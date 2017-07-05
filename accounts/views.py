@@ -1,4 +1,4 @@
-
+from django.shortcuts import render
 from django.views.generic import View
 from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
@@ -19,13 +19,15 @@ class LoginView(View):
 
     def post(self, request, *args, **kwargs):
         username = request.POST.get('username')
+        print(username)
         password = request.POST.get('password')
+        print(password)
         user = authenticate(username=username, password=password)
-        if user is not None:
+        if user:
             login(request, user)
             return redirect('http://www.baidu.com')
         else:
-            messages.error(request, '用户名或密码错误')
+            return render(request, 'index.html', {'msg': '账户或密码不正确'})
 
 
 @method_decorator(superadmin_required(), name='dispatch')

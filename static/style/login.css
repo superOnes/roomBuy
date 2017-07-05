@@ -44,8 +44,7 @@ ul li{
 	width:100%;
 	padding: 0 50px ;
 	box-sizing: border-box;
-	background: url(../image/back.jpg) no-repeat center center;
-	background-size: 100% 100%;
+	background: linear-gradient(to right bottom,#e3e3e3 0,#808080 100%);
 }
 .login{
 	width:35%;

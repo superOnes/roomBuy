@@ -8,16 +8,4 @@ $(document).ready(function(){
 		$("#login-wrap").height(wrapHeight);
 	});
 	
-	
-//	表单提交
-	$("#loginBtn").click(function(){
-		var username = $("#inputText3").val();
-		var passwrod = $("#inputPassword3").val();
-		$.ajax({
-			type:"post",
-			url:"../acc/login/",
-			async:true,
-			data:{username:username ,passwrod:passwrod},
-		});
-	})
 })
