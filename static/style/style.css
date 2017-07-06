@@ -1,0 +1,145 @@
+body{
+	background-color:#fff;
+}
+a{
+	text-decoration:none;
+	color:#000;
+}
+a:link{
+	text-decoration:none;
+	
+}
+ul li{
+	list-style: none;
+}
+
+/*头部样式*/
+.Xlogo{
+	width:100%;
+	background: #696969;
+}
+.Xlogo h1{
+	width:100%;
+	height:50px;
+	margin: 0;
+}
+.Xlogo h1 div{
+	float:left;
+	margin-top:5px;
+	margin-left:5%;
+}
+.Xlogo h1 div a{
+	color:#FFFFFF;
+}
+.Xlogo h1 small{
+	float:right;
+	margin-top:15px;
+	margin-right:10%;
+	color:#FFFFFF;
+}
+
+
+.login-wrap{
+	width:100%;
+	padding: 0 50px ;
+	box-sizing: border-box;
+	background: linear-gradient(to right bottom,#e3e3e3 0,#000 100%);
+}
+.login{
+	width:35%;
+	float:right;
+	padding: 30px;
+	border-radius: 10px;
+	box-shadow: 1px 1px 1px 3px rgba(250,250,250,0.4);
+	background: rgba(250,250,250,0.4);
+	margin-top:150px;
+	margin-right:10%;
+}
+
+
+/*event_list样式*/
+#listContent{
+	width:90%;
+	margin: 20px auto;
+}
+
+.btn-handle{
+	margin:20px;
+}
+
+#files{
+	margin-left:20px !important;
+}
+
+.status{
+	width:100%;
+	height:35px;
+	border: 1px solid #D3D3D3;
+	background: linear-gradient(to bottom, #ffffff 0,#696969 100%);
+}
+.status>ul{
+	padding: 0;
+}
+.status>ul>li{
+	line-height: 35px;
+	text-align: center;
+}
+
+.listWrap{
+	width:100%;
+	height:auto;
+	padding: 0 ;
+}
+.listWrap>li{
+	width: 100%;
+	height:auto;
+	padding: 15px 0;
+	border: 1px solid #D3D3D3;
+	box-sizing: border-box;
+	border: 1px solid #D3D3D3;
+	border-top:none;
+}
+.listWrap>li>ul{
+	padding: 0;
+}
+.listWrapCon>li>ul>li:nth-child(1),
+.listWrapCon>li>ul>li:nth-child(4),
+.listWrapCon>li>ul>li:nth-child(5){
+	line-height:70px ;
+}
+.listWrap>li>ul>li{
+	text-align: center;
+}
+.introduceHouse{
+	display: block;
+	margin: 15px;
+	line-height: 20px;
+	text-align: left;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+p[class='introduceHouse'] a{
+	color:#d3d3d3;
+}
+
+
+
+
+
+
+/*底部样式*/
+.loginFotter{
+	width:100%;
+}
+.loginFotter h4{
+	width:100%;
+	height:50px;
+	margin: 0;
+	padding-right: 10%;
+	text-align: right;
+	line-height: 50px;
+	font-size: 16px;
+	color:#FFFFFF;
+	background: #696969;
+}

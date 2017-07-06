@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+	{% load static %}
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>登录</title>
+		<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}"/>
+		<link rel="stylesheet" type="text/css" href="{% static 'style/style.css' %}"/>
+	</head>
+	<script src="{% static 'js/jquery-3.2.1.min.js' %}" type="text/javascript" charset="utf-8"></script>
+	<script src="{% static 'js/bootstrap.js' %}" type="text/javascript" charset="utf-8"></script>
+	<script src="{% static 'customJS/index.js' %}" type="text/javascript" charset="utf-8"></script>
+	<body>
+		<header class="Xlogo">
+			<h1>
+				<div>
+					<img src=""/>
+					<a href="###">XXX</a>
+				</div>
+				<small>欢迎来到XXX</small>
+			</h1>
+		</header>
+		<!--内容部分-->
+		<section class="container" id="listContent">
+			<div class="row">
+			  <div class="col-md-2">导航栏</div>
+			  <div class="col-md-10">
+			  	<div>
+			  		<h3>活动列表</h3>
+			  	</div>
+			  	<button type="button" class="btn btn-default  btn-handle" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">导入Excel</button>
+			  	<a href="###"class="btn btn-default">导出文件</a>
+				<!--模态框-->
+				<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+				  <div class="modal-dialog" role="document">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				        <h4 class="modal-title" id="exampleModalLabel">上传文件</h4>
+				      </div>
+				      <div class="modal-body">
+				        <form class="form-horizontal">
+				  			<div class="form-group">
+				  				<input type="file" name="file" id="files"/>
+				  			</div>
+				  		</form>
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				        <button type="button" class="btn btn-default" onclick="submitFile()">确定</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+			  	<!--状态栏-->
+			  	<div class="status">
+			  		<ul class="row">
+			  			<li class="col-md-1">序列</li>
+			  			<li class="col-md-1">活动名称</li>
+			  			<li class="col-md-2">公测时间</li>
+			  			<li class="col-md-2">活动时间</li>
+			  			<li class="col-md-1">认筹名单</li>
+			  			<li class="col-md-1">车位房源</li>
+			  			<li class="col-md-1">活动状态</li>
+			  			<li class="col-md-1">二维码</li>
+			  			<li class="col-md-2">操作</li>
+			  		</ul>
+			  	</div>
+			  	<!--list显示-->
+			  	<ul class="listWrap">
+				  	{% for obj in object_list %}
+			  		<li>
+		  				<ul class="row">
+		  					<li class="col-md-1">{{ forloop.counter }}</li>
+		  					<li class="col-md-1">{{ obj.name }}</li>
+				  			<li class="col-md-2">
+				  				<p>{{ obj.test_start }}</p>
+				  				<p>至</p>
+				  				<p>{{ obj.test_end }}</p>
+				  			</li>
+				  			<li class="col-md-2">
+				  				<p>{{ obj.event_start }}</p>
+				  				<p>至</p>
+				  				<p>{{ obj.event_end }}</p>
+				  			</li>
+				  			<li class="col-md-1">0人</li>
+				  			<li class="col-md-1">无</li>
+				  			<li class="col-md-1">公测</li>
+				  			<li class="col-md-1">二维码</li>
+		  					<li class="col-md-2">
+		  						<p><a href="###">查看</a></p>
+		  						<p><a href="###">取消发布</a></p>
+		  						<p><a href="###">编辑</a></p>
+		  						<p><a href="###">清楚公测名单</a></p>
+		  					</li>
+		  				</ul>
+			  		</li>
+			  		{% endfor %}
+			  	</ul>
+			  </div>
+			</div>
+		</section>
+		<!--底部-->
+		<footer class="loginFotter">
+			<h4>承接单位：石家庄佳诚网络技术有限公司</h4>
+		</footer>
+	</body>
+</html>

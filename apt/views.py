@@ -1,3 +1,4 @@
+
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView
 from .models import Event
@@ -18,3 +19,4 @@ class EventCreateView(CreateView):
     fields = [f.name for f in model._meta.get_fields()]
     template_name = 'event_create.html'
     # form_class = EventCreateForm
+
