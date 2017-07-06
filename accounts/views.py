@@ -7,6 +7,8 @@ from django.utils.decorators import method_decorator
 from django.http import QueryDict
 from django.shortcuts import redirect
 from django.contrib import messages
+from django.core.urlresolvers import reverse
+
 
 from .models import User
 from .decorators import superadmin_required
@@ -16,18 +18,20 @@ class LoginView(View):
     '''
     登录
     '''
+    def get(self, request):
+        return render(request, 'index.html')
 
     def post(self, request, *args, **kwargs):
         username = request.POST.get('username')
-        print(username)
         password = request.POST.get('password')
-        print(password)
+        print(username)
         user = authenticate(username=username, password=password)
         if user:
             login(request, user)
             return redirect('http://www.baidu.com')
-        else:
-            return render(request, 'index.html', {'msg': '账户或密码不正确'})
+
+        messages.error(request, '用户名或密码不正确')
+        return redirect(reverse('acc_login'))
 
 
 @method_decorator(superadmin_required(), name='dispatch')
