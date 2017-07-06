@@ -1,14 +1,13 @@
-from django.shortcuts import render
+
 from django.views.generic import View
 from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.http import QueryDict
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.core.urlresolvers import reverse
-
 
 from .models import User
 from .decorators import superadmin_required
@@ -18,6 +17,7 @@ class LoginView(View):
     '''
     登录
     '''
+
     def get(self, request):
         return render(request, 'index.html')
 
@@ -28,8 +28,7 @@ class LoginView(View):
         user = authenticate(username=username, password=password)
         if user:
             login(request, user)
-            return redirect('http://www.baidu.com')
-
+            return redirect(reverse('even_list'))
         messages.error(request, '用户名或密码不正确')
         return redirect(reverse('acc_login'))
 

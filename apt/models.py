@@ -13,7 +13,7 @@ class Event(models.Model):
     phone_num = models.CharField('咨询电话', max_length=50, null=True, blank=True)
     test_start = models.DateTimeField('公测开始时间')
     test_end = models.DateTimeField('公测结束时间')
-    test_price = models.BooleanField('是否显示公测放假', default=False)
+    test_price = models.BooleanField('是否显示公测放价', default=False)
     event_start = models.DateTimeField('活动开始时间')
     event_end = models.DateTimeField('活动结束时间')
     limit = models.IntegerField('选房完成期限')
@@ -32,4 +32,7 @@ class Event(models.Model):
                               null=True, blank=True)
     plane_graph = models.ImageField('平面图', upload_to='planeGraph/%Y/%m/%d/',
                                     null=True, blank=True)
-    term = models.TextField('协议')
+    termname = models.CharField('协议名称', max_length=100, null=True)
+    rc_list = models.CharField('认筹名单', max_length=50, null=True)
+    park_hous = models.CharField('车位房源', max_length=50, null=True)
+    term = models.TextField('协议内容')

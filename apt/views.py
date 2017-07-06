@@ -1,5 +1,7 @@
 from django.views.generic import ListView
+from django.views.generic.edit import CreateView
 from .models import Event
+# from .form import EventCreateForm
 
 
 class EventListView(ListView):
@@ -9,3 +11,9 @@ class EventListView(ListView):
 
     def get_queryset(self):
         return self.model.objects.order_by('-id')
+
+
+class EventCreateView(CreateView):
+    model = Event
+    template_name = 'event_create.html'
+    # form_class = EventCreateForm
