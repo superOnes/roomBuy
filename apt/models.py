@@ -36,3 +36,12 @@ class Event(models.Model):
     rc_list = models.CharField('认筹名单', max_length=50, null=True)
     park_hous = models.CharField('车位房源', max_length=50, null=True)
     term = models.TextField('协议内容')
+
+
+class EventDetail(models.Model):
+    building = models.CharField('楼栋', max_length=100)
+    unit = models.CharField('单元', max_length=100)
+    floor = models.IntegerField('楼层')
+    room_num = models.CharField('房号', max_length=100)
+    price = models.CharField('原价', max_length=100)
+    total = models.CharField('线上总价', max_length=100)
