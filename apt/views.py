@@ -15,5 +15,6 @@ class EventListView(ListView):
 
 class EventCreateView(CreateView):
     model = Event
+    fields = [f.name for f in model._meta.get_fields()]
     template_name = 'event_create.html'
     # form_class = EventCreateForm
