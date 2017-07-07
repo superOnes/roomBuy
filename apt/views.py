@@ -1,11 +1,17 @@
+import os
 
+import xlrd
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
 from django.shortcuts import resolve_url
+from django.views import View
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from xlwt import Workbook
 from io import BytesIO
 from django.http import JsonResponse, HttpResponse
 
+from aptm import settings
 from .models import Event, EventDetail
 
 
@@ -60,6 +66,39 @@ class EventDetailTotalUpdateView(UpdateView):
     template_name = 'popup/eventdetail_total.html'
     fields = ['total']
     model = EventDetail
+
+
+class ImportView(View):
+    '''
+    导入数据
+    '''
+
+    def post(self, request, *args, **kwargs):
+        file = request.FILES.get('f')
+        path = default_storage.save('tmp/somename.xlsx', ContentFile(file.read()))
+        tmp_file = os.path.join(settings.MEDIA_ROOT, path)
+        workdata = xlrd.open_workbook(tmp_file)
+        sheet_name = workdata.sheet_names()[0]
+        sheet = workdata.sheet_by_name(sheet_name)
+        row = sheet.nrows
+        col = sheet.ncols
+        data = []
+        for rx in range(1, row):
+            li = []
+            for cx in range(0, col):
+                value = sheet.cell(rowx=rx, colx=cx).value
+                li.append(value)
+            data.append(li)
+        for ed in data:
+            eventdetail = EventDetail.objects.create(building=ed[1],
+                                                     unit=ed[2],
+                                                     floor=ed[3],
+                                                     room_num=ed[4],
+                                                     price=ed[5],
+                                                     total=ed[6])
+            eventdetail.save()
+        os.remove('file/tmp/somename.xlsx')
+        return JsonResponse({'success': True})
 
 
 def ExportView(request):
