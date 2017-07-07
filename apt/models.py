@@ -40,7 +40,7 @@ class EventDetail(models.Model):
     batch = models.CharField('期/批', max_length=50)
     building = models.CharField('楼号', max_length=50)
     unit = models.CharField('单元', max_length=100)
-    floor = models.IntegerField('楼层', max_length=50)
+    floor = models.IntegerField('楼层')
     room_num = models.CharField('房号', max_length=50)
     price = models.CharField('原价', max_length=100)
     total = models.CharField('线上总价', max_length=100)

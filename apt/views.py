@@ -1,14 +1,16 @@
-import os
 
+import os
+import qrcode
+from xlwt import Workbook
+from io import BytesIO
 import xlrd
+
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.shortcuts import resolve_url
 from django.views import View
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView
-from xlwt import Workbook
-from io import BytesIO
 from django.http import JsonResponse, HttpResponse
 
 from aptm import settings
@@ -107,26 +109,19 @@ def ExportView(request):
     if objs:
         sheet = Workbook(encoding='utf-8')
         s = sheet.add_sheet('数据表')
-        s.write(0, 0, '楼栋')
-        s.write(0, 1, '单元')
-        s.write(0, 2, '楼层')
-        s.write(0, 3, '房号')
-        s.write(0, 4, '原价')
-        s.write(0, 5, '线上总价')
+        list = ['楼栋', '单元', '楼层', '房号', '原价', '线上总价']
+        col = 0
+        for i in list:
+            s.write(0, col, i)
+            col += 1
         row = 1
         for obj in objs:
-            building = obj.building
-            unit = obj.unit
-            floor = obj.floor
-            room_num = obj.room_num
-            price = obj.price
-            total = obj.total
-            s.write(row, 0, building)
-            s.write(row, 1, unit)
-            s.write(row, 2, floor)
-            s.write(row, 3, room_num)
-            s.write(row, 4, price)
-            s.write(row, 5, total)
+            s.write(row, 0, obj.building)
+            s.write(row, 1, obj.unit)
+            s.write(row, 2, obj.floor)
+            s.write(row, 3, obj.room_num)
+            s.write(row, 4, obj.price)
+            s.write(row, 5, obj.total)
             row += 1
         sio = BytesIO()
         sheet.save(sio)
@@ -136,3 +131,15 @@ def ExportView(request):
         response.write(sio.getvalue())
         return response
     return JsonResponse({'msg': '内容为空！'})
+
+
+def url2qrcode(request, data):
+    '''
+    二维码 
+    '''
+    img = qrcode.make(data)
+    buf = BytesIO()
+    img.save(buf)
+    image_stream = buf.getvalue()
+    response = HttpResponse(image_stream, content_type="image/png")
+    return response

@@ -8,7 +8,8 @@ from .views import (
     EventDetailView,
     EventDetailListView,
     EventDetailTotalUpdateView,
-    EventTermUpdateView)
+    EventTermUpdateView,
+    url2qrcode)
 
 
 urlpatterns = [
@@ -22,5 +23,5 @@ urlpatterns = [
     url(r'^(?P<pk>\d+)/rooms/', EventDetailListView.as_view(), name='room_list'),
     url(r'^room/(?P<pk>\d+)/price/', EventDetailTotalUpdateView.as_view(), name='room_price_update'),
     url(r'^export/', ExportView, name='event_export'),
-
+    url(r'^qrcode/(.+)$', url2qrcode, name='qrcode'),
 ]
