@@ -56,6 +56,7 @@ class EventDetailListView(ListView):
     model = EventDetail
 
     def get_queryset(self):
+        print(111)
         return self.model.objects.order_by('-id')
 
 
