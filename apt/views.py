@@ -1,6 +1,12 @@
+from django.shortcuts import resolve_url
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from .models import Event, EventDetail
+
+
+class DialogMixin(object):
+    def get_success_url(self):
+        return resolve_url('dialog_success')
 
 
 class EventListView(ListView):
@@ -11,7 +17,7 @@ class EventListView(ListView):
         return self.model.objects.order_by('-id')
 
 
-class EventCreateView(CreateView):
+class EventCreateView(DialogMixin, CreateView):
     model = Event
     fields = [f.name for f in model._meta.get_fields()]
     template_name = 'event_create.html'

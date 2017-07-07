@@ -23,5 +23,5 @@ urlpatterns = [
     url(r'^event/', include('apt.urls')),
     url(r'^acc/', include('accounts.urls')),
     url(r'^login/', TemplateView.as_view(template_name='index.html')),
-
+    url(r'^dialog-success/$', TemplateView.as_view(template_name='popup/dialog_success.html'), name='dialog_success'),
 ]
