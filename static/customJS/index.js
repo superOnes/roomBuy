@@ -11,11 +11,11 @@ $(document).ready(function(){
 //上传文件
 function submitFile(){
 	var files = $("#files")[0].files;
-    var data = new FormData(); //转化为表单格式的数据
+	var data = new FormData(); //转化为表单格式的数据
     data.append('f', files[0]);
 	$.ajax({
 		type:"post",
-		url:"../import/",
+		url:"http://10.7.10.198:8000/event/import/",
 		async:true,
 		data:data,
 		cache: false,

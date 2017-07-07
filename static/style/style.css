@@ -71,13 +71,27 @@ input::-webkit-inner-spin-button{
 	width:90%;
 	margin: 20px auto;
 }
+
+.navList{
+	margin-top:30px !important;
+}
+.navList>ul>li{
+	text-align: center;
+}
+
+
+.gridTitle{
+	border-bottom: 1px solid #CCCCCC;
+}
+
+
+
 .btnHandleStatus{
 	height: 75px;
 }
 
 .btn-handle{
 	margin:20px;
-	float: right;
 }
 
 #files{
@@ -88,7 +102,7 @@ input::-webkit-inner-spin-button{
 	width:100%;
 	height:35px;
 	border: 1px solid #D3D3D3;
-	background: linear-gradient(to bottom, #ffffff 0,#696969 100%);
+	background: #CCCCCC;
 }
 .status>ul{
 	padding: 0;
