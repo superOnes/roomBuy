@@ -1,17 +1,5 @@
-<!DOCTYPE html>
-<html>
-	{% load static %}
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<title>登录</title>
-		<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}"/>
-		<link rel="stylesheet" type="text/css" href="{% static 'style/style.css' %}"/>
-	</head>
-	<script src="{% static 'js/jquery-3.2.1.min.js' %}" type="text/javascript" charset="utf-8"></script>
-	<script src="{% static 'js/bootstrap.js' %}" type="text/javascript" charset="utf-8"></script>
-	<script src="{% static 'customJS/index.js' %}" type="text/javascript" charset="utf-8"></script>
-	<body>
+{% extends 'include/base.html' %}
+{% block main %}
 		<header class="Xlogo">
 			<h1>
 				<div>
@@ -29,9 +17,14 @@
 			  	<div>
 			  		<h3>活动列表</h3>
 			  	</div>
-			  	<button type="button" class="btn btn-default  btn-handle" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">导入Excel</button>
-			  	<a href="###"class="btn btn-default">导出文件</a>
-				<!--模态框-->
+			  	<div class="btnHandleStatus">
+			  		<!--a标签的弹窗内部链接-->
+			  		<a href="{% url 'event_create' %}"  class="btn btn-default btn-handle" data-toggle="modal" data-target="#mymodal">创建活动</a>
+				  	<a href="http://10.7.10.193:8000/event/export/" class="btn btn-default btn-handle">导出文件</a>
+				  	<button type="button" class="btn btn-default  btn-handle" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">导入Excel</button>
+
+			  	</div>
+				<!--导入文件模态框-->
 				<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
 				  <div class="modal-dialog" role="document">
 				    <div class="modal-content">
@@ -50,6 +43,14 @@
 				        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
 				        <button type="button" class="btn btn-default" onclick="submitFile()">确定</button>
 				      </div>
+				    </div>
+				  </div>
+				</div>
+				<!--创建活动模态框-->
+				<div class="modal fade" id="mymodal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel">
+				  <div class="modal-dialog" role="document">
+				    <div class="modal-content">
+				    	
 				    </div>
 				  </div>
 				</div>
@@ -105,5 +106,4 @@
 		<footer class="loginFotter">
 			<h4>承接单位：石家庄佳诚网络技术有限公司</h4>
 		</footer>
-	</body>
-</html>
+{% endblock %}

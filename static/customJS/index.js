@@ -1,10 +1,21 @@
+$(document).ready(function(){
+//	中间部分的高度自适应
+	var wrapHeight = $(window).height()-100 ;
+	$("#login-wrap").height(wrapHeight);
+	$(window).resize(function(){
+		var wrapHeight = $(window).height()-100 ;
+		$("#login-wrap").height(wrapHeight);
+	});
+})
+
+//上传文件
 function submitFile(){
 	var files = $("#files")[0].files;
     var data = new FormData(); //转化为表单格式的数据
     data.append('f', files[0]);
 	$.ajax({
 		type:"post",
-		url:"http://10.7.10.198:8000/event/import/",
+		url:"../import/",
 		async:true,
 		data:data,
 		cache: false,
@@ -17,10 +28,4 @@ function submitFile(){
 			alert("未知错误")
 		}
 	});
-};
-
-function handleBtn(){
-	$(".handle-button").click(function(){
-		$(this).siblings("div").show();
-	})
 };
