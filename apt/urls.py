@@ -1,8 +1,14 @@
 from django.conf.urls import url
-from .views import (EventListView, EventCreateView, EventUpdateView,
-                    EventDetailView,
-                    EventDetailListView, EventDetailTotalUpdateView,
-                    EventTermUpdateView)
+from .views import (
+    EventListView,
+    EventCreateView,
+    ExportView,
+    EventUpdateView,
+    EventDetailView,
+    EventDetailListView,
+    EventDetailTotalUpdateView,
+    EventTermUpdateView)
+
 
 urlpatterns = [
     url(r'^list/', EventListView.as_view(), name='event_list'),
@@ -10,8 +16,8 @@ urlpatterns = [
     url(r'^(?P<pk>\d+)/', EventDetailView.as_view(), name='event_detail'),
     url(r'^update/(?P<pk>\d+)/$', EventUpdateView.as_view(), name='event_update'),
     url(r'^update/(?P<pk>\d+)/term/', EventTermUpdateView.as_view(), name='event_term_update'),
-
-
     url(r'^room/list/', EventDetailListView.as_view(), name='room_list'),
-    url(r'^room/(?P<pk>\d+)/price/', EventDetailTotalUpdateView.as_view(), name='room_price_update')
+    url(r'^room/(?P<pk>\d+)/price/', EventDetailTotalUpdateView.as_view(), name='room_price_update'),
+    url(r'^export/', ExportView, name='event_export'),
+
 ]

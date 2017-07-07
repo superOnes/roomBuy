@@ -37,9 +37,13 @@ class Event(models.Model):
 
 
 class EventDetail(models.Model):
-    building = models.CharField('楼栋', max_length=100)
+    batch=models.CharField('期/批',max_length=50)
+    building = models.CharField('楼号', max_length=50)
     unit = models.CharField('单元', max_length=100)
-    floor = models.IntegerField('楼层')
-    room_num = models.CharField('房号', max_length=100)
+    floor = models.IntegerField('楼层',max_length=50)
+    room_num = models.CharField('房号', max_length=50)
     price = models.CharField('原价', max_length=100)
     total = models.CharField('线上总价', max_length=100)
+    house_type=models.CharField('户型',max_length=100)
+    floor_area=models.CharField('建筑面积',max_length=50)
+    is_sold=models.BooleanField('是否被卖',default=False)

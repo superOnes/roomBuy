@@ -24,11 +24,11 @@ class LoginView(View):
     def post(self, request, *args, **kwargs):
         username = request.POST.get('username')
         password = request.POST.get('password')
-        print(username)
         user = authenticate(username=username, password=password)
         if user:
-            login(request, user)
-            return redirect(reverse('even_list'))
+            if user.is_admin:
+                login(request, user)
+                return redirect(reverse('even_list'))
         messages.error(request, '用户名或密码不正确')
         return redirect(reverse('acc_login'))
 
@@ -68,6 +68,7 @@ class UserConfigView(View):
                 User.objects.create_user(
                     username=username,
                     password=password1,
+                    is_admin=True,
                 )
                 return JsonResponse({'success': True})
         else:
@@ -163,3 +164,23 @@ class LogoutView(View):
     def post(self, request):
         logout(request)
         return JsonResponse({'success': True, 'msg': '退出登录成功'})
+
+
+class CustomerLoginView(View):
+    '''
+    顾客登录
+    '''
+
+    def get(self, request):
+        return render(request, 'customer_login.html')
+
+    def post(self, request, *args, **kwargs):
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+        if user:
+            if not user.is_admin:
+                login(request, user)
+                return redirect(reverse('home_page_view'))
+        messages.error(request, '用户名或密码不正确')
+        return redirect(reverse('acc_login'))
