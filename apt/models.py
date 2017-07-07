@@ -32,10 +32,8 @@ class Event(models.Model):
                               null=True, blank=True)
     plane_graph = models.ImageField('平面图', upload_to='planeGraph/%Y/%m/%d/',
                                     null=True, blank=True)
-    termname = models.CharField('协议名称', max_length=100, null=True)
-    rc_list = models.CharField('认筹名单', max_length=50, null=True)
-    park_hous = models.CharField('车位房源', max_length=50, null=True)
-    term = models.TextField('协议内容')
+    termname = models.CharField('协议名称', max_length=100, null=True, blank=True)
+    term = models.TextField('协议内容', null=True, blank=True)
 
 
 class EventDetail(models.Model):

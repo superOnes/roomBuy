@@ -1,163 +1,139 @@
-<!--创建活动模态框-->
-  <div class="modal-body">
-    <form class="form-horizontal" method="post" action="">
-    	{% csrf_token %}
-    	<div class="form-group">
-		    <label for="inputText3" class="col-sm-3 control-label">活动类型</label>
-		    <div class="col-sm-9">
-		    	<select class="form-control" name="type">
-		    		<option value="">房间开盘</option>
-		    		<option value="">车位开盘</option>
-		    	</select>
-		    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputText3" class="col-sm-3 control-label">活动名称</label>
-			    <div class="col-sm-9">
-			    	<input type="text" class="form-control" id="inputText3" placeholder="name" name="name" required>
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">咨询电话</label>
-			    <div class="col-sm-9">
-			    	<input type="tel" class="form-control" id="inputNumber3" placeholder="phone" name="phone_num" required>
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">公测开始时间</label>
-			    <div class="col-sm-9">
-			    	<input type="date" class="form-control" id="inputNumber3" placeholder="start" name="test_start" required>
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">公测结束时间</label>
-			    <div class="col-sm-9">
-			    	<input type="date" class="form-control" id="inputNumber3" placeholder="end" name="test_end" required>
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">是否显示公测放价</label>
-			    <div class="col-sm-9">
-			    	<input type="checkbox" class="input-sm" name="test_price">
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">活动开始时间</label>
-			    <div class="col-sm-9">
-			    	<input type="date" class="form-control" id="inputNumber3" placeholder="" name="event_start" required>
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">活动结束时间</label>
-			    <div class="col-sm-9">
-			    	<input type="date" class="form-control" id="inputNumber3" placeholder="" name="event_end" required>
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">选房完成期限</label>
-			    <div class="col-sm-9">
-			    	<input type="number" class="form-control" id="inputNumber3" min="0" name="limit" required>
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">支持设备登录数</label>
-			    <div class="col-sm-9">
-			    	<input type="number" class="form-control" id="inputNumber3"  min="0" placeholder="" name="equ_login_num" required>
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">同一账号允许收藏数</label>
-			    <div class="col-sm-9">
-			    	<input type="number" class="form-control" id="inputNumber3"  min="0" placeholder="" name="follow_num" required>
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">登录短信提醒</label>
-			    <div class="col-sm-9">
-			    	<input type="checkbox" class="input-sm" name="login_msg">
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label" >是否显示原价</label>
-			    <div class="col-sm-9">
-			    	<input type="checkbox" class="input-sm" name="price">
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">是否显示建筑面积</label>
-			    <div class="col-sm-9">
-			    	<input type="checkbox" class="input-sm" name="covered_space">
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">是否显示建筑面积单价</label>
-			    <div class="col-sm-9">
-			    	<input type="checkbox" class="input-sm" name="covered_space_price">
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">是否显示套内面积</label>
-			    <div class="col-sm-9">
-			    	<input type="checkbox" class="input-sm" name="inside_space">
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">是否显示套内面积单价</label>
-			    <div class="col-sm-9">
-			    	<input type="checkbox" class="input-sm" name="inside_space_price">
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">活动细则</label>
-			    <div class="col-sm-9">
-			    	<textarea class="form-control" rows="3" name="description" required></textarea>
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">认购须知</label>
-			    <div class="col-sm-9">
-			    	<textarea class="form-control" rows="3" name="notice" required></textarea>
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">温馨提示</label>
-			    <div class="col-sm-9">
-			    	<textarea class="form-control" rows="3" name="tip"></textarea>
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">活动封面</label>
-			    <div class="col-sm-9">
-			    	<input type="file" class="form-control" id="inputNumber3" placeholder="" name="cover">
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">平面图</label>
-			    <div class="col-sm-9">
-			    	<input type="file" class="form-control" id="inputNumber3" placeholder="" name="plane_graph">
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">协议名称</label>
-			    <div class="col-sm-9">
-			    	<input type="text" class="form-control" id="inputNumber3" placeholder="" name="termname" required>
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">认筹名单</label>
-			    <div class="col-sm-9">
-			    	<input type="text" class="form-control" id="inputNumber3" placeholder="" name="rc_list" required>
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">车位房源</label>
-			    <div class="col-sm-9">
-			    	<input type="text" class="form-control" id="inputNumber3" placeholder="" name="park_hous" required>
-			    </div>
-			</div>
-		  <div class="modal-footer">
-		    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-		    <input type="submit" class="btn btn-default" value="确定"></input>
-		  </div>
-		</form>
+{% extends 'include/base.html' %}
+{% block main %}
+<form class="form-horizontal" method="post" action="">
+	{% csrf_token %}
+	<div class="form-group">
+    <label for="id_type" class="col-sm-3 control-label">活动类型</label>
+    <div class="col-sm-9">
+    	<select class="form-control" name="type" id="id_type">
+    		<option value="1">房间开盘</option>
+    		<option value="2">车位开盘</option>
+    	</select>
+    </div>
 	</div>
+	<div class="form-group">
+	    <label for="id_name" class="col-sm-3 control-label">活动名称</label>
+	    <div class="col-sm-9">
+	    	<input type="text" class="form-control" id="id_name" placeholder="name" name="name" required>
+	    </div>
+	</div>
+	<div class="form-group">
+	    <label for="id_phone_num" class="col-sm-3 control-label">咨询电话</label>
+	    <div class="col-sm-9">
+	    	<input type="tel" class="form-control" id="id_phone_num" placeholder="phone" name="phone_num" required>
+	    </div>
+	</div>
+	<div class="form-group">
+	    <label for="id_test_start" class="col-sm-3 control-label">公测开始时间</label>
+	    <div class="col-sm-9">
+	    	<input type="date" class="form-control" id="id_test_start" placeholder="start" name="test_start" required>
+	    </div>
+	</div>
+	<div class="form-group">
+	    <label for="id_test_end" class="col-sm-3 control-label">公测结束时间</label>
+	    <div class="col-sm-9">
+	    	<input type="date" class="form-control" id="id_test_end" placeholder="end" name="test_end" required>
+	    </div>
+	</div>
+	<div class="form-group">
+	    <label for="id_test_price" class="col-sm-3 control-label">是否显示公测放价</label>
+	    <div class="col-sm-9">
+	    	<input type="checkbox" class="input-sm" name="test_price" id="id_test_price">
+	    </div>
+	</div>
+	<div class="form-group">
+	    <label for="id_event_start" class="col-sm-3 control-label">活动开始时间</label>
+	    <div class="col-sm-9">
+	    	<input type="date" class="form-control" id="id_event_start" placeholder="" name="event_start" required>
+	    </div>
+	</div>
+	<div class="form-group">
+	    <label for="id_event_end" class="col-sm-3 control-label">活动结束时间</label>
+	    <div class="col-sm-9">
+	    	<input type="date" class="form-control" id="id_event_end" placeholder="" name="event_end" required>
+	    </div>
+	</div>
+	<div class="form-group">
+	    <label for="id_limit" class="col-sm-3 control-label">选房完成期限</label>
+	    <div class="col-sm-9">
+	    	<input type="number" class="form-control" id="id_limit" min="0" name="limit" required>
+	    </div>
+	</div>
+	<div class="form-group">
+	    <label for="id_equ_login_num" class="col-sm-3 control-label">支持设备登录数</label>
+	    <div class="col-sm-9">
+	    	<input type="number" class="form-control" id="id_equ_login_num"  min="0" placeholder="" name="equ_login_num" required>
+	    </div>
+	</div>
+	<div class="form-group">
+	    <label for="id_follow_num" class="col-sm-3 control-label">同一账号允许收藏数</label>
+	    <div class="col-sm-9">
+	    	<input type="number" class="form-control" id="id_follow_num"  min="0" placeholder="" name="follow_num" required>
+	    </div>
+	</div>
+	<div class="form-group">
+	    <label for="id_price" class="col-sm-3 control-label" >是否显示原价</label>
+	    <div class="col-sm-9">
+	    	<input type="checkbox" class="input-sm" name="price" id="id_price">
+	    </div>
+	</div>
+	<div class="form-group">
+	    <label for="id_covered_space" class="col-sm-3 control-label">是否显示建筑面积</label>
+	    <div class="col-sm-9">
+	    	<input type="checkbox" class="input-sm" name="covered_space" id="id_covered_space">
+	    </div>
+	</div>
+	<div class="form-group">
+	    <label for="id_covered_space_price" class="col-sm-3 control-label">是否显示建筑面积单价</label>
+	    <div class="col-sm-9">
+	    	<input type="checkbox" class="input-sm" name="covered_space_price" id="id_covered_space_price">
+	    </div>
+	</div>
+	<div class="form-group">
+	    <label for="id_inside_space" class="col-sm-3 control-label">是否显示套内面积</label>
+	    <div class="col-sm-9">
+	    	<input type="checkbox" class="input-sm" name="inside_space" id="id_inside_space">
+	    </div>
+	</div>
+	<div class="form-group">
+	    <label for="id_inside_space_price" class="col-sm-3 control-label">是否显示套内面积单价</label>
+	    <div class="col-sm-9">
+	    	<input type="checkbox" class="input-sm" name="inside_space_price" id="id_inside_space_price">
+	    </div>
+	</div>
+	<div class="form-group">
+	    <label for="id_description" class="col-sm-3 control-label">活动细则</label>
+	    <div class="col-sm-9">
+	    	<textarea class="form-control" rows="3" name="description" id="id_description" required></textarea>
+	    </div>
+	</div>
+	<div class="form-group">
+	    <label for="id_notice" class="col-sm-3 control-label">认购须知</label>
+	    <div class="col-sm-9">
+	    	<textarea class="form-control" rows="3" name="notice" id="id_notice" required></textarea>
+	    </div>
+	</div>
+	<div class="form-group">
+	    <label for="id_tip" class="col-sm-3 control-label">温馨提示</label>
+	    <div class="col-sm-9">
+	    	<textarea class="form-control" rows="3" name="tip" id="id_tip"></textarea>
+	    </div>
+	</div>
+	<div class="form-group">
+	    <label for="id_cover" class="col-sm-3 control-label">活动封面</label>
+	    <div class="col-sm-9">
+	    	<input type="file" class="form-control" id="id_cover" placeholder="" name="cover">
+	    </div>
+	</div>
+	<div class="form-group">
+	    <label for="id_plane_graph" class="col-sm-3 control-label">平面图</label>
+	    <div class="col-sm-9">
+	    	<input type="file" class="form-control" id="id_plane_graph" placeholder="" name="plane_graph">
+	    </div>
+	</div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+    <input type="submit" class="btn btn-default" value="确定"></input>
+  </div>
+</form>
+{% endblock %}

@@ -19,7 +19,8 @@
 			  	</div>
 			  	<div class="btnHandleStatus">
 			  		<!--a标签的弹窗内部链接-->
-			  		<a href="{% url 'event_create' %}"  class="btn btn-default btn-handle" data-toggle="modal" data-target="#mymodal">创建活动</a>
+						<a class="btn btn-primary" data-iframe="{% url 'event_create' %}" data-toggle="modal" data-height='2000'>创建活动</button>
+			  		<!-- <a href="{% url 'event_create' %}"  class="btn btn-default btn-primary" data-toggle="modal" data-target="#mymodal">创建活动</a> -->
 				  	<a href="http://10.7.10.193:8000/event/export/" class="btn btn-default btn-handle">导出文件</a>
 				  	<button type="button" class="btn btn-default  btn-handle" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">导入Excel</button>
 
@@ -50,7 +51,7 @@
 				<div class="modal fade" id="mymodal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel">
 				  <div class="modal-dialog" role="document">
 				    <div class="modal-content">
-				    	
+
 				    </div>
 				  </div>
 				</div>
