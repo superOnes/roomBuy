@@ -33,7 +33,7 @@
 				  		<!--a标签的弹窗内部链接-->
 				  		<button type="button" class="btn btn-default  btn-handle" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">导入Excel</button>
 					  	<a href="http://10.7.10.193:8000/event/export/" class="btn btn-default btn-handle">导出文件</a>
-					  	<a class="btn btn-primary" data-iframe="{% url 'event_create' %}" data-toggle="modal" data-height='2000'>创建活动</button>
+					  	<a class="btn btn-primary" data-iframe="{% url 'event_create' %}" data-toggle="modal">创建活动</a>
 				  	</div>
 					<!--导入文件模态框-->
 					<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
@@ -61,7 +61,7 @@
 					<div class="modal fade" id="mymodal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel">
 					  <div class="modal-dialog" role="document">
 					    <div class="modal-content">
-	
+
 					    </div>
 					  </div>
 					</div>
@@ -94,10 +94,13 @@
 								<td><a href="{% url 'room_list' pk=obj.id %}">0 <i class='icon-edit'></i></a></td>
 								<td>none</td>
 								<td>qr</td>
-								<td><p><a href="###">查看</a></p>
-								<p><a href="###">取消发布</a></p>
-								<p><a href="###">编辑协议</a></p>
-								<p><a href="###">清楚公测名单</a></p></td>
+								<td>
+									<p><a data-iframe="{% url 'event_detail' pk=obj.id %}" data-toggle="modal" data-title="活动详情">查看</a></p>
+									<p><a href="###">取消发布</a></p>
+									<p><a data-iframe="{% url 'event_update' pk=obj.id%}" data-toggle="modal">编辑活动</a></p>
+									<p><a data-iframe="{% url 'event_term_update' pk=obj.id%}" data-toggle="modal">编辑协议</a></p>
+									<p><a href="###">清楚公测名单</a></p>
+								</td>
 							</tr>
 							{% endfor %}
 						</tbody>

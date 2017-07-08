@@ -1,184 +1,104 @@
-<!--创建活动模态框-->
-  <div class="modal-body">
-    <form class="form-horizontal" method="post" action="">
-    	{% csrf_token %}
-    	<div class="form-group">
-		    <label for="inputText3" class="col-sm-3 control-label">活动类型</label>
-		    <div class="col-sm-9">
-		    	<select class="form-control" name="type">
-		    		<option value="1">房间开盘</option>
-		    		<option value="2">车位开盘</option>
-		    	</select>
-		    </div>
+{% extends 'include/base.html' %}
+{% block main %}
+		<header class="Xlogo">
+			<h1>
+				<div>
+					<img src=""/>
+					<a href="###">XXX</a>
+				</div>
+				<small>欢迎来到XXX</small>
+			</h1>
+		</header>
+		<!--内容部分-->
+		<section class="container" id="listContent" style="min-height:570px">
+			<div class="row">
+			    <div class="col-md-2 col-lg-2">
+				  	<div class="gridTitle">
+				  		<h3>导航</h3>
+				  	</div>
+				  	<div class="navList">
+					  	<ul class="nav nav-pills nav-stacked">
+					  		<li><a href="###">活动介绍</a></li>
+					  		<li><a href="###">房源信息</a></li>
+					  		<li><a href="###">认筹名单</a></li>
+					  		<li><a href="###">活动</a></li>
+						</ul>
+				  	</div>
+			    </div>
+			    <div class="col-md-10  col-lg-10">
+				  	<div>
+				  		<h3>房源信息 > <a href="{% url 'event_list' %}">{{ event.name }}</a></h3>
+				  	</div>
+            <div class="row" style="padding:10px">
+              <input placeholder="searching" style="float:right">
+              <a class="btn btn-primary" data-iframe="{% url 'room_create' pk=event.id %}" data-toggle=modal>添加房间/车位</a>
+              <button type="button" class="btn btn-default" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">导入房价</button>
+              <a href="{% url 'event_export' pk=event.id %}" class="btn btn-default">导出房价</a>
+            </div>
+  					<table class="table datatable">
+  						<thead>
+  							<tr>
+  								<th>序号</th>
+  								<th>车位/房间号</th>
+  								<th>关联户型</th>
+  								<th>价格</th>
+  								<th>上架状态</th>
+  								<th>选购状态</th>
+  								<th>备注状态</th>
+  								<th>二维码</th>
+  								<th>操作</th>
+  							</tr>
+  						</thead>
+  						<tbody>
+  							{% for obj in object_list %}
+  							<tr>
+  								<td>{{ forloop.counter }}</td>
+  								<td>{{ obj.room_num }}</td>
+  								<td>TODO</td>
+  								<td><p>原价：{{ obj.price }}</p>
+  								<p>线上价格：<a data-iframe="{% url 'room_price_update' pk=obj.id %}"
+                                data-toggle="modal" data-title="编辑线上价格">{{ obj.total }}
+                             <i class="icon icon-pencil"/></a></p></td>
+  								<td>{{ obj.status }}</td>
+  								<td>TODO</td>
+  								<td>TODO</td>
+  								<td>qr</td>
+  								<td>
+  									<p>下架</p>
+  									<p><a data-iframe="{% url 'room_remark_update' pk=obj.id %}" data-toggle="modal">情况描述</a></p>
+  									<p><a data-iframe="{% url 'event_term_update' pk=obj.id%}" data-toggle="modal">备注</a></p>
+  								</td>
+  							</tr>
+  							{% endfor %}
+  						</tbody>
+  					</table>
+		     </div>
 			</div>
-			<div class="form-group">
-			    <label for="inputText3" class="col-sm-3 control-label">活动名称</label>
-			    <div class="col-sm-9">
-			    	<input type="text" class="form-control" id="inputText3" placeholder="name" name="name" required>
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">咨询电话</label>
-			    <div class="col-sm-9">
-			    	<input type="tel" class="form-control" id="inputNumber3" placeholder="phone" name="phone_num" required>
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">公测开始时间</label>
-			    <div class="col-sm-9">
-			    	<input type="date" class="form-control" id="inputNumber3" placeholder="start" name="test_start" required>
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">公测结束时间</label>
-			    <div class="col-sm-9">
-			    	<input type="date" class="form-control" id="inputNumber3" placeholder="end" name="test_end" required>
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">是否显示公测放价</label>
-			    <div class="col-sm-4">
-			    	<input type="radio" class="input-group-sm" name="test_price">是
-					</div>
-			    <div class="col-sm-4">
-		    		<input type="radio" class="input-group-sm" name="test_price">否
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">活动开始时间</label>
-			    <div class="col-sm-9">
-			    	<input type="date" class="form-control" id="inputNumber3" placeholder="" name="event_start" required>
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">活动结束时间</label>
-			    <div class="col-sm-9">
-			    	<input type="date" class="form-control" id="inputNumber3" placeholder="" name="event_end" required>
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">选房完成期限</label>
-			    <div class="col-sm-9">
-			    	<input type="number" class="form-control" id="inputNumber3" min="0" name="limit" required>
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">支持设备登录数</label>
-			    <div class="col-sm-9">
-			    	<input type="number" class="form-control" id="inputNumber3"  min="0" placeholder="" name="equ_login_num" required>
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">同一账号允许收藏数</label>
-			    <div class="col-sm-9">
-			    	<input type="number" class="form-control" id="inputNumber3"  min="0" placeholder="" name="follow_num" required>
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">登录短信提醒</label>
-			    <div class="col-sm-4">
-			    	<input type="radio" class="input-group-sm" name="login_msg">是
-			    </div>
-			    <div class="col-sm-4">
-			    	<input type="radio" class="input-group-sm" name="login_msg">否
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label" >是否显示原价</label>
-			    <div class="col-sm-4">
-			    	<input type="radio" class="input-group-sm" name="price">是
-			    </div>
-			    <div class="col-sm-4">
-			    	<input type="radio" class="input-group-sm" name="price">否
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">是否显示建筑面积</label>
-			    <div class="col-sm-4">
-			    	<input type="radio" class="input-group-sm" name="covered_space">是
-			    </div>
-			    <div class="col-sm-4">
-			    	<input type="radio" class="input-group-sm" name="covered_space">否
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">是否显示建筑面积单价</label>
-			    <div class="col-sm-4">
-			    	<input type="radio" class="input-group-sm" name="covered_space_price">是
-			    </div>
-			    <div class="col-sm-4">
-			    	<input type="radio" class="input-group-sm" name="covered_space_price">否
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">是否显示套内面积</label>
-			    <div class="col-sm-4">
-			    	<input type="radio" class="input-group-sm" name="inside_space">是
-			    </div>
-			    <div class="col-sm-4">
-			    	<input type="radio" class="input-group-sm" name="inside_space">否
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">是否显示套内面积单价</label>
-			    <div class="col-sm-4">
-			    	<input type="radio" class="input-group-sm" name="inside_space_price">是
-			    </div>
-			    <div class="col-sm-4">
-			    	<input type="radio" class="input-group-sm" name="inside_space_price">否
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">活动细则</label>
-			    <div class="col-sm-9">
-			    	<textarea class="form-control" rows="3" name="description" required></textarea>
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">认购须知</label>
-			    <div class="col-sm-9">
-			    	<textarea class="form-control" rows="3" name="notice" required></textarea>
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">温馨提示</label>
-			    <div class="col-sm-9">
-			    	<textarea class="form-control" rows="3" name="tip"></textarea>
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">活动封面</label>
-			    <div class="col-sm-9">
-			    	<input type="file" class="form-control" id="inputNumber3" placeholder="" name="cover">
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">平面图</label>
-			    <div class="col-sm-9">
-			    	<input type="file" class="form-control" id="inputNumber3" placeholder="" name="plane_graph">
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">协议名称</label>
-			    <div class="col-sm-9">
-			    	<input type="text" class="form-control" id="inputNumber3" placeholder="" name="termname" required>
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">认筹名单</label>
-			    <div class="col-sm-9">
-			    	<input type="text" class="form-control" id="inputNumber3" placeholder="" name="rc_list" required>
-			    </div>
-			</div>
-			<div class="form-group">
-			    <label for="inputNumber3" class="col-sm-3 control-label">车位房源</label>
-			    <div class="col-sm-9">
-			    	<input type="text" class="form-control" id="inputNumber3" placeholder="" name="park_hous" required>
-			    </div>
-			</div>
-		  <div class="modal-footer">
-		    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-		    <input type="submit" class="btn btn-default" value="确定"></input>
-		  </div>
-		</form>
-	</div>
+		</section>
+    <!--导入文件模态框-->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="exampleModalLabel">上传文件</h4>
+          </div>
+          <div class="modal-body">
+            <form class="form-horizontal">
+            <div class="form-group">
+              <input type="file" name="file" id="files"/>
+            </div>
+          </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-default" onclick="submitFile()">确定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+	<!--底部-->
+	<footer class="loginFotter">
+		<h4>承接单位：石家庄佳诚网络技术有限公司</h4>
+	</footer>
+{% endblock %}

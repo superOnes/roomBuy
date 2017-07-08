@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.shortcuts import get_object_or_404
 
 class Event(models.Model):
     APT = 1
@@ -35,15 +35,24 @@ class Event(models.Model):
     termname = models.CharField('协议名称', max_length=100, null=True, blank=True)
     term = models.TextField('协议内容', null=True, blank=True)
 
+    @classmethod
+    def get(cls, id):
+        return get_object_or_404(cls.objects, id=id)
+
 
 class EventDetail(models.Model):
-    batch = models.CharField('期/批', max_length=50)
+    # batch = models.CharField('期/批', max_length=50)
     building = models.CharField('楼号', max_length=50)
     unit = models.CharField('单元', max_length=100)
     floor = models.IntegerField('楼层', max_length=50)
     room_num = models.CharField('房号', max_length=50)
     price = models.CharField('原价', max_length=100)
     total = models.CharField('线上总价', max_length=100)
-    house_type = models.CharField('户型', max_length=100)
-    floor_area = models.CharField('建筑面积', max_length=50)
+    status = models.BooleanField('上架状态', default=False)
+    event = models.ForeignKey(Event, verbose_name='所属活动')
+    # house_type = models.CharField('户型', max_length=100)
+    # floor_area = models.CharField('建筑面积', max_length=50)
     is_sold = models.BooleanField('是否被卖', default=False)
+    remark = models.TextField('描述补充', blank=True)
+    image = models.ImageField('平面图', upload_to='eventdetail/%Y/%m/%d/',
+                              null=True, blank=True)
