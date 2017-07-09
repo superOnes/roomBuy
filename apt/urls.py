@@ -10,7 +10,8 @@ from .views import (
     EventDetailTotalUpdateView,
     EventTermUpdateView,
     EventDetailCreateView,
-    EventDetailRemarkUpdateView)
+    EventDetailRemarkUpdateView,
+    CustomListView, CustomCreateView)
 
 
 urlpatterns = [
@@ -32,6 +33,8 @@ urlpatterns = [
         name='room_price_update'),
     url(r'^room/(?P<pk>\d+)/remark/', EventDetailRemarkUpdateView.as_view(),
         name='room_remark_update'),
-
-
+    url(r'^(?P<pk>\d+)/customs/$', CustomListView.as_view(),
+        name='event_customs'),
+    url(r'^(?P<pk>\d+)/customs/create/', CustomCreateView.as_view(),
+        name='custom_create'),
 ]

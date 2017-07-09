@@ -90,8 +90,8 @@
 								<td><p>{{ obj.event_start }}</p>
 								<p>至</p>
 								<p>{{ obj.event_end }}</p></td>
-								<td>0</td>
-								<td><a href="{% url 'room_list' pk=obj.id %}">0 <i class='icon-edit'></i></a></td>
+								<td><a href="{% url 'event_customs' pk=obj.id %}">0 <i class='icon-edit'></i></a></td>
+								<td><a href="{% url 'room_list' pk=obj.id %}">{{ obj.eventdetail_set.count }} <i class='icon-edit'></i></a></td>
 								<td>none</td>
 								<td>qr</td>
 								<td>

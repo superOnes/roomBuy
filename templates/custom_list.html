@@ -1,0 +1,97 @@
+{% extends 'include/base.html' %}
+{% block main %}
+		<header class="Xlogo">
+			<h1>
+				<div>
+					<img src=""/>
+					<a href="###">XXX</a>
+				</div>
+				<small>欢迎来到XXX</small>
+			</h1>
+		</header>
+		<!--内容部分-->
+		<section class="container" id="listContent" style="min-height:570px">
+			<div class="row">
+			    <div class="col-md-2 col-lg-2">
+				  	<div class="gridTitle">
+				  		<h3>导航</h3>
+				  	</div>
+				  	<div class="navList">
+					  	<ul class="nav nav-pills nav-stacked">
+					  		<li><a href="###">活动介绍</a></li>
+					  		<li><a href="###">房源信息</a></li>
+					  		<li><a href="###">认筹名单</a></li>
+					  		<li><a href="###">活动</a></li>
+						</ul>
+				  	</div>
+			    </div>
+			    <div class="col-md-10  col-lg-10">
+				  	<div>
+				  		<h3>认筹名单 > <a href="{% url 'event_list' %}">{{ event.name }}</a></h3>
+				  	</div>
+            <div class="row" style="padding:10px">
+              <input placeholder="searching" style="float:right">
+              <a class="btn btn-primary" data-iframe="{% url 'custom_create' pk=event.id %}" data-toggle=modal>添加认筹名单</a>
+              <button type="button" class="btn btn-default" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">导入房价</button>
+              <a href="" class="btn btn-default">导出房价</a>
+            </div>
+  					<table class="table datatable">
+  						<thead>
+  							<tr>
+  								<th>序号</th>
+  								<th>姓名</th>
+  								<th>手机号</th>
+  								<th>证件号</th>
+  								<th>备注</th>
+  								<th>可选套数</th>
+  								<th>状态</th>
+  								<th>操作</th>
+  							</tr>
+  						</thead>
+  						<tbody>
+  							{% for obj in object_list %}
+  							<tr>
+  								<td>{{ forloop.counter }}</td>
+  								<td>{{ obj.realname }}</td>
+  								<td>{{ obj.mobile }}</td>
+  								<td>{{ obj.identication }}</td>
+  								<td>{{ obj.remark }}</td>
+  								<td>{{ obj.count }}</td>
+                  <td>TODO</td>
+  								<td>
+  									<p><a href="">删除</a></p>
+  								</td>
+  							</tr>
+  							{% endfor %}
+  						</tbody>
+  					</table>
+		     </div>
+			</div>
+		</section>
+    <!--导入文件模态框-->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="exampleModalLabel">上传文件</h4>
+          </div>
+          <div class="modal-body">
+            <form class="form-horizontal">
+            <div class="form-group">
+              <input type="file" name="file" id="files"/>
+            </div>
+          </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-default" onclick="submitFile()">确定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+	<!--底部-->
+	<footer class="loginFotter">
+		<h4>承接单位：石家庄佳诚网络技术有限公司</h4>
+	</footer>
+{% endblock %}
