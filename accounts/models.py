@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from apt.models import Event
 
 
-class Custom(models.Model):
+class Customer(models.Model):
     realname = models.CharField('姓名', max_length=10)
     mobile = models.CharField('手机号', max_length=20)
     identication = models.CharField('身份证', max_length=50)
@@ -16,7 +16,7 @@ class Custom(models.Model):
 class User(AbstractUser):
     is_delete = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
-    custom = models.OneToOneField(Custom, null=True, blank=True)
+    custom = models.OneToOneField(Customer, null=True, blank=True)
 
     @classmethod
     def remove(cls, id):

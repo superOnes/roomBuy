@@ -12,8 +12,8 @@ from django.http import JsonResponse, HttpResponse
 
 from aptm import settings
 from .models import Event, EventDetail
-from accounts.models import Custom
-from .forms import EventDetailForm, CustomForm
+from accounts.models import Customer
+from .forms import EventDetailForm, CustomerForm
 
 
 class DialogMixin(object):
@@ -37,7 +37,7 @@ class EventCreateView(DialogMixin, CreateView):
     新增活动
     '''
     model = Event
-    fields = [f.name for f in model._meta.get_fields()]
+    fields = [f.name for f in model._meta.fields]
     template_name = 'popup/event_create.html'
 
 
@@ -54,7 +54,7 @@ class EventUpdateView(UpdateView):
     编辑活动信息
     '''
     model = Event
-    fields = [f.name for f in model._meta.get_fields()]
+    fields = [f.name for f in model._meta.fields]
     template_name = 'popup/event_create.html'
 
 
@@ -185,7 +185,7 @@ def ExportView(request):
 
 class CustomListView(ListView):
     template_name = 'custom_list.html'
-    model = Custom
+    model = Customer
 
     def get_queryset(self):
         self.event = Event.get(self.kwargs['pk'])
@@ -198,7 +198,7 @@ class CustomListView(ListView):
 
 
 class CustomCreateView(DialogMixin, CreateView):
-    form_class = CustomForm
+    form_class = CustomerForm
     template_name = 'popup/custom_create.html'
 
     def get_initial(self):
