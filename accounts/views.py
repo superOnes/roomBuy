@@ -1,3 +1,8 @@
+import os
+
+import xlrd
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
 from django.views.generic import View
 from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
@@ -8,7 +13,9 @@ from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 
-from .models import User
+from apt.models import Event
+from aptm import settings
+from .models import User, Customer
 from .decorators import superadmin_required
 
 
@@ -183,3 +190,38 @@ class CustomerLoginView(View):
                 return redirect(reverse('home_page_view'))
         messages.error(request, '用户名或密码不正确')
         return redirect(reverse('acc_login'))
+
+
+class ImportView(View):
+    '''
+    导入认筹名单
+    '''
+    def post(self, request, *args, **kwargs):
+        id = request.POST.get('id')
+        print(id)
+        if id:
+            event = Event.get(id)
+            file = request.FILES.get('filename')
+            path = default_storage.save('tmp/customer.xlsx', ContentFile(file.read()))
+            tmp_file = os.path.join(settings.MEDIA_ROOT, path)
+            workdata = xlrd.open_workbook(tmp_file)
+            sheet_name = workdata.sheet_names()[0]
+            sheet = workdata.sheet_by_name(sheet_name)
+            row = sheet.nrows
+            col = sheet.ncols
+            data =[]
+            for rx in range(1, row):
+                li = []
+                for cx in range(0, col):
+                    value = sheet.cell(rowx=rx, colx=cx).value
+                    li.append(value)
+                data.append(li)
+            for ct in data:
+                customer = Customer.objects.create(realname=ct[0],
+                                                   mobile=ct[1],
+                                                   identication=ct[2],
+                                                   remark=ct[3],
+                                                   event=event)
+                customer.save()
+            return JsonResponse({'success': True})
+        return JsonResponse({'success': False})

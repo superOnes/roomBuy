@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-from apt.models import Event
+from apt.models import Event, EventDetail
 
 
 class Customer(models.Model):
@@ -21,5 +21,24 @@ class User(AbstractUser):
     @classmethod
     def remove(cls, id):
         obj = cls.objects.get(id=id)
+        obj.is_delete = True
+        obj.save()
+
+
+class Order(models.Model):
+    customer = models.ForeignKey(User)
+    eventdetail = models.ForeignKey(EventDetail)
+    time = models.DateTimeField('公测订单时间')
+    event = models.ForeignKey(Event)
+    is_delete = models.BooleanField(default=False)
+
+    def get(cls, id):
+        return cls.objects.filter(id=id).first()
+
+    def all(cls):
+        return cls.objects.filter(is_delete=0).order_by('-id')
+
+    def remove(cls, id):
+        obj = cls.get(id)
         obj.is_delete = True
         obj.save()
