@@ -23,7 +23,7 @@ class HomePageView(TemplateView):
             'event_start',
             'event_end',
             'cover').filter(
-            event_end__gte=timenow)
+            event_end__gte=timenow).filter(is_pub=True)
         context['customer'] = customer
         context['events'] = objs
         return context

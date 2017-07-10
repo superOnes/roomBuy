@@ -117,13 +117,32 @@ class EventDetailRemarkUpdateView(DialogMixin, UpdateView):
     fields = ['remark', 'image']
 
 
+class ChangeEventStatus(View):
+    '''
+    修改活动发布情况
+    '''
+
+    def post(self, request):
+        id = request.POST.get('id')
+        if id:
+            obj = Event.objects.get(id)
+            obj.is_pub = not obj.is_pub
+            obj.save()
+            return JsonResponse({'success': True})
+        return JsonResponse({'success': False})
+
+
 class ImportView(View):
     '''
     导入数据
     '''
+
     def post(self, request, *args, **kwargs):
         file = request.FILES.get('f')
-        path = default_storage.save('tmp/somename.xlsx', ContentFile(file.read()))
+        path = default_storage.save(
+            'tmp/somename.xlsx',
+            ContentFile(
+                file.read()))
         tmp_file = os.path.join(settings.MEDIA_ROOT, path)
         workdata = xlrd.open_workbook(tmp_file)
         sheet_name = workdata.sheet_names()[0]

@@ -35,6 +35,7 @@ class Event(models.Model):
                                     null=True, blank=True)
     termname = models.CharField('协议名称', max_length=100, null=True, blank=True)
     term = models.TextField('协议内容', null=True, blank=True)
+    is_pub=models.BooleanField('是否发布',default=False)#活动是否发布，默认未发布。
 
     @classmethod
     def get(cls, id):
