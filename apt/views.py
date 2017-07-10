@@ -1,4 +1,3 @@
-
 import os
 import qrcode
 from xlwt import Workbook
@@ -15,6 +14,8 @@ from django.http import JsonResponse, HttpResponse
 
 from aptm import settings
 from .models import Event, EventDetail
+from accounts.models import Customer
+from .forms import EventDetailForm, CustomerForm
 
 
 class DialogMixin(object):
@@ -23,6 +24,9 @@ class DialogMixin(object):
 
 
 class EventListView(ListView):
+    '''
+    活动列表
+    '''
     template_name = 'event_list.html'
     model = Event
 
@@ -31,51 +35,92 @@ class EventListView(ListView):
 
 
 class EventCreateView(DialogMixin, CreateView):
+    '''
+    新增活动
+    '''
     model = Event
-    fields = [f.name for f in model._meta.get_fields()]
-    template_name = 'event_create.html'
+    fields = [f.name for f in model._meta.fields]
+    template_name = 'popup/event_create.html'
 
 
 class EventDetailView(DetailView):
+    '''
+    活动详情
+    '''
     model = Event
     template_name = 'popup/event_detail.html'
 
 
 class EventUpdateView(UpdateView):
+    '''
+    编辑活动信息
+    '''
     model = Event
-    fields = [f.name for f in model._meta.get_fields()]
-    template_name = 'event_create.html'
+    fields = [f.name for f in model._meta.fields]
+    template_name = 'popup/event_create.html'
 
 
 class EventTermUpdateView(UpdateView):
+    '''
+    编辑协议
+    '''
     model = Event
-    fields = ['term']
+    fields = ['termname', 'term']
     template_name = 'popup/event_term.html'
 
 
 class EventDetailListView(ListView):
+    '''
+    房源/车位列表
+    '''
     template_name = 'eventdetail_list.html'
     model = EventDetail
 
     def get_queryset(self):
-        print(111)
-        return self.model.objects.order_by('-id')
+        self.event = Event.get(self.kwargs['pk'])
+        return self.model.objects.filter(event=self.event).order_by('-id')
+
+    def get_context_data(self):
+        context = super(EventDetailListView, self).get_context_data()
+        context['event'] = self.event
+        return context
 
 
-class EventDetailTotalUpdateView(UpdateView):
+class EventDetailCreateView(DialogMixin, CreateView):
     '''
-    修改线上总价
+    新增房间/车位
+    '''
+    template_name = 'popup/eventdetail_create.html'
+    form_class = EventDetailForm
+
+    def get_initial(self):
+        initial = super(EventDetailCreateView, self).get_initial()
+        initial['event'] = Event.get(self.kwargs['pk'])
+        return initial
+
+
+class EventDetailTotalUpdateView(DialogMixin, UpdateView):
+    '''
+    编辑线上总价
     '''
     template_name = 'popup/eventdetail_total.html'
-    fields = ['total']
+    fields = ['price', 'total']
     model = EventDetail
+
+
+class EventDetailRemarkUpdateView(DialogMixin, UpdateView):
+    '''
+    情况描述
+    '''
+    template_name = 'popup/eventdetail_remark.html'
+    model = EventDetail
+    fields = ['remark', 'image']
 
 
 class ImportView(View):
     '''
     导入数据
     '''
-
     def post(self, request, *args, **kwargs):
         file = request.FILES.get('f')
         path = default_storage.save('tmp/somename.xlsx', ContentFile(file.read()))
@@ -135,7 +180,7 @@ def ExportView(request):
 
 def url2qrcode(request, data):
     '''
-    二维码 
+    二维码
     '''
     img = qrcode.make(data)
     buf = BytesIO()
@@ -143,3 +188,27 @@ def url2qrcode(request, data):
     image_stream = buf.getvalue()
     response = HttpResponse(image_stream, content_type="image/png")
     return response
+
+
+class CustomListView(ListView):
+    template_name = 'custom_list.html'
+    model = Customer
+
+    def get_queryset(self):
+        self.event = Event.get(self.kwargs['pk'])
+        return self.model.objects.filter(event=self.event)
+
+    def get_context_data(self):
+        context = super(CustomListView, self).get_context_data()
+        context['event'] = self.event
+        return context
+
+
+class CustomCreateView(DialogMixin, CreateView):
+    form_class = CustomerForm
+    template_name = 'popup/custom_create.html'
+
+    def get_initial(self):
+        initial = super(CustomCreateView, self).get_initial()
+        initial['event'] = Event.get(self.kwargs['pk'])
+        return initial

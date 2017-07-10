@@ -13,7 +13,7 @@
 	<script src="{{ STATIC_URL }}zui/js/zui.js" type="text/javascript" charset="utf-8"></script>
 	<script src="{{ STATIC_URL }}zui/lib/datatable/zui.datatable.min.js"></script>
 	<script src="{{ STATIC_URL }}customJS/index.js" type="text/javascript" charset="utf-8"></script>
-
+	{% block js %}{% endblock %}
 	<body>
 		{% block main %}{% endblock %}
 	</body>

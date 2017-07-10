@@ -6,7 +6,8 @@ from accounts.views import (LoginView,
                             UserListView,
                             UserConfigView,
                             PersonalSettingsView,
-                            CustomerLoginView)
+                            CustomerLoginView,
+                            )
 
 urlpatterns = [
 
@@ -18,5 +19,5 @@ urlpatterns = [
     url(r'^config/', UserConfigView.as_view(), name='acc_config'),
     url(r'^settings/', PersonalSettingsView.as_view(), name='acc_settings'),
     url(r'^logout/', LogoutView.as_view(), name='acc_logout'),
-    url(r'^cuslog/', CustomerLoginView.as_view(), name='acc_cuslog')
+    url(r'^cuslog/', CustomerLoginView.as_view(), name='acc_cuslog'),
 ]

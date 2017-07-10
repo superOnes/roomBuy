@@ -1,4 +1,3 @@
-
 from django.views.generic import View
 from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
