@@ -35,7 +35,7 @@ class Event(models.Model):
                                     null=True, blank=True)
     termname = models.CharField('协议名称', max_length=100, null=True, blank=True)
     term = models.TextField('协议内容', null=True, blank=True)
-    is_pub=models.BooleanField('是否发布',default=False)#活动是否发布，默认未发布。
+    is_pub = models.BooleanField('是否发布', default=False)  # 活动是否发布，默认未发布。
 
     @classmethod
     def get(cls, id):
@@ -58,3 +58,5 @@ class EventDetail(models.Model):
     remark = models.TextField('描述补充', blank=True)
     image = models.ImageField('平面图', upload_to='eventdetail/%Y/%m/%d/',
                               null=True, blank=True)
+    on_sale = models.BooleanField('是否上架', default=False)  # 上架状态。
+    is_delete = models.BooleanField('删除', default=False)

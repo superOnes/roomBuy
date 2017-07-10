@@ -117,9 +117,9 @@ class EventDetailRemarkUpdateView(DialogMixin, UpdateView):
     fields = ['remark', 'image']
 
 
-class ChangeEventStatus(View):
+class EventStatus(View):
     '''
-    修改活动发布情况
+    活动发布情况 发布/未发布
     '''
 
     def post(self, request):
@@ -127,6 +127,36 @@ class ChangeEventStatus(View):
         if id:
             obj = Event.objects.get(id)
             obj.is_pub = not obj.is_pub
+            obj.save()
+            return JsonResponse({'success': True, 'msg': obj.is_pub})
+        return JsonResponse({'success': False})
+
+
+class EventDelStatus(View):
+    '''
+    车位/房源  上架/下架
+    '''
+
+    def post(self, request):
+        id = request.POST.get('id')
+        if id:
+            obj = EventDetail.objects.get(id)
+            obj.on_sale = not obj.on_sale
+            obj.save()
+            return JsonResponse({'success': True, 'msg': obj.on_sale})
+        return JsonResponse({'success': False})
+
+
+class EventDelDel(View):
+    '''
+    车位/房源  删除
+    '''
+
+    def post(self, request):
+        id = request.POST.get('id')
+        if id:
+            obj = EventDetail.objects.get(id)
+            obj.is_delete = True
             obj.save()
             return JsonResponse({'success': True})
         return JsonResponse({'success': False})
@@ -168,34 +198,38 @@ class ImportView(View):
         return JsonResponse({'success': True})
 
 
-def ExportView(request, pk):
-    objs = EventDetail.objects.filter(event_id=pk)
-    if objs:
-        sheet = Workbook(encoding='utf-8')
-        s = sheet.add_sheet('数据表')
-        list = ['选房房源id', '楼栋', '单元', '楼层', '房号', '原价', '线上总价']
-        col = 0
-        for i in list:
-            s.write(0, col, i)
-            col += 1
-        row = 1
-        for obj in objs:
-            s.write(row, 0, obj.id)
-            s.write(row, 1, obj.building)
-            s.write(row, 2, obj.unit)
-            s.write(row, 3, obj.floor)
-            s.write(row, 4, obj.room_num)
-            s.write(row, 5, obj.price)
-            s.write(row, 6, obj.total)
-            row += 1
-        sio = BytesIO()
-        sheet.save(sio)
-        sio.seek(0)
-        response = HttpResponse(content_type='application/vnd.ms-excel')
-        response['Content-Disposition'] = 'attachment;filename=export.xls'
-        response.write(sio.getvalue())
-        return response
-    return JsonResponse({'msg': '内容为空！'})
+class ExportView(View):
+    '''
+    导出房价
+    '''
+    def get(self,request,pk):
+        objs = EventDetail.objects.filter(event_id=pk)
+        if objs:
+            sheet = Workbook(encoding='utf-8')
+            s = sheet.add_sheet('数据表')
+            list = ['选房房源id', '楼栋', '单元', '楼层', '房号', '原价', '线上总价']
+            col = 0
+            for i in list:
+                s.write(0, col, i)
+                col += 1
+            row = 1
+            for obj in objs:
+                s.write(row, 0, obj.id)
+                s.write(row, 1, obj.building)
+                s.write(row, 2, obj.unit)
+                s.write(row, 3, obj.floor)
+                s.write(row, 4, obj.room_num)
+                s.write(row, 5, obj.price)
+                s.write(row, 6, obj.total)
+                row += 1
+            sio = BytesIO()
+            sheet.save(sio)
+            sio.seek(0)
+            response = HttpResponse(content_type='application/vnd.ms-excel')
+            response['Content-Disposition'] = 'attachment;filename=export.xls'
+            response.write(sio.getvalue())
+            return response
+        return JsonResponse({'msg': '内容为空！'})
 
 
 def url2qrcode(request, data):
