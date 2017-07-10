@@ -16,7 +16,7 @@ class Customer(models.Model):
 class User(AbstractUser):
     is_delete = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
-    custom = models.OneToOneField(Customer, null=True, blank=True)
+    customer = models.OneToOneField(Customer, null=True, blank=True)
 
     @classmethod
     def remove(cls, id):

@@ -1,6 +1,7 @@
 from django import forms
+from django.db import transaction
 from .models import EventDetail
-from accounts.models import Customer
+from accounts.models import Customer, User
 
 
 class EventDetailForm(forms.ModelForm):
@@ -24,6 +25,12 @@ class CustomerForm(forms.ModelForm):
 
     def save(self, commit=True):
         if not self.instance.id:
-            self.instance.event = self.initial['event']
-            instance = super(CustomerForm, self).save(commit)
-            return instance
+            with transaction.atomic():
+                self.instance.event = self.initial['event']
+                instance = super(CustomerForm, self).save(commit)
+                user = User(username=self.instance.mobile,
+                            password=self.instance.identication)
+                user.custom = instance
+                user.is_admin = False
+                user.save()
+                return instance
