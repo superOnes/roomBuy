@@ -168,24 +168,25 @@ class ImportView(View):
         return JsonResponse({'success': True})
 
 
-def ExportView(request):
-    objs = EventDetail.objects.all()
+def ExportView(request, pk):
+    objs = EventDetail.objects.filter(event_id=pk)
     if objs:
         sheet = Workbook(encoding='utf-8')
         s = sheet.add_sheet('数据表')
-        list = ['楼栋', '单元', '楼层', '房号', '原价', '线上总价']
+        list = ['选房房源id', '楼栋', '单元', '楼层', '房号', '原价', '线上总价']
         col = 0
         for i in list:
             s.write(0, col, i)
             col += 1
         row = 1
         for obj in objs:
-            s.write(row, 0, obj.building)
-            s.write(row, 1, obj.unit)
-            s.write(row, 2, obj.floor)
-            s.write(row, 3, obj.room_num)
-            s.write(row, 4, obj.price)
-            s.write(row, 5, obj.total)
+            s.write(row, 0, obj.id)
+            s.write(row, 1, obj.building)
+            s.write(row, 2, obj.unit)
+            s.write(row, 3, obj.floor)
+            s.write(row, 4, obj.room_num)
+            s.write(row, 5, obj.price)
+            s.write(row, 6, obj.total)
             row += 1
         sio = BytesIO()
         sheet.save(sio)
