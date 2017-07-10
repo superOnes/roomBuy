@@ -32,8 +32,8 @@
 				  	<div class="btnHandleStatus">
 				  		<!--a标签的弹窗内部链接-->
 				  		<button type="button" class="btn btn-default  btn-handle" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">导入Excel</button>
-					  	<a href="http://10.7.10.193:8000/event/export/" class="btn btn-default btn-handle">导出文件</a>
-					  	<a class="btn btn-primary" data-iframe="{% url 'event_create' %}" data-toggle="modal" data-height='2000'>创建活动</button>
+					  	<a href="../export/" class="btn btn-default btn-handle">导出文件</a>
+					  	<a class="btn btn-default btn-handle" data-iframe="{% url 'event_create' %}" data-toggle="modal" data-height='2000'>创建活动</a>
 				  	</div>
 					<!--导入文件模态框-->
 					<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">

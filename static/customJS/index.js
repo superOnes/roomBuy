@@ -15,7 +15,7 @@ function submitFile(){
     data.append('f', files[0]);
 	$.ajax({
 		type:"post",
-		url:"http://10.7.10.198:8000/event/import/",
+		url:"../import/",
 		async:true,
 		data:data,
 		cache: false,
