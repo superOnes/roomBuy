@@ -1,1 +1,177 @@
-{{ object.name }}
+{% extends 'include/base.html' %}
+{% block main %}
+<script type="text/javascript">
+		// 选择时间和日期
+	$(".form-datetime").datetimepicker({
+	    weekStart: 1,
+	    todayBtn:  1,
+	    autoclose: 1,
+	    todayHighlight: 1,
+	    startView: 2,
+	    forceParse: 0,
+	    showMeridian: 1,
+	    format: "yyyy-mm-dd hh:ii"
+	});
+</script>
+<div style="padding:20px">
+	<form class="form-horizontal" method="post" action="">
+		{% csrf_token %}
+		<div class="form-group">
+		    <label for="inputText3" class="col-sm-3 control-label">活动类型</label>
+		    <div class="col-sm-9">
+		    	<select class="form-control" name="type" id="type" readonly>
+		    		<option {% if object.type == 1 %}selected{% endif %}>房间开盘</option>
+		    		<option {% if object.type == 2 %}selected{% endif %}>车位开盘</option>
+		    	</select>
+		    </div>
+		</div>
+		<div class="form-group">
+		    <label for="inputText3" class="col-sm-3 control-label">活动名称</label>
+		    <div class="col-sm-9">
+		    	<input type="text" class="form-control" id="inputText3" placeholder="活动名称" name="name" required readonly value="{{ object.name }}">
+		    </div>
+		</div>
+		<div class="form-group">
+		    <label for="inputNumber3" class="col-sm-3 control-label">咨询电话</label>
+		    <div class="col-sm-9">
+		    	<input type="tel" class="form-control" id="inputNumber3" placeholder="咨询电话" name="phone_num" required readonly value="{{ object.phone_num }}">
+		    </div>
+		</div>
+		<div class="form-group">
+		    <label for="inputNumber3" class="col-sm-3 control-label">公测开始时间</label>
+		    <div class="col-sm-9">
+		    	<input type="text" class="form-control form-datetime" placeholder="公测开始时间" name="test_start" required readonly value="{{ object.test_start }}">
+		    </div>
+		</div>
+		<div class="form-group">
+		    <label for="inputNumber3" class="col-sm-3 control-label">公测结束时间</label>
+		    <div class="col-sm-9">
+		    	<input type="text" class="form-control form-datetime" id="inputNumber3" placeholder="公测结束时间" name="test_end" required readonly value="{{ object.test_end }}">
+		    </div>
+		</div>
+		<div class="form-group">
+		    <label for="inputNumber3" class="col-sm-3 control-label">是否显示公测放价</label>
+		    <div class="col-sm-3">
+		    	<input type="radio" class="input-group-sm" name="test_price" {% if object.test_price == True %}checked="checked" {% endif %}>是
+				</div>
+		    <div class="col-sm-3">
+	    		<input type="radio" class="input-group-sm" name="test_price" {% if object.test_price == False %}checked="checked" {% endif %}>否
+		    </div>
+		</div>
+		<div class="form-group">
+		    <label for="inputNumber3" class="col-sm-3 control-label">活动开始时间</label>
+		    <div class="col-sm-9">
+		    	<input type="text" class="form-control form-datetime" id="inputNumber3" placeholder="活动开始时间" name="event_start" required readonly value="{{ object.event_start }}">
+		    </div>
+		</div>
+		<div class="form-group">
+		    <label for="inputNumber3" class="col-sm-3 control-label">活动结束时间</label>
+		    <div class="col-sm-9">
+		    	<input type="text" class="form-control form-datetime" id="inputNumber3" placeholder="活动结束时间" name="event_end" required readonly value="{{ object.event_end }}">
+		    </div>
+		</div>
+		<div class="form-group">
+		    <label for="inputNumber3" class="col-sm-3 control-label">选房完成期限</label>
+		    <div class="col-sm-9">
+		    	<input type="number" class="form-control" id="inputNumber3" min="0" name="limit" required readonly value="{{ object.limit }}">
+		    </div>
+		</div>
+		<div class="form-group">
+		    <label for="inputNumber3" class="col-sm-3 control-label">支持设备登录数</label>
+		    <div class="col-sm-9">
+		    	<input type="number" class="form-control" id="inputNumber3"  min="0" placeholder="" name="equ_login_num" required readonly value="{{ object.equ_login_num }}">
+		    </div>
+		</div>
+		<div class="form-group">
+		    <label for="inputNumber3" class="col-sm-3 control-label">同一账号允许收藏数</label>
+		    <div class="col-sm-9">
+		    	<input type="number" class="form-control" id="inputNumber3"  min="0" placeholder="" name="follow_num" required readonly value="{{ object.follow_num }}">
+		    </div>
+		</div>
+		<div class="form-group">
+		    <label for="inputNumber3" class="col-sm-3 control-label">登录短信提醒</label>
+		    <div class="col-sm-4">
+		    	<input type="radio" class="input-group-sm" name="login_msg" {% if object.login_msg == True %}checked="checked" {% endif %}>是
+		    </div>
+		    <div class="col-sm-4">
+		    	<input type="radio" class="input-group-sm" name="login_msg" {% if object.login_msg == False %}checked="checked" {% endif %}>否
+		    </div>
+		</div>
+		<div class="form-group">
+		    <label for="inputNumber3" class="col-sm-3 control-label" >是否显示原价</label>
+		    <div class="col-sm-4">
+		    	<input type="radio" class="input-group-sm" name="price" {% if object.price == True %}checked="checked" {% endif %}>是
+		    </div>
+		    <div class="col-sm-4">
+		    	<input type="radio" class="input-group-sm" name="price" {% if object.price == False %}checked="checked" {% endif %}>否
+		    </div>
+		</div>
+		<div class="form-group">
+		    <label for="inputNumber3" class="col-sm-3 control-label">是否显示建筑面积</label>
+		    <div class="col-sm-4">
+		    	<input type="radio" class="input-group-sm" name="covered_space" {% if object.covered_space == True %}checked="checked" {% endif %}>是
+		    </div>
+		    <div class="col-sm-4">
+		    	<input type="radio" class="input-group-sm" name="covered_space" {% if object.covered_space == False %}checked="checked" {% endif %}>否
+		    </div>
+		</div>
+		<div class="form-group">
+		    <label for="inputNumber3" class="col-sm-3 control-label">是否显示建筑面积单价</label>
+		    <div class="col-sm-4">
+		    	<input type="radio" class="input-group-sm" name="covered_space_price" {% if object.covered_space_price == True %}checked="checked" {% endif %}>是
+		    </div>
+		    <div class="col-sm-4">
+		    	<input type="radio" class="input-group-sm" name="covered_space_price" {% if object.covered_space_price == False %}checked="checked" {% endif %}>否
+		    </div>
+		</div>
+		<div class="form-group">
+		    <label for="inputNumber3" class="col-sm-3 control-label">是否显示套内面积</label>
+		    <div class="col-sm-4">
+		    	<input type="radio" class="input-group-sm" name="inside_space" {% if object.inside_space == True %}checked="checked" {% endif %}>是
+		    </div>
+		    <div class="col-sm-4">
+		    	<input type="radio" class="input-group-sm" name="inside_space" {% if object.inside_space == False %}checked="checked" {% endif %}>否
+		    </div>
+		</div>
+		<div class="form-group">
+		    <label for="inputNumber3" class="col-sm-3 control-label">是否显示套内面积单价</label>
+		    <div class="col-sm-4">
+		    	<input type="radio" class="input-group-sm" name="inside_space_price" {% if object.inside_space_price == True %}checked="checked" {% endif %}>是
+		    </div>
+		    <div class="col-sm-4">
+		    	<input type="radio" class="input-group-sm" name="inside_space_price" {% if object.inside_space_price == False %}checked="checked" {% endif %}>否
+		    </div>
+		</div>
+		<div class="form-group">
+		    <label for="inputNumber3" class="col-sm-3 control-label">活动细则</label>
+		    <div class="col-sm-9">
+		    	<textarea class="form-control" rows="3" name="description" required readonly>{{ object.description }}</textarea>
+		    </div>
+		</div>
+		<div class="form-group">
+		    <label for="inputNumber3" class="col-sm-3 control-label">认购须知</label>
+		    <div class="col-sm-9">
+		    	<textarea class="form-control" rows="3" name="notice" required readonly>{{ object.notice }}</textarea>
+		    </div>
+		</div>
+		<div class="form-group">
+		    <label for="inputNumber3" class="col-sm-3 control-label">温馨提示</label>
+		    <div class="col-sm-9">
+		    	<textarea class="form-control" rows="3" name="tip" readonly >{{ object.tip }}</textarea>
+		    </div>
+		</div>
+		<div class="form-group">
+		    <label for="inputNumber3" class="col-sm-3 control-label">活动封面</label>
+		    <div class="col-sm-9">
+		    	<input type="file" class="form-control" id="inputNumber3" value="{{ object.cover }}" name="cover" required readonly>
+		    </div>
+		</div>
+		<div class="form-group">
+		    <label for="inputNumber3" class="col-sm-3 control-label">平面图</label>
+		    <div class="col-sm-9">
+		    	<input type="file" class="form-control" id="inputNumber3" name="plane_graph" value="{{ object.plane_graph }}" required readonly>
+		    </div>
+		</div>
+</form>
+</div>
+{% endblock %}

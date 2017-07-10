@@ -5,6 +5,7 @@ body{
 a{
 	text-decoration:none;
 	color:#000;
+	cursor: pointer;
 }
 a:link{
 	text-decoration:none;
@@ -25,7 +26,6 @@ input::-webkit-inner-spin-button{
 /*头部样式*/
 .Xlogo{
 	width:100%;
-	background: #696969;
 }
 .Xlogo h1{
 	width:100%;
@@ -47,22 +47,54 @@ input::-webkit-inner-spin-button{
 	color:#FFFFFF;
 }
 
-
+.loginTitle{
+	font-size: 25px !important;
+	font-weight: normal;
+	text-align: center;
+	margin: 15px 0 !important;
+}
 .login-wrap{
+	position: relative;
 	width:100%;
-	padding: 0 50px ;
 	box-sizing: border-box;
-	background: linear-gradient(to right bottom,#e3e3e3 0,#000 100%);
+	background: url(../img/index.png) no-repeat center center;
+	background-size:100% 100% ;
+}
+.loginBack{
+	position: absolute;
+	z-index: 1;
+	top:240px;
+	width:100%;
+	height:200px;
+	background: #2c669c;
+}
+.loginBack>h3{
+	color:#FFFFFF;
+	font-size: 35px !important;
+	font-weight: normal;
+	letter-spacing: 20px;
+	margin:30px 0 30px 300px;
+}
+.loginBack>p{
+	font-size: 20px;
+	color: #FFFFFF;
+	margin:0 0 30px 300px;
+}
+.loginTitle h3{
+	margin: 10px 0;
+	font-weight: normal;
+	font-size: 25px !important;
 }
 .login{
+	position: absolute;
+	z-index: 5;
 	width:470px;
-	float:right;
 	padding: 30px;
 	border-radius: 10px;
-	box-shadow: 1px 1px 1px 3px rgba(250,250,250,0.4);
-	background: rgba(250,250,250,0.4);
-	margin-top:150px;
-	margin-right:10%;
+	box-shadow: 1px 1px 1px 3px rgba(250,250,250,1);
+	background: #FFFFFF;
+	top:200px;
+	right:10%;
 }
 
 
@@ -168,5 +200,4 @@ p[class='introduceHouse'] a{
 	line-height: 50px;
 	font-size: 16px;
 	color:#FFFFFF;
-	background: #696969;
 }
