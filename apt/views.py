@@ -162,40 +162,44 @@ class EventDelDel(View):
         return JsonResponse({'success': False})
 
 
-class ImportView(View):
+class ImportPriceView(View):
     '''
     导入数据
     '''
 
     def post(self, request, *args, **kwargs):
-        file = request.FILES.get('f')
-        path = default_storage.save(
-            'tmp/somename.xlsx',
-            ContentFile(
-                file.read()))
-        tmp_file = os.path.join(settings.MEDIA_ROOT, path)
-        workdata = xlrd.open_workbook(tmp_file)
-        sheet_name = workdata.sheet_names()[0]
-        sheet = workdata.sheet_by_name(sheet_name)
-        row = sheet.nrows
-        col = sheet.ncols
-        data = []
-        for rx in range(1, row):
-            li = []
-            for cx in range(0, col):
-                value = sheet.cell(rowx=rx, colx=cx).value
-                li.append(value)
-            data.append(li)
-        for ed in data:
-            eventdetail = EventDetail.objects.create(building=ed[1],
-                                                     unit=ed[2],
-                                                     floor=ed[3],
-                                                     room_num=ed[4],
-                                                     price=ed[5],
-                                                     total=ed[6])
-            eventdetail.save()
-        os.remove('file/tmp/somename.xlsx')
-        return JsonResponse({'success': True})
+        id = request.POST.get('id')
+        if id:
+            event = Event.get(id)
+            file = request.FILES.get('file')
+            path = default_storage.save(
+                'price/price.xlsx',
+                ContentFile(
+                    file.read()))
+            tmp_file = os.path.join(settings.MEDIA_ROOT, path)
+            workdata = xlrd.open_workbook(tmp_file)
+            sheet_name = workdata.sheet_names()[0]
+            sheet = workdata.sheet_by_name(sheet_name)
+            row = sheet.nrows
+            col = sheet.ncols
+            data = []
+            for rx in range(1, row):
+                li = []
+                for cx in range(0, col):
+                    value = sheet.cell(rowx=rx, colx=cx).value
+                    li.append(value)
+                data.append(li)
+            for ed in data:
+                eventdetail = EventDetail.objects.create(building=ed[1],
+                                                         unit=ed[2],
+                                                         floor=ed[3],
+                                                         room_num=ed[4],
+                                                         price=ed[5],
+                                                         total=ed[6],
+                                                         event=event)
+                eventdetail.save()
+            return JsonResponse({'success': True})
+        return JsonResponse({'success': False})
 
 
 class ExportView(View):

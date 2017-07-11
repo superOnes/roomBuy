@@ -2,7 +2,7 @@ from django.conf.urls import url
 from .views import (
     EventListView,
     EventCreateView,
-    ImportView,
+    ImportPriceView,
     ExportView,
     EventUpdateView,
     EventDetailView,
@@ -19,7 +19,7 @@ from .views import (
 urlpatterns = [
     url(r'^list/', EventListView.as_view(), name='event_list'),
     url(r'^create/', EventCreateView.as_view(), name='event_create'),
-    url(r'^import/', ImportView.as_view(), name='event_import'),
+    url(r'^importprice/', ImportPriceView.as_view(), name='event_import'),
     url(r'^pubstatus/', EventStatus.as_view(), name='event_status'),
     url(r'^salestatus/', EventDelStatus.as_view(), name='eventdel_status'),
     url(r'^(?P<pk>\d+)/$', EventDetailView.as_view(), name='event_detail'),
