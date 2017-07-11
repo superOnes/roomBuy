@@ -26,6 +26,7 @@ input::-webkit-inner-spin-button{
 /*头部样式*/
 .Xlogo{
 	width:100%;
+	background: #2c669c;
 }
 .Xlogo h1{
 	width:100%;
@@ -185,11 +186,10 @@ p[class='introduceHouse'] a{
 
 
 
-
-
 /*底部样式*/
 .loginFotter{
 	width:100%;
+	background: #2c669c;
 }
 .loginFotter h4{
 	width:100%;
