@@ -1,14 +1,5 @@
-$(document).ready(function(){
-//	中间部分的高度自适应
-	var wrapHeight = $(window).height() ;
-	$("#login-wrap").height(wrapHeight);
-	$(window).resize(function(){
-		var wrapHeight = $(window).height() ;
-		$("#login-wrap").height(wrapHeight);
-	});
-})
 
-//上传文件
+//上传认筹名单文件
 function submitFile(thisID){
 	var files = $("#files")[0].files;
 	var data = new FormData(); //转化为表单格式的数据
@@ -16,7 +7,7 @@ function submitFile(thisID){
     data.append('id', thisID);
 	$.ajax({
 		type:"POST",
-		url:"../acc/import/",
+		url:"/acc/import/",
 		async:true,
 		data:data,
 		cache: false,
@@ -38,7 +29,7 @@ function roomPriceFile(thisID){
     data.append('id', thisID);
 	$.ajax({
 		type:"POST",
-		url:"../event/importprice/",
+		url:"/event/importprice/",
 		async:true,
 		data:data,
 		cache: false,
@@ -91,4 +82,11 @@ function deleteOrder(thisID){
 			alert("未知错误")
 		}
 	});
+};
+
+
+//搜索功能函数
+function search(url){
+	var $value = $("#searchInput").val();
+	alert($value)
 };

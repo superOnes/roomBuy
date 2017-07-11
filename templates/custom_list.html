@@ -4,10 +4,17 @@
 	<h3>认筹名单 > <a href="{% url 'event_list' %}">{{ event.name }}</a></h3>
 </div>
 <div class="row" style="padding:10px">
-  <input placeholder="searching" style="float:right">
-  <a class="btn btn-primary" data-iframe="{% url 'custom_create' pk=event.id %}" data-toggle=modal>添加认筹名单</a>
-  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">导入认筹名单</button>
-  <a href="" class="btn btn-default">导出认筹名单</a>
+    <a class="btn btn-primary" data-iframe="{% url 'custom_create' pk=event.id %}" data-toggle=modal>添加认筹名单</a>
+    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">导入认筹名单</button>
+    <a href="" class="btn btn-default">导出认筹名单</a>
+  	<div class="col-lg-3" style="float: right;">
+	    <div class="input-group">
+	      <input type="text" class="form-control" placeholder="Search for..." id="searchInput">
+	      <span class="input-group-btn">
+	        <button class="btn btn-default" type="button" onclick="search()">Go!</button>
+	      </span>
+	    </div>
+    </div>
 </div>
 <table class="table datatable">
 	<thead>
@@ -61,4 +68,22 @@
 		{% endfor %}
 	</tbody>
 </table>
+<script type="text/javascript">
+	//搜索功能函数
+	function search(url){
+		var $value = $("#searchInput").val();
+		$.ajax({
+			type:"get",
+			url:url,
+			async:true,
+			data:{value:$value,},
+			success:function(data){
+				window.location.reload()
+			},
+			error:function(){
+				alert("未知错误！")
+			}
+		});
+	};
+</script>
 {% endblock %}

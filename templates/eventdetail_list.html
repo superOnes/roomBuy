@@ -4,10 +4,17 @@
 	<h3>房源信息 > <a href="{% url 'event_list' %}">{{ event.name }}</a></h3>
 </div>
 <div class="row" style="padding:10px">
-  <input placeholder="searching" style="float:right">
-  <a class="btn btn-primary" data-iframe="{% url 'room_create' pk=event.id %}" data-toggle=modal>添加房间/车位</a>
-  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">导入房价</button>
-  <a href="{% url 'event_export' pk=event.id %}" class="btn btn-default">导出房价</a>
+    <a class="btn btn-primary" data-iframe="{% url 'room_create' pk=event.id %}" data-toggle=modal>添加房间/车位</a>
+    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">导入房价</button>
+    <a href="{% url 'event_export' pk=event.id %}" class="btn btn-default">导出房价</a>
+	<div class="col-lg-3" style="float: right;">
+	    <div class="input-group">
+	      <input type="text" class="form-control" placeholder="Search for...">
+	      <span class="input-group-btn">
+	        <button class="btn btn-default" type="button">Go!</button>
+	      </span>
+	    </div>
+    </div>
 </div>
 <table class="table datatable">
 	<thead>
@@ -33,12 +40,12 @@
 			<p>线上价格：<a data-iframe="{% url 'room_price_update' pk=obj.id %}"
                     data-toggle="modal" data-title="编辑线上价格">{{ obj.total }}
                  <i class="icon icon-pencil"/></a></p></td>
-			<td>{{ obj.status }}</td>
+			<td>{% if obj.status == False %}未上架{% else %}已上架{% endif %}</td>
 			<td>TODO</td>
 			<td>TODO</td>
 			<td>qr</td>
 			<td>
-				<p><a data-iframe="{% url 'room_remark_update' pk=obj.id %}" data-toggle="modal">下架</a></p>
+				<p><a data-toggle="modal"> {% if obj.status == False %}上架{% else %}下架{% endif %} </a></p>
 				<p><a data-iframe="{% url 'room_remark_update' pk=obj.id %}" data-toggle="modal">情况描述</a></p>
 				<p><a data-iframe="{% url 'event_term_update' pk=obj.id%}" data-toggle="modal">备注</a></p>
 			</td>
@@ -68,4 +75,7 @@
 		{% endfor %}
 	</tbody>
 </table>
+<script type="text/javascript">
+$(document).ready(function(){ $('table.datatable').datatable({ sortable: true, }); });
+</script>
 {% endblock %}

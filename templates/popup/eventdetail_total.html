@@ -1,5 +1,19 @@
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <input type="submit" value="submit">
+{% extends 'include/base.html' %}
+{% block main %}
+<div style="padding:20px">
+	<form class="form-horizontal" method="post">
+		{% csrf_token %}
+		<div class="input-group">
+		    <label for="inputText3" class="input-group-addon">原价</label>
+	    	<input type="number" class="form-control" placeholder="原价" name="price" required>
+		</div>
+		<div class="input-group">
+		    <label for="inputText3" class="input-group-addon">线上总价</label>
+	    	<input type="number" class="form-control" placeholder="线上总价" name="total" required>
+		</div>
+	<div class="modal-footer">
+    	<input type="submit" class="btn btn-primary" value="确定"></input>
+    </div>
 </form>
+</div>
+{% endblock %}
