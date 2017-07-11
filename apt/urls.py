@@ -4,6 +4,7 @@ from .views import (
     EventCreateView,
     ImportPriceView,
     ExportView,
+    ExportCustomerView,
     EventUpdateView,
     EventDetailView,
     EventDetailListView,
@@ -13,15 +14,20 @@ from .views import (
     EventDetailCreateView,
     EventDetailRemarkUpdateView,
     CustomListView, CustomCreateView,
-    EventStatus, EventDelStatus)
+    EventStatus, EventDelStatus,
+    EventDelDel)
 
 
 urlpatterns = [
+
+
+
+    url(r'^qrcode/(.+)', url2qrcode, name='qrcode'),
+    # 活动
+    url(r'^pubstatus/', EventStatus.as_view(), name='event_status'),
     url(r'^list/', EventListView.as_view(), name='event_list'),
     url(r'^create/', EventCreateView.as_view(), name='event_create'),
     url(r'^importprice/', ImportPriceView.as_view(), name='event_import'),
-    url(r'^pubstatus/', EventStatus.as_view(), name='event_status'),
-    url(r'^salestatus/', EventDelStatus.as_view(), name='eventdel_status'),
     url(r'^(?P<pk>\d+)/$', EventDetailView.as_view(), name='event_detail'),
     url(r'^update/(?P<pk>\d+)/$',
         EventUpdateView.as_view(),
@@ -29,27 +35,28 @@ urlpatterns = [
     url(r'^update/(?P<pk>\d+)/term/',
         EventTermUpdateView.as_view(),
         name='event_term_update'),
+    # 车位房源
+    url(r'^salestatus/', EventDelStatus.as_view(), name='eventdel_status'),
+    url(r'^eventdeldel/$', EventDelDel.as_view(), name='eventdel_del'),
+    url(r'^(?P<pk>\d+)/rooms/create/',
+        EventDetailCreateView.as_view(),
+        name='room_create'),
+    url(r'^room/(?P<pk>\d+)/remark/',
+        EventDetailRemarkUpdateView.as_view(),
+        name='room_remark_update'),
     url(r'^(?P<pk>\d+)/rooms/$', EventDetailListView.as_view(), name='room_list'),
     url(r'^room/(?P<pk>\d+)/price/',
         EventDetailTotalUpdateView.as_view(),
         name='room_price_update'),
-    url(r'^qrcode/(.+)$', url2qrcode, name='qrcode'),
-    url(r'^(?P<pk>\d+)/export/', ExportView, name='event_export'),
-    url(r'^update/(?P<pk>\d+)/$', EventUpdateView.as_view(),
-        name='event_update'),
-    url(r'^update/(?P<pk>\d+)/term/', EventTermUpdateView.as_view(),
-        name='event_term_update'),
-    # EventDetail
-    url(r'^(?P<pk>\d+)/rooms/$', EventDetailListView.as_view(),
-        name='room_list'),
-    url(r'^(?P<pk>\d+)/rooms/create/', EventDetailCreateView.as_view(),
-        name='room_create'),
-    url(r'^room/(?P<pk>\d+)/price/', EventDetailTotalUpdateView.as_view(),
-        name='room_price_update'),
-    url(r'^room/(?P<pk>\d+)/remark/', EventDetailRemarkUpdateView.as_view(),
-        name='room_remark_update'),
-    url(r'^(?P<pk>\d+)/customs/$', CustomListView.as_view(),
+    url(r'^(?P<pk>\d+)/export/', ExportView.as_view(), name='room_export'),
+    # 认筹
+    url(r'^(?P<pk>\d+)/customs/$',
+        CustomListView.as_view(),
         name='event_customs'),
-    url(r'^(?P<pk>\d+)/customs/create/', CustomCreateView.as_view(),
+    url(r'^(?P<pk>\d+)/customs/create/',
+        CustomCreateView.as_view(),
         name='custom_create'),
+    url(r'^(?P<pk>\d+)/cusexport/',
+        ExportCustomerView.as_view(),
+        name='customer_export'),
 ]

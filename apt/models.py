@@ -59,4 +59,7 @@ class EventDetail(models.Model):
     image = models.ImageField('平面图', upload_to='eventdetail/%Y/%m/%d/',
                               null=True, blank=True)
     on_sale = models.BooleanField('是否上架', default=False)  # 上架状态。
-    is_delete = models.BooleanField('删除', default=False)
+
+    @classmethod
+    def get(cls, id):
+        return get_object_or_404(cls.objects, id=id)

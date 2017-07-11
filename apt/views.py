@@ -11,8 +11,11 @@ from django.views import View
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.http import JsonResponse, HttpResponse
+from django.db.models import Q
+from django.http import QueryDict
 
 from aptm import settings
+from accounts.models import Customer
 from .models import Event, EventDetail
 from accounts.models import Customer
 from .forms import EventDetailForm, CustomerForm
@@ -77,6 +80,15 @@ class EventDetailListView(ListView):
     model = EventDetail
 
     def get_queryset(self):
+        # value = self.request.GET.get('value')
+        # if value:
+        #     obj = self.model.objects.get(Q(xxx=value) | Q(
+        #         xxx=value))
+        #     if obj:
+        #         return obj
+        #     else:
+        #         return JsonResponse({'msg': '没有匹配的内容！'})
+        # else:
         self.event = Event.get(self.kwargs['pk'])
         return self.model.objects.filter(event=self.event).order_by('-id')
 
@@ -122,13 +134,14 @@ class EventStatus(View):
     活动发布情况 发布/未发布
     '''
 
-    def post(self, request):
-        id = request.POST.get('id')
+    def put(self, request):
+        put = QueryDict(request.body, encoding=request.encoding)
+        id = put.get('id')
         if id:
-            obj = Event.objects.get(id)
+            obj = Event.get(id)
             obj.is_pub = not obj.is_pub
             obj.save()
-            return JsonResponse({'success': True, 'msg': obj.is_pub})
+            return JsonResponse({'success': True})
         return JsonResponse({'success': False})
 
 
@@ -137,13 +150,14 @@ class EventDelStatus(View):
     车位/房源  上架/下架
     '''
 
-    def post(self, request):
-        id = request.POST.get('id')
+    def put(self, request):
+        put = QueryDict(request.body, encoding=request.encoding)
+        id = put.get('id')
         if id:
-            obj = EventDetail.objects.get(id)
+            obj = EventDetail.get(id)
             obj.on_sale = not obj.on_sale
             obj.save()
-            return JsonResponse({'success': True, 'msg': obj.on_sale})
+            return JsonResponse({'success': True})
         return JsonResponse({'success': False})
 
 
@@ -152,12 +166,10 @@ class EventDelDel(View):
     车位/房源  删除
     '''
 
-    def post(self, request):
-        id = request.POST.get('id')
+    def delete(self, request):
+        id = request.GET.get('id')
         if id:
-            obj = EventDetail.objects.get(id)
-            obj.is_delete = True
-            obj.save()
+            EventDetail.get(id).delete()
             return JsonResponse({'success': True})
         return JsonResponse({'success': False})
 
@@ -206,7 +218,8 @@ class ExportView(View):
     '''
     导出房价
     '''
-    def get(self,request,pk):
+
+    def get(self, request, pk):
         objs = EventDetail.objects.filter(event_id=pk)
         if objs:
             sheet = Workbook(encoding='utf-8')
@@ -230,7 +243,39 @@ class ExportView(View):
             sheet.save(sio)
             sio.seek(0)
             response = HttpResponse(content_type='application/vnd.ms-excel')
-            response['Content-Disposition'] = 'attachment;filename=export.xls'
+            response['Content-Disposition'] = 'attachment;filename=eventdetail.xls'
+            response.write(sio.getvalue())
+            return response
+        return JsonResponse({'msg': '内容为空！'})
+
+
+class ExportCustomerView(View):
+    '''
+    导出认筹名单
+    '''
+
+    def get(self, request, pk):
+        objs = Customer.objects.filter(event_id=pk)
+        if objs:
+            sheet = Workbook(encoding='utf-8')
+            s = sheet.add_sheet('数据表')
+            list = ['姓名', '手机号', '身份证号', '备注']
+            col = 0
+            for i in list:
+                s.write(0, col, i)
+                col += 1
+            row = 1
+            for obj in objs:
+                s.write(row, 0, obj.realname)
+                s.write(row, 1, obj.mobile)
+                s.write(row, 2, obj.identication)
+                s.write(row, 3, obj.remark)
+                row += 1
+            sio = BytesIO()
+            sheet.save(sio)
+            sio.seek(0)
+            response = HttpResponse(content_type='application/vnd.ms-excel')
+            response['Content-Disposition'] = 'attachment;filename=customer.xls'
             response.write(sio.getvalue())
             return response
         return JsonResponse({'msg': '内容为空！'})
@@ -249,12 +294,24 @@ def url2qrcode(request, data):
 
 
 class CustomListView(ListView):
+    '''
+    认筹名单列表
+    '''
     template_name = 'custom_list.html'
     model = Customer
 
     def get_queryset(self):
-        self.event = Event.get(self.kwargs['pk'])
-        return self.model.objects.filter(event=self.event)
+        value = self.request.GET.get('value')
+        if value:
+            obj = self.model.objects.get(Q(realname=value) | Q(
+                mobile=value) | Q(identication=value))
+            if obj:
+                return obj
+            else:
+                return JsonResponse({'msg':'没有匹配的内容！'})
+        else:
+            self.event = Event.get(self.kwargs['pk'])
+            return self.model.objects.filter(event=self.event)
 
     def get_context_data(self):
         context = super(CustomListView, self).get_context_data()
@@ -263,6 +320,9 @@ class CustomListView(ListView):
 
 
 class CustomCreateView(DialogMixin, CreateView):
+    '''
+    添加认筹名单
+    '''
     form_class = CustomerForm
     template_name = 'popup/custom_create.html'
 
