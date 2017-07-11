@@ -15,7 +15,7 @@ from django.core.urlresolvers import reverse
 
 from apt.models import Event
 from aptm import settings
-from .models import User, Customer
+from .models import User, Customer, Order
 from .decorators import superadmin_required
 
 
@@ -190,6 +190,16 @@ class CustomerLoginView(View):
                 return redirect(reverse('home_page_view'))
         messages.error(request, '用户名或密码不正确')
         return redirect(reverse('acc_login'))
+
+
+class DeleteTestView(View):
+    '''
+    清除公测订单
+    '''
+    def post(self, request):
+        id=request.POST.get('id')
+        Order.objects.filter(event_id=id).delete()
+        return JsonResponse({'success': False})
 
 
 class ImportView(View):
