@@ -428,3 +428,23 @@ class DeleteCustomerView(View):
             Customer.get(id).delete()
             return JsonResponse({'success': True})
         return JsonResponse({'success': False})
+
+
+class HouseHeatView(View):
+    '''
+    房源热度统计
+    '''
+    def get(self, request, *args, **kwargs):
+        queryset = EventDetail.all()
+        et_list = [{'id': et.id,
+                    'building': et.building,
+                    'unit': et.unit,
+                    'floor': et.floor,
+                    'room_num': et.room_num,
+                    'is_sold': et.is_sold,
+                    'price': et.price,
+                    'total': et.total,
+                    'num': et.num,
+                    'is_testsold': et.is_testsold
+                    } for et in queryset]
+        return JsonResponse({'success': True, "data": et_list})

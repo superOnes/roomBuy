@@ -16,7 +16,7 @@ from .views import (
     CustomListView, CustomCreateView,
     EventStatus, EventDelStatus,
     EventDelDel, DeleteCustomerView,
-    ExportHouseHotView)
+    ExportHouseHotView, HouseHeatView)
 
 
 urlpatterns = [
@@ -50,6 +50,7 @@ urlpatterns = [
         EventDetailTotalUpdateView.as_view(),
         name='room_price_update'),
     url(r'^(?P<pk>\d+)/export/', ExportView.as_view(), name='room_export'),
+    url(r'^househeat/', HouseHeatView.as_view(), name='househeat'),
     # 认筹
     url(r'^(?P<pk>\d+)/customs/$',
         CustomListView.as_view(),
