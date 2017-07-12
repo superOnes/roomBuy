@@ -38,7 +38,7 @@ urlpatterns = [
         EventTermUpdateView.as_view(),
         name='event_term_update'),
     # 车位房源
-    url(r'^salestatus/', EventDelStatus.as_view(), name='eventdel_status'),
+    url(r'^^(?P<pk>\d+)/salestatus/', EventDelStatus.as_view(), name='eventdel_status'),
     url(r'^eventdeldel/$', EventDelDel.as_view(), name='eventdel_del'),
     url(r'^(?P<pk>\d+)/rooms/create/',
         EventDetailCreateView.as_view(),
@@ -63,6 +63,6 @@ urlpatterns = [
         ExportCustomerView.as_view(),
         name='customer_export'),
     url(r'^deletect/', DeleteCustomerView.as_view(), name='ct_delete'),
-    url(r'^exporthousehot/', ExportHouseHotView.as_view(), name='househot_export')
+    url(r'^exporthousehot/', ExportHouseHotView.as_view(), name='househot_export'),
     url(r'^opensta/',TemplateView.as_view(template_name='opensta.html'), name='event_opensta'),
 ]

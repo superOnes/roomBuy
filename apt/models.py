@@ -58,7 +58,6 @@ class EventDetail(models.Model):
     remark = models.TextField('描述补充', blank=True)
     image = models.ImageField('平面图', upload_to='eventdetail/%Y/%m/%d/',
                               null=True, blank=True)
-    on_sale = models.BooleanField('是否上架', default=False)  # 上架状态。
     num = models.IntegerField('收藏人数', null=True)
     visit_num=models.IntegerField('访问热度',default=0)
 

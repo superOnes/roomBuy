@@ -141,12 +141,12 @@ class EventDelStatus(View):
     车位/房源  上架/下架
     '''
 
-    def put(self, request):
+    def put(self, request,**kwargs):
         put = QueryDict(request.body, encoding=request.encoding)
         id = put.get('id')
         if id:
             obj = EventDetail.get(id)
-            obj.on_sale = not obj.on_sale
+            obj.status = not obj.status
             obj.save()
             return JsonResponse({'success': True})
         return JsonResponse({'success': False})
