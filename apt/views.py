@@ -330,3 +330,15 @@ class CustomCreateView(DialogMixin, CreateView):
         initial = super(CustomCreateView, self).get_initial()
         initial['event'] = Event.get(self.kwargs['pk'])
         return initial
+
+
+class DeleteCustomerView(View):
+    '''
+    删除认筹名单
+    '''
+    def post(self, request):
+        id = request.GET.get('id')
+        if id:
+            Customer.get(id).delete()
+            return JsonResponse({'success': True})
+        return JsonResponse({'success': False})
