@@ -8,8 +8,8 @@
     <button type="button" class="btn btn-default" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">导入认筹名单</button>
     <a href="{% url 'customer_export' pk=event.id %}" class="btn btn-default">导出认筹名单</a>
   	<div class="col-lg-3" style="float: right;">
-	    <div class="input-group">
-	      <input type="text" class="form-control" placeholder="搜索名单" id="searchInput">
+	    <div class="input-group searchWrap">
+	      <input type="text" class="form-control" placeholder="搜索名单" id="searchInput" onkeypress="onkeypress(event)">
 	      <span class="input-group-btn">
 	        <button class="btn btn-default" type="button" onclick="search()">搜索</button>
 	      </span>
