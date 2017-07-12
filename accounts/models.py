@@ -9,11 +9,11 @@ class Customer(models.Model):
     mobile = models.CharField('手机号', max_length=20)
     identication = models.CharField('身份证', max_length=50)
     remark = models.TextField('备注', null=True, blank=True)
-    protime = models.DateTimeField('同意协议时间')
-    heat = models.IntegerField('访问热度')
-    testroom = models.ForeignKey(EventDetail)
-    count = models.IntegerField(default=0)
-    event = models.ForeignKey(Event)
+    protime = models.DateTimeField('同意协议时间', null=True, blank=True)
+    heat = models.IntegerField('访问热度', default=0)
+    # testroom = models.ForeignKey(EventDetail)
+    count = models.IntegerField('可选套数', default=0)
+    event = models.ForeignKey(Event, verbose_name='关联活动')
 
 
 class User(AbstractUser):
