@@ -273,6 +273,7 @@ class ExportCustomerView(View):
             return response
         return JsonResponse({'msg': '内容为空！'})
 
+
 class ExportRTView(View):
     '''
     导出房源热度统计
@@ -309,7 +310,6 @@ class ExportRTView(View):
             response.write(sio.getvalue())
             return response
         return JsonResponse({'msg': '内容为空！'})
-
 
 
 def url2qrcode(request, data):
@@ -373,3 +373,4 @@ class DeleteCustomerView(View):
             Customer.get(id).delete()
             return JsonResponse({'success': True})
         return JsonResponse({'success': False})
+

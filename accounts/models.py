@@ -9,6 +9,9 @@ class Customer(models.Model):
     mobile = models.CharField('手机号', max_length=20)
     identication = models.CharField('身份证', max_length=50)
     remark = models.TextField('备注', null=True, blank=True)
+    protime = models.DateTimeField('同意协议时间')
+    heat = models.IntegerField('访问热度')
+    testroom = models.ForeignKey(EventDetail)
     count = models.IntegerField(default=0)
     event = models.ForeignKey(Event)
 
