@@ -27,13 +27,13 @@
 		<div class="form-group">
 		    <label class="col-sm-3 col-lg-3 control-label">公测开始时间</label>
 		    <div class="col-sm-9 col-lg-9">
-		    	<input type="text" class="form-control form-datetime" name="test_start" value="{{form.test_start.value|default:''}}" required>
+		    	<input type="text" class="form-control form-datetime" name="test_start" value="{{form.test_start.value|default:''|date:'Y-m-d h:i'}}" required>
 		    </div>
 		</div>
 		<div class="form-group">
 		    <label class="col-sm-3 col-lg-3 control-label">公测结束时间</label>
 		    <div class="col-sm-9 col-lg-9">
-		    	<input type="text" class="form-control form-datetime" name="test_end" value="{{form.test_end.value|default:''}}" required>
+		    	<input type="text" class="form-control form-datetime" name="test_end" value="{{form.test_end.value|default:''|date:'Y-m-d h:i'}}" required>
 		    </div>
 		</div>
 		<div class="form-group">
@@ -48,13 +48,13 @@
 		<div class="form-group">
 		    <label class="col-sm-3 col-lg-3 control-label">活动开始时间</label>
 		    <div class="col-sm-9 col-lg-9">
-		    	<input type="text" class="form-control form-datetime" name="event_start" value="{{form.event_start.value|default:''}}" required>
+		    	<input type="text" class="form-control form-datetime" name="event_start" value="{{form.event_start.value|default:''|date:'Y-m-d h:i'}}" required>
 		    </div>
 		</div>
 		<div class="form-group">
 		    <label class="col-sm-3 col-lg-3 control-label">活动结束时间</label>
 		    <div class="col-sm-9 col-lg-9">
-		    	<input type="text" class="form-control form-datetime" name="event_end" value="{{form.event_end.value|default:''}}" required>
+		    	<input type="text" class="form-control form-datetime" name="event_end" value="{{form.event_end.value|default:''|date:'Y-m-d h:i'}}" required>
 		    </div>
 		</div>
 		<div class="form-group">

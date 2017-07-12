@@ -42,8 +42,6 @@ class EventCreateView(DialogMixin, CreateView):
     '''
     新增活动
     '''
-    # model = Event
-    # fields = [f.name for f in model._meta.fields]
     form_class = EventForm
     template_name = 'popup/event_create.html'
 
