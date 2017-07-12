@@ -7,7 +7,7 @@
 	<a class="btn btn-primary" data-moveable="true" data-iframe="{% url 'event_create' %}" data-toggle="modal">创建活动</a>
 	<div class="col-lg-3" style="float: right;">
 	    <div class="input-group">
-	      <input type="text" class="form-control" placeholder="Search for..." id="searchInput">
+	      <input type="text" class="form-control" placeholder="搜索活动" id="searchInput">
 	      <span class="input-group-btn">
 	        <button class="btn btn-default" type="button" onclick="search()">搜索</button>
 	      </span>
@@ -82,7 +82,7 @@
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-		        <button type="button" class="btn btn-primary" onclick="deleteOrder({{obj.id}})">确认</button>
+		        <button type="button" class="btn btn-primary" onclick="deleteOrder({{obj.id}},'/acc/ctdelete/')">确认</button>
 		      </div>
 		    </div>
 		  </div>

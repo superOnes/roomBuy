@@ -65,11 +65,11 @@ function Unpublish(thisID){
 };
 
 
-//清除公测名单
-function deleteOrder(thisID){
+//清除公测名单\\\ 删除认筹名单
+function deleteOrder(thisID,url){
 	$.ajax({
 		type:"POST",
-		url:"../acc/ctdelete/",
+		url:url,
 		async:true,
 		data:{id:thisID},
 		cache: false,
@@ -84,9 +84,3 @@ function deleteOrder(thisID){
 	});
 };
 
-
-//搜索功能函数
-function search(url){
-	var $value = $("#searchInput").val();
-	alert($value)
-};
