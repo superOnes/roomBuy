@@ -45,7 +45,7 @@ class Event(models.Model):
 class EventDetail(models.Model):
     building = models.CharField('楼号', max_length=50)
     unit = models.CharField('单元', max_length=100)
-    floor = models.IntegerField('楼层')
+    floor = models.CharField('楼层', max_length=100)
     room_num = models.CharField('房号', max_length=50)
     price = models.CharField('原价', max_length=100)
     total = models.CharField('线上总价', max_length=100)
