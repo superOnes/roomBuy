@@ -1,0 +1,170 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+<meta name="format-detection" content="telephone=no, email=no" />
+<title>郑州中原新城</title>
+<link type="text/css" rel="stylesheet" href="{{STATIC_URL}}css/reset.css"/>
+</head>
+<body>
+	<div class="container">
+		<ul class="houseTitle clear">
+			<li>
+				<h3>{{event.name}}</h3>
+				<p>参与人数：<span>{{event.customer_set.count}}</span></p>
+			</li>
+			<li class="order">
+				<a href="order.html">
+					<i></i>
+					<p>订单</p>
+				</a>
+			</li>
+			<li class="fresh">
+				<a href="javascript:;">
+					<i></i>
+					<p>刷新</p>
+				</a>
+			</li>
+		</ul>
+
+			<div class="houseList">
+				<div class="listTile clear">
+					<div class="listTileDiv fl">
+						<p>
+							<i></i>
+							我的收藏
+						</p>
+						<p class="listTile-style">A区车位</p>
+						<p>B区车位</p>
+					</div>
+					<label class="click-down fr" name="true"><i></i></label>
+				</div>
+			</div>
+
+		<!--<div class="houseList">-->
+			<!--<div class="choseList">-->
+				<!--<p class="choseList-style">单元</p>-->
+				<!--<p>其他</p>-->
+			<!--</div>-->
+		<!--</div>-->
+
+		<ul class="shareCarList houseTap">
+			<li class="shareCar-list">
+				<a href="#">
+					<p>A区车位--1-004</p>
+					<span>￥1000</span>
+				</a>
+			</li>
+			<li class="shareCar-list">
+				<a href="#">
+					<p>1号楼5单元</p>
+					<span>￥43万</span>
+				</a>
+			</li>
+			<li class="shareCar-list">
+				<a href="#">
+					<p>B区车位--1-008</p>
+					<span>￥1000</span>
+				</a>
+			</li>
+		</ul>
+
+		<div class="houseChose houseTap">
+			<ul class="floorList">
+				<li class="floorList-style">楼层-1</li>
+			</ul>
+			<div class="tab">
+				<div class="shouing">在售</div>
+				<div class="shoued">已售</div>
+			</div>
+			<ul class="floorChose">
+				<li class="floorChose-red">001</li>
+				<li class="floorChose-red">002</li>
+				<li class="floorChose-red">003</li>
+				<li class="floorChose-red">004</li>
+				<li class="floorChose-red">005</li>
+				<li><a href="houseInfo.html">006</a></li>
+				<li class="floorChose-red">007</li>
+				<li class="floorChose-red">008</li>
+				<li class="floorChose-red">009</li>
+				<li class="floorChose-red">010</li>
+				<li>011</li>
+				<li class="floorChose-red">012</li>
+
+			</ul>
+			<div class="picLi">
+				<div class="sellFloat"><div class="radius-radio"></div><label class="sellClass">在售</label></div>
+				<div class="sellFloat"><div class="radius-radio-red"></div><label class="sellClass">已售</label></div>
+				<p>图例：</p>
+			</div>
+		</div>
+
+
+		<div class="endTime">
+			<i></i>
+			<p id="endTimeing"></p>
+		</div>
+	</div>
+
+	<div id="log_window" class="windowBlack">
+		<div class="content-loading">
+			<a class="close-icons" href="javascript:;"><i></i></a>
+			<div class="input">
+				<input class="pleaseChose" type="text" value="" placeholder="请选择">
+			</div>
+			<p>
+				<i></i>
+				我的收藏
+			</p>
+			<ul class="choseHouseList">
+				<li class="choseHouse-list">
+					<span>A区车位</span>
+					<input type="radio" name="choseOne" class="choseOneRight" id="choseOneA"/>
+					<label for="choseOneA" class="choseImg"></label>
+
+				</li>
+				<li class="choseHouse-list">
+					<span>B区车位</span>
+					<input type="radio" name="choseOne" class="choseOneRight" id="choseOneB"/>
+					<label for="choseOneB" class="choseImg"></label>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="{{STATIC_URL}}src/zepto.min.js"></script>
+	<script type="text/javascript" src="{{STATIC_URL}}js/login.js"></script>
+<script>
+	function updataTime() {
+		var date1 = new Date();  //当前时间
+		//活动结束时间
+//		var dates="2017-07-08 00:08:00";
+		var date2 = new Date("2017/7/11 00:08:00");
+		var date3 = date2.getTime() - date1.getTime();  //时间差的毫秒数
+		//计算出相差天数
+		if (date3 > 0) {
+			var days = Math.floor(date3 / (24 * 3600 * 1000));
+			//计算出小时数
+			var leave1 = date3 % (24 * 3600 * 1000);   //计算天数后剩余的毫秒数
+			var hours = Math.floor(leave1 / (3600 * 1000));
+			//计算相差分钟数
+			var leave2 = leave1 % (3600 * 1000);       //计算小时数后剩余的毫秒数
+			var minutes = Math.floor(leave2 / (60 * 1000));
+			//计算相差秒数
+			var leave3 = leave2 % (60 * 1000);     //计算分钟数后剩余的毫秒数
+			var seconds = Math.round(leave3 / 1000);
+			// alert(" 相差 "+days+"天 "+hours+"小时 "+minutes+" 分钟"+seconds+" 秒");
+			var str = " 相差 " + (days < 10 ? "0" + days : days) + "天 " + (hours < 10 ? "0" + hours : hours) + "小时 " + (minutes < 10 ? "0" + minutes : minutes) + " 分钟" + (seconds < 10 ? "0" + seconds : seconds) + " 秒";
+
+			document.getElementById('endTimeing').innerHTML = " 距活动结束还有 " + (days < 10 ? "0" + days : days) + "天 " + (hours < 10 ? "0" + hours : hours) + "小时 " + (minutes < 10 ? "0" + minutes : minutes) + " 分钟" + (seconds < 10 ? "0" + seconds : seconds) + " 秒";
+			setInterval(updataTime, 1000);
+		} else {
+			document.getElementById('endTimeing').innerHTML = "活动已结束"
+		}
+	}
+
+	updataTime();
+</script>
+</body>
+</html>

@@ -5,7 +5,35 @@ from django.utils import timezone
 
 class AppLoginView(TemplateView):
     template_name = 'aptp/login.html'
-    
+
+
+class AppEventDetailView(TemplateView):
+    template_name = 'aptp/eventdetail.html'
+
+    def get_context_data(self, pk):
+        context = super(AppEventDetailView, self).get_context_data()
+        context['event'] = Event.get(pk)
+        return context
+
+
+class AppEventDetailListView(TemplateView):
+    template_name = 'aptp/eventdetail_list.html'
+
+    def get_context_data(self, pk):
+        context = super(AppEventDetailListView, self).get_context_data()
+        context['event'] = Event.get(pk)
+        context['object_list'] = EventDetail.objects.filter(event_id=pk)
+        return context
+
+
+class AppEventDetailDetailView(TemplateView):
+    template_name = 'aptp/eventdetail_detail.html'
+
+    def get_context_data(self, pk):
+        context = super(AppEventDetailDetailView, self).get_context_data()
+        context['object'] = EventDetail.objects.get(id=pk)
+        return context
+
 
 class HomePageView(TemplateView):
     '''
