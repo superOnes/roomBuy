@@ -15,6 +15,7 @@ from django.db.models import Q
 from django.http import QueryDict
 
 from aptm import settings
+from aptp.models import Follow
 from accounts.models import Customer
 from .models import Event, EventDetail
 from accounts.models import Customer
@@ -54,13 +55,14 @@ class EventDetailView(DetailView):
     template_name = 'popup/event_detail.html'
 
 
-class EventUpdateView(UpdateView):
+class EventUpdateView(DialogMixin,UpdateView):
     '''
     编辑活动信息
     '''
     model = Event
     fields = [f.name for f in model._meta.fields]
     template_name = 'popup/event_create.html'
+
 
 
 class EventTermUpdateView(UpdateView):
@@ -80,15 +82,6 @@ class EventDetailListView(ListView):
     model = EventDetail
 
     def get_queryset(self):
-        # value = self.request.GET.get('value')
-        # if value:
-        #     obj = self.model.objects.get(Q(xxx=value) | Q(
-        #         xxx=value))
-        #     if obj:
-        #         return obj
-        #     else:
-        #         return JsonResponse({'msg': '没有匹配的内容！'})
-        # else:
         self.event = Event.get(self.kwargs['pk'])
         return self.model.objects.filter(event=self.event).order_by('-id')
 
@@ -280,6 +273,44 @@ class ExportCustomerView(View):
             return response
         return JsonResponse({'msg': '内容为空！'})
 
+class ExportRTView(View):
+    '''
+    导出房源热度统计
+    '''
+
+    def get(self, request, pk):
+        objs = EventDetail.objects.all()
+        if objs:
+            sheet = Workbook(encoding='utf-8')
+            s = sheet.add_sheet('数据表')
+            list = [ '楼栋', '单元', '楼层', '房号', '是否已售','原价', '线上总价','收藏人数','公测是否已售']
+            col = 0
+            for i in list:
+                s.write(0, col, i)
+                col += 1
+            row = 1
+            for obj in objs:
+                s.write(row, 0, obj.building)
+                s.write(row, 1, obj.unit)
+                s.write(row, 2, obj.floor)
+                s.write(row, 3, obj.room_num)
+                s.write(row, 4, obj.is_sold)
+                s.write(row, 5, obj.price)
+                s.write(row, 6, obj.total)
+                fcount=Follow.objects.filter(eventdetail=obj).count()
+                s.write(row, 7, fcount)
+                s.write(row, 8, )
+                row += 1
+            sio = BytesIO()
+            sheet.save(sio)
+            sio.seek(0)
+            response = HttpResponse(content_type='application/vnd.ms-excel')
+            response['Content-Disposition'] = 'attachment;filename=fangyuanredu.xls'
+            response.write(sio.getvalue())
+            return response
+        return JsonResponse({'msg': '内容为空！'})
+
+
 
 def url2qrcode(request, data):
     '''
@@ -308,7 +339,7 @@ class CustomListView(ListView):
             if obj:
                 return obj
             else:
-                return JsonResponse({'msg':'没有匹配的内容！'})
+                return JsonResponse({'msg': '没有匹配的内容！'})
         else:
             self.event = Event.get(self.kwargs['pk'])
             return self.model.objects.filter(event=self.event)

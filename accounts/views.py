@@ -3,7 +3,7 @@ import os
 import xlrd
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
-from django.views.generic import View
+from django.views.generic import View,ListView
 from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -40,26 +40,22 @@ class LoginView(View):
 
 
 @method_decorator(superadmin_required(), name='dispatch')
-class UserListView(View):
+class UserListView(ListView):
     '''
-    用户参数
+    后台用户列表
     '''
+    model = User
+    template_name = 'userlist.html'
+    fields=['username','password','is_delete']
 
-    def get(self, request, *args, **kwargs):
-        queryset = User.all()
-        user_list = [{
-            'id': user.id,
-            'username': user.username,
-        } for user in queryset]
-        context = {}
-        context['objects'] = user_list
-        return JsonResponse(context)
+    def get_queryset(self):
+        return self.model.objects.filter(is_admin=True).order_by('-id')
 
 
 @method_decorator(superadmin_required(), name='dispatch')
 class UserConfigView(View):
     '''
-    注册
+    注册后台用户
     '''
 
     def post(self, request, *args, **kwargs):
@@ -81,7 +77,7 @@ class UserConfigView(View):
             return JsonResponse({'success': False, 'msg': '两次密码输入不一致，请重新输入！'})
 
     '''
-     更改用户信息
+     更改后台用户信息
      '''
 
     def put(self, request, *args, **kwargs):
@@ -96,7 +92,7 @@ class UserConfigView(View):
         return JsonResponse({'success': False})
 
     '''
-    删除账户
+    删除用户
     '''
 
     def delete(self, request):
@@ -196,8 +192,9 @@ class DeleteTestView(View):
     '''
     清除公测订单
     '''
+
     def post(self, request):
-        id=request.POST.get('id')
+        id = request.POST.get('id')
         Order.objects.filter(event_id=id).delete()
         return JsonResponse({'success': False})
 
@@ -206,20 +203,24 @@ class ImportView(View):
     '''
     导入认筹名单
     '''
+
     def post(self, request, *args, **kwargs):
         id = request.POST.get('id')
         print(id)
         if id:
             event = Event.get(id)
             file = request.FILES.get('filename')
-            path = default_storage.save('tmp/customer.xlsx', ContentFile(file.read()))
+            path = default_storage.save(
+                'tmp/customer.xlsx',
+                ContentFile(
+                    file.read()))
             tmp_file = os.path.join(settings.MEDIA_ROOT, path)
             workdata = xlrd.open_workbook(tmp_file)
             sheet_name = workdata.sheet_names()[0]
             sheet = workdata.sheet_by_name(sheet_name)
             row = sheet.nrows
             col = sheet.ncols
-            data =[]
+            data = []
             for rx in range(1, row):
                 li = []
                 for cx in range(0, col):
