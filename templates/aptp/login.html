@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+<meta name="format-detection" content="telephone=no, email=no" />
+<title>资格审核</title>
+<link type="text/css" rel="stylesheet" href="{{STATIC_URL}}css/reset.css"/>
+</head>
+<body>
+	<div class="container">
+		<div class="login-top">
+			<img src="{{STATIC_URL}}images/img1.png" />
+		</div>
+		<h3 class="login-text">享购房正式开盘</h3>
+		<p class="tips"></p>
+		<div class="login-box">
+			<form>
+				<p class="telp">
+					<label>手机号</label>
+					<input type="text" placeholder="请输入手机号" class="telptxt"/>
+				</p>
+
+				<p class="personId">
+					<label>证件号码</label>
+					<input type="text" placeholder="请输入证件号码" class="personIdtxt"/>
+				</p>
+
+				<button class="loginBtn" type="button">确 定</button>
+			</form>
+		</div>
+
+	</div>
+
+	<script type="text/javascript" src="{{STATIC_URL}}src/zepto.min.js"></script>
+	<script type="text/javascript" src="{{STATIC_URL}}js/login.js"></script>
+</body>
+</html>

@@ -1,8 +1,11 @@
-
 from django.views.generic.base import TemplateView
 from apt.models import Event, EventDetail
 from django.utils import timezone
 
+
+class AppLoginView(TemplateView):
+    template_name = 'aptp/login.html'
+    
 
 class HomePageView(TemplateView):
     '''
@@ -54,4 +57,3 @@ class HouseDetailView(TemplateView):
 #     template_name = 'eventdellist.html'
 #     def get_context_data(self, **kwargs):
 #         context=super(ListView,self).get_context_data()
-
