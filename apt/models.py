@@ -55,10 +55,12 @@ class EventDetail(models.Model):
     # house_type = models.CharField('户型', max_length=100)
     # floor_area = models.CharField('建筑面积', max_length=50)
     is_sold = models.BooleanField('是否被卖', default=False)
+    is_testsold = models.BooleanField('公测是否已售', default=False)
     remark = models.TextField('描述补充', blank=True)
     image = models.ImageField('平面图', upload_to='eventdetail/%Y/%m/%d/',
                               null=True, blank=True)
     on_sale = models.BooleanField('是否上架', default=False)  # 上架状态。
+    num = models.IntegerField('收藏人数', null=True)
 
     @classmethod
     def get(cls, id):
