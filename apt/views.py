@@ -19,7 +19,7 @@ from aptp.models import Follow
 from accounts.models import Order
 from .models import Event, EventDetail
 from accounts.models import Customer
-from .forms import EventDetailForm, CustomerForm
+from .forms import EventForm, EventDetailForm, CustomerForm
 
 
 class DialogMixin(object):
@@ -42,8 +42,9 @@ class EventCreateView(DialogMixin, CreateView):
     '''
     新增活动
     '''
-    model = Event
-    fields = [f.name for f in model._meta.fields]
+    # model = Event
+    # fields = [f.name for f in model._meta.fields]
+    form_class = EventForm
     template_name = 'popup/event_create.html'
 
 

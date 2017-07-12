@@ -1,7 +1,7 @@
 {% extends 'include/base.html' %}
 {% block main %}
 <div style="padding:20px">
-	<form class="form-horizontal" method="post">
+	<form class="form-horizontal" method="post" enctype="multipart/form-data">
 		{% csrf_token %}
 		<div class="form-group">
 		    <label class="col-sm-3 col-lg-3 control-label">活动类型</label>
@@ -80,7 +80,7 @@
 		    <div class="col-sm-4 col-lg-4">
 		    	<input type="radio" class="input-group-sm" name="login_msg" {% if object.login_msg == True %}checked{% endif %}> 是
 		    </div>
-		    <div class="col-sm-4 col-lg-4"> 
+		    <div class="col-sm-4 col-lg-4">
 		    	<input type="radio" class="input-group-sm" name="login_msg" {% if object.login_msg == False %}checked{% endif %}> 否
 		    </div>
 		</div>
@@ -150,7 +150,7 @@
 		<div class="form-group">
 		    <label class="col-sm-3 col-lg-3 control-label">活动封面</label>
 		    <div class="col-sm-9 col-lg-9">
-		    	<input type="file" class="form-control" id="inputNumber3" name="cover" value="" required>
+		    	<input type="file" class="form-control" id="inputNumber3" name="cover" required>
 		    </div>
 		</div>
 		<div class="form-group">

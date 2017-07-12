@@ -1,7 +1,14 @@
 from django import forms
 from django.db import transaction
-from .models import EventDetail
+from .models import Event, EventDetail
 from accounts.models import Customer, User
+
+
+class EventForm(forms.ModelForm):
+
+    class Meta:
+        model = Event
+        fields = [f.name for f in model._meta.fields]
 
 
 class EventDetailForm(forms.ModelForm):
