@@ -41,18 +41,18 @@
 			<p>{{ obj.event_end }}</p></td>
 			<td><a href="{% url 'event_customs' pk=obj.id %}">{{ obj.customer_set.count }} <i class='icon-edit'></i></a></td>
 			<td><a href="{% url 'room_list' pk=obj.id %}">{{ obj.eventdetail_set.count }} <i class='icon-edit'></i></a></td>
-			<td>TODO</td>
+			<td>{{ obj.is_pub|yesno:"发布,未发布"}}</td>
 			<td>qr</td>
 			<td>
 				<p><a data-iframe="{% url 'event_detail' pk=obj.id %}" data-toggle="modal" data-title="活动详情">查看</a></p>
-				<p><a data-toggle="modal" data-target="#deleteIssue">{% if obj.is_pub == False %}发布{% else %}取消发布{% endif %}</a></p>
+				<p><a href="javascript:void(0)" data-id="{{obj.id}}" class="is_pub">{% if obj.is_pub == False %}发布{% else %}取消发布{% endif %}</a></p>
 				<p><a data-iframe="{% url 'event_update' pk=obj.id %}" data-toggle="modal">编辑活动</a></p>
 				<p><a data-iframe="{% url 'event_term_update' pk=obj.id %}" data-toggle="modal">编辑协议</a></p>
 				<p><a data-toggle="modal" data-target="#deleteModal">清除公测名单</a></p>
 			</td>
 		</tr>
 		<!--取消发布-->
-		<div class="modal fade" id="deleteIssue">
+		<div class="modal fade" id="is_pub_issue">
 		  <div class="modal-dialog modal-sm">
 		    <div class="modal-content">
 		      <div class="modal-header">
@@ -64,13 +64,14 @@
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-		        <button type="button" class="btn btn-primary" onclick="Unpublish({{obj.id}})">确认</button>
+		        <button type="button" class="btn btn-primary is_pub_confirm">确认</button>
+						<input type="hidden" value="" id="is_pub_status">
 		      </div>
 		    </div>
 		  </div>
 		</div>
 		<!--清除公测名单-->
-		<div class="modal fade" id="deleteModal">
+		<div class="modal fade" id="deleteModal" data-id="">
 		  <div class="modal-dialog modal-sm">
 		    <div class="modal-content">
 		      <div class="modal-header">
@@ -93,6 +94,27 @@
 {% endblock %}
 {% block js %}
 <script type="text/javascript">
-$(document).ready(function(){ $('table.datatable').datatable({ sortable: true, }); });
+$(document).ready(function(){
+	$('table.datatable').datatable({ sortable: true, });
+	$('.is_pub').on('click', function(e){
+		$("#is_pub_status").val($(e.currentTarget).data("id"));
+    $("#is_pub_issue").modal();
+	});
+	$(".is_pub_confirm").on("click", function(e){
+		var id = $("#is_pub_status").val();
+		$.ajax({
+			type:"PUT",
+			url:"../pubstatus/",
+			async:true,
+			data:{id:id},
+			success:function(){
+				window.location.reload();
+			},
+			error:function(){
+				alert("未知错误")
+			}
+		});
+	});
+});
 </script>
 {% endblock %}
