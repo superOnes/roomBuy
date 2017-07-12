@@ -8,7 +8,7 @@ from accounts.views import (LoginView,
                             PersonalSettingsView,
                             CustomerLoginView,
                             DeleteTestView,
-                            ImportView)
+                            ImportView,)
 
 urlpatterns = [
 

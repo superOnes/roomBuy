@@ -41,6 +41,7 @@ class HouseDetailView(TemplateView):
     def get_context_data(self, request, **kwargs):
         context = super(HouseDetailView, self).get_context_data()
         id = request.GET.get('id')  # 房子id号
+
         obj = EventDetail.objects.values(
             'batch',
             'house_type',
@@ -48,6 +49,9 @@ class HouseDetailView(TemplateView):
             'floor_area',
             'price',
             'is_sold').get(id)
+        visit=EventDetail.get(id=id)
+        visit.visit_num=visit.visit_num+1
+        visit.save()
         # 还缺少房子平面图
         context['eventdetail'] = obj
         return context

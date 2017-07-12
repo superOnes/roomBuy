@@ -16,7 +16,7 @@ from django.http import QueryDict
 
 from aptm import settings
 from aptp.models import Follow
-from accounts.models import Customer
+from accounts.models import Order
 from .models import Event, EventDetail
 from accounts.models import Customer
 from .forms import EventDetailForm, CustomerForm
@@ -55,14 +55,13 @@ class EventDetailView(DetailView):
     template_name = 'popup/event_detail.html'
 
 
-class EventUpdateView(DialogMixin,UpdateView):
+class EventUpdateView(DialogMixin, UpdateView):
     '''
     编辑活动信息
     '''
     model = Event
     fields = [f.name for f in model._meta.fields]
     template_name = 'popup/event_create.html'
-
 
 
 class EventTermUpdateView(UpdateView):
@@ -274,17 +273,26 @@ class ExportCustomerView(View):
         return JsonResponse({'msg': '内容为空！'})
 
 
-class ExportRTView(View):
+class ExportHouseHotView(View):
     '''
     导出房源热度统计
     '''
 
-    def get(self, request, pk):
+    def get(self, request):
         objs = EventDetail.objects.all()
         if objs:
             sheet = Workbook(encoding='utf-8')
             s = sheet.add_sheet('数据表')
-            list = [ '楼栋', '单元', '楼层', '房号', '是否已售','原价', '线上总价','收藏人数','公测是否已售']
+            list = [
+                '楼栋',
+                '单元',
+                '楼层',
+                '房号',
+                '是否已售',
+                '原价',
+                '线上总价',
+                '收藏人数',
+                '公测是否已售']
             col = 0
             for i in list:
                 s.write(0, col, i)
@@ -298,9 +306,56 @@ class ExportRTView(View):
                 s.write(row, 4, obj.is_sold)
                 s.write(row, 5, obj.price)
                 s.write(row, 6, obj.total)
-                fcount=Follow.objects.filter(eventdetail=obj).count()
-                s.write(row, 7, fcount)
-                s.write(row, 8, )
+                s.write(row, 7, Follow.objects.filter(eventdetail=obj).count())
+                s.write(row, 8, Order.objects.get(eventdetail=obj).is_test)
+                row += 1
+            sio = BytesIO()
+            sheet.save(sio)
+            sio.seek(0)
+            response = HttpResponse(content_type='application/vnd.ms-excel')
+            response['Content-Disposition'] = 'attachment;filename=fangyuanredu.xls'
+            response.write(sio.getvalue())
+            return response
+        return JsonResponse({'msg': '内容为空！'})
+
+
+class ExportBuyHotView(View):
+    '''
+    导出购房热度统计
+    '''
+
+    def get(self, request):
+        objs = Order.all()
+        if objs:
+            sheet = Workbook(encoding='utf-8')
+            s = sheet.add_sheet('数据表')
+            list = [
+                '姓名',
+                '手机号',
+                '证件号码',
+                '同意协议时间',
+                '收藏房间数',
+                '访问热度',
+                '公测选择房间',
+                '公测订单时间',
+                '开盘选择房间',
+                '开盘订单时间']
+            col = 0
+            for i in list:
+                s.write(0, col, i)
+                col += 1
+            row = 1
+            for obj in objs:
+                s.write(row, 0, obj.user.customer.realname)
+                s.write(row, 1, obj.user.customer.mobile)
+                s.write(row, 2, obj.user.customer.identication)
+                s.write(row, 3, obj.user.customer.protime)
+                s.write(row, 4, Follow.objects.filter(user=obj.user).count())
+                s.write(row, 5, obj.eventdetail.visit_num)
+                # s.write(row, 6, obj.)
+                s.write(row, 7, obj.time)
+                # s.write(row, 8, obj.)
+                s.write(row, 9, obj.opentime)
                 row += 1
             sio = BytesIO()
             sheet.save(sio)
@@ -367,10 +422,10 @@ class DeleteCustomerView(View):
     '''
     删除认筹名单
     '''
+
     def post(self, request):
         id = request.GET.get('id')
         if id:
             Customer.get(id).delete()
             return JsonResponse({'success': True})
         return JsonResponse({'success': False})
-

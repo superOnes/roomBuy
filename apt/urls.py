@@ -15,7 +15,8 @@ from .views import (
     EventDetailRemarkUpdateView,
     CustomListView, CustomCreateView,
     EventStatus, EventDelStatus,
-    EventDelDel, DeleteCustomerView)
+    EventDelDel, DeleteCustomerView,
+    ExportHouseHotView)
 
 
 urlpatterns = [
@@ -59,5 +60,7 @@ urlpatterns = [
     url(r'^(?P<pk>\d+)/cusexport/',
         ExportCustomerView.as_view(),
         name='customer_export'),
-    url(r'^deletect/', DeleteCustomerView.as_view(), name='ct_delete')
+    url(r'^deletect/', DeleteCustomerView.as_view(), name='ct_delete'),
+
+    url(r'^exporthousehot/', ExportHouseHotView.as_view(), name='househot_export')
 ]

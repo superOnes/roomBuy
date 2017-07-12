@@ -43,7 +43,6 @@ class Event(models.Model):
 
 
 class EventDetail(models.Model):
-    # batch = models.CharField('期/批', max_length=50)
     building = models.CharField('楼号', max_length=50)
     unit = models.CharField('单元', max_length=100)
     floor = models.IntegerField('楼层')
@@ -61,6 +60,7 @@ class EventDetail(models.Model):
                               null=True, blank=True)
     on_sale = models.BooleanField('是否上架', default=False)  # 上架状态。
     num = models.IntegerField('收藏人数', null=True)
+    visit_num=models.IntegerField('访问热度',default=0)
 
     @classmethod
     def get(cls, id):

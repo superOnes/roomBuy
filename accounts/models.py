@@ -29,19 +29,23 @@ class User(AbstractUser):
 
 
 class Order(models.Model):
-    customer = models.ForeignKey(User)
+    user = models.ForeignKey(User)
     eventdetail = models.ForeignKey(EventDetail)
     time = models.DateTimeField('公测订单时间')
     opentime = models.DateTimeField('开盘订单时间')
     event = models.ForeignKey(Event)
     is_delete = models.BooleanField(default=False)
+    is_test = models.BooleanField('是否是公测订单', default=True)
 
+    @classmethod
     def get(cls, id):
         return cls.objects.filter(id=id).first()
 
+    @classmethod
     def all(cls):
         return cls.objects.filter(is_delete=0).order_by('-id')
 
+    @classmethod
     def remove(cls, id):
         obj = cls.get(id)
         obj.is_delete = True

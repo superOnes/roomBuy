@@ -4,5 +4,5 @@ from apt.models import EventDetail
 
 
 class Follow(models.Model):
-    customer = models.ForeignKey(User, verbose_name='顾客名')
+    user = models.ForeignKey(User, verbose_name='顾客名')
     eventdetail = models.ForeignKey(EventDetail, verbose_name='房源/车位信息')
