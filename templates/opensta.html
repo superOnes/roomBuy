@@ -1,0 +1,103 @@
+{% extends 'include/main_base.html' %}
+{% block right %}
+<div class="page-header" style="border-bottom: 0;">
+  <h2><span class="code">统计管理</span></h2>
+</div>
+<ul class="nav nav-tabs">
+    <li class="active"><a data-tab href="#tabContent1">购房者热度统计</a></li>
+    <li><a data-tab href="#tabContent2">房源热度统计</a></li>
+    <div class="row" style="float: right;">
+    	<a class="btn btn-primary" href="" data-toggle="modal" style="margin: 0 !important;">导出</a>
+	</div>
+</ul>
+<div class="tab-content">
+	<div class="tab-pane fade active in" id="tabContent1">
+		<table class="table datatable">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>姓名</th>
+					<th>手机号</th>
+					<th>证件号码</th>
+					<th>同意协议时间</th>
+					<th>收藏房间数</th>
+					<th>访问热度</th>
+					<th>公测选择房间</th>
+					<th>公测订单时间</th>
+					<th>开盘选择房间</th>
+					<th>开盘订单时间</th>
+				</tr>
+			</thead>
+			<tbody id="buyer">
+				<tr> </tr>
+			</tbody>
+		</table>
+    </div>
+    <div class="tab-pane fade" id="tabContent2">
+    	<table class="table datatable">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>楼栋</th>
+					<th>单元</th>
+					<th>楼层</th>
+					<th>房号</th>
+					<th>是否已售</th>
+					<th>原价</th>
+					<th>线上总价</th>
+					<th>收藏人数</th>
+					<th>公测是否已售</th>
+				</tr>
+			</thead>
+			<tbody id="houseHot">
+				<tr> </tr>
+			</tbody>
+		</table>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function(){ 
+	$("#navActive li").eq(1).addClass("active");
+	var $listBuyer = $("#buyer");
+	var $listHouse = $("#houseHot");
+	$.ajax({
+		type:"get",
+		url:"/event/househeat/",
+		async:true,
+		dataType:'JSON',
+		success:function(results){
+			var result =results.data;
+			for (var i=0; i<result.length; i++) {
+				result[i].is_sold ? result[i].is_sold="是":result[i].is_sold="否";
+				result[i].is_testsold ? result[i].is_testsold="是":result[i].is_testsold="否";
+				$listHouse.append("<tr><td>"+i+"</td><td>"+result[i].building+"</td><td>"+result[i].unit+"</td><td>"+result[i].floor+"</td>"+
+				"<td>"+result[i].num+"</td><td>"+result[i].is_sold+"</td><td>"+result[i].price+"</td><td>"+result[i].total+"</td><td>"+result[i].room_num+"</td>"+
+				"<td>"+result[i].is_testsold+"</td></tr>")
+			}
+		},
+		error:function(){
+			alert("获取购买者热度统计错误！！！")
+		}
+	});
+	$.ajax({
+		type:"get",
+		url:"/event/purcharseheat/",
+		async:true,
+		dataType:'JSON',
+		success:function(results){
+			var result =results.data;
+			for (var i=0; i<result.length; i++) {
+				$listHouse.append("<tr><td>"+i+"</td><td>"+result[i].name+"</td><td>"+result[i].mobile+"</td><td>"+result[i].identication+"</td>"+
+				"<td>"+result[i].protime+"</td><td>"+result[i].count+"</td><td>"+result[i].heat+"</td><td>"+result[i].testroom+"</td>"+
+				"<td>"+result[i].testtime+"</td><td>"+result[i].openroom+"</td><td>"+result[i].opentime+"</td></tr>")
+			}
+		},
+		error:function(){
+			alert("房源热度统计错误！！！")
+		}
+	});
+});
+</script>
+{% endblock %}

@@ -1,4 +1,5 @@
 from django.conf.urls import url
+from django.views.generic import TemplateView
 from .views import (
     EventListView,
     EventCreateView,
@@ -62,6 +63,6 @@ urlpatterns = [
         ExportCustomerView.as_view(),
         name='customer_export'),
     url(r'^deletect/', DeleteCustomerView.as_view(), name='ct_delete'),
-
     url(r'^exporthousehot/', ExportHouseHotView.as_view(), name='househot_export')
+    url(r'^opensta/',TemplateView.as_view(template_name='opensta.html'), name='event_opensta'),
 ]

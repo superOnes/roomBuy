@@ -16,10 +16,20 @@ ul li{
 textarea{
 	resize: none !important;
 }
+a{
+	text-overflow: ellipsis;
+}
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button{
     -webkit-appearance: none !important;
     margin: 0; 
+}
+
+.page-header{
+	margin:0 !important;
+}
+.row>.btn-primary{
+	margin: 15px 0 !important;	
 }
 
 
@@ -112,12 +122,31 @@ input::-webkit-inner-spin-button{
 	text-align: center;
 }
 
+/*表单框的间距*/
+.input-group{
+	margin: 15px 0 !important;
+}
+
 
 .gridTitle{
 	border-bottom: 1px solid #CCCCCC;
 }
 
-
+@media only screen and (max-width: 1950px) {
+	#listContent{
+		min-height: 760px;
+	}
+}
+@media only screen and (max-width: 1440px) {
+	#listContent{
+		min-height: 630px;
+	}
+}
+@media only screen and (max-width: 1320px) {
+	#listContent{
+		min-height: 520px;
+	}
+}
 
 .btnHandleStatus{
 	height: 75px;

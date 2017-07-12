@@ -63,8 +63,3 @@ function deleteOrder(thisID,url){
 	});
 };
 
-function onkeypress(event) {
-    var x = event.which || event.keyCode;
-
-
-}

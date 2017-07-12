@@ -4,9 +4,8 @@
 	<form class="form-horizontal" method="post" action="">
 		{% csrf_token %}
 		<div class="form-group">
-		    <label for="inputText3" class="col-sm-3 col-lg-3 control-label">活动类型</label>
 		    <div class="col-sm-9 col-lg-9">
-		    	<textarea id="content" name="content" class="form-control kindeditor" style="height:150px;">Hello, world!</textarea>
+		    	<textarea name="content" class="form-control" style="height:150px;">Hello, world!</textarea>
 		    </div>
 		</div>
 	<div class="modal-footer">
@@ -14,12 +13,4 @@
     </div>
 </form>
 </div>
-<script type="text/javascript">
-		//文本编辑器
-KindEditor.create('textarea.kindeditor', {
-    basePath: '/zui/lib/kindeditor',
-    allowFileManager : true,
-    bodyClass : 'article-content'
-});
-</script>
 {% endblock %}
