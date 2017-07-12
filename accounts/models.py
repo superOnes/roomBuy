@@ -29,6 +29,7 @@ class Order(models.Model):
     customer = models.ForeignKey(User)
     eventdetail = models.ForeignKey(EventDetail)
     time = models.DateTimeField('公测订单时间')
+    opentime = models.DateTimeField('开盘订单时间')
     event = models.ForeignKey(Event)
     is_delete = models.BooleanField(default=False)
 
