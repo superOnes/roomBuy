@@ -13,7 +13,8 @@
   	<div class="col-lg-3" style="float: right;">
 	    <form class="form-horizontal searchWrap" method="get" action="">
 		    <div class="input-group">
-			  <input type="text" class="form-control" placeholder="姓名/手机号/证件号" id="searchInput" name="value">
+			  <input type="text" class="form-control" placeholder="姓名/手机号/证件号" id="searchInput" name="value"
+				       value="{{value|default:''}}">
 			  <span class="input-group-btn">
 			    <button class="btn btn-default" type="submit">搜索</button>
 			  </span>

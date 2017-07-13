@@ -386,21 +386,19 @@ class CustomListView(ListView):
     model = Customer
 
     def get_queryset(self):
-        value = self.request.GET.get('value')
-        if value:
-            obj = self.model.objects.get(Q(realname=value) | Q(
-                mobile=value) | Q(identication=value))
-            if obj:
-                return obj
-            else:
-                return JsonResponse({'msg': '没有匹配的内容！'})
-        else:
-            self.event = Event.get(self.kwargs['pk'])
-            return self.model.objects.filter(event=self.event)
+        self.value = self.request.GET.get('value')
+        self.event = Event.get(self.kwargs['pk'])
+        queryset = self.model.objects.filter(event=self.event)
+        if self.value:
+            queryset = queryset.filter(Q(realname__icontains=self.value) |
+                                       Q(mobile__icontains=self.value) |
+                                       Q(identication__icontains=self.value))
+        return queryset
 
     def get_context_data(self):
         context = super(CustomListView, self).get_context_data()
         context['event'] = self.event
+        context['value'] = self.value
         return context
 
 
