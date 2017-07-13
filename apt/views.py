@@ -382,7 +382,7 @@ class CustomListView(ListView):
     '''
     认筹名单列表
     '''
-    template_name = 'custom_list.html'
+    template_name = 'customer_list.html'
     model = Customer
 
     def get_queryset(self):
@@ -409,7 +409,7 @@ class CustomCreateView(DialogMixin, CreateView):
     添加认筹名单
     '''
     form_class = CustomerForm
-    template_name = 'popup/custom_create.html'
+    template_name = 'popup/customer_create.html'
 
     def get_initial(self):
         initial = super(CustomCreateView, self).get_initial()

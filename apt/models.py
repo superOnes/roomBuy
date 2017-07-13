@@ -56,9 +56,9 @@ class EventDetail(models.Model):
     is_sold = models.BooleanField('是否被卖', default=False)
     is_testsold = models.BooleanField('公测是否已售', default=False)
     remark = models.TextField('描述补充', blank=True)
-    image = models.ImageField('平面图', upload_to='eventdetail/%Y/%m/%d/',
+    image = models.ImageField('图片', upload_to='eventdetail/%Y/%m/%d/',
                               null=True, blank=True)
-    num = models.IntegerField('收藏人数', null=True)
+    num = models.IntegerField('收藏人数', default=0)
     visit_num = models.IntegerField('访问热度', default=0)
 
     @classmethod
