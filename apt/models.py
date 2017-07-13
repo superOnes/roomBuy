@@ -70,3 +70,4 @@ class HouseType(models.Model):
     name = models.CharField('户型名称', max_length=100)
     pic = models.ImageField('户型照片', upload_to='housetype/%Y/%m/%d/')
     event = models.ForeignKey(Event)
+    num = models.IntegerField('编号', null=True, blank=True)

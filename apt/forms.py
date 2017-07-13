@@ -47,7 +47,7 @@ class HouseTypeForm(forms.ModelForm):
 
     class Meta:
         model = HouseType
-        fields = ['name', 'pic']
+        fields = ['name', 'pic', 'num']
 
     def save(self, commit=True):
         if not self.instance.id:

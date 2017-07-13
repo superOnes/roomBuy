@@ -451,9 +451,12 @@ class HouseHeatView(View):
 
 
 class HouseTypeListView(ListView):
+    '''
+    户型列表
+    '''
     template_name = 'housetype_list.html'
     model = HouseType
-    fields = ['name', 'pic']
+    fields = ['name', 'pic', 'num']
 
     def get_queryset(self):
         self.event = Event.get(self.kwargs['pk'])
@@ -467,6 +470,9 @@ class HouseTypeListView(ListView):
 
 
 class HouseTypeCreateView(DialogMixin, CreateView):
+    '''
+    新建户型
+    '''
     template_name = 'popup/housetype_create.html'
     form_class = HouseTypeForm
 
@@ -477,6 +483,9 @@ class HouseTypeCreateView(DialogMixin, CreateView):
 
 
 class HouseTypeUpdateView(DialogMixin, UpdateView):
+    '''
+    修改户型
+    '''
     template_name = 'popup/housetype_create.html'
     model = HouseType
-    fields = ['name', 'pic']
+    fields = ['name', 'pic', 'num']
