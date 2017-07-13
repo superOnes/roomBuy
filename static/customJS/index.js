@@ -44,7 +44,7 @@ function roomPriceFile(thisID){
 	});
 };
 
-//清除公测名单\\\ 删除认筹名单
+//清除公测名单
 function deleteOrder(thisID,url){
 	$.ajax({
 		type:"POST",
@@ -52,7 +52,7 @@ function deleteOrder(thisID,url){
 		async:true,
 		data:{id:thisID},
 		cache: false,
-        processData: false,//发送的数据将被转换为对象，false就是不转化，默认为true
+        processData: false,//发送的数据将被序列化，false就是序列化数据，默认为true
         contentType: false,
 		success:function(){
 			window.location.reload();

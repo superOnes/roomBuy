@@ -49,6 +49,7 @@
                 <p><a href="javascript:void(0)" data-id="{{obj.id}}" class="status">{% if obj.status == False %}上架{% else %}取消上架{% endif %}</a></p>
 				<p><a data-iframe="{% url 'room_remark_update' pk=obj.id %}" data-toggle="modal">情况描述</a></p>
 				<p><a data-iframe="{% url 'event_term_update' pk=obj.id%}" data-toggle="modal">备注</a></p>
+				<p><a data-target="#deleteModal" data-toggle="modal" data-id="{{obj.id}}" class="delete">删除</a></p>
 			</td>
 		</tr>
             <!--取消上架-->
@@ -57,10 +58,10 @@
 		    <div class="modal-content">
 		      <div class="modal-header">
 		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
-		        <h4 class="modal-title">取消上架</h4>
+		        <h4 class="modal-title">是否上架</h4>
 		      </div>
 		      <div class="modal-body">
-		        <p>确认取消上架？</p>
+		        <p>确认{{ obj.status|yesno:"上架,取消上架"}}？</p>
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -87,7 +88,25 @@
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-		        <button type="button" class="btn btn-default" onclick="roomPriceFile({{ obj.id }})">确定</button>
+		        <button type="button" class="btn btn-default" onclick="roomPriceFile({{ obj.event_id }})">确定</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		<!--删除房源-->
+		<div class="modal fade" id="deleteModal" data-id="">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+		        <h4 class="modal-title">是否删除该房源</h4>
+		      </div>
+		      <div class="modal-body">
+		        <h2 style="text-align: center;">确认删除该房源？</h2>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+		        <button type="button" class="btn btn-primary" id="delete">确认</button>
 		      </div>
 		    </div>
 		  </div>
@@ -95,9 +114,6 @@
 		{% endfor %}
 	</tbody>
 </table>
-<script type="text/javascript">
-$(document).ready(function(){ $('table.datatable').datatable({ sortable: true, }); });
-</script>
 {% endblock %}
 {% block js %}
 <script type="text/javascript">
@@ -120,6 +136,24 @@ $(document).ready(function(){
 			error:function(){
 				alert("未知错误")
 			}
+		});
+	});
+	$(".delete").on('click',function(e){
+		var $id = $(e.currentTarget).data("id");
+		$("#delete").click(function(){
+			$.ajax({
+				type:"POST",
+				url:"/event/eventdeldel/",
+				async:true,
+				data:{id:$id},
+				cache: false,
+				success:function(){
+					window.location.reload();
+				},
+				error:function(){
+					alert("未知错误")
+				}
+			});
 		});
 	});
 });
