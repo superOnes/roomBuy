@@ -306,11 +306,17 @@ class ExportHouseHotView(View):
                 s.write(row, 1, obj.unit)
                 s.write(row, 2, obj.floor)
                 s.write(row, 3, obj.room_num)
-                s.write(row, 4, obj.is_sold)
+                if obj.is_sold:
+                    s.write(row, 4, '已售')
+                else:
+                    s.write(row, 4, '未售')
                 s.write(row, 5, obj.price)
                 s.write(row, 6, obj.total)
                 s.write(row, 7, Follow.objects.filter(eventdetail=obj).count())
-                s.write(row, 8, Order.objects.get(eventdetail=obj).is_test)
+                if Order.objects.get(eventdetail=obj).is_test:
+                    s.write(row, 8, '公测已售')
+                else:
+                    s.write(row, 8, '公测未售')
                 row += 1
             sio = BytesIO()
             sheet.save(sio)
@@ -364,7 +370,7 @@ class ExportBuyHotView(View):
                             obj.eventdetail.floor +
                             '层' +
                             obj.eventdetail.room_num + '号')
-                    s.write(row, 7, obj.time)
+                    s.write(row, 7, (obj.time).strftime("%Y %m %d %H:%M:%S"))
                     s.write(row, 8, None)
                     s.write(row, 9, None)
                 else:
@@ -378,7 +384,7 @@ class ExportBuyHotView(View):
                             obj.eventdetail.floor +
                             '层' +
                             obj.eventdetail.room_num + '号')
-                    s.write(row, 9, obj.time)
+                    s.write(row, 9, (obj.time).strftime("%Y %m %d %H:%M:%S"))
                 row += 1
             sio = BytesIO()
             sheet.save(sio)

@@ -50,7 +50,7 @@ class User(AbstractUser):
 class Order(models.Model):
     user = models.ForeignKey(User)
     eventdetail = models.ForeignKey(EventDetail)
-    time = models.DateTimeField('订单时间',auto_now_add=True)
+    time = models.DateTimeField('订单时间', auto_now_add=True)
     event = models.ForeignKey(Event)
     is_delete = models.BooleanField(default=False)
     is_test = models.BooleanField('是否是公测订单', default=True)
