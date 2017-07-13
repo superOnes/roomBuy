@@ -8,16 +8,46 @@
 </div>
 <div class="row" style="padding:10px">
     <a class="btn btn-primary" data-iframe="{% url 'custom_create' pk=event.id %}" data-toggle=modal>添加认筹名单</a>
-    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">导入认筹名单{{ obj.id }}</button>
+    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#exampleModal">导入认筹名单</button>
     <a href="{% url 'customer_export' pk=event.id %}" class="btn btn-default">导出认筹名单</a>
   	<div class="col-lg-3" style="float: right;">
-	    <div class="input-group searchWrap">
-	      <input type="text" class="form-control" placeholder="搜索名单" id="searchInput" onkeypress="onkeypress(event)">
-	      <span class="input-group-btn">
-	        <button class="btn btn-default" type="button" onclick="search()">搜索</button>
-	      </span>
-	    </div>
+	    <form class="form-horizontal searchWrap" method="get" action="">
+		    <div class="input-group">
+			  <input type="text" class="form-control" placeholder="姓名/手机号/证件号" id="searchInput" name="value">
+			  <span class="input-group-btn">
+			    <button class="btn btn-default" type="submit">搜索</button>
+			  </span>
+			</div>
+		</form>
     </div>
+	<!--导入文件模态框-->
+	<div class="modal" id="exampleModal" tabindex="-1" role="dialog">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title">上传文件</h4>
+	      </div>
+	      <div class="modal-body">
+	        <div id='uploaderExample2' class="uploader" data-ride="uploader" data-url="/acc/import/">
+			  <div class="uploader-message text-center">
+			    <div class="content"></div>
+			    <button type="button" class="close">×</button>
+			  </div>
+			  <div class="uploader-files file-list file-list-lg" data-drag-placeholder="请拖拽文件到此处"></div>
+			  <div class="uploader-actions">
+			    <div class="uploader-status pull-right text-muted"></div>
+			    <button type="button" class="btn btn-link uploader-btn-browse"><i class="icon icon-plus"></i> 选择文件</button>
+			    <button type="button" class="btn btn-link uploader-btn-start"><i class="icon icon-cloud-upload"></i> 开始上传</button>
+			  </div>
+			</div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 </div>
 <table class="table datatable">
 	<thead>
@@ -46,35 +76,13 @@
 				<p><a data-toggle="modal" data-target="#deleteModal" data-id="{{obj.id}}" class="delete">删除</a></p>
 			</td>
 		</tr>
-		<!--导入文件模态框-->
-		<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-		  <div class="modal-dialog" role="document">
-		    <div class="modal-content">
-		      <div class="modal-header">
-		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		        <h4 class="modal-title" id="exampleModalLabel">上传文件</h4>
-		      </div>
-		      <div class="modal-body">
-		        <form class="form-horizontal">
-		        <div class="form-group">
-		          <input type="file" name="file" id="files"/>
-		        </div>
-		      </form>
-		      </div>
-		      <div class="modal-footer">
-		        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-		        <button type="button" class="btn btn-default" onclick="submitFile({{ obj.event_id }})">确定</button>
-		      </div>
-		    </div>
-		  </div>
-		</div>
 		<!--删除确认框-->
-		<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+		<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog">
 		  <div class="modal-dialog" role="document">
 		    <div class="modal-content">
 		      <div class="modal-header">
 		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		        <h4 class="modal-title" id="exampleModalLabel">提示框</h4>
+		        <h4 class="modal-title">提示框</h4>
 		      </div>
 		      <div class="modal-body">
 		        <form class="form-horizontal">
@@ -94,22 +102,6 @@
 	</tbody>
 </table>
 <script type="text/javascript">
-	//搜索功能函数
-	function search(url){
-		var $value = $("#searchInput").val();
-		$.ajax({
-			type:"get",
-			url:url,
-			async:true,
-			data:{value:$value,},
-			success:function(data){
-				window.location.reload()
-			},
-			error:function(){
-				alert("未知错误！")
-			}
-		});
-	};
 //	删除认筹名单
 	$(".delete").on('click',function(e){
 		var $id = $(e.currentTarget).data("id");

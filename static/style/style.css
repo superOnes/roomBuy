@@ -163,8 +163,6 @@ input::-webkit-inner-spin-button{
 .status{
 	width:100%;
 	height:35px;
-	border: 1px solid #D3D3D3;
-	background: #CCCCCC;
 }
 .status>ul{
 	padding: 0;
