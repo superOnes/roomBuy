@@ -18,7 +18,7 @@ from aptm import settings
 from aptp.models import Follow
 from accounts.models import Order
 from .models import Event, EventDetail, HouseType
-from accounts.models import Customer
+from accounts.models import Customer, User
 from .forms import EventForm, EventDetailForm, CustomerForm, HouseTypeForm
 
 
@@ -80,8 +80,12 @@ class EventDetailListView(ListView):
     model = EventDetail
 
     def get_queryset(self):
+        self.value = self.request.GET.get('value')
         self.event = Event.get(self.kwargs['pk'])
-        return self.model.objects.filter(event=self.event).order_by('-id')
+        queryset = self.model.objects.filter(event=self.event)
+        if self.value:
+            queryset = queryset.filter(Q(room_num__contains=self.value))
+        return queryset
 
     def get_context_data(self):
         context = super(EventDetailListView, self).get_context_data()
@@ -141,7 +145,7 @@ class EventDelStatus(View):
     车位/房源  上架/下架
     '''
 
-    def put(self, request,**kwargs):
+    def put(self, request, **kwargs):
         put = QueryDict(request.body, encoding=request.encoding)
         id = put.get('id')
         if id:
@@ -157,8 +161,8 @@ class EventDelDel(View):
     车位/房源  删除
     '''
 
-    def delete(self, request):
-        id = request.GET.get('id')
+    def post(self, request):
+        id = request.POST.get('id')
         if id:
             EventDetail.get(id).delete()
             return JsonResponse({'success': True})
@@ -234,7 +238,7 @@ class ExportView(View):
             sheet.save(sio)
             sio.seek(0)
             response = HttpResponse(content_type='application/vnd.ms-excel')
-            response['Content-Disposition'] = 'attachment;filename=eventdetail.xls'
+            response['Content-Disposition'] = 'attachment;filename=fangyuanxinxi.xls'
             response.write(sio.getvalue())
             return response
         return JsonResponse({'msg': '内容为空！'})
@@ -266,7 +270,7 @@ class ExportCustomerView(View):
             sheet.save(sio)
             sio.seek(0)
             response = HttpResponse(content_type='application/vnd.ms-excel')
-            response['Content-Disposition'] = 'attachment;filename=customer.xls'
+            response['Content-Disposition'] = 'attachment;filename=renchoumingdan.xls'
             response.write(sio.getvalue())
             return response
         return JsonResponse({'msg': '内容为空！'})
@@ -351,16 +355,36 @@ class ExportBuyHotView(View):
                 s.write(row, 3, obj.user.customer.protime)
                 s.write(row, 4, Follow.objects.filter(user=obj.user).count())
                 s.write(row, 5, obj.eventdetail.visit_num)
-                # s.write(row, 6, obj.)
-                s.write(row, 7, obj.time)
-                # s.write(row, 8, obj.)
-                s.write(row, 9, obj.opentime)
+                if obj.is_test:
+                    s.write(row, 6,
+                            obj.eventdetail.building +
+                            '楼' +
+                            obj.eventdetail.unit +
+                            '单元' +
+                            obj.eventdetail.floor +
+                            '层' +
+                            obj.eventdetail.room_num + '号')
+                    s.write(row, 7, obj.time)
+                    s.write(row, 8, None)
+                    s.write(row, 9, None)
+                else:
+                    s.write(row, 6, None)
+                    s.write(row, 7, None)
+                    s.write(row, 8,
+                            obj.eventdetail.building +
+                            '楼' +
+                            obj.eventdetail.unit +
+                            '单元' +
+                            obj.eventdetail.floor +
+                            '层' +
+                            obj.eventdetail.room_num + '号')
+                    s.write(row, 9, obj.time)
                 row += 1
             sio = BytesIO()
             sheet.save(sio)
             sio.seek(0)
             response = HttpResponse(content_type='application/vnd.ms-excel')
-            response['Content-Disposition'] = 'attachment;filename=fangyuanredu.xls'
+            response['Content-Disposition'] = 'attachment;filename=goufangredu.xls'
             response.write(sio.getvalue())
             return response
         return JsonResponse({'msg': '内容为空！'})
@@ -430,7 +454,7 @@ class DeleteCustomerView(View):
     '''
 
     def post(self, request):
-        id = request.GET.get('id')
+        id = request.POST.get('id')
         if id:
             Customer.get(id).delete()
             return JsonResponse({'success': True})
@@ -441,6 +465,7 @@ class HouseHeatView(View):
     '''
     房源热度统计
     '''
+
     def get(self, request, *args, **kwargs):
         queryset = EventDetail.all()
         et_list = [{'id': et.id,

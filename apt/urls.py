@@ -9,7 +9,7 @@ from .views import (EventListView, EventCreateView, ImportPriceView,
                     CustomCreateView, EventStatus, EventDelStatus, EventDelDel,
                     DeleteCustomerView, ExportHouseHotView, HouseHeatView,
                     HouseTypeListView, HouseTypeCreateView,
-                    HouseTypeUpdateView, CustomerCountUpdateView)
+                    HouseTypeUpdateView, CustomerCountUpdateView,ExportBuyHotView)
 
 
 urlpatterns = [
@@ -63,4 +63,6 @@ urlpatterns = [
         name='event_house_type_create'),
     url(r'^housetypes/(?P<pk>\d+)/update', HouseTypeUpdateView.as_view(),
         name='event_house_type_update'),
+    url(r'^exportbuyhot/', ExportBuyHotView.as_view(),
+        name='buyhot_export'),
 ]

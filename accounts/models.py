@@ -30,6 +30,10 @@ class Customer(models.Model):
         obj.is_delete = True
         obj.save()
 
+    @classmethod
+    def get(cls, id):
+        return cls.objects.filter(id=id).first()
+
 
 class User(AbstractUser):
     is_delete = models.BooleanField(default=False)
@@ -46,8 +50,7 @@ class User(AbstractUser):
 class Order(models.Model):
     user = models.ForeignKey(User)
     eventdetail = models.ForeignKey(EventDetail)
-    time = models.DateTimeField('公测订单时间')
-    opentime = models.DateTimeField('开盘订单时间')
+    time = models.DateTimeField('订单时间',auto_now_add=True)
     event = models.ForeignKey(Event)
     is_delete = models.BooleanField(default=False)
     is_test = models.BooleanField('是否是公测订单', default=True)

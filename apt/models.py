@@ -87,6 +87,10 @@ class EventDetail(models.Model):
         obj.is_delete = True
         obj.save()
 
+    @classmethod
+    def all(cls):
+        return cls.objects.all().order_by('-id')
+
 
 class HouseType(models.Model):
     name = models.CharField('户型名称', max_length=100)
