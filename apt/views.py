@@ -417,6 +417,15 @@ class CustomCreateView(DialogMixin, CreateView):
         return initial
 
 
+class CustomerCountUpdateView(DialogMixin, UpdateView):
+    '''
+    修改可选套数
+    '''
+    template_name = 'popup/customer_count.html'
+    model = Customer
+    fields = ['count']
+
+
 class DeleteCustomerView(View):
     '''
     删除认筹名单

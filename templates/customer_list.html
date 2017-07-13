@@ -70,7 +70,8 @@
 			<td>{{ obj.mobile }}</td>
 			<td>{{ obj.identication }}</td>
 			<td>{{ obj.remark }}</td>
-			<td>{{ obj.count }}</td>
+			<td><a data-iframe="{% url 'customer_count_update' pk=obj.id %}" data-toggle="modal">
+				     {{ obj.count }} <i class="icon icon-edit"></i></a></td>
       		<td>TODO</td>
 			<td>
 				<p><a data-toggle="modal" data-target="#deleteModal" data-id="{{obj.id}}" class="delete">删除</a></p>

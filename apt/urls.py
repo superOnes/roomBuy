@@ -9,7 +9,7 @@ from .views import (EventListView, EventCreateView, ImportPriceView,
                     CustomCreateView, EventStatus, EventDelStatus, EventDelDel,
                     DeleteCustomerView, ExportHouseHotView, HouseHeatView,
                     HouseTypeListView, HouseTypeCreateView,
-                    HouseTypeUpdateView)
+                    HouseTypeUpdateView, CustomerCountUpdateView)
 
 
 urlpatterns = [
@@ -45,14 +45,13 @@ urlpatterns = [
     url(r'^(?P<pk>\d+)/export/', ExportView.as_view(), name='room_export'),
     url(r'^househeat/', HouseHeatView.as_view(), name='househeat'),
     # 认筹
-    url(r'^(?P<pk>\d+)/customs/$',
-        CustomListView.as_view(),
+    url(r'^(?P<pk>\d+)/customs/$', CustomListView.as_view(),
         name='event_customs'),
-    url(r'^(?P<pk>\d+)/customs/create/',
-        CustomCreateView.as_view(),
+    url(r'^(?P<pk>\d+)/customs/create/', CustomCreateView.as_view(),
         name='custom_create'),
-    url(r'^(?P<pk>\d+)/cusexport/',
-        ExportCustomerView.as_view(),
+    url(r'^customs/(?P<pk>\d+)/count', CustomerCountUpdateView.as_view(),
+        name='customer_count_update'),
+    url(r'^(?P<pk>\d+)/cusexport/', ExportCustomerView.as_view(),
         name='customer_export'),
     url(r'^deletect/', DeleteCustomerView.as_view(), name='ct_delete'),
     url(r'^exporthousehot/', ExportHouseHotView.as_view(), name='househot_export'),
