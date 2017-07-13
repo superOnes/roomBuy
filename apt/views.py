@@ -63,7 +63,7 @@ class EventUpdateView(DialogMixin, UpdateView):
     template_name = 'popup/event_create.html'
 
 
-class EventTermUpdateView(UpdateView):
+class EventTermUpdateView(DialogMixin, UpdateView):
     '''
     编辑协议
     '''
