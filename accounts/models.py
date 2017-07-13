@@ -14,6 +14,21 @@ class Customer(models.Model):
     # testroom = models.ForeignKey(EventDetail)
     count = models.IntegerField('可选套数', default=0)
     event = models.ForeignKey(Event, verbose_name='关联活动')
+    is_delete = models.BooleanField(default=False)
+
+    @classmethod
+    def get(cls, id):
+        return cls.objects.filter(id=id).first()
+
+    @classmethod
+    def all(cls):
+        return cls.objects.filter(is_delete=0).order_by('-id')
+
+    @classmethod
+    def remove(cls, id):
+        obj = cls.get(id)
+        obj.is_delete = True
+        obj.save()
 
 
 class User(AbstractUser):

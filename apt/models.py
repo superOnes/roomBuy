@@ -36,10 +36,21 @@ class Event(models.Model):
     termname = models.CharField('协议名称', max_length=100, null=True, blank=True)
     term = models.TextField('协议内容', null=True, blank=True)
     is_pub = models.BooleanField('是否发布', default=False)  # 活动是否发布，默认未发布。
+    is_delete = models.BooleanField(default=False)
 
     @classmethod
     def get(cls, id):
-        return get_object_or_404(cls.objects, id=id)
+        return cls.objects.filter(id=id).first()
+
+    @classmethod
+    def all(cls):
+        return cls.objects.filter(is_delete=0).order_by('-id')
+
+    @classmethod
+    def remove(cls, id):
+        obj = cls.get(id)
+        obj.is_delete = True
+        obj.save()
 
 
 class EventDetail(models.Model):
@@ -60,10 +71,21 @@ class EventDetail(models.Model):
                               null=True, blank=True)
     num = models.IntegerField('收藏人数', default=0)
     visit_num = models.IntegerField('访问热度', default=0)
+    is_delete = models.BooleanField(default=False)
 
     @classmethod
     def get(cls, id):
-        return get_object_or_404(cls.objects, id=id)
+        return cls.objects.filter(id=id).first()
+
+    @classmethod
+    def all(cls):
+        return cls.objects.filter(is_delete=0).order_by('-id')
+
+    @classmethod
+    def remove(cls, id):
+        obj = cls.get(id)
+        obj.is_delete = True
+        obj.save()
 
 
 class HouseType(models.Model):
