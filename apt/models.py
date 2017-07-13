@@ -59,8 +59,14 @@ class EventDetail(models.Model):
     image = models.ImageField('平面图', upload_to='eventdetail/%Y/%m/%d/',
                               null=True, blank=True)
     num = models.IntegerField('收藏人数', null=True)
-    visit_num=models.IntegerField('访问热度',default=0)
+    visit_num = models.IntegerField('访问热度', default=0)
 
     @classmethod
     def get(cls, id):
         return get_object_or_404(cls.objects, id=id)
+
+
+class HouseType(models.Model):
+    name = models.CharField('户型名称', max_length=100)
+    pic = models.ImageField('户型照片', upload_to='housetype/%Y/%m/%d/')
+    event = models.ForeignKey(Event)

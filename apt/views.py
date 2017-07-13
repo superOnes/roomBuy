@@ -17,9 +17,9 @@ from django.http import QueryDict
 from aptm import settings
 from aptp.models import Follow
 from accounts.models import Order
-from .models import Event, EventDetail
+from .models import Event, EventDetail, HouseType
 from accounts.models import Customer
-from .forms import EventForm, EventDetailForm, CustomerForm
+from .forms import EventForm, EventDetailForm, CustomerForm, HouseTypeForm
 
 
 class DialogMixin(object):
@@ -448,3 +448,35 @@ class HouseHeatView(View):
                     'is_testsold': et.is_testsold
                     } for et in queryset]
         return JsonResponse({'success': True, "data": et_list})
+
+
+class HouseTypeListView(ListView):
+    template_name = 'housetype_list.html'
+    model = HouseType
+    fields = ['name', 'pic']
+
+    def get_queryset(self):
+        self.event = Event.get(self.kwargs['pk'])
+        queryset = self.model.objects.filter(event=self.event)
+        return queryset
+
+    def get_context_data(self):
+        context = super(HouseTypeListView, self).get_context_data()
+        context['event'] = self.event
+        return context
+
+
+class HouseTypeCreateView(DialogMixin, CreateView):
+    template_name = 'popup/housetype_create.html'
+    form_class = HouseTypeForm
+
+    def get_initial(self):
+        initial = super(HouseTypeCreateView, self).get_initial()
+        initial['event'] = Event.get(self.kwargs['pk'])
+        return initial
+
+
+class HouseTypeUpdateView(DialogMixin, UpdateView):
+    template_name = 'popup/housetype_create.html'
+    model = HouseType
+    fields = ['name', 'pic']

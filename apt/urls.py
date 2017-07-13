@@ -1,23 +1,15 @@
 from django.conf.urls import url
 from django.views.generic import TemplateView
-from .views import (
-    EventListView,
-    EventCreateView,
-    ImportPriceView,
-    ExportView,
-    ExportCustomerView,
-    EventUpdateView,
-    EventDetailView,
-    EventDetailListView,
-    EventDetailTotalUpdateView,
-    EventTermUpdateView,
-    url2qrcode,
-    EventDetailCreateView,
-    EventDetailRemarkUpdateView,
-    CustomListView, CustomCreateView,
-    EventStatus, EventDelStatus,
-    EventDelDel, DeleteCustomerView,
-    ExportHouseHotView, HouseHeatView)
+from .views import (EventListView, EventCreateView, ImportPriceView,
+                    ExportView, ExportCustomerView, EventUpdateView,
+                    EventDetailView, EventDetailListView,
+                    EventDetailTotalUpdateView, EventTermUpdateView,
+                    url2qrcode, EventDetailCreateView,
+                    EventDetailRemarkUpdateView, CustomListView,
+                    CustomCreateView, EventStatus, EventDelStatus, EventDelDel,
+                    DeleteCustomerView, ExportHouseHotView, HouseHeatView,
+                    HouseTypeListView, HouseTypeCreateView,
+                    HouseTypeUpdateView)
 
 
 urlpatterns = [
@@ -64,5 +56,12 @@ urlpatterns = [
         name='customer_export'),
     url(r'^deletect/', DeleteCustomerView.as_view(), name='ct_delete'),
     url(r'^exporthousehot/', ExportHouseHotView.as_view(), name='househot_export'),
-    url(r'^opensta/',TemplateView.as_view(template_name='opensta.html'), name='event_opensta'),
+    url(r'^opensta/', TemplateView.as_view(template_name='opensta.html'), name='event_opensta'),
+    # 户型
+    url(r'^(?P<pk>\d+)/housetypes/$', HouseTypeListView.as_view(),
+        name='event_house_type_list'),
+    url(r'^(?P<pk>\d+)/housetypes/create', HouseTypeCreateView.as_view(),
+        name='event_house_type_create'),
+    url(r'^housetypes/(?P<pk>\d+)/update', HouseTypeUpdateView.as_view(),
+        name='event_house_type_update'),
 ]

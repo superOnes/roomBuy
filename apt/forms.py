@@ -1,6 +1,6 @@
 from django import forms
 from django.db import transaction
-from .models import Event, EventDetail
+from .models import Event, EventDetail, HouseType
 from accounts.models import Customer, User
 
 
@@ -41,3 +41,16 @@ class CustomerForm(forms.ModelForm):
                 user.is_admin = False
                 user.save()
                 return instance
+
+
+class HouseTypeForm(forms.ModelForm):
+
+    class Meta:
+        model = HouseType
+        fields = ['name', 'pic']
+
+    def save(self, commit=True):
+        if not self.instance.id:
+            self.instance.event = self.initial['event']
+            instance = super(HouseTypeForm, self).save(commit)
+            return instance

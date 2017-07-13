@@ -1,0 +1,38 @@
+{% extends 'include/main_base.html' %}
+{% block right %}
+<ol class="breadcrumb">
+  <i class="icon icon-home"></i>
+  <li><a href="{% url 'event_list' %}"><h3>{{event.name}}</h3></a></li>
+  <li><a href="{% url 'room_list' pk=event.id %}">房源信息</a></li>
+  <li class="active">户型</li>
+</ol>
+<div class="row" style="padding:0 10px;margin-top:-30px">
+    <a class="btn btn-primary" data-iframe="{% url 'event_house_type_create' pk=event.id %}" data-toggle=modal>添加户型</a>
+</div>
+<table class="table datatable">
+	<thead>
+		<tr>
+			<th data-width='10%'>序号</th>
+			<th>户型名称</th>
+			<th>户型图片</th>
+			<th data-width='10%'>操作</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for obj in object_list %}
+		<tr>
+			<td>{{ forloop.counter }}</td>
+			<td>{{ obj.name }}</td>
+			<td><img src="{{MEDIA_URL}}{{obj.pic}}" width="200px"></td>
+			<td>
+        <p><a data-iframe="{% url 'event_house_type_update' pk=obj.id %}" data-toggle="modal">编辑</a></p>
+				<p><a>删除</a></p>
+			</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+<script type="text/javascript">
+$(document).ready(function(){ $('table.datatable').datatable({ sortable: true, }); });
+</script>
+{% endblock %}
