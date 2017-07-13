@@ -1,77 +1,63 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
-<meta name="format-detection" content="telephone=no, email=no" />
-<title>在线选房</title>
-<link type="text/css" rel="stylesheet" href="{{STATIC_URL}}css/reset.css"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width = device-width ,initial-scale = 1,minimum-scale = 1,maximum-scale = 1,user-scalable =no"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>在线选房</title>
+    <link rel="stylesheet" href="{{STATIC_URL}}css/reset.css">
+    <link rel="stylesheet" href="{{STATIC_URL}}css/swiper.min.css" />
 </head>
 <body>
-	<div class="container">
-		<div class="login-top">
-			<img src="{{STATIC_URL}}images/img1.png" />
-		</div>
-		<nav class="choiceTop clear">
-			<p class="fl">
-				<span>客户:</span>
-				<span>11111</span>
-			</p>
-			<ul class="fr">
-				<li>签到码</li>
-				<li>退出</li>
-			</ul>
-		</nav>
-		<header class="choieHead">
-			<h1>{{event.name}}</h1>
-			<p>咨询电话：{{event.phone_num}}</p>
-		</header>
+<div class="wapline">
+    <div class="bannerline">
+        <div class="swiper-container" style="width:100%;">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" ><img src="{{STATIC_URL}}images/img1.png" alt=""/></div>
+                <div class="swiper-slide" ><img src="{{STATIC_URL}}images/img1.png" alt=""/></div>
+                <div class="swiper-slide" ><img src="{{STATIC_URL}}images/img1.png" alt=""/></div>
 
-		<section>
-			<div class="sectionTop clear">
-				<div class="housePho fl">
-					<a href="photo_swp.htm">
-						<img src="{{STATIC_URL}}images/img2.png" />
-						<p>查看平面图</p>
-					</a>
-				</div>
-				<div class="fl">
-					<dl>
-						<dt>公测活动</dt>
-						<dd>{{event.test_start|date:'Y-m-d h:i'}} 开始</dd>
-						<dd>{{event.test_end|date:'Y-m-d h:i'}} 结束</dd>
-					</dl>
-					<dl>
-						<dt>正式活动</dt>
-						<dd>{{event.event_start|date:'Y-m-d h:i'}} 开始</dd>
-						<dd>{{event.event_end|date:'Y-m-d h:i'}} 结束</dd>
-					</dl>
-				</div>
-			</div>
+            </div>
+            <!-- Add Pagination -->
+            <div class="swiper-pagination"></div>
 
-			<div class="houseContent">
-				<dl>
-					<dt>活动细则</dt>
-					<dd>{{event.description}}</dd>
-				</dl>
-				<dl>
-					<dt>活动须知</dt>
-					<dd>{{event.notice}}</dd>
-				</dl>
-				<dl>
-					<dt>温馨提示</dt>
-					<dd>{{event.tip}}</dd>
-				</dl>
-			</div>
-		</section>
+        </div>
+    </div>
+    <div class="houseQui clear">
+        <h1 class="fl">名苑测试开盘</h1>
+        <p class="quit fr">退出</p>
+    </div>
 
-		<div class="choiceBtn">
-			<a href="{% url 'app_eventdetail_list' pk=event.id %}">立即进入</a>
-		</div>
+    <div class="phone">咨询电话：03115684634</div>
+    <div class="lineBox">
+        <div class="floor"><div class="remark"><div class="mark"></div><span class="floor1">开盘时间</span></div><div class="flr choicSt">2017-07-04 08:00 开始<br/>2017-07-04 08:00 开始</div></div>
+        <div class="floor"><span class="floor2 bder">活动细则</span> <div class="flr hgt">1.关注**官方微信，在微官网菜单中点击 在线选房。<br/>2.进入选房界面后选择同意选房须知，并 凭账号密码登录操作界面。</div></div>
+        <div class="floor"><span class="floor3 bder">活动须知</span><div class="flr hgt">活动期间大家随意买房</div></div>
+        <div class="floor"><span class="floor2 bder">温馨提示</span> <div class="flr hgt">1.为保证账号安全，请勿将个人账号信息 告知他人。<br/>2.开始选房前，请确保手机正确登录选房 界面，如有问题，请及时询问工作人员。1.为保证账号安全，请勿将个人账号信息 告知他人。<br/>2.开始选房前，请确保手机正确登录选房 界面，如有问题，请及时询问工作人员。1.为保证账号安全，请勿将个人账号信息 告知他人。<br/>2.开始选房前，请确保手机正确登录选房 界面，如有问题，请及时询问工作人员。1.为保证账号安全，请勿将个人账号信息 告知他人。<br/>2.开始选房前，请确保手机正确登录选房 界面，如有问题，请及时询问工作人员。1.为保证账号安全，请勿将个人账号信息 告知他人。<br/>2.开始选房前，请确保手机正确登录选房 界面，如有问题，请及时询问工作人员。</div></div>
 
-	</div>
-
-	<script type="text/javascript" src="{{STATIC_URL}}src/zepto.min.js"></script>
-	<script type="text/javascript" src="{{STATIC_URL}}js/login.js"></script>
+</div>
+    <div class="btnline"><a href="houseList.html" class="btnL">立即进入</a></div>
+</div>
 </body>
+<script src="{{STATIC_URL}}src/jquery-1.12.4.min.js"></script>
+<script src="{{STATIC_URL}}src/swiper.jquery.min.js"></script>
+<script>
+    var width = $("body").width();
+    $(".swiper-container").css({"width":width});
+    var swiper = new Swiper('.swiper-container', {
+        pagination: '.swiper-pagination',
+        freeModeMomentum : true,
+        autoplay : 3000,
+        autoplayDisableOnInteraction : false
+    });
+    var dpr = window.devicePixelRatio;
+
+    for(var i = 0 ;i<$(".floor div.hgt").length;i++){
+        var index = i;
+        var sindex = i+1;
+        var height = parseInt($(".floor div.hgt").eq(index).css("height"));
+        $(".floor span").eq(sindex).css({"height":(height/(20)+0.85)+"rem","line-height":(height/(20)+0.85)+"rem"})
+    }
+
+</script>
 </html>

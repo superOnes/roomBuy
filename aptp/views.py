@@ -17,7 +17,7 @@ class AppEventDetailView(TemplateView):
 
 
 class AppEventDetailListView(TemplateView):
-    template_name = 'aptp/eventdetail_list.html'
+    template_name = 'aptp/house_list.html'
 
     def get_context_data(self, pk):
         context = super(AppEventDetailListView, self).get_context_data()
@@ -27,7 +27,7 @@ class AppEventDetailListView(TemplateView):
 
 
 class AppEventDetailDetailView(TemplateView):
-    template_name = 'aptp/eventdetail_detail.html'
+    template_name = 'aptp/house_info.html'
 
     def get_context_data(self, pk):
         context = super(AppEventDetailDetailView, self).get_context_data()

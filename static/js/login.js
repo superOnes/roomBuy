@@ -1,14 +1,14 @@
 
 $(function(){
 
-	$(".loginBtn").tap(function(){
-		if($(".telptxt").val().trim().length==0){
+	$(".btnLogin").tap(function(){
+		if($(".titleph").val().trim().length==0){
 			$(".tips").html("请输入手机号！");
 		}
 		else if(!telp()){
 			$(".tips").html("手机号格式错误！");
 		}
-		else if($(".personIdtxt").val().trim().length==0){
+		else if($(".titlezj").val().trim().length==0){
 			$(".tips").html("请输入证件号！");
 		}
 		else if(!personId()){
@@ -83,11 +83,17 @@ $(function(){
 /*在线选房切换*/
 	houseTab($(".listTileDiv"),$(".houseTap"));
 
+	houseTab($(".houseUnit"),$(".choseTap"));
+
+	$(".houseUnit p").tap(function(){
+		$(this).addClass("listTile-style").siblings().removeClass("listTile-style");
+	})
+
 });
 
 function telp (){
 	var reg=/^1[3|4|5|7|8]\d{9}$/;
-	var hao= $(".telptxt").val();
+	var hao= $(".titleph").val();
 	if(reg.test(hao)){
 		return true;
 	}else {
@@ -97,7 +103,7 @@ function telp (){
 
 function personId(){
 	var reg=/^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/;
-	var hao=$(".personIdtxt").val();
+	var hao=$(".titlezj").val();
 	if(reg.test(hao)){
 		return true;
 	}else{

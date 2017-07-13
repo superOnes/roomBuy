@@ -26,6 +26,7 @@ body {
     font-family: "Microsoft Ya Hei", "微软雅黑";
     color: #222;
     -webkit-overflow-scrolling: touch;
+    overflow-scrolling: touch;
     background: #fff;
 }
 
@@ -69,132 +70,250 @@ a, img {-webkit-touch-callout: none;}
     width: 100%;
     height: 100%;
 }
-
-
 /*登录页*/
 .container{ width:100%;}
 .container .login-top,.container .login-top img{width:100%;}
-.login-text{
-    padding:0 1.5rem;
-    line-height:2.6rem;
-    font-size:1rem;
-    font-weight:normal;
-}
-.login-box form>p{
-    width:90%;
-    height:2.4rem;
 
-    line-height:2.4rem;
-    margin:0 5% 1rem 5%;
-    padding:0 4%;
-    background:#f8f8f8;
-    border-radius:6px;
-    font-size:.8rem;
-}
-.login-box form>p>label{width:3.5rem;display:inline-block;}
-.login-box form>p>input{
-    width:70%;
-    height:2rem;
-    line-height:2rem;
-    padding:0.2rem;
-}
-.login-box button{
-    width:90%;
-    height:2.4rem;
-    color:#fff;
-    font-size:1rem;
-    margin:2% 5% 0 5%;
-    background:#f75c2e;
-    border:none;
-    border-radius:6px;
-    font-family: 微软雅黑;
-}
 .tips{
     width:90%;
     margin:5%;
     font-size:.6rem;
-    color:red;
+    color:#f75c2e;
 }
-
-/*选房*/
-.choiceTop{
-    height:2.4rem;
-    padding:0 5%;
-    border-bottom:solid 1px #ededed;
-    font-size:.8rem;
-}
-.choiceTop p{line-height:2.4rem;}
-.choiceTop ul li{
-    width:3rem;
-    height:1.4rem;
-    line-height:1.4rem;
-    text-align:center;
-    float:left;
-    margin-left:.9rem;
-    margin-top:.5rem;
-    border:solid 1px #bababa;
-    border-radius:6px;
-}
-.choieHead{
-    height:4.2rem;
-    padding:0 5%;
-    border-bottom:solid 10px #ededed;
-}
-.choieHead h1{
-    font-size:1rem;
-    font-weight:normal;
-    line-height:2.2rem;
-}
-.choieHead p{
+.wapLogin{
     width:100%;
-    font-size:.7rem;
-    color:#009ef0;
-    line-height:1.4rem;
-    padding-left:10%;
-    background:url("../images/tel.png") no-repeat 3% center;
-    background-size:6%;
+    height:100%;
+    color:#fff;
+    overflow:hidden;
 }
-.sectionTop{
-    padding:5%;
-    border-bottom:solid 10px #eee;
+.wapLogin>img{
+    width:120%;
+    height:120%;
+    background-position: center;
+    background-size: cover;
+    -ms-filter: blur(14px);
+    filter: blur(14px);
+    position:fixed;
+    left:-10%;
+    top:-10%;
+    z-index:-1;
+    opacity:0.85;
 }
-.houseContent{width:90%;margin:.5rem 5% 3rem 5%;}
-.housePho{position:relative;width:40%;margin-right:5%;}
-.housePho img{ width:100%;}
-.housePho p{
-    width:100%;
-    height:1.2rem;
-    line-height:1.2rem;
-    text-align:center;
+.login{ text-align:center;margin-top:15%;position:relative; }
+.loginLogo {
+    width:108px;
+    height:108px;
+    border-radius:50%;
+    overflow:hidden;
+    background:#fff;
     position:absolute;
-    bottom:0;
-    left:0;
-    background-color:rgba(0,0,0,0.5);
+    top:0;
+    left:50%;
+    margin-left:-54px;
+}
+.loginLogo img{width:100%;height:100%;}
+.login h1{
+    font-weight:normal;
+    font-size:1.6rem;
+    padding-top:6.5rem;
+    text-shadow: 3px 3px 8px rgba(247,92,46,0.4) ;
+}
+.loginBox{margin-top:2.6rem;}
+.tipbox{
+    width:80%;
+    margin:0 10% 2.0rem;
+    border-bottom:solid 1px #e5e5e5;
+}
+.tipbox span{
+    text-indent:.5rem;
+    font-size:.9rem;
+    line-height:1.8rem;
+}
+.tipbox input{
+    margin-right:.5rem;
+    line-height:1.4rem;
+    text-indent:1rem;
     color:#fff;
     font-size:.8rem;
 }
-.sectionTop dl,.houseContent dl{
-    font-size:.9rem;
-    margin-bottom:.4rem;
-}
-.sectionTop dl dt, .houseContent dl dt{ color:#f75c2e; line-height:1.4rem;}
-.sectionTop dl dd, .houseContent dl dd{
-    font-size:.8rem;
-    line-height:1rem;
-}
-.houseContent dl dd{line-height:1.4rem;}
-.choiceBtn{
-    width:100%;
-    height:2.2rem;
-    background:#f75c2e;
-    font-size:1rem;
+.tipbox input::-webkit-input-placeholder { color: #bfbfbf;}
+.tipbox input:-moz-placeholder { color: #bfbfbf; }
+.tipbox input:-ms-input-placeholder {  color: #bfbfbf;}​,
+.btnLogin{
+    width:80%;
+    margin:10%;
+    height:2rem;
+    line-height:2rem;
     text-align:center;
-    line-height:2.2rem;
+    font-size:.9rem;
+    background:#f75c2e;
+    border-radius:100px;
+}
+
+/*在线选房*/
+.wapline{
+    width:100%;
+    background: #eeeeee;
+    font-size: 0.6rem;
+    color:#222222;
+}
+.wapline div,.wapline h1 ,{
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+.wapline .bannerline{
+    width: 100%;
+    height:10.2rem;
+    /*position:absolute;*/
+}
+.wapline .bannerline img{
+    height:10.2rem;
+    width:100%;
+}
+.wapline h1{
+    font-size:1rem;
+    font-style: normal;
+    line-height: 2.1rem;
+    height: 2.1rem;
+    padding-left: 1rem;
+    background: #fff;
+}
+.houseQui {background:#fff;}
+.quit {
+    padding:0 3%;
+    height:1.2rem;
+    line-height:1.2rem;
+    text-align:center;
+    margin-right:5%;
+    margin-top:.5rem;
+    border:solid 1px #eee;
+    border-radius:6px;
+}
+.wapline .phone{
+    font-size:0.65rem;
+    line-height: 1.8rem;
+    height: 1.8rem;
+    color: #1f9af0;
+    padding-left: 2.8rem;
+    background:#fff url("../images/tel.png") 1.45rem center no-repeat;
+    background-size:6%;
+}
+.wapline .lineBox{
+    width: 95%;
+    margin: 0.4rem auto 1.8rem;
+    background: #fff;
+    padding: 0.4rem 0;
+    position: relative;
+    border-bottom:solid 10px #eee;
+}
+.wapline .lineBox .floor {
+    overflow: hidden;
+
+}
+.wapline .lineBox .floor span,.wapline .lineBox .floor4{
+    float: left;
+    width: 5.65rem;
+    text-align: center;
+
+}
+.floor2,.floor3,.floor4{
+    padding: 0 0.8rem;
+}
+.wapline .lineBox  .remark{
+    width: 4.05rem;
+    height:4.05rem;
+    margin:0.8rem 0.8rem 0;
+    line-height: 4.05rem;
+    text-align: center;
+    background: url("../images/img2.png") no-repeat left top;
+    background-size: cover;
+    background-origin: content-box;
+    position: relative;
+    left:-.3rem;
+    font-size: 0.7rem;
+    color: #fff;
+    float: left;
+
+}
+.wapline .lineBox .floor .mark{
+    width: 4.05rem;
+    height:4.05rem;
+    position: absolute;
+    background: rgba(0,0,0,.5);
+    z-index: 11;
+}
+.floor{
+    position: relative;
+}
+.wapline .lineBox .floor .floor1{
+    width: 4.05rem;
+    text-align: center;
+    position: relative;
+    z-index: 111;
+}
+.wapline .lineBox .floor .flr{
+    background: #eee;
+    padding:0.3rem 0.5rem;
+    line-height: 1.05rem;
+    margin-top: 0.85rem;
+    margin-left: 0.35rem;
+    position: relative;
+    float: left;
+    width: 60%;
+}
+.wapline .lineBox .floor .choicSt {margin-top:1.0rem;}
+.wapline .lineBox .floor .hgt {margin-top:0.2rem;}
+.wapline .lineBox .floor .flr:before{
+    content: '';
+    display: block;
+    width:0;
+    height: 0;
+    border-style: solid;
+    border-width: 0.2rem;
+    border-color: transparent #eee transparent transparent;
+    position: absolute;
+    top: 50%;
+    left: -0.4rem;
+}
+.wapline .btnline{
+    height:1.8rem;
+    width:100%;
+    background: #f75c2e;
+    margin-top: 0.7rem;
     position:fixed;
     bottom:0;
     left:0;
 }
-.choiceBtn a{color:#fff;}
+.wapline .btnline a{
+    font-size: 0.8rem;
+    line-height: 1.8rem;
+    text-align: center;
+    float: left;
+    width: 100%;
+    color: #fff;
+}
+.wapline .lineBox .floor:before{
+    content: "";
+    display: block;
+    width: 1px;
+    background: #ccc;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    left: 5.2rem;
+}
+.wapline .lineBox .floor:after{
+    content: "";
+    display: block;
+    width: 1.425rem;
+    background: #ccc;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    left: 4.75rem;
+    background: url("../images/yuan.png") left center no-repeat;
+}
 
 /*选房列表*/
 .houseTitle{
@@ -246,19 +365,26 @@ a, img {-webkit-touch-callout: none;}
     padding:.9rem 5% .2rem 5%;
 }
 .listTileDiv{width:90%;height:2rem;overflow:hidden;}
-.listTile p{
+.listTile p,.houseUnit p{
     float:left;
     height:1.5rem;
     line-height:1.5rem;
-    padding:0 .5rem;
+    padding:0 .3rem;
     background:#eee;
-    font-size:.8rem;
-    margin-right:.8rem;
+    font-size:.7rem;
+    margin-right:.5rem;
     margin-bottom: 0.6rem;
     -moz-border-radius:.2rem;
     -webkit-border-radius:.2rem;
     border-radius:.2rem;
 }
+.houseUnit p{background:#fff;margin-bottom:0;}
+.unite{
+    background:#eee;
+    padding:5%;
+}
+.floorListbox { margin-bottom:1rem;}
+.houseUnit{ margin-bottom:2.6rem;}
 /*添加选房列表code*/
 .listTile p i{
     background:url("../images/share.png") no-repeat;
@@ -277,7 +403,7 @@ a, img {-webkit-touch-callout: none;}
     color: #222;
     margin-left:.3rem;
 }
-.listTile p.listTile-style{
+.listTile p.listTile-style,.houseUnit p.listTile-style{
     background-color: #f75c2e;
     color:#fff;
 }
@@ -322,10 +448,7 @@ a, img {-webkit-touch-callout: none;}
 .choseList-style{
     background-color: #f75c2e;
 }
-.houseChose{
-    height:9.0rem;
-    position: relative;
-}
+.houseChose{ position: relative; }
 
 .floorList{
     height: 1.4rem;
@@ -353,12 +476,10 @@ a, img {-webkit-touch-callout: none;}
 .floorList .active{
     background-color: chartreuse;
 }
-.floorList .normal{}
 
 .floorChose{
-    width:80%;
-    /*float: left;*/
-    margin-left: 2.9rem;
+    width:90%;
+    margin-left:5%;
     margin-top: 0.45rem;
     border:solid 1px #fdd6d6;
     padding: 0.8rem 0.95rem .5rem 0.3rem;
@@ -390,7 +511,7 @@ a, img {-webkit-touch-callout: none;}
 }
 div.shouing{
     color: #000;
-    border-color: #cccccc;
+    border-color: #ccc;
     top:3.2rem;
     margin-bottom:.5rem;
 }
@@ -400,10 +521,10 @@ div.shoued{
 .floorChose li{
     height:1.4rem;
     font-size:.7rem;
-    width:28%;
+    width:30%;
     float: left;
-    margin:0 0 0.32rem 6%;
-    border:solid 1px #f75c2e;
+    margin:0 0 0.32rem 3%;
+    border:solid 1px #ccc;
     text-align: center;
     line-height:1.4rem;
     -moz-border-radius:.2rem;
@@ -411,25 +532,10 @@ div.shoued{
     border-radius:.2rem;
 }
 .floorChose li a{color:#222;}
-.floorChose-red{
-    background-color: #f75c2e;
-    color:#fff;
-}
-.picLi{
-    width:96%;
-    height:3.0rem;
-    margin-top: .4rem;
-    display: none;
-}
-.picLi p{
-    float: right;
-    font-size: .7rem;
-    margin-top: .2rem;
-}
 .radius-radio{
     width:0.7rem;
     height:0.7rem;
-    border: solid 1px #888888;
+    border: solid 1px #888;
     float: left;
     margin-top:0.45rem;
     margin-right:.2rem;
@@ -447,13 +553,6 @@ div.shoued{
     -moz-border-radius:.2rem;
     -webkit-border-radius:.2rem;
 }
-.sellFloat{
-    float: right;
-    margin-right: .4rem;
-}
-.sellClass{
-    font-size: .7rem;
-}
 .endTime{
     height:2rem;
     line-height:2rem;
@@ -467,7 +566,31 @@ div.shoued{
     font-size: .8rem;
     color: #f75c2e;
 }
-/*收藏页*/
+.houseUnit .floorChose {width:90%;margin-left:5%;}
+.houseUnit .floorChose li {width:30%;margin:0 0 0.32rem 3%;}
+.floorChose li.floorLi-red{background:#f75c2e;border:none;}
+.floorChose li.floorLi-red a{color:#fff;}
+.legend{
+    padding:0 5% 0 60%;
+    font-size:.6rem;
+    position:relative;
+}
+.legend i{
+    width:12px;
+    height:12px;
+    border:solid 1px #ccc;
+    border-radius:3px;
+    margin-right:.3rem;
+    margin-top:.2rem;
+    display:inline-block;
+    position:absolute;
+    top:-.1rem;
+}
+.legend i:nth-of-type(2){border:none;background:#f75c2e;}
+.legend span{
+    padding-left:14px;
+}
+    /*收藏页*/
 .shareCarList{
     float: left;
     width:100%;
@@ -509,17 +632,6 @@ div.shoued{
     float: right;
     margin-right:.2rem;
     border-radius:50%;
-}
-.input{
-    width:100%;
-    height:2.4rem;
-    line-height:2.4rem;
-    border-bottom: solid 1px #eee;
-    margin-top: .30rem;
-    padding-left: 5%;
-}
-.pleaseChose{
-    font-size: .8rem;
 }
 .choseOneRight{
     float: right;
@@ -595,7 +707,6 @@ div.shoued{
     background-color: #f75c2e;
 }
 
-
 /*户型详情*/
 .houseInfotop{
     width:100%;
@@ -623,22 +734,17 @@ div.shoued{
     margin-bottom:.5rem;
 }
 .houseShare span{
-    padding:0 5% 0 14%;
-    height:1.6rem;
-    line-height:1.6rem;
-    font-size:.8rem;
-    color:#fff;
+    padding:0 3%;
+    height:1.2rem;
+    line-height:1.2rem;
+    font-size:.7rem;
+    color:#f75c2e;
     border-radius:6px;
+    border:solid 1px #f75c2e;
 }
-.houseShare span a{ color:#fff;}
+.houseShare span a{ color:#f75c2e;}
 .houseShare span:nth-of-type(1){
-    background:url("../images/list.png") no-repeat 12% center #009ef0;
-    background-size:20%;
-}
-.houseShare span:nth-of-type(2){
-    background:url("../images/share1.png") no-repeat 14% center #f75c2e;
-    background-size:24%;
-    padding-left:10%;
+    margin-right:1.0rem;
 }
 .houseInfoCont{
     height:4.2rem;
@@ -754,9 +860,6 @@ div.shoued{
     color: #a8a8a8;
     left:80%;
 }
-
-
-
 /*订单详情*/
 .order-top2{
     width:95%;
@@ -858,7 +961,7 @@ div.shoued{
     display:none;
 }
 .dialog{
-    background-color: #ffffff;
+    background-color: #fff;
     border-radius: 0.5rem;
     width:80%;
     margin: 10% auto;
@@ -997,6 +1100,7 @@ div.shoued{
     top:50%;
 }
 .banner img{width:100%;}
+
 @media (min-width:320px){
     .houseInfotop h1{font-size:.7rem;}
     .houseInfoOther ul li{font-size:.7rem;}
@@ -1004,5 +1108,4 @@ div.shoued{
     .order-top a span {font-size:.8rem;}
     .order-2{left:38%;}
     .order-bottom2 div table{font-size:.8rem;}
-    .floorChose li{ width:27%;}
 }
