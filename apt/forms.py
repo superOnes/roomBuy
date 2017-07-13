@@ -35,8 +35,8 @@ class CustomerForm(forms.ModelForm):
             with transaction.atomic():
                 self.instance.event = self.initial['event']
                 instance = super(CustomerForm, self).save(commit)
-                user = User(username=self.instance.mobile,
-                            password=self.instance.identication)
+                user = User.objects.create_user(username=instance.mobile,
+                                                password=instance.identication)
                 user.custom = instance
                 user.is_admin = False
                 user.save()
