@@ -71,7 +71,8 @@
 			<td>{{ obj.mobile }}</td>
 			<td>{{ obj.identication }}</td>
 			<td>{{ obj.remark }}</td>
-			<td><a data-iframe="{% url 'customer_count_update' pk=obj.id %}" data-toggle="modal">
+			<td><a data-iframe="{% url 'customer_count_update' pk=obj.id %}" data-toggle="modal"
+				     data-title="修改可选套数" data-width="300">
 				     {{ obj.count }} <i class="icon icon-edit"></i></a></td>
       		<td>TODO</td>
 			<td>

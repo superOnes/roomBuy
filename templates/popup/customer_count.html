@@ -1,5 +1,18 @@
-<form method="post">
-{% csrf_token %}
-{{form.as_p}}
-<input type="submit" value="确认">
+{% extends 'include/base.html' %}
+{% block main %}
+<div style="padding:20px">
+	<form class="form-horizontal" method="post" action="">
+		{% csrf_token %}
+		<div class="form-group">
+		    <label class="col-sm-2">可选套数</label>
+		    <div class="col-md-6 col-sm-10">
+		      <input type="number" class="form-control" placeholder="协议名称"
+					 name="count" value="{{form.count.value|default:''}}" required />
+		    </div>
+		</div>
+	<div class="modal-footer">
+    	<input type="submit" class="btn btn-primary" value="确定"></input>
+    </div>
 </form>
+</div>
+{% endblock %}
