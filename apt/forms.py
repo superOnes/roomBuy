@@ -37,7 +37,7 @@ class CustomerForm(forms.ModelForm):
                 instance = super(CustomerForm, self).save(commit)
                 user = User.objects.create_user(username=instance.mobile,
                                                 password=instance.identication)
-                user.custom = instance
+                user.customer = instance
                 user.is_admin = False
                 user.save()
                 return instance
