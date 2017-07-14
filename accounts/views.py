@@ -206,7 +206,7 @@ class ImportView(View):
 
     def post(self, request, *args, **kwargs):
         id = request.POST.get('id')
-        print(id)
+        # custom = Customer.objects.filter(event_id=id)
         if id:
             event = Event.get(id)
             file = request.FILES.get('filename')
@@ -228,11 +228,14 @@ class ImportView(View):
                     li.append(value)
                 data.append(li)
             for ct in data:
-                customer = Customer.objects.create(realname=ct[0],
-                                                   mobile=ct[1],
-                                                   identication=ct[2],
-                                                   remark=ct[3],
-                                                   event=event)
-                customer.save()
-            return JsonResponse({'success': True})
+                if Customer.objects.all(event_id=id, mobile=ct[1]).exists():
+                    continue
+                else:
+                    customer = Customer.objects.create(realname=ct[0],
+                                                       mobile=ct[1],
+                                                       identication=ct[2],
+                                                       remark=ct[3],
+                                                       event=event)
+                    customer.save()
+                return JsonResponse({'success': True})
         return JsonResponse({'success': False})

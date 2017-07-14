@@ -203,7 +203,10 @@ class ImportPriceView(View):
                     li.append(value)
                 data.append(li)
             for ed in data:
-                eventdetail = EventDetail.objects.create(building=ed[1],
+                if EventDetail.objects.filter(event_id=id, room_num=ed[4]).exists():
+                    continue
+                else:
+                    eventdetail = EventDetail.objects.create(building=ed[1],
                                                          unit=ed[2],
                                                          floor=ed[3],
                                                          room_num=ed[4],
