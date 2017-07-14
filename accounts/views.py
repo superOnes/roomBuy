@@ -240,7 +240,7 @@ class ImportView(View):
                     li.append(value)
                 data.append(li)
             for ct in data:
-                if Customer.objects.all(event_id=id, mobile=ct[1]).exists():
+                if Customer.objects.filter(event_id=id, mobile=ct[1]).exists():
                     continue
                 else:
                     customer = Customer.objects.create(realname=ct[0],

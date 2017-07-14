@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.shortcuts import get_object_or_404
 
 from apt.models import Event, EventDetail
 
@@ -18,7 +19,7 @@ class Customer(models.Model):
 
     @classmethod
     def get(cls, id):
-        return cls.objects.filter(id=id).first()
+        return get_object_or_404(cls.objects, id=id)
 
     @classmethod
     def all(cls):
@@ -29,10 +30,6 @@ class Customer(models.Model):
         obj = cls.get(id)
         obj.is_delete = True
         obj.save()
-
-    @classmethod
-    def get(cls, id):
-        return cls.objects.filter(id=id).first()
 
 
 class User(AbstractUser):
@@ -57,7 +54,7 @@ class Order(models.Model):
 
     @classmethod
     def get(cls, id):
-        return cls.objects.filter(id=id).first()
+        return get_object_or_404(cls.objects, id=id)
 
     @classmethod
     def all(cls):

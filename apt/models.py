@@ -40,7 +40,7 @@ class Event(models.Model):
 
     @classmethod
     def get(cls, id):
-        return cls.objects.filter(id=id).first()
+        return get_object_or_404(cls.objects, id=id)
 
     @classmethod
     def all(cls):
@@ -85,7 +85,7 @@ class EventDetail(models.Model):
 
     @classmethod
     def get(cls, id):
-        return cls.objects.filter(id=id).first()
+        return get_object_or_404(cls.objects, id=id)
 
     @classmethod
     def all(cls):
@@ -96,7 +96,3 @@ class EventDetail(models.Model):
         obj = cls.get(id)
         obj.is_delete = True
         obj.save()
-
-    @classmethod
-    def all(cls):
-        return cls.objects.all().order_by('-id')
