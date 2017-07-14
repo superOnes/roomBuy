@@ -1,9 +1,10 @@
 import os
-
 import xlrd
+import uuid
+
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
-from django.views.generic import View,ListView
+from django.views.generic import View, ListView
 from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -34,7 +35,7 @@ class LoginView(View):
         if user:
             if user.is_admin:
                 login(request, user)
-                return redirect(reverse('even_list'))
+                return redirect('/event/list/')
         messages.error(request, '用户名或密码不正确')
         return redirect(reverse('acc_login'))
 
@@ -46,7 +47,7 @@ class UserListView(ListView):
     '''
     model = User
     template_name = 'userlist.html'
-    fields=['username','password','is_delete']
+    fields = ['username', 'password', 'is_delete']
 
     def get_queryset(self):
         return self.model.objects.filter(is_admin=True).order_by('-id')
@@ -173,20 +174,31 @@ class CustomerLoginView(View):
     顾客登录
     '''
 
-    def get(self, request):
-        return render(request, 'customer_login.html')
-
     def post(self, request, *args, **kwargs):
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(username=username, password=password)
-        if user:
-            if not user.is_admin:
-                login(request, user)
-                return redirect(reverse('home_page_view'))
-        messages.error(request, '用户名或密码不正确')
-        return redirect(reverse('acc_login'))
-
+        mobile = request.POST.get('tel')
+        identication = request.POST.get('personId')
+        response = JsonResponse({'response_state': 400})
+        response['Access-Control-Allow-Origin'] = '*'
+        try:
+            customer = Customer.objects.get(
+                mobile=mobile, identication=identication)
+        except BaseException:
+            return response
+        else:
+            userobj = customer.user
+            eventid = customer.event_id
+            user = authenticate(
+                username=userobj.username,
+                password=identication)
+            if user:
+                if not user.is_admin:
+                    login(request, user)
+                    response = JsonResponse(
+                        {'response_state': 200, 'id': eventid})
+                    response['Access-Control-Allow-Origin'] = '*'
+                    return response
+                return response
+            return response
 
 class DeleteTestView(View):
     '''
@@ -237,5 +249,9 @@ class ImportView(View):
                                                        remark=ct[3],
                                                        event=event)
                     customer.save()
-                return JsonResponse({'success': True})
+                    User.objects.create_user(username=uuid.uuid1(),
+                                             password=customer.identication,
+                                             customer=customer,
+                                             is_admin=False)
+                    return JsonResponse({'success': True})
         return JsonResponse({'success': False})

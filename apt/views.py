@@ -13,6 +13,8 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.http import JsonResponse, HttpResponse
 from django.db.models import Q
 from django.http import QueryDict
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 from aptm import settings
 from aptp.models import Follow
@@ -26,7 +28,7 @@ class DialogMixin(object):
     def get_success_url(self):
         return resolve_url('dialog_success')
 
-
+# @method_decorator(login_required,name='dispatch')
 class EventListView(ListView):
     '''
     活动列表
@@ -35,7 +37,11 @@ class EventListView(ListView):
     model = Event
 
     def get_queryset(self):
-        return self.model.objects.order_by('-id')
+        self.value = self.request.GET.get('value')
+        queryset = self.model.objects.all()
+        if self.value:
+            queryset = queryset.filter(Q(name__contains=self.value))
+        return queryset
 
 
 class EventCreateView(DialogMixin, CreateView):
@@ -203,16 +209,17 @@ class ImportPriceView(View):
                     li.append(value)
                 data.append(li)
             for ed in data:
-                if EventDetail.objects.filter(event_id=id, room_num=ed[4]).exists():
+                if EventDetail.objects.filter(
+                        event_id=id, room_num=ed[4]).exists():
                     continue
                 else:
                     eventdetail = EventDetail.objects.create(building=ed[1],
-                                                         unit=ed[2],
-                                                         floor=ed[3],
-                                                         room_num=ed[4],
-                                                         price=ed[5],
-                                                         total=ed[6],
-                                                         event=event)
+                                                             unit=ed[2],
+                                                             floor=ed[3],
+                                                             room_num=ed[4],
+                                                             price=ed[5],
+                                                             total=ed[6],
+                                                             event=event)
                 eventdetail.save()
             return JsonResponse({'success': True})
         return JsonResponse({'success': False})

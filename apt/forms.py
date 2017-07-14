@@ -1,3 +1,4 @@
+import uuid
 from django import forms
 from django.db import transaction
 from .models import Event, EventDetail, HouseType
@@ -35,11 +36,10 @@ class CustomerForm(forms.ModelForm):
             with transaction.atomic():
                 self.instance.event = self.initial['event']
                 instance = super(CustomerForm, self).save(commit)
-                user = User.objects.create_user(username=instance.mobile,
-                                                password=instance.identication)
-                user.customer = instance
-                user.is_admin = False
-                user.save()
+                User.objects.create_user(username=instance.mobile,
+                                         password=instance.identication,
+                                         customer=instance,
+                                         is_admin=False)
                 return instance
 
 

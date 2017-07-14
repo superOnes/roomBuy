@@ -1,6 +1,5 @@
 from django.views.generic.base import TemplateView
 from apt.models import Event, EventDetail
-from django.utils import timezone
 
 
 class AppLoginView(TemplateView):
