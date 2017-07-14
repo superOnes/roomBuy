@@ -96,6 +96,7 @@ class EventDetailListView(ListView):
     def get_context_data(self):
         context = super(EventDetailListView, self).get_context_data()
         context['event'] = self.event
+        context['value'] = self.value
         return context
 
 
