@@ -6,12 +6,21 @@
 <ul class="nav nav-tabs">
     <li class="active"><a data-tab href="#tabContent1">购房者热度统计</a></li>
     <li><a data-tab href="#tabContent2">房源热度统计</a></li>
-    <div class="row" style="float: right;">
-    	<a class="btn btn-primary" href="" data-toggle="modal" style="margin: 0 !important;">导出</a>
-	</div>
+    <div class="row" style="float:right;margin:2px 60px 0 0;">
+    	<div class="input-group" style="margin: 0 !important;width:200px;">
+			  <select class="form-control selectInp" name="value">
+			  	{ for obj in object_list}
+			    <option value="{{ obj.id }}">{{ obj.name }}</option>
+			    { endfor }
+			  </select>
+			</div>
+		</div>
 </ul>
 <div class="tab-content">
 	<div class="tab-pane fade active in" id="tabContent1">
+		<div class="row">
+    	<a class="btn btn-primary" href="http://10.7.10.193:8000/event/exportbuyhot">导出</a>
+		</div>
 		<table class="table datatable">
 			<thead>
 				<tr>
@@ -34,6 +43,9 @@
 		</table>
     </div>
     <div class="tab-pane fade" id="tabContent2">
+    	<div class="row">
+	    	<a class="btn btn-primary" href="http://10.7.10.193:8000/event/exporthousehot/">导出</a>
+			</div>
     	<table class="table datatable">
 			<thead>
 				<tr>
@@ -60,44 +72,13 @@
 <script type="text/javascript">
 $(document).ready(function(){ 
 	$("#navActive li").eq(1).addClass("active");
-	var $listBuyer = $("#buyer");
-	var $listHouse = $("#houseHot");
-	$.ajax({
-		type:"get",
-		url:"/event/househeat/",
-		async:true,
-		dataType:'JSON',
-		success:function(results){
-			var result =results.data;
-			for (var i=0; i<result.length; i++) {
-				result[i].is_sold ? result[i].is_sold="是":result[i].is_sold="否";
-				result[i].is_testsold ? result[i].is_testsold="是":result[i].is_testsold="否";
-				$listHouse.append("<tr><td>"+i+"</td><td>"+result[i].building+"</td><td>"+result[i].unit+"</td><td>"+result[i].floor+"</td>"+
-				"<td>"+result[i].num+"</td><td>"+result[i].is_sold+"</td><td>"+result[i].price+"</td><td>"+result[i].total+"</td><td>"+result[i].room_num+"</td>"+
-				"<td>"+result[i].is_testsold+"</td></tr>")
-			}
-		},
-		error:function(){
-			alert("获取购买者热度统计错误！！！")
-		}
-	});
-	$.ajax({
-		type:"get",
-		url:"/event/purcharseheat/",
-		async:true,
-		dataType:'JSON',
-		success:function(results){
-			var result =results.data;
-			for (var i=0; i<result.length; i++) {
-				$listHouse.append("<tr><td>"+i+"</td><td>"+result[i].name+"</td><td>"+result[i].mobile+"</td><td>"+result[i].identication+"</td>"+
-				"<td>"+result[i].protime+"</td><td>"+result[i].count+"</td><td>"+result[i].heat+"</td><td>"+result[i].testroom+"</td>"+
-				"<td>"+result[i].testtime+"</td><td>"+result[i].openroom+"</td><td>"+result[i].opentime+"</td></tr>")
-			}
-		},
-		error:function(){
-			alert("房源热度统计错误！！！")
-		}
-	});
+	statisticsData();
+	$(".selectInp").change(function(){
+		var val = $(this).val();
+		console.log(val)
+		//	获取数据
+		statisticsData(val);
+	})
 });
 </script>
 {% endblock %}

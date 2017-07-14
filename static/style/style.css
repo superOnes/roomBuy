@@ -127,6 +127,20 @@ input::-webkit-inner-spin-button{
 	margin: 15px 0 !important;
 }
 
+/*面包屑导航*/
+.breadcrumb{
+	font-size: 16px !important;
+	margin:0 !important;
+}
+
+/*tab切换下的导出按钮*/
+.tab-pane>.row{
+	float: right !important;
+	margin: -34px 1px 0 0 !important;
+}
+.tab-pane>.row>a{
+	margin: 0 !important;
+}
 
 .gridTitle{
 	border-bottom: 1px solid #CCCCCC;

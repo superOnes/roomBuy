@@ -1,9 +1,12 @@
 {% extends 'include/main_base.html' %}
 {% block right %}
 <div>
-	<h3>房源信息 > <a href="{% url 'event_list' %}">{{ event.name }}</a></h3>
+	<ol class="breadcrumb">
+	  <li><h3>车位房源</h3></li>
+	  <li class="active"><a href="{% url 'event_list' %}">{{ event.name }}</a></li>
+	</ol>
 </div>
-<div class="row" style="padding:10px">
+<div class="row" style="padding:10px;margin-top:-20px;">
     <a class="btn btn-primary" data-iframe="{% url 'room_create' pk=event.id %}" data-toggle=modal>添加房间/车位</a>
     <button type="button" class="btn btn-default" data-toggle="modal" data-target="#exampleModal">导入房价</button>
     <a href="{% url 'room_export' pk=event.id %}" class="btn btn-default">导出房价</a>
@@ -19,33 +22,27 @@
 		</form>
     </div>
     <!--导入房价文件模态框-->
-		<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog">
-		  <div class="modal-dialog" role="document">
-		    <div class="modal-content">
-		      <div class="modal-header">
-		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		        <h4 class="modal-title" >上传文件</h4>
-		      </div>
-		      <div class="modal-body">
-		        <div id='uploaderExample2' class="uploader" data-ride="uploader" data-url="/event/importprice/">
-				  <div class="uploader-message text-center">
-				    <div class="content"></div>
-				    <button type="button" class="close">×</button>
-				  </div>
-				  <div class="uploader-files file-list file-list-lg" data-drag-placeholder="请拖拽文件到此处"></div>
-				  <div class="uploader-actions">
-				    <div class="uploader-status pull-right text-muted"></div>
-				    <button type="button" class="btn btn-link uploader-btn-browse"><i class="icon icon-plus"></i> 选择文件</button>
-				    <button type="button" class="btn btn-link uploader-btn-start"><i class="icon icon-cloud-upload"></i> 开始上传</button>
-				  </div>
-				</div>
-		      </div>
-		      <div class="modal-footer">
-		        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-		      </div>
-		    </div>
-		  </div>
-		</div>
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="exampleModalLabel">上传文件</h4>
+	      </div>
+	      <div class="modal-body">
+	        <form class="form-horizontal">
+	        <div class="form-group">
+	          <input type="file" name="file" id="priceFile"/>
+	        </div>
+	      </form>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+	        <button type="button" class="btn btn-default" onclick="roomPriceFile({{ event.id }})">确定</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 </div>
 <table class="table datatable">
 	<thead>

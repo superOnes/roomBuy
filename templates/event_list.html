@@ -6,12 +6,14 @@
 <div class="row" style="padding:10px">
 	<a class="btn btn-primary" data-moveable="true" data-iframe="{% url 'event_create' %}" data-toggle="modal">创建活动</a>
 	<div class="col-lg-3" style="float: right;">
-	    <div class="input-group">
-	      <input type="text" class="form-control" placeholder="搜索活动" id="searchInput">
-	      <span class="input-group-btn">
-	        <button class="btn btn-default" type="button" onclick="search()">搜索</button>
-	      </span>
-	    </div>
+	    <form class="form-horizontal searchWrap" method="get" action="">
+		    <div class="input-group">
+			  <input type="text" class="form-control" placeholder="活动名称" id="searchInput" name="value">
+			  <span class="input-group-btn">
+			    <button class="btn btn-default" type="submit">搜索</button>
+			  </span>
+			</div>
+		</form>
     </div>
 </div>
 <table class="table datatable">
@@ -60,7 +62,7 @@
 		        <h4 class="modal-title">是否发布</h4>
 		      </div>
 		      <div class="modal-body">
-		        <p>确定{{ obj.is_pub|yesno:"发布,取消发布"}}？</p>
+		        <p>确定{{ obj.is_pub|yesno:"取消发布,发布"}}？</p>
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -95,6 +97,7 @@
 {% block js %}
 <script type="text/javascript">
 $(document).ready(function(){
+	$("#navActive li").eq(0).addClass("active");
 	$('table.datatable').datatable({ sortable: true, });
 	$('.is_pub').on('click', function(e){
 		$("#is_pub_status").val($(e.currentTarget).data("id"));

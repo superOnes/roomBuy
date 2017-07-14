@@ -2,11 +2,11 @@
 {% block right %}
 <div>
 	<ol class="breadcrumb">
-	  <li>认筹名单</li>
+	  <li><h3>认筹名单</h3></li>
 	  <li class="active"><a href="{% url 'event_list' %}">{{ event.name }}</a></li>
 	</ol>
 </div>
-<div class="row" style="padding:10px">
+<div class="row" style="padding:10px;margin-top:-20px;">
     <a class="btn btn-primary" data-iframe="{% url 'custom_create' pk=event.id %}" data-toggle=modal>添加认筹名单</a>
     <button type="button" class="btn btn-default" data-toggle="modal" data-target="#exampleModal">导入认筹名单</button>
     <a href="{% url 'customer_export' pk=event.id %}" class="btn btn-default">导出认筹名单</a>
@@ -30,21 +30,15 @@
 	        <h4 class="modal-title">上传文件</h4>
 	      </div>
 	      <div class="modal-body">
-	        <div id='uploaderExample2' class="uploader" data-ride="uploader" data-url="/acc/import/">
-			  <div class="uploader-message text-center">
-			    <div class="content"></div>
-			    <button type="button" class="close">×</button>
-			  </div>
-			  <div class="uploader-files file-list file-list-lg" data-drag-placeholder="请拖拽文件到此处"></div>
-			  <div class="uploader-actions">
-			    <div class="uploader-status pull-right text-muted"></div>
-			    <button type="button" class="btn btn-link uploader-btn-browse"><i class="icon icon-plus"></i> 选择文件</button>
-			    <button type="button" class="btn btn-link uploader-btn-start"><i class="icon icon-cloud-upload"></i> 开始上传</button>
-			  </div>
-			</div>
+	        <form class="form-horizontal">
+		        <div class="form-group">
+		          <input type="file" name="file" id="files"/>
+		        </div>
+	        </form>
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+	        <button type="button" class="btn btn-default" onclick="submitFile({{ event.id }})">确定</button>
 	      </div>
 	    </div>
 	  </div>
