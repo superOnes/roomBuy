@@ -504,6 +504,37 @@ class HouseHeatView(View):
         return JsonResponse({'success': True, "data": et_list})
 
 
+class PurcharseHeatView(View):
+    '''
+    购房者热度统计
+    '''
+    def get(self, request, *args, **kwargs):
+        id = request.POST.get('id')
+        event_id = Event.get(id=1)
+        if id or event_id:
+            queryset = Customer.all()
+            li = []
+            for customer in queryset:
+                testorder = customer.user.order_set.filter(is_test=True).first()
+                openorder = customer.user.order_set.filter(is_test=False).first()
+                if testorder and openorder:
+                    ct_list = {'id': customer.id,
+                               'name': customer.realname,
+                               'mobile': customer.mobile,
+                               'identication': customer.identication,
+                               'protime': customer.protime,
+                               'count': customer.count,
+                               'heat': customer.heat,
+                               'testtime': testorder.time,
+                               'testroom': testorder.eventdetail.room_num,
+                               'opentime': openorder.time,
+                               'openroom': openorder.eventdeatail.room_num
+                               }
+                    li.append(ct_list)
+            return JsonResponse({'success': True, 'data': li})
+        return JsonResponse({'success': False})
+
+
 class HouseTypeListView(ListView):
     '''
     户型列表

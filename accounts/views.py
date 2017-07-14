@@ -253,5 +253,5 @@ class ImportView(View):
                                              password=customer.identication,
                                              customer=customer,
                                              is_admin=False)
-                    return JsonResponse({'success': True})
+            return JsonResponse({'success': True})
         return JsonResponse({'success': False})
