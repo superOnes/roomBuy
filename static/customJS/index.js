@@ -1,3 +1,10 @@
+$(document).ready(function(){
+	$("#login-wrap").height($(window).height());
+	$(window).resize(function(){
+		$("#login-wrap").height($(window).height());
+	});
+})
+
 //上传认筹名单文件
 function submitFile(thisID){
 	var files = $("#files")[0].files;

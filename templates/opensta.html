@@ -6,21 +6,21 @@
 <ul class="nav nav-tabs">
     <li class="active"><a data-tab href="#tabContent1">购房者热度统计</a></li>
     <li><a data-tab href="#tabContent2">房源热度统计</a></li>
-    <div class="row" style="float:right;margin:2px 60px 0 0;">
-    	<div class="input-group" style="margin: 0 !important;width:200px;">
+    <div class="row" style="float:right;margin:0;width: 400px;">
+    	<div class="col-lg-6 col-md-6 col-lg-offset-4">
 			  <select class="form-control selectInp" name="value">
 			  	{ for obj in object_list}
 			    <option value="{{ obj.id }}">{{ obj.name }}</option>
 			    { endfor }
 			  </select>
 			</div>
+			<div class=" col-lg-2">
+	    	<a class="btn btn-primary" id="exportEach" href="http://10.7.10.193:8000/event/exportbuyhot/">导出</a>
+			</div>
 		</div>
 </ul>
 <div class="tab-content">
 	<div class="tab-pane fade active in" id="tabContent1">
-		<div class="row">
-    	<a class="btn btn-primary" href="http://10.7.10.193:8000/event/exportbuyhot">导出</a>
-		</div>
 		<table class="table datatable">
 			<thead>
 				<tr>
@@ -43,9 +43,6 @@
 		</table>
     </div>
     <div class="tab-pane fade" id="tabContent2">
-    	<div class="row">
-	    	<a class="btn btn-primary" href="http://10.7.10.193:8000/event/exporthousehot/">导出</a>
-			</div>
     	<table class="table datatable">
 			<thead>
 				<tr>
@@ -75,10 +72,17 @@ $(document).ready(function(){
 	statisticsData();
 	$(".selectInp").change(function(){
 		var val = $(this).val();
-		console.log(val)
 		//	获取数据
 		statisticsData(val);
-	})
+	});
+	var $exportEach = $("#exportEach");
+	$("ul.nav-tabs li").click(function(){
+		if($(this).index() == 0){
+			$exportEach.attr("href","http://10.7.10.193:8000/event/exportbuyhot/")
+		}else{
+			$exportEach.attr("href","http://10.7.10.193:8000/event/exporthousehot/")
+		}
+	});
 });
 </script>
 {% endblock %}
