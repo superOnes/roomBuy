@@ -10,7 +10,8 @@
     <a class="btn btn-primary" data-iframe="{% url 'room_create' pk=event.id %}" data-toggle=modal>添加房间/车位</a>
     <button type="button" class="btn btn-default" data-toggle="modal" data-target="#exampleModal">导入房价</button>
     <a href="{% url 'room_export' pk=event.id %}" class="btn btn-default">导出房价</a>
-	<a href="{% url 'event_house_type_list' pk=event.id %}" class="btn btn-default" target="_blank">编辑户型</a>
+	  <a href="{% url 'event_house_type_list' pk=event.id %}" class="btn btn-default" target="_blank">编辑户型</a>
+		<a href="javascript:void(0)" class="btn btn-default house-type" data-id="{{event.id}}" data-target="#myModal">一键关联户型</a>
 	<div class="col-lg-3" style="float: right;">
 	    <form class="form-horizontal searchWrap" method="get" action="">
 		    <div class="input-group">
@@ -63,7 +64,8 @@
 		<tr>
 			<td>{{ forloop.counter }}</td>
 			<td>{{ obj.room_num }}</td>
-			<td>TODO</td>
+			<td><a data-iframe="{% url 'room_ht_update' pk=obj.id %}" data-toggle="modal" data-title="关联户型">
+				{{ obj.house_type.name }} <i class="icon icon-edit"></i></a></td>
 			<td><p>原价：{{ obj.price }}</p>
 			<p>线上价格：<a data-iframe="{% url 'room_price_update' pk=obj.id %}"
                     data-toggle="modal" data-title="编辑线上价格">{{ obj.total }}
@@ -116,6 +118,26 @@
 		    </div>
 		  </div>
 		</div>
+		<!-- <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#myModal">启动对话框</button> -->
+
+		<!-- 对话框HTML -->
+		<div class="modal fade" id="house-type-modal">
+		  <div class="modal-dialog modal-sm">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+		        <h4 class="modal-title">一键关联户型</h4>
+		      </div>
+		      <div class="modal-body">
+		        <p>已经关联过的户型将不会被重复关联<br>确认关联吗？</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+		        <button type="button" class="btn btn-primary house-type-save">保存</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
 		{% endfor %}
 	</tbody>
 </table>
@@ -139,11 +161,16 @@ $(document).ready(function(){
 				window.location.reload();
 			},
 			error:function(){
-				alert("未知错误")
+				new $.zui.Messager("未知错误", {
+					icon: "bell",
+					placement: "center",
+					type: "danger",
+					time: 2000,
+				}).show();
 			}
 		});
 	});
-	
+
 	//删除房源
 	$(".delete").on('click',function(e){
 		var $id = $(e.currentTarget).data("id");
@@ -158,7 +185,52 @@ $(document).ready(function(){
 					window.location.reload();
 				},
 				error:function(){
-					alert("未知错误")
+					new $.zui.Messager("未知错误", {
+						icon: "bell",
+						placement: "center",
+						type: "danger",
+						time: 2000,
+					}).show();
+				}
+			});
+		});
+	});
+	// 关联户型
+	$(".house-type").on('click', function(e){
+		var event_id = $(e.currentTarget).data("id");
+		$("#house-type-modal").modal();
+		$(".house-type-save").on("click", function(){
+			$.ajax({
+				type:"post",
+				url:"/event/housetypes/",
+				data:{event_id:event_id},
+				success: function(data) {
+					if(data.success == true) {
+						var msg = new $.zui.Messager(data.msg, {
+							placement:"center",
+							type:"success",
+							time:0,
+						});
+						msg.show();
+						setTimeout(function(){
+							msg.hide(window.location.reload());
+						}, 500);
+					} else {
+						new $.zui.Messager(data.msg, {
+							icon: "bell",
+							placement: "center",
+							type: "warning",
+							time: 2000,
+						}).show();
+					}
+				},
+				error: function(){
+					new $.zui.Messager("未知错误", {
+						icon: "bell",
+						placement: "center",
+						type: "danger",
+						time: 2000,
+					}).show();
 				}
 			});
 		});

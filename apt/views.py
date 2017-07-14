@@ -18,7 +18,7 @@ from aptm import settings
 from aptp.models import Follow
 from accounts.models import Order
 from .models import Event, EventDetail, HouseType
-from accounts.models import Customer, User
+from accounts.models import Customer
 from .forms import EventForm, EventDetailForm, CustomerForm, HouseTypeForm
 
 
@@ -122,6 +122,12 @@ class EventDetailRemarkUpdateView(DialogMixin, UpdateView):
     template_name = 'popup/eventdetail_remark.html'
     model = EventDetail
     fields = ['remark', 'image']
+
+
+class EventDetailHTUpdateView(DialogMixin, UpdateView):
+    template_name = 'popup/eventdetail_ht.html'
+    model = EventDetail
+    fields = ['house_type']
 
 
 class EventStatus(View):
@@ -525,5 +531,21 @@ class HouseTypeUpdateView(DialogMixin, UpdateView):
     修改户型
     '''
     template_name = 'popup/housetype_create.html'
+    form_class = HouseTypeForm
     model = HouseType
-    fields = ['name', 'pic', 'num']
+
+
+class HouseTypeRelatedView(View):
+
+    def post(self, request):
+        event_id = request.POST.get('event_id')
+        event = Event.get(event_id)
+        if event.type == Event.APT:
+            eventdetails = event.eventdetail_set.all()
+            for ed in eventdetails:
+                house_type = HouseType.get_obj_by_num(ed.room_num[-1])
+                if house_type and not ed.house_type:
+                    ed.house_type = house_type
+                    ed.save()
+            return JsonResponse({'success': True, 'msg': '关联成功'})
+        return JsonResponse({'success': False, 'msg': '暂不支持车位自动关联'})

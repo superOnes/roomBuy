@@ -9,7 +9,9 @@ from .views import (EventListView, EventCreateView, ImportPriceView,
                     CustomCreateView, EventStatus, EventDelStatus, EventDelDel,
                     DeleteCustomerView, ExportHouseHotView, HouseHeatView,
                     HouseTypeListView, HouseTypeCreateView,
-                    HouseTypeUpdateView, CustomerCountUpdateView,ExportBuyHotView)
+                    HouseTypeUpdateView, CustomerCountUpdateView,
+                    ExportBuyHotView, HouseTypeRelatedView,
+                    EventDetailHTUpdateView)
 
 
 urlpatterns = [
@@ -35,9 +37,10 @@ urlpatterns = [
     url(r'^(?P<pk>\d+)/rooms/create/',
         EventDetailCreateView.as_view(),
         name='room_create'),
-    url(r'^room/(?P<pk>\d+)/remark/',
-        EventDetailRemarkUpdateView.as_view(),
+    url(r'^room/(?P<pk>\d+)/remark/', EventDetailRemarkUpdateView.as_view(),
         name='room_remark_update'),
+    url(r'^room/(?P<pk>\d+)/ht/', EventDetailHTUpdateView.as_view(),
+        name='room_ht_update'),
     url(r'^(?P<pk>\d+)/rooms/$', EventDetailListView.as_view(), name='room_list'),
     url(r'^room/(?P<pk>\d+)/price/',
         EventDetailTotalUpdateView.as_view(),
@@ -65,4 +68,6 @@ urlpatterns = [
         name='event_house_type_update'),
     url(r'^exportbuyhot/', ExportBuyHotView.as_view(),
         name='buyhot_export'),
+    url(r'^housetypes/', HouseTypeRelatedView.as_view(),
+        name='event_house_type_related'),
 ]

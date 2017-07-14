@@ -53,6 +53,17 @@ class Event(models.Model):
         obj.save()
 
 
+class HouseType(models.Model):
+    name = models.CharField('户型名称', max_length=100)
+    pic = models.ImageField('户型照片', upload_to='housetype/%Y/%m/%d/')
+    event = models.ForeignKey(Event)
+    num = models.IntegerField('编号', null=True, blank=True)
+
+    @classmethod
+    def get_obj_by_num(cls, num):
+        return cls.objects.filter(num=num).first()
+
+
 class EventDetail(models.Model):
     building = models.CharField('楼号', max_length=50)
     unit = models.CharField('单元', max_length=100)
@@ -62,8 +73,6 @@ class EventDetail(models.Model):
     total = models.CharField('线上总价', max_length=100)
     status = models.BooleanField('上架状态', default=False)
     event = models.ForeignKey(Event, verbose_name='所属活动')
-    # house_type = models.CharField('户型', max_length=100)
-    # floor_area = models.CharField('建筑面积', max_length=50)
     is_sold = models.BooleanField('是否被卖', default=False)
     is_testsold = models.BooleanField('公测是否已售', default=False)
     remark = models.TextField('描述补充', blank=True)
@@ -72,6 +81,7 @@ class EventDetail(models.Model):
     num = models.IntegerField('收藏人数', default=0)
     visit_num = models.IntegerField('访问热度', default=0)
     is_delete = models.BooleanField(default=False)
+    house_type = models.ForeignKey(HouseType, null=True, blank=True)
 
     @classmethod
     def get(cls, id):
@@ -90,10 +100,3 @@ class EventDetail(models.Model):
     @classmethod
     def all(cls):
         return cls.objects.all().order_by('-id')
-
-
-class HouseType(models.Model):
-    name = models.CharField('户型名称', max_length=100)
-    pic = models.ImageField('户型照片', upload_to='housetype/%Y/%m/%d/')
-    event = models.ForeignKey(Event)
-    num = models.IntegerField('编号', null=True, blank=True)

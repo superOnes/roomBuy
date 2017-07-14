@@ -47,10 +47,16 @@ class HouseTypeForm(forms.ModelForm):
 
     class Meta:
         model = HouseType
-        fields = ['name', 'pic', 'num']
+        fields = ['event', 'name', 'pic', 'num']
 
-    def save(self, commit=True):
+    def clean_event(self):
         if not self.instance.id:
-            self.instance.event = self.initial['event']
-            instance = super(HouseTypeForm, self).save(commit)
-            return instance
+            return self.initial['event']
+        return self.cleaned_data['event']
+
+    def clean_num(self):
+        num_list = HouseType.objects.filter(event=self.cleaned_data['event']) \
+                                    .values_list('num', flat=True)
+        if self.cleaned_data['num'] in num_list:
+            raise forms.ValidationError('户型编码不能重复')
+        return self.cleaned_data['num']
