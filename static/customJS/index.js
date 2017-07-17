@@ -78,7 +78,7 @@ function statisticsData(thisId){
 	$.ajax({
 		type:"get",
 		data:{id:thisId},
-		url:"/event/househeat/",
+		url:"http://10.7.10.198:8000/event/househeat/",
 		async:true,
 		dataType:'JSON',
 		success:function(results){
@@ -87,7 +87,7 @@ function statisticsData(thisId){
 			for (var i=0; i<result.length; i++) {
 				result[i].is_sold ? result[i].is_sold="是":result[i].is_sold="否";
 				result[i].is_testsold ? result[i].is_testsold="是":result[i].is_testsold="否";
-				$listHouse.append("<tr><td>"+i+"</td><td>"+result[i].building+"</td><td>"+result[i].unit+"</td><td>"+result[i].floor+"</td>"+
+				$listHouse.append("<tr><td>"+(i+1)+"</td><td>"+result[i].building+"</td><td>"+result[i].unit+"</td><td>"+result[i].floor+"</td>"+
 				"<td>"+result[i].num+"</td><td>"+result[i].is_sold+"</td><td>"+result[i].price+"</td><td>"+result[i].total+"</td><td>"+result[i].room_num+"</td>"+
 				"<td>"+result[i].is_testsold+"</td></tr>");
 			}
@@ -105,9 +105,10 @@ function statisticsData(thisId){
 		dataType:'JSON',
 		success:function(results){
 			var result =results.data;
+			console.log(result);
 			$listBuyer.find("tr").remove();
 			for (var i=0; i<result.length; i++) {
-				$listHouse.append("<tr><td>"+i+"</td><td>"+result[i].name+"</td><td>"+result[i].mobile+"</td><td>"+result[i].identication+"</td>"+
+				$listBuyer.append("<tr><td>"+(i+1)+"</td><td>"+result[i].name+"</td><td>"+result[i].mobile+"</td><td>"+result[i].identication+"</td>"+
 				"<td>"+result[i].protime+"</td><td>"+result[i].count+"</td><td>"+result[i].heat+"</td><td>"+result[i].testroom+"</td>"+
 				"<td>"+result[i].testtime+"</td><td>"+result[i].openroom+"</td><td>"+result[i].opentime+"</td></tr>")
 			}
@@ -117,4 +118,3 @@ function statisticsData(thisId){
 		}
 	});
 }
-	

@@ -8,14 +8,10 @@
     <li><a data-tab href="#tabContent2">房源热度统计</a></li>
     <div class="row" style="float:right;margin:0;width: 400px;">
     	<div class="col-lg-6 col-md-6 col-lg-offset-4">
-			  <select class="form-control selectInp" name="value">
-			  	{ for obj in object_list}
-			    <option value="{{ obj.id }}">{{ obj.name }}</option>
-			    { endfor }
-			  </select>
+			  <select class="form-control selectInp" name="value"></select>
 			</div>
 			<div class=" col-lg-2">
-	    	<a class="btn btn-primary" id="exportEach" href="http://10.7.10.193:8000/event/exportbuyhot/">导出</a>
+	    	<a class="btn btn-primary" id="exportEach">导出</a>
 			</div>
 		</div>
 </ul>
@@ -69,20 +65,54 @@
 <script type="text/javascript">
 $(document).ready(function(){ 
 	$("#navActive li").eq(1).addClass("active");
+//	活动下拉框列表的显示请求
+	$.ajax({
+		type:"get",
+		url:"http://10.7.10.198:8000/event/getevent/",
+		async:true,
+		success:function(results){
+			var result =results.data;
+			for(var i=0; i<result.length; i++){
+				$(".selectInp").append("<option value='"+result[i].id+"'>"+result[i].name+"</option>")
+			};
+			$(".selectInp").children("option").attr("selected","selected");
+		},
+		error:function(){
+			alert("获取活动列表失败")
+		}
+	})
+//	默认获取的数据
 	statisticsData();
+//	活动列表选择时数据的切换显示
 	$(".selectInp").change(function(){
 		var val = $(this).val();
 		//	获取数据
 		statisticsData(val);
 	});
-	var $exportEach = $("#exportEach");
+//		导出下载url改变
+	var urls = "/event/exportbuyhot/";
 	$("ul.nav-tabs li").click(function(){
 		if($(this).index() == 0){
-			$exportEach.attr("href","http://10.7.10.193:8000/event/exportbuyhot/")
+			urls="/event/exportbuyhot/";
 		}else{
-			$exportEach.attr("href","http://10.7.10.193:8000/event/exporthousehot/")
-		}
+			urls="/event/exporthousehot/";
+		};
 	});
+	$("#exportEach").click(function(){
+		var eventId = $(".selectInp").val();
+		$.ajax({
+			type:"get",
+			data:{id:eventId},
+			url:urls,
+			async:true,
+			success:function(){
+				window.open(urls);
+			},
+			error:function(){
+				alert("下载失败")
+			}
+		});
+	})
 });
 </script>
 {% endblock %}

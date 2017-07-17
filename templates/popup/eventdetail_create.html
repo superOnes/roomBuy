@@ -6,36 +6,42 @@
 	}
 </style>
 <div style="padding:20px">
-	<form class="form-horizontal" method="post">
+	<form class="form-horizontal" method="post" action="">
 		{% csrf_token %}
 		<div class="form-group">
-		    <label class="col-sm-2">楼号</label>
-		    <div class="col-md-6 col-sm-10">
-		      <input type="text" class="form-control" placeholder="楼号" name="building" required style="display: block;">
+		    <label class="col-sm-3 col-lg-3 control-label">楼号</label>
+		    <div class="col-sm-9 col-lg-9">
+		      <input type="text" class="form-control" placeholder="楼号" name="building" required>
 		    </div>
 		</div>
 		<div class="form-group">
-		    <label class="col-sm-2">单元</label>
-		    <div class="col-md-6 col-sm-10">
-		      <input type="text" class="form-control" placeholder="单元" name="unit" required>
+		    <label class="col-sm-3 col-lg-3 control-label">单元</label>
+		    <div class="col-sm-9 col-lg-9">
+		      <input type="number" class="form-control" placeholder="单元" name="unit" required>
 		    </div>
 		</div>
 		<div class="form-group">
-		    <label class="col-sm-2">楼层</label>
-		    <div class="col-md-6 col-sm-10">
+		    <label class="col-sm-3 col-lg-3 control-label">楼层</label>
+		    <div class="col-sm-9 col-lg-9">
 		      <input type="number" class="form-control" placeholder="楼层" name="floor" required>
 		    </div>
 		</div>
 		<div class="form-group">
-		    <label class="col-sm-2">原价</label>
-		    <div class="col-md-6 col-sm-10">
+		    <label class="col-sm-3 col-lg-3 control-label">房号</label>
+		    <div class="col-sm-9 col-lg-9">
+		      <input type="number" class="form-control" placeholder="房号" name="room_num" required>
+		    </div>
+		</div>
+		<div class="form-group">
+		    <label class="col-sm-3 col-lg-3 control-label">原价</label>
+		    <div class="col-sm-9 col-lg-9">
 		      <input type="number" class="form-control" placeholder="原价" name="price" required>
 		    </div>
 		</div>
 		<div class="form-group">
-		    <label class="col-sm-2"  for="exampleInputAccount4">线上总价</label>
-		    <div class="col-md-6 col-sm-10">
-		      <input type="number" class="form-control" id="exampleInputAccount4" placeholder="线上总价" name="total" required>
+		    <label class="col-sm-3 col-lg-3 control-label">线上总价</label>
+		    <div class="col-sm-9 col-lg-9">
+		      <input type="number" class="form-control" placeholder="线上总价" name="total" required>
 		    </div>
 		</div>
 		<div class="modal-footer">
