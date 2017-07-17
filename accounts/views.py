@@ -177,13 +177,11 @@ class CustomerLoginView(View):
     def post(self, request, *args, **kwargs):
         mobile = request.POST.get('tel')
         identication = request.POST.get('personId')
-        response = JsonResponse({'response_state': 400})
-        response['Access-Control-Allow-Origin'] = '*'
         try:
             customer = Customer.objects.get(
                 mobile=mobile, identication=identication)
         except BaseException:
-            return response
+            return JsonResponse({'response_state': 400})
         else:
             userobj = customer.user
             eventid = customer.event_id
@@ -193,12 +191,10 @@ class CustomerLoginView(View):
             if user:
                 if not user.is_admin:
                     login(request, user)
-                    response = JsonResponse(
-                        {'response_state': 200, 'id': eventid})
-                    response['Access-Control-Allow-Origin'] = '*'
-                    return response
-                return response
-            return response
+                    return JsonResponse({'response_state': 200, 'id': eventid})
+                return JsonResponse({'response_state': 400})
+            return JsonResponse({'response_state': 400})
+
 
 class DeleteTestView(View):
     '''
