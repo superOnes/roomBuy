@@ -1,5 +1,6 @@
 import os
 import qrcode
+from django.views.generic import TemplateView
 from xlwt import Workbook
 from io import BytesIO
 import xlrd
@@ -475,7 +476,6 @@ class DeleteCustomerView(View):
     '''
     删除认筹名单
     '''
-
     def post(self, request):
         id = request.POST.get('id')
         if id:
@@ -488,9 +488,13 @@ class HouseHeatView(View):
     '''
     房源热度统计
     '''
-
     def get(self, request, *args, **kwargs):
-        queryset = EventDetail.all()
+        objs = Order.all()
+        event_id = request.POST.get('event_id')
+        if event_id:
+            queryset = EventDetail.objects.filter(event_id=event_id)
+        else:
+            queryset = EventDetail.objects.filter(event_id=1)
         et_list = [{'id': et.id,
                     'building': et.building,
                     'unit': et.unit,
@@ -499,9 +503,10 @@ class HouseHeatView(View):
                     'is_sold': et.is_sold,
                     'price': et.price,
                     'total': et.total,
-                    'num': et.num,
                     'is_testsold': et.is_testsold
                     } for et in queryset]
+        num = Follow.objects.filter(user=objs.user).count
+        et_list.append(num)
         return JsonResponse({'success': True, "data": et_list})
 
 
@@ -510,30 +515,44 @@ class PurcharseHeatView(View):
     购房者热度统计
     '''
     def get(self, request, *args, **kwargs):
-        id = request.POST.get('id')
-        event_id = Event.get(id=1)
-        if id or event_id:
-            queryset = Customer.all()
+        event_id = request.POST.get('event_id')
+        li = []
+        if event_id:
+            queryset = Customer.objects.filter(event_id=event_id)
+        else:
+            queryset = Customer.objects.filter(event_id=1)
             li = []
-            for customer in queryset:
-                testorder = customer.user.order_set.filter(is_test=True).first()
-                openorder = customer.user.order_set.filter(is_test=False).first()
-                if testorder and openorder:
-                    ct_list = {'id': customer.id,
-                               'name': customer.realname,
-                               'mobile': customer.mobile,
-                               'identication': customer.identication,
-                               'protime': customer.protime,
-                               'count': customer.count,
-                               'heat': customer.heat,
-                               'testtime': testorder.time,
-                               'testroom': testorder.eventdetail.room_num,
-                               'opentime': openorder.time,
-                               'openroom': openorder.eventdeatail.room_num
-                               }
-                    li.append(ct_list)
-            return JsonResponse({'success': True, 'data': li})
+        for customer in queryset:
+            testorder = customer.user.order_set.filter(is_test=True).first()
+            openorder = customer.user.order_set.filter(is_test=False).first()
+            ct_list = {'id': customer.id,
+                       'name': customer.realname,
+                       'mobile': customer.mobile,
+                       'identication': customer.identication,
+                       'protime': customer.protime,
+                       'count': customer.count,
+                       'heat': customer.heat,
+                       'testtime': testorder.time,
+                       'testroom': testorder.eventdetail.room_num,
+                       'opentime': openorder.time,
+                       'openroom': openorder.eventdetail.room_num
+                       }
+            li.append(ct_list)
+            print(li)
+            return JsonResponse({'success': True, "data": li})
         return JsonResponse({'success': False})
+
+
+class GetEventView(View):
+    '''
+    获取活动列表
+    '''
+    def get(self, request, *args, **kwargs):
+        context = {}
+        event_list = Event.all()
+        context['event'] = [{'id': et.id,
+                             'name': et.name} for et in event_list]
+        return JsonResponse(context)
 
 
 class HouseTypeListView(ListView):
