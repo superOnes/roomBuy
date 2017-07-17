@@ -78,7 +78,7 @@ function statisticsData(thisId){
 	$.ajax({
 		type:"get",
 		data:{id:thisId},
-		url:"http://10.7.10.198:8000/event/househeat/",
+		url:"/event/househeat/",
 		async:true,
 		dataType:'JSON',
 		success:function(results){
@@ -100,7 +100,7 @@ function statisticsData(thisId){
 	$.ajax({
 		type:"get",
 		data:{id:thisId},
-		url:"http://10.7.10.198:8000/event/purcharseheat/",
+		url:"/event/purcharseheat/",
 		async:true,
 		dataType:'JSON',
 		success:function(results){
