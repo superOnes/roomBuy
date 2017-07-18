@@ -1,9 +1,8 @@
 import os
 import qrcode
-from django.views.generic import TemplateView
+import xlrd
 from xlwt import Workbook
 from io import BytesIO
-import xlrd
 
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
@@ -14,14 +13,13 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.http import JsonResponse, HttpResponse
 from django.db.models import Q
 from django.http import QueryDict
-from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
 from aptm import settings
 from aptp.models import Follow
-from accounts.models import Order
+from accounts.models import Order, Customer
 from .models import Event, EventDetail, HouseType
-from accounts.models import Customer
+from accounts.decorators import admin_required
 from .forms import EventForm, EventDetailForm, CustomerForm, HouseTypeForm
 
 
@@ -29,7 +27,8 @@ class DialogMixin(object):
     def get_success_url(self):
         return resolve_url('dialog_success')
 
-@method_decorator(login_required, name='dispatch')
+
+@method_decorator(admin_required, name='dispatch')
 class EventListView(ListView):
     '''
     活动列表
@@ -39,13 +38,13 @@ class EventListView(ListView):
 
     def get_queryset(self):
         self.value = self.request.GET.get('value')
-        queryset = self.model.objects.all()
+        queryset = self.model.all()
         if self.value:
             queryset = queryset.filter(Q(name__contains=self.value))
         return queryset
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class EventCreateView(DialogMixin, CreateView):
     '''
     新增活动
@@ -54,7 +53,7 @@ class EventCreateView(DialogMixin, CreateView):
     template_name = 'popup/event_create.html'
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class EventDetailView(DetailView):
     '''
     活动详情
@@ -63,7 +62,7 @@ class EventDetailView(DetailView):
     template_name = 'popup/event_detail.html'
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class EventUpdateView(DialogMixin, UpdateView):
     '''
     编辑活动信息
@@ -73,7 +72,7 @@ class EventUpdateView(DialogMixin, UpdateView):
     template_name = 'popup/event_create.html'
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class EventTermUpdateView(DialogMixin, UpdateView):
     '''
     编辑协议
@@ -83,7 +82,7 @@ class EventTermUpdateView(DialogMixin, UpdateView):
     template_name = 'popup/event_term.html'
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class EventDetailListView(ListView):
     '''
     房源/车位列表
@@ -106,7 +105,7 @@ class EventDetailListView(ListView):
         return context
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class EventDetailCreateView(DialogMixin, CreateView):
     '''
     新增房间/车位
@@ -120,7 +119,7 @@ class EventDetailCreateView(DialogMixin, CreateView):
         return initial
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class EventDetailTotalUpdateView(DialogMixin, UpdateView):
     '''
     编辑线上总价
@@ -130,7 +129,7 @@ class EventDetailTotalUpdateView(DialogMixin, UpdateView):
     model = EventDetail
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class EventDetailRemarkUpdateView(DialogMixin, UpdateView):
     '''
     情况描述
@@ -140,14 +139,14 @@ class EventDetailRemarkUpdateView(DialogMixin, UpdateView):
     fields = ['remark', 'image']
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class EventDetailHTUpdateView(DialogMixin, UpdateView):
     template_name = 'popup/eventdetail_ht.html'
     model = EventDetail
     fields = ['house_type']
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class EventStatus(View):
     '''
     活动发布情况 发布/未发布
@@ -164,7 +163,7 @@ class EventStatus(View):
         return JsonResponse({'success': False})
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class EventDelStatus(View):
     '''
     车位/房源  上架/下架
@@ -181,7 +180,7 @@ class EventDelStatus(View):
         return JsonResponse({'success': False})
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class EventDelDel(View):
     '''
     车位/房源  删除
@@ -195,7 +194,7 @@ class EventDelDel(View):
         return JsonResponse({'success': False})
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class ImportPriceView(View):
     '''
     导入数据
@@ -240,7 +239,7 @@ class ImportPriceView(View):
         return JsonResponse({'success': False})
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class ExportView(View):
     '''
     导出房价
@@ -276,7 +275,7 @@ class ExportView(View):
         return JsonResponse({'msg': '内容为空！'})
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class ExportCustomerView(View):
     '''
     导出认筹名单
@@ -309,7 +308,7 @@ class ExportCustomerView(View):
         return JsonResponse({'msg': '内容为空！'})
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class ExportHouseHotView(View):
     '''
     导出房源热度统计
@@ -362,7 +361,7 @@ class ExportHouseHotView(View):
         return JsonResponse({'msg': '内容为空！'})
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class ExportBuyHotView(View):
     '''
     导出购房热度统计
@@ -431,7 +430,7 @@ class ExportBuyHotView(View):
         return JsonResponse({'msg': '内容为空！'})
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 def url2qrcode(request, data):
     '''
     二维码
@@ -444,7 +443,7 @@ def url2qrcode(request, data):
     return response
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class CustomListView(ListView):
     '''
     认筹名单列表
@@ -469,7 +468,7 @@ class CustomListView(ListView):
         return context
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class CustomCreateView(DialogMixin, CreateView):
     '''
     添加认筹名单
@@ -483,7 +482,7 @@ class CustomCreateView(DialogMixin, CreateView):
         return initial
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class CustomerCountUpdateView(DialogMixin, UpdateView):
     '''
     修改可选套数
@@ -493,7 +492,7 @@ class CustomerCountUpdateView(DialogMixin, UpdateView):
     fields = ['count']
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class DeleteCustomerView(View):
     '''
     删除认筹名单
@@ -506,7 +505,7 @@ class DeleteCustomerView(View):
         return JsonResponse({'success': False})
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class HouseHeatView(View):
     '''
     房源热度统计
@@ -531,7 +530,7 @@ class HouseHeatView(View):
         return JsonResponse({'success': True, "data": et_list})
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class PurcharseHeatView(View):
     '''
     购房者热度统计
@@ -563,7 +562,7 @@ class PurcharseHeatView(View):
         return JsonResponse({'success': True, "data": li})
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class GetEventView(View):
     '''
     获取活动列表
@@ -575,7 +574,7 @@ class GetEventView(View):
         return JsonResponse({'success': True, 'data': event})
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class HouseTypeListView(ListView):
     '''
     户型列表
@@ -595,7 +594,7 @@ class HouseTypeListView(ListView):
         return context
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class HouseTypeCreateView(DialogMixin, CreateView):
     '''
     新建户型
@@ -609,7 +608,7 @@ class HouseTypeCreateView(DialogMixin, CreateView):
         return initial
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class HouseTypeUpdateView(DialogMixin, UpdateView):
     '''
     修改户型
@@ -619,7 +618,7 @@ class HouseTypeUpdateView(DialogMixin, UpdateView):
     model = HouseType
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class HouseTypeRelatedView(View):
 
     def post(self, request):
@@ -634,4 +633,3 @@ class HouseTypeRelatedView(View):
                     ed.save()
             return JsonResponse({'success': True, 'msg': '关联成功'})
         return JsonResponse({'success': False, 'msg': '暂不支持车位自动关联'})
-

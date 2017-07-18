@@ -26,16 +26,18 @@ class LoginView(View):
     '''
 
     def get(self, request):
-        return render(request, 'index.html')
+        print("get:", request.GET.get('next'))
+        return render(request, 'index.html', {'next': request.GET.get('next')})
 
     def post(self, request, *args, **kwargs):
         username = request.POST.get('username')
         password = request.POST.get('password')
+        nxt = request.POST.get('next', '/event/list/')
         user = authenticate(username=username, password=password)
         if user:
             if user.is_admin:
                 login(request, user)
-                return redirect('/event/list/')
+                return redirect(nxt)
         messages.error(request, '用户名或密码不正确')
         return redirect(reverse('acc_login'))
 
