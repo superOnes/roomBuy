@@ -196,6 +196,7 @@ class CustomerLoginView(View):
             return JsonResponse({'response_state': 400})
 
 
+@method_decorator(login_required, name='dispatch')
 class DeleteTestView(View):
     '''
     清除公测订单
@@ -207,6 +208,7 @@ class DeleteTestView(View):
         return JsonResponse({'success': False})
 
 
+@method_decorator(login_required, name='dispatch')
 class ImportView(View):
     '''
     导入认筹名单
@@ -214,7 +216,6 @@ class ImportView(View):
 
     def post(self, request, *args, **kwargs):
         id = request.POST.get('id')
-        # custom = Customer.objects.filter(event_id=id)
         if id:
             event = Event.get(id)
             file = request.FILES.get('filename')
