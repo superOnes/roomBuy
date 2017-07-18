@@ -489,8 +489,7 @@ class HouseHeatView(View):
     房源热度统计
     '''
     def get(self, request, *args, **kwargs):
-        objs = Order.all()
-        event_id = request.POST.get('id')
+        event_id = request.GET.get('id')
         if event_id:
             queryset = EventDetail.objects.filter(event_id=event_id)
         else:
@@ -514,7 +513,7 @@ class PurcharseHeatView(View):
     购房者热度统计
     '''
     def get(self, request, *args, **kwargs):
-        event_id = request.POST.get('id')
+        event_id = request.GET.get('id')
         li = []
         if event_id:
             queryset = Customer.objects.filter(event_id=event_id)
