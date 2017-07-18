@@ -503,10 +503,9 @@ class HouseHeatView(View):
                     'is_sold': et.is_sold,
                     'price': et.price,
                     'total': et.total,
+                    'num': et.follow_set.count(),
                     'is_testsold': et.is_testsold
                     } for et in queryset]
-        num = Follow.objects.filter(user=objs.user).count
-        et_list.append(num)
         return JsonResponse({'success': True, "data": et_list})
 
 
