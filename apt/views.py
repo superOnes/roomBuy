@@ -555,8 +555,8 @@ class PurcharseHeatView(View):
                        'heat': customer.heat,
                        'testtime': testorder.time if testorder else '',
                        'testroom': testorder.eventdetail.room_num if testorder else '',
-                       'opentime': openorder.time if testorder else '',
-                       'openroom': openorder.eventdetail.room_num if testorder else ''
+                       'opentime': openorder.time if openorder else '',
+                       'openroom': openorder.eventdetail.room_num if openorder else ''
                        }
             li.append(ct_list)
         return JsonResponse({'success': True, "data": li})
