@@ -21,7 +21,7 @@ def superadmin_required(return_type=RETURN_JSON):
             return response
         return return_wrapper
     return func_wrapper
-    
+
 
 def admin_required(func):
     @wraps(func)

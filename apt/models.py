@@ -35,7 +35,7 @@ class Event(models.Model):
                                     null=True, blank=True)
     termname = models.CharField('协议名称', max_length=100, null=True, blank=True)
     term = models.TextField('协议内容', null=True, blank=True)
-    is_pub = models.BooleanField('是否发布', default=False)  # 活动是否发布，默认未发布。
+    is_pub = models.BooleanField('是否发布', default=False)
     is_delete = models.BooleanField(default=False)
 
     @classmethod
@@ -82,6 +82,10 @@ class EventDetail(models.Model):
     visit_num = models.IntegerField('访问热度', default=0)
     is_delete = models.BooleanField(default=False)
     house_type = models.ForeignKey(HouseType, null=True, blank=True)
+    looking=models.CharField('朝向',max_length=100)
+    term=models.CharField('使用年限',max_length=50)
+    area=models.CharField('建筑面积',max_length=50)
+    unit_price=models.CharField('面积单价',max_length=100)
 
     @classmethod
     def get(cls, id):
