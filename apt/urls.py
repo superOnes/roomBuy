@@ -16,7 +16,8 @@ from .views import (EventListView, EventCreateView, ImportPriceView,
 
 urlpatterns = [
 
-
+    url(r'^opensta/', TemplateView.as_view(template_name='opensta.html'), name='event_opensta'),
+    url(r'^order/', TemplateView.as_view(template_name='order.html'), name='event_order'),
 
     url(r'^qrcode/(.+)', url2qrcode, name='qrcode'),
     # 活动
@@ -60,7 +61,7 @@ urlpatterns = [
         name='customer_export'),
     url(r'^deletect/', DeleteCustomerView.as_view(), name='ct_delete'),
     url(r'^exporthousehot/', ExportHouseHotView.as_view(), name='househot_export'),
-    url(r'^opensta/', TemplateView.as_view(template_name='opensta.html'), name='event_opensta'),
+
     # 户型
     url(r'^(?P<pk>\d+)/housetypes/$', HouseTypeListView.as_view(),
         name='event_house_type_list'),
