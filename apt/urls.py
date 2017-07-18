@@ -11,7 +11,8 @@ from .views import (EventListView, EventCreateView, ImportPriceView,
                     HouseTypeListView, HouseTypeCreateView,
                     HouseTypeUpdateView, CustomerCountUpdateView,
                     ExportBuyHotView, HouseTypeRelatedView,
-                    EventDetailHTUpdateView, PurcharseHeatView, GetEventView)
+                    EventDetailHTUpdateView, PurcharseHeatView, GetEventView,
+                    OrderListView, GetOrderView)
 
 
 urlpatterns = [
@@ -49,7 +50,9 @@ urlpatterns = [
     url(r'^(?P<pk>\d+)/export/', ExportView.as_view(), name='room_export'),
     url(r'^househeat/', HouseHeatView.as_view(), name='househeat'),
     url(r'^purcharseheat/', PurcharseHeatView.as_view(), name='purcharseheat'),
+    url(r'^orderlist/', OrderListView.as_view(), name='orderlist'),
     url(r'^getevent/', GetEventView.as_view()),
+    url(r'^getorder/', GetOrderView.as_view()),
     # 认筹
     url(r'^(?P<pk>\d+)/customs/$', CustomListView.as_view(),
         name='event_customs'),

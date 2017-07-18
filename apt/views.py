@@ -633,3 +633,40 @@ class HouseTypeRelatedView(View):
                     ed.save()
             return JsonResponse({'success': True, 'msg': '关联成功'})
         return JsonResponse({'success': False, 'msg': '暂不支持车位自动关联'})
+
+
+@method_decorator(admin_required, name='dispatch')
+class OrderListView(View):
+    '''
+    订单管理列表
+    '''
+    def get(self, request, *args, **kwargs):
+        event_id = request.GET.get('id')
+        is_test = request.GET.get('is_test')
+        if event_id and is_test:
+            queryset = Order.objects.filter(event_id=event_id, is_test=is_test)
+        else:
+            queryset = Order.objects.filter(event_id=1, is_test=1)
+        if queryset:
+            order_list = [{'id': od.id,
+                           'time': od.time.strftime("%Y %m %d %H:%M:%S"),
+                           'room_num': od.eventdetail.room_num,
+                           'total': od.eventdetail.total,
+                           'realname': od.user.customer.realname,
+                           'mobile': od.user.customer.mobile,
+                           'identication': od.user.customer.identication,
+                           'remark': od.user.customer.remark,
+                           'status': od.eventdetail.status,
+                           } for od in queryset]
+        return JsonResponse({'success': True, 'data': order_list})
+
+
+@method_decorator(admin_required, name='dispatch')
+class GetOrderView(View):
+    '''
+    获取订单状态列表
+    '''
+    def get(self, requests, *args, **kwargs):
+        order = [{'id': 0, 'is_test': False},
+                 {'id': 1, 'is_test': True}]
+        return JsonResponse({'success': True, 'data': order})
