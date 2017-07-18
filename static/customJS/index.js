@@ -85,8 +85,8 @@ function statisticsData(thisId){
 			var result =results.data;
 			$listHouse.find("tr").remove();
 			for (var i=0; i<result.length; i++) {
-				result[i].is_sold ? result[i].is_sold="是":result[i].is_sold="否";
-				result[i].is_testsold ? result[i].is_testsold="是":result[i].is_testsold="否";
+				result[i].is_sold=  result[i].is_sold==true?"是":"否";
+				result[i].is_testsold= result[i].is_testsold==true?"是":"否";
 				$listHouse.append("<tr><td>"+(i+1)+"</td><td>"+result[i].building+"</td><td>"+result[i].unit+"</td><td>"+result[i].floor+"</td>"+
 				"<td>"+result[i].num+"</td><td>"+result[i].is_sold+"</td><td>"+result[i].price+"</td><td>"+result[i].total+"</td><td>"+result[i].room_num+"</td>"+
 				"<td>"+result[i].is_testsold+"</td></tr>");
@@ -117,4 +117,64 @@ function statisticsData(thisId){
 			alert("获取购买者热度统计错误！！！")
 		}
 	});
+};
+
+//订单下拉框数据显示
+function getorderSelect(){
+	//	活动下拉框列表的显示请求
+		$.ajax({
+			type:"get",
+			url:"/event/getevent/",
+			async:true,
+			success:function(results){
+				var result =results.data;
+				for(var i=0; i<result.length; i++){
+					$("#eventList").prepend("<option value='"+result[i].id+"'>"+result[i].name+"</option>")
+				};
+				$("#eventList option:first").attr("selected","selected");
+			},
+			error:function(){
+				alert("获取活动列表失败");
+			}
+		});
+	//	公测列表的显示请求
+		$.ajax({
+			type:"get",
+			url:"/event/getorder/",
+			async:true,
+			success:function(results){
+				var result =results.data;
+				for(var i=0; i<result.length; i++){
+					result[i].is_test = result[i].is_test==true?"开盘":"公测";
+					$("#orderList").prepend("<option value='"+result[i].id+"'>"+result[i].is_test+"</option>")
+				};
+				$("#orderList option:first").attr("selected","selected");
+			},
+			error:function(){
+				alert("获取活动列表失败");
+			}
+		});
+}
+
+//订单数据列表显示
+function getorderList(thisId,is_test){
+	var $openList = $("#openList");
+	$.ajax({
+		type:"get",
+		data:{id:thisId,is_test:is_test},
+		url:"/event/orderlist/",
+		asunc:true,
+		success:function(results){
+			var result =results.data;
+			$openList.children("tr").remove();
+			for (var i = 0; i < result.length; i++) {
+				result[i].status= result[i].status==true ?"已售":"未售";
+				$openList.append("<tr><td>"+(i+1)+"</td><td>"+result[i].time+"</td><td>"+result[i].room_num+"</td><td>"+result[i].total+"</td><td>"+result[i].realname+"</td>"+
+				"<td>"+result[i].mobile+"</td><td>"+result[i].identication+"</td><td>"+result[i].remark+"</td><td>"+result[i].status+"</td></tr>")
+			}
+		},
+		error:function(){
+			alert("获取开盘数据失败！！！")
+		}
+	})
 }

@@ -12,15 +12,15 @@
 </div>
 <div class="row" id="selectInp">
   <div class="col-lg-3 col-md-3">
-    <select class="form-control" name="value"></select>
+    <select class="form-control" name="value" id="eventList"></select>
   </div>
   <div class="col-lg-3 col-md-3">
-    <select class="form-control" name="value"></select>
+    <select class="form-control" name="value" id="orderList"></select>
   </div>
-  <div class="col-lg-3" style="float: right;">
+  <div class="col-lg-3 col-md-offset-3" style="float: right;">
 	    <form class="form-horizontal searchWrap" method="get" action="">
 		    <div class="input-group" style="margin:0 !important;">
-			      <input type="text" class="form-control" placeholder="活动名称" id="searchInput" name="value">
+			      <input type="text" class="form-control" placeholder="购买人或手机号进行搜索" id="searchInput" name="value">
 			      <span class="input-group-btn">
 			         <button class="btn btn-default" type="submit">搜索</button>
 			      </span>
@@ -32,84 +32,37 @@
 	<thead>
 		<tr>
 			<th>序号</th>
-			<th>活动名称</th>
-			<th>公测时间</th>
-			<th>活动时间</th>
-			<th>认筹名单</th>
-			<th>车位房源</th>
-			<th>活动状态</th>
-			<th>二维码</th>
-			<th>操作</th>
+			<th>选房时间</th>
+			<th>车位/房间号</th>
+			<th>线上总价</th>
+			<th>认购者</th>
+			<th>手机号</th>
+			<th>证件号码</th>
+			<th>认筹人备注</th>
+			<th>状态</th>
 		</tr>
 	</thead>
-	<tbody>
-		{% for obj in object_list %}
-		<tr>
-			<td>{{ forloop.counter }}</td>
-			<td>{{ obj.name }}</td>
-			<td><p>{{ obj.test_start }}</p>
-			<p>至</p>
-			<p>{{ obj.test_end }}</p></td>
-			<td><p>{{ obj.event_start }}</p>
-			<p>至</p>
-			<p>{{ obj.event_end }}</p></td>
-			<td><a href="{% url 'event_customs' pk=obj.id %}">{{ obj.customer_set.count }} <i class='icon-edit'></i></a></td>
-			<td><a href="{% url 'room_list' pk=obj.id %}">{{ obj.eventdetail_set.count }} <i class='icon-edit'></i></a></td>
-			<td>{{ obj.is_pub|yesno:"发布,未发布"}}</td>
-			<td>qr</td>
-			<td>
-				<p><a data-iframe="{% url 'event_detail' pk=obj.id %}" data-toggle="modal" data-title="活动详情">查看</a></p>
-				<p><a href="javascript:void(0)" data-id="{{obj.id}}" class="is_pub">{% if obj.is_pub == False %}发布{% else %}取消发布{% endif %}</a></p>
-				<p><a data-iframe="{% url 'event_update' pk=obj.id %}" data-toggle="modal">编辑活动</a></p>
-				<p><a data-iframe="{% url 'event_term_update' pk=obj.id %}" data-toggle="modal">编辑协议</a></p>
-				<p><a data-toggle="modal" data-target="#deleteModal">清除公测名单</a></p>
-			</td>
-		</tr>
-		<!--取消发布-->
-		<div class="modal fade" id="is_pub_issue">
-		  <div class="modal-dialog modal-sm">
-		    <div class="modal-content">
-		      <div class="modal-header">
-		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
-		        <h4 class="modal-title">是否发布</h4>
-		      </div>
-		      <div class="modal-body">
-		        <p>确定{{ obj.is_pub|yesno:"取消发布,发布"}}？</p>
-		      </div>
-		      <div class="modal-footer">
-		        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-		        <button type="button" class="btn btn-primary is_pub_confirm">确认</button>
-						<input type="hidden" value="" id="is_pub_status">
-		      </div>
-		    </div>
-		  </div>
-		</div>
-		<!--清除公测名单-->
-		<div class="modal fade" id="deleteModal" data-id="">
-		  <div class="modal-dialog modal-sm">
-		    <div class="modal-content">
-		      <div class="modal-header">
-		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
-		        <h4 class="modal-title">清除公测名单</h4>
-		      </div>
-		      <div class="modal-body">
-		        <p>确认清除公测名单？</p>
-		      </div>
-		      <div class="modal-footer">
-		        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-		        <button type="button" class="btn btn-primary" onclick="deleteOrder({{obj.id}},'/acc/ctdelete/')">确认</button>
-		      </div>
-		    </div>
-		  </div>
-		</div>
-		{% endfor %}
+	<tbody id="openList">
+		<tr></tr>
 	</tbody>
 </table>
 {% endblock %}
 {% block js %}
 <script type="text/javascript">
 $(document).ready(function(){
+  getorderList();
+  getorderSelect();
 	$("#navActive li").eq(2).addClass("active");
+  $("#eventList").change(function(){
+    var thisVal = $(this).val();
+    var is_test = $("#orderList").val();
+    getorderList(thisVal,is_test);
+  });
+  $("#orderList").change(function(){
+    var is_test = $(this).val();
+    var thisVal = $("#eventList").val();
+    getorderList(thisVal,is_test);
+  });
 });
 </script>
 {% endblock %}

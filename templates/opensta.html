@@ -63,7 +63,7 @@
 {% endblock %}
 {% block js %}
 <script type="text/javascript">
-$(document).ready(function(){ 
+$(document).ready(function(){
 	$("#navActive li").eq(1).addClass("active");
 //	活动下拉框列表的显示请求
 	$.ajax({
@@ -73,9 +73,9 @@ $(document).ready(function(){
 		success:function(results){
 			var result =results.data;
 			for(var i=0; i<result.length; i++){
-				$(".selectInp").append("<option value='"+result[i].id+"'>"+result[i].name+"</option>")
+				$(".selectInp").prepend("<option value='"+result[i].id+"'>"+result[i].name+"</option>")
 			};
-			$(".selectInp").children("option").attr("selected","selected");
+			$(".selectInp option:first").attr("selected","selected");
 		},
 		error:function(){
 			alert("获取活动列表失败")
