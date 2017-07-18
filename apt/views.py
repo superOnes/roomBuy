@@ -490,7 +490,7 @@ class HouseHeatView(View):
     '''
     def get(self, request, *args, **kwargs):
         objs = Order.all()
-        event_id = request.POST.get('event_id')
+        event_id = request.POST.get('id')
         if event_id:
             queryset = EventDetail.objects.filter(event_id=event_id)
         else:
@@ -515,7 +515,7 @@ class PurcharseHeatView(View):
     购房者热度统计
     '''
     def get(self, request, *args, **kwargs):
-        event_id = request.POST.get('event_id')
+        event_id = request.POST.get('id')
         li = []
         if event_id:
             queryset = Customer.objects.filter(event_id=event_id)
@@ -538,7 +538,6 @@ class PurcharseHeatView(View):
                        'openroom': openorder.eventdetail.room_num
                        }
             li.append(ct_list)
-            print(li)
             return JsonResponse({'success': True, "data": li})
         return JsonResponse({'success': False})
 
@@ -548,11 +547,10 @@ class GetEventView(View):
     获取活动列表
     '''
     def get(self, request, *args, **kwargs):
-        context = {}
         event_list = Event.all()
-        context['event'] = [{'id': et.id,
-                             'name': et.name} for et in event_list]
-        return JsonResponse(context)
+        event = [{'id': et.id,
+                  'name': et.name} for et in event_list]
+        return JsonResponse({'success': True, 'data': event})
 
 
 class HouseTypeListView(ListView):
