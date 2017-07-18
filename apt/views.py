@@ -530,14 +530,13 @@ class PurcharseHeatView(View):
                        'protime': customer.protime,
                        'count': customer.count,
                        'heat': customer.heat,
-                       'testtime': testorder.time,
-                       'testroom': testorder.eventdetail.room_num,
-                       'opentime': openorder.time,
-                       'openroom': openorder.eventdetail.room_num
+                       'testtime': testorder.time if testorder else '',
+                       'testroom': testorder.eventdetail.room_num if testorder else '',
+                       'opentime': openorder.time if testorder else '',
+                       'openroom': openorder.eventdetail.room_num if testorder else ''
                        }
             li.append(ct_list)
-            return JsonResponse({'success': True, "data": li})
-        return JsonResponse({'success': False})
+        return JsonResponse({'success': True, "data": li})
 
 
 class GetEventView(View):
