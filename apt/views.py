@@ -237,7 +237,7 @@ class ImportPriceView(View):
                                                              floor=ed[3],
                                                              room_num=ed[4],
                                                              price=ed[5],
-                                                             total=ed[6],
+                                                             area=ed[6],
                                                              event=event)
                 eventdetail.save()
             return JsonResponse({'success': True})
@@ -255,7 +255,7 @@ class ExportView(View):
         if objs:
             sheet = Workbook(encoding='utf-8')
             s = sheet.add_sheet('数据表')
-            list = ['选房房源id', '楼栋', '单元', '楼层', '房号', '原价', '线上总价']
+            list = ['选房房源id', '楼栋', '单元', '楼层', '房号', '单价', '建筑面积']
             col = 0
             for i in list:
                 s.write(0, col, i)
@@ -330,8 +330,8 @@ class ExportHouseHotView(View):
                 '楼层',
                 '房号',
                 '是否已售',
-                '原价',
-                '线上总价',
+                '单价',
+                '建筑面积',
                 '收藏人数',
                 '公测是否已售']
             col = 0
@@ -529,7 +529,7 @@ class HouseHeatView(View):
                     'room_num': et.room_num,
                     'is_sold': et.is_sold,
                     'price': et.price,
-                    'total': et.total,
+                    'area': et.area,
                     'num': et.follow_set.count(),
                     'is_testsold': et.is_testsold
                     } for et in queryset]
@@ -682,7 +682,8 @@ class OrderListView(View):
             order_list = [{'id': od.id,
                            'time': od.time.strftime("%Y %m %d %H:%M:%S"),
                            'room_num': od.eventdetail.room_num,
-                           'total': od.eventdetail.total,
+                           'price': od.eventdetail.price,
+                           'area': od.eventdetail.area,
                            'realname': od.user.customer.realname,
                            'mobile': od.user.customer.mobile,
                            'identication': od.user.customer.identication,

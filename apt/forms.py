@@ -16,7 +16,7 @@ class EventDetailForm(forms.ModelForm):
 
     class Meta:
         model = EventDetail
-        fields = ['building', 'unit', 'floor', 'room_num', 'price', 'total']
+        fields = ['building', 'unit', 'floor', 'room_num', 'price', 'area']
 
     def save(self, commit=True):
         if not self.instance.id:
