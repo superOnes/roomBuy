@@ -647,7 +647,7 @@ class HouseTypeRelatedView(View):
         return JsonResponse({'success': False, 'msg': '暂不支持车位自动关联'})
 
 
-@method_decorator(admin_required, name='dispatch')
+# @method_decorator(admin_required, name='dispatch')
 class OrderListView(View):
     '''
     订单管理列表
@@ -655,10 +655,16 @@ class OrderListView(View):
     def get(self, request, *args, **kwargs):
         event_id = request.GET.get('id')
         is_test = request.GET.get('is_test')
+        value = request.GET.get('value')
+
         if event_id and is_test:
-            queryset = Order.objects.filter(event_id=event_id, is_test=is_test)
+            queryset = Order.objects.filter(eventdetail__event_id=event_id, is_test=is_test)
         else:
-            queryset = Order.objects.filter(event_id=1, is_test=1)
+            last_event = Event.get_last_event(request.user.company.id)
+            queryset = Order.objects.filter(eventdetail__event=last_event, is_test=1)
+        if value:
+            queryset = queryset.filter(Q(user__customer__realname__icontains=value) |
+                                       Q(user__customer__mobile__icontains=value))
         if queryset:
             order_list = [{'id': od.id,
                            'time': od.time.strftime("%Y %m %d %H:%M:%S"),
@@ -670,7 +676,8 @@ class OrderListView(View):
                            'remark': od.user.customer.remark,
                            'status': od.eventdetail.status,
                            } for od in queryset]
-        return JsonResponse({'success': True, 'data': order_list})
+            return JsonResponse({'success': True, 'data': order_list})
+        return JsonResponse({'success': False})
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -682,3 +689,5 @@ class GetOrderView(View):
         order = [{'id': 0, 'is_test': False},
                  {'id': 1, 'is_test': True}]
         return JsonResponse({'success': True, 'data': order})
+
+
