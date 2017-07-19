@@ -10,6 +10,7 @@ from accounts.models import Order
 from accounts.decorators import customer_login_required, customer_login_time
 
 
+@method_decorator(customer_login_required, name='dispatch')
 class AppEventDetailView(View):
     '''
     显示活动
@@ -32,6 +33,7 @@ class AppEventDetailView(View):
         return JsonResponse(context)
 
 
+@method_decorator(customer_login_required, name='dispatch')
 class AppEventDetailListView(View):
     '''
     车位/房源 楼号列表
@@ -54,6 +56,7 @@ class AppEventDetailListView(View):
         return JsonResponse(context)
 
 
+@method_decorator(customer_login_required, name='dispatch')
 class AppEventDetailUnitListView(View):
     '''
     车位/房源 单元列表
@@ -75,6 +78,7 @@ class AppEventDetailUnitListView(View):
         return JsonResponse(context)
 
 
+@method_decorator(customer_login_required, name='dispatch')
 class AppEventDetailHouseListView(View):
     '''
     车位/房源 房号列表
@@ -99,6 +103,8 @@ class AppEventDetailHouseListView(View):
         return JsonResponse(context)
 
 
+@method_decorator(customer_login_time, name='dispatch')
+@method_decorator(customer_login_required, name='dispatch')
 class AppEventDetailHouseInfoView(View):
     '''
     车位/房源 详情
@@ -144,6 +150,7 @@ class AppEventDetailHouseInfoView(View):
         return JsonResponse(context)
 
 
+@method_decorator(customer_login_required, name='dispatch')
 class AddFollow(View):
     '''
     添加收藏
@@ -170,6 +177,7 @@ class AddFollow(View):
             return JsonResponse({'success': True})
 
 
+@method_decorator(customer_login_required, name='dispatch')
 class FollowView(View):
     '''
     用户收藏列表信息
@@ -196,6 +204,8 @@ class FollowView(View):
         return JsonResponse(context)
 
 
+@method_decorator(customer_login_time, name='dispatch')
+@method_decorator(customer_login_required, name='dispatch')
 class AppHouseChoiceConfirmView(View):
     '''
     订单确认
@@ -248,6 +258,8 @@ class AppHouseChoiceConfirmView(View):
                 })
 
 
+@method_decorator(customer_login_time, name='dispatch')
+@method_decorator(customer_login_required, name='dispatch')
 class AppOrderListView(View):
     '''
     订单列表
@@ -279,6 +291,8 @@ class AppOrderListView(View):
         return JsonResponse(context)
 
 
+@method_decorator(customer_login_time, name='dispatch')
+@method_decorator(customer_login_required, name='dispatch')
 class AppOrderInfoView(View):
     '''
     订单详情

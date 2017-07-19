@@ -40,5 +40,26 @@ def customer_login_required(func):
         if request.user.is_authenticated():
             if not request.user.is_admin:
                 return func(request, *args, **kwargs)
-        return JsonResponse({'msg': 'please login'})
+        return JsonResponse({'response_state': 403})
+    return wrapper
+
+
+def customer_login_time(func):
+    @wraps(func)
+    def wrapper(request, *args, **kwargs):
+        user = request.user
+        if time.strftime('%Y%m%d %H:%M:%S') <= user.customer.event.test_start.strftime(
+                '%Y%m%d %H:%M:%S'):
+            return JsonResponse({'response_state': 403})
+        elif time.strftime('%Y%m%d %H:%M:%S') <= user.customer.event.test_end.strftime('%Y%m%d %H:%M:%S'):
+            return func(request, *args, **kwargs)
+        elif time.strftime('%Y%m%d %H:%M:%S') > user.customer.event.test_end.strftime('%Y%m%d %H:%M:%S'):
+            if time.strftime('%Y%m%d %H:%M:%S') <= user.customer.event.event_star.strftime(
+                    '%Y%m%d %H:%M:%S'):
+                return JsonResponse({'response_state': 403})
+            elif time.strftime('%Y%m%d %H:%M:%S') <= user.customer.event.event_end.strftime('%Y%m%d %H:%M:%S'):
+                return func(request, *args, **kwargs)
+            elif time.strftime('%Y%m%d %H:%M:%S') > user.customer.event.event_end.strftime('%Y%m%d %H:%M:%S'):
+                return JsonResponse({'response_state': 403})
+            return JsonResponse({'response_state': 403})
     return wrapper
