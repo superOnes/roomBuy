@@ -50,6 +50,7 @@ class Order(models.Model):
     time = models.DateTimeField('订单时间', auto_now_add=True)
     is_delete = models.BooleanField(default=False)
     is_test = models.BooleanField('是否是公测订单', default=True)
+    order_num = models.CharField('订单编号', max_length=100)
 
     @classmethod
     def get(cls, id):

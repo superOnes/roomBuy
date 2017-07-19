@@ -1,11 +1,13 @@
+import time
 
-from django.views.generic.base import TemplateView
 from django.views.generic import View
 from django.http import JsonResponse
+from django.utils.decorators import method_decorator
 
 from apt.models import Event, EventDetail
 from aptp.models import Follow
 from accounts.models import Order
+from accounts.decorators import customer_login_required, customer_login_time
 
 
 class AppEventDetailView(View):
@@ -106,6 +108,8 @@ class AppEventDetailHouseInfoView(View):
         user = request.user
         house = request.GET.get('house')
         eventdetobj = EventDetail.get(house)
+        test = True if time.strftime('%Y%m%d %H:%M:%S') <= eventdetobj.event.test_end.strftime(
+            '%Y%m%d %H:%M:%S') else False
         try:
             Follow.objects.get(user=request.user, eventdetail=eventdetobj)
         except BaseException:
@@ -123,12 +127,12 @@ class AppEventDetailHouseInfoView(View):
             '-' +
             eventdetobj.floor +
             '-' + house,
-            'total': eventdetobj.total,
+            'total': '***' if test and not eventdetobj.event.test_price else eventdetobj.total,
             'house_type': '三室两厅',  # 这里还需要改
             'pic': '这是图片',  # 这里需要改
             'floor': eventdetobj.floor,
-            'area': eventdetobj.area,
-            'unit_price': eventdetobj.unit_price,
+            'area': eventdetobj.area if eventdetobj.event.covered_space else '***',
+            'unit_price': eventdetobj.unit_price if eventdetobj.event.covered_space_price else '***',
             'looking': eventdetobj.looking,
             'term': eventdetobj.term,
             'is_sold': eventdetobj.is_sold,
@@ -173,7 +177,7 @@ class FollowView(View):
 
     def get(self, request):
         user = request.user
-        objs = Follow.objects.filter(user=user)
+        objs = user.follow_set.all()
         context = {}
         list = []
         for obj in objs:
@@ -208,9 +212,15 @@ class AppHouseChoiceConfirmView(View):
                         eventdetail=eventdetail):
                     if user.order_set.count() < user.customer.count:
                         a = Order.objects.create(
-                            user=user, eventdetail=eventdetail, event=eventdetail.event)
+                            user=user,
+                            eventdetail=eventdetail,
+                            event=eventdetail.event,  # 需要去掉event
+                            order_num=time.strftime('%Y%m%d%H%M%S'))
                         if a.time <= a.event.test_end:
                             a.is_test = True
+                            a.save()
+                        else:
+                            a.is_test = False
                             a.save()
                     else:
                         return JsonResponse({'success': False})
@@ -231,12 +241,78 @@ class AppHouseChoiceConfirmView(View):
                         '-' +
                         eventdetail.floor +
                         '-' +
-                        eventdetail.room_num)})
+                        eventdetail.room_num),
+                    'limit': eventdetail.event.limit,
+                    'ordertime': a.time,
+                    'orderid': a.id,
+                })
 
 
-class AppOrderListView(TemplateView):
-    template_name = 'aptp/order_list.html'
+class AppOrderListView(View):
+    '''
+    订单列表
+    '''
+
+    def get(self, request):
+        user = request.user
+        objs = user.order_set.all()
+        valuelist = []
+        for obj in objs:
+            value = [{
+                'order_num': obj.order_num,
+                'room_info': (
+                    obj.eventdetail.building +
+                    '-' +
+                    obj.eventdetail.unit +
+                    '-' +
+                    obj.eventdetail.floor +
+                    '-' +
+                    obj.eventdetail.room_num),
+                'time': obj.time,
+                'event': obj.eventdetail.event.name,
+                'unit_price': obj.eventdetail.unit_price if obj.eventdetail.event.covered_space_price else '',
+                'choice_num': '0000000000000001',  # 这里需要确认一下
+            }]
+            valuelist.append(value)
+        context = {}
+        context['objects'] = valuelist
+        return JsonResponse(context)
 
 
 class AppOrderInfoView(View):
-    pass
+    '''
+    订单详情
+    '''
+
+    def get(self, request):
+        orderid = request.GET.get('orderId')
+        try:
+            obj = Order.get(orderid)
+            value = [{
+                'eventname': obj.eventdetail.event.name,
+                'unit_price': obj.eventdetail.unit_price,
+                'limit': obj.eventdetail.event.limit,
+                'ordertime': obj.time.strftime('%Y%m%d %H:%M:%S'),
+                'room_info': (
+                    obj.eventdetail.building +
+                    '-' +
+                    obj.eventdetail.unit +
+                    '-' +
+                    obj.eventdetail.floor +
+                    '-' +
+                    obj.eventdetail.room_num),
+                'houst_type': '三室两厅',  # 这里需要改
+                'area': obj.eventdetail.area,
+                'customer': obj.user.customer.realname,
+                'mobile': obj.user.customer.mobile,
+                'iidentication': obj.user.customer.identication,
+                'order_num': obj.order_num,
+                'orderid': obj.id,
+            }]
+            context = {}
+            context['objects'] = value
+            context['success'] = True
+        except BaseException:
+            return JsonResponse({'success': False})
+        else:
+            return JsonResponse(context)

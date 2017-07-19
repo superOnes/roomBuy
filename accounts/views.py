@@ -17,7 +17,7 @@ from django.core.urlresolvers import reverse
 from apt.models import Event
 from aptm import settings
 from .models import User, Customer, Order
-from .decorators import superadmin_required
+from .decorators import superadmin_required, customer_login_time
 
 
 class LoginView(View):

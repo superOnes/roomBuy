@@ -1,3 +1,4 @@
+import time
 from functools import wraps
 from django.http import JsonResponse
 from django.shortcuts import redirect, resolve_url
@@ -27,7 +28,17 @@ def admin_required(func):
     @wraps(func)
     def return_wrapper(request, *args, **kwargs):
         if request.user.is_authenticated():
-            if request.user.is_admin is True:
+            if request.user.is_admin:
                 return func(request, *args, **kwargs)
         return redirect('/acc/login/?next=%s' % request.get_full_path())
     return return_wrapper
+
+
+def customer_login_required(func):
+    @wraps(func)
+    def wrapper(request, *args, **kwargs):
+        if request.user.is_authenticated():
+            if not request.user.is_admin:
+                return func(request, *args, **kwargs)
+        return JsonResponse({'msg': 'please login'})
+    return wrapper
