@@ -78,28 +78,6 @@
 		    </div>
 		</div>
 		<div class="form-group">
-		    <label class="col-sm-3 col-lg-3 control-label">登录短信提醒</label>
-		    <div class="col-sm-9 col-lg-9">
-			    <label class="checkbox-inline">
-		    		<input type="radio" class="input-group-sm" name="login_msg" {% if object.login_msg == True %}checked{% endif %}> 是
-				</label>
-			    <label class="checkbox-inline">
-			    	<input type="radio" class="input-group-sm" name="login_msg" {% if object.login_msg == False %}checked{% endif %}> 否
-				</label>
-		    </div>
-		</div>
-		<div class="form-group">
-		    <label class="col-sm-3 control-label" >是否显示原价</label>
-		    <div class="col-sm-9 col-lg-9">
-			    <label class="checkbox-inline">
-			    	<input type="radio" class="input-group-sm" name="price" {% if object.price == True %}checked{% endif %}> 是
-				</label>
-			    <label class="checkbox-inline">
-			    	<input type="radio" class="input-group-sm" name="price" {% if object.price == False %}checked{% endif %}> 否
-				</label>
-		    </div>
-		</div>
-		<div class="form-group">
 		    <label class="col-sm-3 col-lg-3 control-label">是否显示建筑面积</label>
 		    <div class="col-sm-9 col-lg-9">
 			    <label class="checkbox-inline">
@@ -118,28 +96,6 @@
 				</label>
 			    <label class="checkbox-inline">
 			    	<input type="radio" class="input-group-sm" name="covered_space_price" {% if object.covered_space_price == False %}checked{% endif %}> 否
-				</label>
-		    </div>
-		</div>
-		<div class="form-group">
-		    <label class="col-sm-3 col-lg-3 control-label">是否显示套内面积</label>
-		    <div class="col-sm-9 col-lg-9">
-			    <label class="checkbox-inline">
-			    	<input type="radio" class="input-group-sm" name="inside_space" {% if object.inside_space == True %}checked{% endif %}> 是
-				</label>
-			    <label class="checkbox-inline">
-			    	<input type="radio" class="input-group-sm" name="inside_space" {% if object.inside_space == False %}checked{% endif %}> 否
-				</label>
-		    </div>
-		</div>
-		<div class="form-group">
-		    <label class="col-sm-3 col-lg-3 control-label">是否显示套内面积单价</label>
-		    <div class="col-sm-9 col-lg-9">
-			    <label class="checkbox-inline">
-			    	<input type="radio" class="input-group-sm" name="inside_space_price" {% if object.inside_space_price == True %}checked{% endif %}> 是
-				</label>
-			    <label class="checkbox-inline">
-			    	<input type="radio" class="input-group-sm" name="inside_space_price" {% if object.inside_space_price == False %}checked{% endif %}> 否
 				</label>
 		    </div>
 		</div>

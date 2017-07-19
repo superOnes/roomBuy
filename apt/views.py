@@ -520,7 +520,8 @@ class HouseHeatView(View):
         if event_id:
             queryset = EventDetail.objects.filter(event_id=event_id)
         else:
-            queryset = EventDetail.objects.filter(event_id=1)
+            last_event = Event.get_last_event(request.user.company.id)
+            queryset = EventDetail.objects.filter(event_id=last_event)
         et_list = [{'id': et.id,
                     'building': et.building,
                     'unit': et.unit,
@@ -532,7 +533,7 @@ class HouseHeatView(View):
                     'num': et.follow_set.count(),
                     'is_testsold': et.is_testsold
                     } for et in queryset]
-        return JsonResponse({'success': True, "data": et_list})
+        return JsonResponse({'success': True, 'data': et_list})
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -546,7 +547,8 @@ class PurcharseHeatView(View):
         if event_id:
             queryset = Customer.objects.filter(event_id=event_id)
         else:
-            queryset = Customer.objects.filter(event_id=1)
+            last_event = Event.get_last_event(request.user.company.id)
+            queryset = Customer.objects.filter(event_id=last_event)
             li = []
         for customer in queryset:
             testorder = customer.user.order_set.filter(is_test=True).first()
@@ -564,7 +566,7 @@ class PurcharseHeatView(View):
                        'openroom': openorder.eventdetail.room_num if openorder else ''
                        }
             li.append(ct_list)
-        return JsonResponse({'success': True, "data": li})
+        return JsonResponse({'success': True, 'data': li})
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -573,7 +575,7 @@ class GetEventView(View):
     获取活动列表
     '''
     def get(self, request, *args, **kwargs):
-        event_list = Event.all()
+        event_list = Event.get_all_by_company(request.user.company.id)
         event = [{'id': et.id,
                   'name': et.name} for et in event_list]
         return JsonResponse({'success': True, 'data': event})
