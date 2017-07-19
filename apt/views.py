@@ -647,7 +647,7 @@ class HouseTypeRelatedView(View):
         return JsonResponse({'success': False, 'msg': '暂不支持车位自动关联'})
 
 
-# @method_decorator(admin_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class OrderListView(View):
     '''
     订单管理列表
