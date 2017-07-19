@@ -73,7 +73,7 @@ $(document).ready(function(){
 		success:function(results){
 			var result =results.data;
 			for(var i=0; i<result.length; i++){
-				$(".selectInp").prepend("<option value='"+result[i].id+"'>"+result[i].name+"</option>")
+				$(".selectInp").append("<option value='"+result[i].id+"'>"+result[i].name+"</option>")
 			};
 			$(".selectInp option:first").attr("selected","selected");
 		},

@@ -549,7 +549,6 @@ class PurcharseHeatView(View):
         else:
             last_event = Event.get_last_event(request.user.company.id)
             queryset = Customer.objects.filter(event_id=last_event)
-            li = []
         for customer in queryset:
             testorder = customer.user.order_set.filter(is_test=True).first()
             openorder = customer.user.order_set.filter(is_test=False).first()
@@ -560,11 +559,17 @@ class PurcharseHeatView(View):
                        'protime': customer.protime,
                        'count': customer.count,
                        'heat': customer.heat,
-                       'testtime': testorder.time if testorder else '',
-                       'testroom': testorder.eventdetail.room_num if testorder else '',
-                       'opentime': openorder.time if openorder else '',
-                       'openroom': openorder.eventdetail.room_num if openorder else ''
+                       'testtime': '',
+                       'testroom': '',
+                       'opentime': '',
+                       'openroom': ''
                        }
+            if testorder:
+                ct_list['testtime'] = testorder.time
+                ct_list['testroom'] = testorder.eventdetail.room_num
+            if openorder:
+                ct_list['opentime'] = openorder.time
+                ct_list['openroom'] = openorder.eventdetail.room_num
             li.append(ct_list)
         return JsonResponse({'success': True, 'data': li})
 
