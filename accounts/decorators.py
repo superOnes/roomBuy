@@ -29,6 +29,5 @@ def admin_required(func):
         if request.user.is_authenticated():
             if request.user.is_admin is True:
                 return func(request, *args, **kwargs)
-        print(request.get_full_path())
         return redirect('/acc/login/?next=%s' % request.get_full_path())
     return return_wrapper

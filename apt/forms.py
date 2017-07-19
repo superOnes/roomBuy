@@ -10,7 +10,7 @@ class EventForm(forms.ModelForm):
     class Meta:
         model = Event
         fields = [f.name for f in model._meta.fields]
-        
+
 
 class EventDetailForm(forms.ModelForm):
 

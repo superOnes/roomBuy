@@ -1,5 +1,6 @@
 from django.contrib import admin
 from accounts.models import User
+from apt.models import Company
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -7,3 +8,4 @@ class UserAdmin(admin.ModelAdmin):
 
 
 admin.site.register(User, UserAdmin)
+admin.site.register(Company)

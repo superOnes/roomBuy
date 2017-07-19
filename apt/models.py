@@ -2,6 +2,10 @@ from django.db import models
 from django.shortcuts import get_object_or_404
 
 
+class Company(models.Model):
+    name = models.CharField(max_length=100)
+
+
 class Event(models.Model):
     APT = 1
     PARKING = 2
@@ -37,6 +41,7 @@ class Event(models.Model):
     term = models.TextField('协议内容', null=True, blank=True)
     is_pub = models.BooleanField('是否发布', default=False)
     is_delete = models.BooleanField(default=False)
+    company = models.ForeignKey(Company)
 
     @classmethod
     def get(cls, id):
@@ -45,6 +50,10 @@ class Event(models.Model):
     @classmethod
     def all(cls):
         return cls.objects.filter(is_delete=0).order_by('-id')
+
+    @classmethod
+    def get_all_by_company(cls, cid):
+        return cls.objects.filter(company_id=cid).order_by('-id')
 
     @classmethod
     def remove(cls, id):
@@ -82,10 +91,10 @@ class EventDetail(models.Model):
     visit_num = models.IntegerField('访问热度', default=0)
     is_delete = models.BooleanField(default=False)
     house_type = models.ForeignKey(HouseType, null=True, blank=True)
-    looking=models.CharField('朝向',max_length=100)
-    term=models.CharField('使用年限',max_length=50)
-    area=models.CharField('建筑面积',max_length=50)
-    unit_price=models.CharField('面积单价',max_length=100)
+    looking = models.CharField('朝向', max_length=100)
+    term = models.CharField('使用年限', max_length=50)
+    area = models.CharField('建筑面积', max_length=50)
+    unit_price = models.CharField('面积单价', max_length=100)
 
     @classmethod
     def get(cls, id):

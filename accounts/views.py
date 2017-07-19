@@ -26,7 +26,6 @@ class LoginView(View):
     '''
 
     def get(self, request):
-        print("get:", request.GET.get('next'))
         return render(request, 'index.html', {'next': request.GET.get('next')})
 
     def post(self, request, *args, **kwargs):

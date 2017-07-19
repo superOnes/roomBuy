@@ -38,7 +38,7 @@ class EventListView(ListView):
 
     def get_queryset(self):
         self.value = self.request.GET.get('value')
-        queryset = self.model.all()
+        queryset = self.model.get_all_by_company(self.request.user.company.id)
         if self.value:
             queryset = queryset.filter(Q(name__contains=self.value))
         return queryset
@@ -51,6 +51,11 @@ class EventCreateView(DialogMixin, CreateView):
     '''
     form_class = EventForm
     template_name = 'popup/event_create.html'
+
+    def get_initial(self):
+        initial = super(EventCreateView, self).get_initial()
+        initial['company'] = self.request.user.company
+        return initial
 
 
 @method_decorator(admin_required, name='dispatch')
