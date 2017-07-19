@@ -105,7 +105,6 @@ function statisticsData(thisId){
 		dataType:'JSON',
 		success:function(results){
 			var result =results.data;
-			console.log(result);
 			$listBuyer.find("tr").remove();
 			for (var i=0; i<result.length; i++) {
 				$listBuyer.append("<tr><td>"+(i+1)+"</td><td>"+result[i].name+"</td><td>"+result[i].mobile+"</td><td>"+result[i].identication+"</td>"+
@@ -157,11 +156,11 @@ function getorderSelect(){
 }
 
 //订单数据列表显示
-function getorderList(thisId,is_test){
+function getorderList(thisId,is_test,searchValue){
 	var $openList = $("#openList");
 	$.ajax({
 		type:"get",
-		data:{id:thisId,is_test:is_test},
+		data:{id:thisId,is_test:is_test,value:searchValue},
 		url:"/event/orderlist/",
 		asunc:true,
 		success:function(results){

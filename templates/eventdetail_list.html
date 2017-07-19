@@ -11,7 +11,7 @@
     <button type="button" class="btn btn-default" data-toggle="modal" data-target="#exampleModal">导入房价</button>
     <a href="{% url 'room_export' pk=event.id %}" class="btn btn-default">导出房价</a>
 	  <a href="{% url 'event_house_type_list' pk=event.id %}" class="btn btn-default" target="_blank">编辑户型</a>
-		<a href="javascript:void(0)" class="btn btn-default house-type" data-id="{{event.id}}" data-target="#myModal">一键关联户型</a>
+		<a href="javascript:void(0)" class="btn btn-default house-type" data-id="{{event.id}}" data-target="#house-type-modal">一键关联户型</a>
 	<div class="col-lg-3" style="float: right;">
 	    <form class="form-horizontal searchWrap" method="get" action="">
 		    <div class="input-group">

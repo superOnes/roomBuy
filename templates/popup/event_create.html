@@ -12,9 +12,9 @@
 		    	</select>
 		    </div>
 		</div>
-		<div class="form-group">
-		    <label class="col-sm-3 col-lg-3 control-label">活动名称</label>
-		    <div class="col-sm-9 col-lg-9">
+		<div class="form-group row">
+		    <label class="col-sm-3 col-md-3 col-lg-3 control-label">活动名称</label>
+		    <div class="col-sm-9 col-md-9 col-lg-9">
 		    	<input type="text" class="form-control" placeholder="活动名称" name="name" value="{{form.name.value|default:''}}" required>
 		    </div>
 		</div>
@@ -38,11 +38,13 @@
 		</div>
 		<div class="form-group">
 		    <label class="col-sm-3 col-lg-3 control-label">是否显示公测放价</label>
-		    <div class="col-sm-3 col-lg-9">
-		    	<input type="radio" class="input-group-sm" name="test_price" {% if object.test_price == True %}checked{% endif %}> 是
-			</div>
-		    <div class="col-sm-3">
-	    		<input type="radio" class="input-group-sm" name="test_price" {% if object.test_price == False %}checked{% endif %}> 否
+		    <div class="col-sm-9 col-lg-9">
+			    <label class="checkbox-inline">
+			    	<input type="radio" class="input-group-sm" name="test_price" {% if object.test_price == True %}checked{% endif %}> 是
+				</label>
+			    <label class="checkbox-inline">
+				  	<input type="radio" class="input-group-sm" name="test_price" {% if object.test_price == False %}checked{% endif %}> 否
+				</label>
 		    </div>
 		</div>
 		<div class="form-group">
@@ -60,91 +62,103 @@
 		<div class="form-group">
 		    <label class="col-sm-3 col-lg-3 control-label">选房完成期限</label>
 		    <div class="col-sm-9 col-lg-9">
-		    	<input type="number" class="form-control" min="0" name="limit" value="{{form.limit.value|default:''}}" required>
+		    	<input type="number" class="form-control" placeholder="小时" min="0" name="limit" value="{{form.limit.value|default:''}}" required>
 		    </div>
 		</div>
 		<div class="form-group">
 		    <label class="col-sm-3 col-lg-3 control-label">支持设备登录数</label>
 		    <div class="col-sm-9 col-lg-9">
-		    	<input type="number" class="form-control"  min="0" placeholder="" name="equ_login_num" value="{{form.equ_login_num.value|default:''}}" required>
+		    	<input type="number" class="form-control"  min="0" placeholder="支持设备登录数" name="equ_login_num" value="{{form.equ_login_num.value|default:''}}" required>
 		    </div>
 		</div>
 		<div class="form-group">
 		    <label class="col-sm-3 col-lg-3 control-label">同一账号允许收藏数</label>
 		    <div class="col-sm-9 col-lg-9">
-		    	<input type="number" class="form-control"  min="0" placeholder="" name="follow_num" value="{{form.follow_num.value|default:''}}" required>
+		    	<input type="number" class="form-control"  min="0" placeholder="同一账号允许收藏数" name="follow_num" value="{{form.follow_num.value|default:''}}" required>
 		    </div>
 		</div>
 		<div class="form-group">
 		    <label class="col-sm-3 col-lg-3 control-label">登录短信提醒</label>
-		    <div class="col-sm-4 col-lg-4">
-		    	<input type="radio" class="input-group-sm" name="login_msg" {% if object.login_msg == True %}checked{% endif %}> 是
-		    </div>
-		    <div class="col-sm-4 col-lg-4">
-		    	<input type="radio" class="input-group-sm" name="login_msg" {% if object.login_msg == False %}checked{% endif %}> 否
+		    <div class="col-sm-9 col-lg-9">
+			    <label class="checkbox-inline">
+		    		<input type="radio" class="input-group-sm" name="login_msg" {% if object.login_msg == True %}checked{% endif %}> 是
+				</label>
+			    <label class="checkbox-inline">
+			    	<input type="radio" class="input-group-sm" name="login_msg" {% if object.login_msg == False %}checked{% endif %}> 否
+				</label>
 		    </div>
 		</div>
 		<div class="form-group">
 		    <label class="col-sm-3 control-label" >是否显示原价</label>
-		    <div class="col-sm-4 col-lg-4">
-		    	<input type="radio" class="input-group-sm" name="price" {% if object.price == True %}checked{% endif %}> 是
-		    </div>
-		    <div class="col-sm-4 col-lg-4">
-		    	<input type="radio" class="input-group-sm" name="price" {% if object.price == False %}checked{% endif %}> 否
+		    <div class="col-sm-9 col-lg-9">
+			    <label class="checkbox-inline">
+			    	<input type="radio" class="input-group-sm" name="price" {% if object.price == True %}checked{% endif %}> 是
+				</label>
+			    <label class="checkbox-inline">
+			    	<input type="radio" class="input-group-sm" name="price" {% if object.price == False %}checked{% endif %}> 否
+				</label>
 		    </div>
 		</div>
 		<div class="form-group">
 		    <label class="col-sm-3 col-lg-3 control-label">是否显示建筑面积</label>
-		    <div class="col-sm-4 col-lg-4">
-		    	<input type="radio" class="input-group-sm" name="covered_space" {% if object.covered_space == True %}checked{% endif %}> 是
-		    </div>
-		    <div class="col-sm-4 col-lg-4">
-		    	<input type="radio" class="input-group-sm" name="covered_space" {% if object.covered_space == False %}checked{% endif %}> 否
+		    <div class="col-sm-9 col-lg-9">
+			    <label class="checkbox-inline">
+			    	<input type="radio" class="input-group-sm" name="covered_space" {% if object.covered_space == True %}checked{% endif %}> 是
+				</label>
+			    <label class="checkbox-inline">
+			    	<input type="radio" class="input-group-sm" name="covered_space" {% if object.covered_space == False %}checked{% endif %}> 否
+				</label>
 		    </div>
 		</div>
 		<div class="form-group">
 		    <label class="col-sm-3 col-lg-3 control-label">是否显示建筑面积单价</label>
-		    <div class="col-sm-4 col-lg-4">
-		    	<input type="radio" class="input-group-sm" name="covered_space_price" {% if object.covered_space_price == True %}checked{% endif %}> 是
-		    </div>
-		    <div class="col-sm-4 col-lg-4">
-		    	<input type="radio" class="input-group-sm" name="covered_space_price" {% if object.covered_space_price == False %}checked{% endif %}> 否
+		    <div class="col-sm-9 col-lg-9">
+			    <label class="checkbox-inline">
+			    	<input type="radio" class="input-group-sm" name="covered_space_price" {% if object.covered_space_price == True %}checked{% endif %}> 是
+				</label>
+			    <label class="checkbox-inline">
+			    	<input type="radio" class="input-group-sm" name="covered_space_price" {% if object.covered_space_price == False %}checked{% endif %}> 否
+				</label>
 		    </div>
 		</div>
 		<div class="form-group">
 		    <label class="col-sm-3 col-lg-3 control-label">是否显示套内面积</label>
-		    <div class="col-sm-4 col-lg-4">
-		    	<input type="radio" class="input-group-sm" name="inside_space" {% if object.inside_space == True %}checked{% endif %}> 是
-		    </div>
-		    <div class="col-sm-4 col-lg-4">
-		    	<input type="radio" class="input-group-sm" name="inside_space" {% if object.inside_space == False %}checked{% endif %}> 否
+		    <div class="col-sm-9 col-lg-9">
+			    <label class="checkbox-inline">
+			    	<input type="radio" class="input-group-sm" name="inside_space" {% if object.inside_space == True %}checked{% endif %}> 是
+				</label>
+			    <label class="checkbox-inline">
+			    	<input type="radio" class="input-group-sm" name="inside_space" {% if object.inside_space == False %}checked{% endif %}> 否
+				</label>
 		    </div>
 		</div>
 		<div class="form-group">
 		    <label class="col-sm-3 col-lg-3 control-label">是否显示套内面积单价</label>
-		    <div class="col-sm-4 col-lg-4">
-		    	<input type="radio" class="input-group-sm" name="inside_space_price" {% if object.inside_space_price == True %}checked{% endif %}> 是
-		    </div>
-		    <div class="col-sm-4 col-lg-4">
-		    	<input type="radio" class="input-group-sm" name="inside_space_price" {% if object.inside_space_price == False %}checked{% endif %}> 否
+		    <div class="col-sm-9 col-lg-9">
+			    <label class="checkbox-inline">
+			    	<input type="radio" class="input-group-sm" name="inside_space_price" {% if object.inside_space_price == True %}checked{% endif %}> 是
+				</label>
+			    <label class="checkbox-inline">
+			    	<input type="radio" class="input-group-sm" name="inside_space_price" {% if object.inside_space_price == False %}checked{% endif %}> 否
+				</label>
 		    </div>
 		</div>
 		<div class="form-group">
 		    <label class="col-sm-3 col-lg-3 control-label">活动细则</label>
 		    <div class="col-sm-9 col-lg-9">
-		    	<textarea class="form-control" rows="3" name="description" required >{{form.description.value|default:''}}</textarea>
+		    	<textarea class="form-control" rows="3" placeholder="请填写活动细则" name="description" required >{{form.description.value|default:''}}</textarea>
 		    </div>
 		</div>
 		<div class="form-group">
 		    <label class="col-sm-3 col-lg-3 control-label">认购须知</label>
 		    <div class="col-sm-9 col-lg-9">
-		    	<textarea class="form-control" rows="3" name="notice" required>{{form.notice.value|default:''}}</textarea>
+		    	<textarea class="form-control" rows="3" placeholder="请填写认购须知" name="notice" required>{{form.notice.value|default:''}}</textarea>
 		    </div>
 		</div>
 		<div class="form-group">
 		    <label class="col-sm-3 col-lg-3 control-label">温馨提示</label>
 		    <div class="col-sm-9 col-lg-9">
-		    	<textarea class="form-control" rows="3" name="tip">{{form.tip.value|default:''}}</textarea>
+		    	<textarea class="form-control" rows="3" placeholder="请填写温馨提示" name="tip">{{form.tip.value|default:''}}</textarea>
 		    </div>
 		</div>
 		<div class="form-group">

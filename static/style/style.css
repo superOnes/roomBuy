@@ -32,6 +32,17 @@ input::-webkit-inner-spin-button{
 	margin: 15px 0 !important;
 }
 
+.form-group>.col-sm-9{
+	width: 70% !important;
+	display: inline-block !important;
+	vertical-align: top;
+}
+.form-group>.col-sm-3{
+	vertical-align: top;
+	width: 25% !important;
+	text-align: right;
+}
+
 
 /*头部样式*/
 .Xlogo{

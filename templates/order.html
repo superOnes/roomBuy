@@ -18,14 +18,14 @@
     <select class="form-control" name="value" id="orderList"></select>
   </div>
   <div class="col-lg-3 col-md-offset-3" style="float: right;">
-	    <form class="form-horizontal searchWrap" method="get" action="">
+	    <!--<form class="form-horizontal searchWrap" method="get" action="">-->
 		    <div class="input-group" style="margin:0 !important;">
 			      <input type="text" class="form-control" placeholder="购买人或手机号进行搜索" id="searchInput" name="value">
 			      <span class="input-group-btn">
-			         <button class="btn btn-default" type="submit">搜索</button>
+			         <button class="btn btn-default" type="submit" id="searchBtn">搜索</button>
 			      </span>
 			   </div>
-		  </form>
+		  <!--</form>-->
     </div>
 </div>
 <table class="table datatable">
@@ -53,16 +53,19 @@ $(document).ready(function(){
   getorderList();
   getorderSelect();
 	$("#navActive li").eq(2).addClass("active");
-  $("#eventList").change(function(){
-    var thisVal = $(this).val();
-    var is_test = $("#orderList").val();
-    getorderList(thisVal,is_test);
-  });
-  $("#orderList").change(function(){
-    var is_test = $(this).val();
-    var thisVal = $("#eventList").val();
-    getorderList(thisVal,is_test);
-  });
+	function filterData(){
+		var thisVal = $("#eventList").val();
+		var is_test = $("#orderList").val();
+		var searchValue = $("#searchInput").val();
+		getorderList(thisVal,is_test,searchValue);
+	};
+  $("#eventList").change(function(){ filterData() });
+  $("#orderList").change(function(){ filterData() });
+	$("#searchBtn").click(function(){ filterData() });
+	$("#searchInput").keydown(function(event){
+		var event=event||window.event;
+		if(event.keyCode == 13){ filterData() };
+	})
 });
 </script>
 {% endblock %}
