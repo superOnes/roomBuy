@@ -12,7 +12,7 @@ from .views import (EventListView, EventCreateView, ImportPriceView,
                     HouseTypeUpdateView, CustomerCountUpdateView,
                     ExportBuyHotView, HouseTypeRelatedView,
                     EventDetailHTUpdateView, PurcharseHeatView, GetEventView,
-                    OrderListView, GetOrderView)
+                    OrderListView, GetOrderView, DeleteHouseTypeView)
 
 
 urlpatterns = [
@@ -76,4 +76,6 @@ urlpatterns = [
         name='buyhot_export'),
     url(r'^housetypes/', HouseTypeRelatedView.as_view(),
         name='event_house_type_related'),
+    url(r'^dlhousetypes/', DeleteHouseTypeView.as_view(),
+        name='delete_house_type')
 ]

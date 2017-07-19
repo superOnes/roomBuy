@@ -14,7 +14,7 @@ from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 
-from apt.models import Event
+from apt.models import Event, EventDetail
 from aptm import settings
 from .models import User, Customer, Order
 from .decorators import superadmin_required, customer_login_time
@@ -205,7 +205,10 @@ class DeleteTestView(View):
 
     def post(self, request):
         id = request.POST.get('id')
-        Order.objects.filter(event_id=id).delete()
+        eventdetail = EventDetail.objects.filter(event_id=id)
+        if eventdetail:
+            Order.objects.filter(eventdetail=eventdetail, is_test=False).delete()
+            return JsonResponse({'success': True})
         return JsonResponse({'success': False})
 
 

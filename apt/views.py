@@ -631,6 +631,19 @@ class HouseTypeUpdateView(DialogMixin, UpdateView):
 
 
 @method_decorator(admin_required, name='dispatch')
+class DeleteHouseTypeView(View):
+    '''
+    删除户型
+    '''
+    def post(self, request):
+        id = request.POST.get('id')
+        if id:
+            HouseType.get(id).delete()
+            return JsonResponse({'success': True})
+        return JsonResponse({'success': False})
+
+
+@method_decorator(admin_required, name='dispatch')
 class HouseTypeRelatedView(View):
 
     def post(self, request):

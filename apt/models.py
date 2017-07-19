@@ -76,6 +76,10 @@ class HouseType(models.Model):
     def get_obj_by_num(cls, num):
         return cls.objects.filter(num=num).first()
 
+    @classmethod
+    def get(cls, id):
+        return get_object_or_404(cls.objects, id=id)
+
 
 class EventDetail(models.Model):
     building = models.CharField('楼号', max_length=50)
