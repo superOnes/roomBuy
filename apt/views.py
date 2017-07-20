@@ -45,6 +45,11 @@ class EventListView(ListView):
             queryset = queryset.filter(Q(name__contains=self.value))
         return queryset
 
+    def get_context_data(self):
+        context = super(EventListView, self).get_context_data()
+        context['value'] = self.value
+        return context
+
 
 @method_decorator(admin_required, name='dispatch')
 class EventCreateView(DialogMixin, CreateView):
@@ -719,5 +724,3 @@ class GetOrderView(View):
         order = [{'id': 0, 'is_test': False},
                  {'id': 1, 'is_test': True}]
         return JsonResponse({'success': True, 'data': order})
-
-
