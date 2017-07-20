@@ -67,7 +67,9 @@
 			<td>{{ obj.room_num }}</td>
 			<td><a data-iframe="{% url 'room_ht_update' pk=obj.id %}" data-toggle="modal" data-title="关联户型">
 				{{ obj.house_type.name }} <i class="icon icon-edit"></i></a></td>
-			<td><p>单价：{{ obj.unit_price }}</p>
+			<td><p>单价：<a data-iframe="{% url 'room_price_update' pk=obj.id %}"
+                    data-toggle="modal" data-title="编辑单价">{{ obj.unit_price }}
+                 <i class="icon icon-pencil"/></a></p></td>
 			<td>{{ obj.status|yesno:"上架,未上架"}}</td>
 			<td>TODO</td>
 			<td>{% if obj.sign %}<i class="icon icon-check"></i>{% endif %}</td>

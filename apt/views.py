@@ -137,7 +137,7 @@ class EventDetailTotalUpdateView(DialogMixin, UpdateView):
     编辑线上总价
     '''
     template_name = 'popup/eventdetail_total.html'
-    fields = ['price', 'total']
+    fields = ['unit_price']
     model = EventDetail
 
 
