@@ -78,7 +78,7 @@ function statisticsData(thisId){
 	$.ajax({
 		type:"get",
 		data:{id:thisId},
-		url:"/event/househeat/",
+		url:"http://10.7.10.198:8000/event/househeat/",
 		async:true,
 		dataType:'JSON',
 		success:function(results){
@@ -88,7 +88,7 @@ function statisticsData(thisId){
 				result[i].is_sold=  result[i].is_sold==true?"是":"否";
 				result[i].is_testsold= result[i].is_testsold==true?"是":"否";
 				$listHouse.append("<tr><td>"+(i+1)+"</td><td>"+result[i].building+"</td><td>"+result[i].unit+"</td><td>"+result[i].floor+"</td>"+
-				"<td>"+result[i].num+"</td><td>"+result[i].is_sold+"</td><td>"+result[i].unit_price+"</td><td>"+result[i].area+"</td><td>"+result[i].room_num+"</td>"+
+				"<td>"+result[i].room_num+"</td><td>"+result[i].is_sold+"</td><td>"+result[i].unit_price+"</td><td>"+result[i].area+"</td><td>"+result[i].num+"</td>"+
 				"<td>"+result[i].is_testsold+"</td></tr>");
 			}
 		},
@@ -100,7 +100,7 @@ function statisticsData(thisId){
 	$.ajax({
 		type:"get",
 		data:{id:thisId},
-		url:"/event/purcharseheat/",
+		url:"http://10.7.10.198:8000/event/purcharseheat/",
 		async:true,
 		dataType:'JSON',
 		success:function(results){
@@ -168,7 +168,7 @@ function getorderList(thisId,is_test,searchValue){
 			$openList.children("tr").remove();
 			for (var i = 0; i < result.length; i++) {
 				result[i].status= result[i].status==true ?"已售":"未售";
-				$openList.append("<tr><td>"+(i+1)+"</td><td>"+result[i].time+"</td><td>"+result[i].room_num+"</td><td>"+result[i].price+"</td><td>"+result[i].area+"</td><td>"+result[i].realname+"</td>"+
+				$openList.append("<tr><td>"+(i+1)+"</td><td>"+result[i].time+"</td><td>"+result[i].room_num+"</td><td>"+result[i].unit_price+"</td><td>"+result[i].area+"</td><td>"+result[i].realname+"</td>"+
 				"<td>"+result[i].mobile+"</td><td>"+result[i].identication+"</td><td>"+result[i].remark+"</td><td>"+result[i].status+"</td></tr>")
 			}
 		},
