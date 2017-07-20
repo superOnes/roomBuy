@@ -650,6 +650,11 @@ class HouseTypeUpdateView(DialogMixin, UpdateView):
     form_class = HouseTypeForm
     model = HouseType
 
+    def get_initial(self):
+        initial = super(HouseTypeUpdateView, self).get_initial()
+        initial['pk'] = self.kwargs['pk']
+        return initial
+
 
 @method_decorator(admin_required, name='dispatch')
 class DeleteHouseTypeView(View):

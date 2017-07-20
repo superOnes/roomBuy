@@ -91,8 +91,11 @@ class HouseTypeForm(forms.ModelForm):
         return self.cleaned_data['event']
 
     def clean_num(self):
-        num_list = HouseType.objects.filter(event=self.cleaned_data['event']) \
-                                    .values_list('num', flat=True)
-        if self.cleaned_data['num'] in num_list:
+        if not self.instance.id:
+            ht = HouseType.objects.filter(event=self.cleaned_data['event'])
+        else:
+            ht = HouseType.objects.filter(event=self.cleaned_data['event']) \
+                                  .exclude(id=self.instance.id)
+        if ht and self.cleaned_data['num'] in ht.values_list('num', flat=True):
             raise forms.ValidationError('户型编码不能重复')
         return self.cleaned_data['num']
