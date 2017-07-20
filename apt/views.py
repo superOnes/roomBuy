@@ -236,7 +236,7 @@ class ImportPriceView(View):
                                                              unit=ed[2],
                                                              floor=ed[3],
                                                              room_num=ed[4],
-                                                             price=ed[5],
+                                                             unit_price=ed[5],
                                                              area=ed[6],
                                                              event=event)
                 eventdetail.save()
@@ -255,7 +255,7 @@ class ExportView(View):
         if objs:
             sheet = Workbook(encoding='utf-8')
             s = sheet.add_sheet('数据表')
-            list = ['选房房源id', '楼栋', '单元', '楼层', '房号', '单价', '建筑面积']
+            list = ['选房房源id', '楼栋', '单元', '楼层', '房号', '面积单价', '建筑面积']
             col = 0
             for i in list:
                 s.write(0, col, i)
@@ -267,8 +267,8 @@ class ExportView(View):
                 s.write(row, 2, obj.unit)
                 s.write(row, 3, obj.floor)
                 s.write(row, 4, obj.room_num)
-                s.write(row, 5, obj.price)
-                s.write(row, 6, obj.total)
+                s.write(row, 5, obj.unit_price)
+                s.write(row, 6, obj.area)
                 row += 1
             sio = BytesIO()
             sheet.save(sio)
@@ -330,7 +330,7 @@ class ExportHouseHotView(View):
                 '楼层',
                 '房号',
                 '是否已售',
-                '单价',
+                '面积单价',
                 '建筑面积',
                 '收藏人数',
                 '公测是否已售']
@@ -348,8 +348,8 @@ class ExportHouseHotView(View):
                     s.write(row, 4, '已售')
                 else:
                     s.write(row, 4, '未售')
-                s.write(row, 5, obj.price)
-                s.write(row, 6, obj.total)
+                s.write(row, 5, obj.unit_price)
+                s.write(row, 6, obj.area)
                 s.write(row, 7, Follow.objects.filter(eventdetail=obj).count())
                 if Order.objects.get(eventdetail=obj).is_test:
                     s.write(row, 8, '公测已售')
@@ -528,7 +528,7 @@ class HouseHeatView(View):
                     'floor': et.floor,
                     'room_num': et.room_num,
                     'is_sold': et.is_sold,
-                    'price': et.price,
+                    'unit_price': et.unit_price,
                     'area': et.area,
                     'num': et.follow_set.count(),
                     'is_testsold': et.is_testsold
@@ -682,7 +682,7 @@ class OrderListView(View):
             order_list = [{'id': od.id,
                            'time': od.time.strftime("%Y %m %d %H:%M:%S"),
                            'room_num': od.eventdetail.room_num,
-                           'price': od.eventdetail.price,
+                           'unit_price': od.eventdetail.unit_price,
                            'area': od.eventdetail.area,
                            'realname': od.user.customer.realname,
                            'mobile': od.user.customer.mobile,
