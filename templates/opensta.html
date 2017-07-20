@@ -71,7 +71,7 @@ $(document).ready(function(){
 //	活动下拉框列表的显示请求
 	$.ajax({
 		type:"get",
-		url:"http://10.7.10.198:8000/event/getevent/",
+		url:"/event/getevent/",
 		async:true,
 		success:function(results){
 			var result =results.data;
