@@ -88,7 +88,7 @@ function statisticsData(thisId){
 				result[i].is_sold=  result[i].is_sold==true?"是":"否";
 				result[i].is_testsold= result[i].is_testsold==true?"是":"否";
 				$listHouse.append("<tr><td>"+(i+1)+"</td><td>"+result[i].building+"</td><td>"+result[i].unit+"</td><td>"+result[i].floor+"</td>"+
-				"<td>"+result[i].num+"</td><td>"+result[i].is_sold+"</td><td>"+result[i].price+"</td><td>"+result[i].area+"</td><td>"+result[i].room_num+"</td>"+
+				"<td>"+result[i].num+"</td><td>"+result[i].is_sold+"</td><td>"+result[i].unit_price+"</td><td>"+result[i].area+"</td><td>"+result[i].room_num+"</td>"+
 				"<td>"+result[i].is_testsold+"</td></tr>");
 			}
 		},
@@ -150,7 +150,7 @@ function getorderSelect(){
 				$("#orderList option:first").attr("selected","selected");
 			},
 			error:function(){
-				alert("获取活动列表失败");
+				alert("获取公测列表失败");
 			}
 		});
 }

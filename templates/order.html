@@ -48,15 +48,15 @@
 {% block js %}
 <script type="text/javascript">
 $(document).ready(function(){
-	$("#exportEach").click(function(){
-		var thisVal = $("#eventList").val();
-		$.ajax({
-			type:"get",
-			url:"",
-			async:true,
-			data:{id:thisVal}
-		});
-	})
+//	$("#exportEach").click(function(){
+//		var thisVal = $("#eventList").val();
+//		$.ajax({
+//			type:"get",
+//			url:"",
+//			async:true,
+//			data:{id:thisVal}
+//		});
+//	})
   getorderList();
   getorderSelect();
 	$("#navActive li").eq(2).addClass("active");

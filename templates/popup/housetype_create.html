@@ -28,6 +28,15 @@
 		    <div class="col-sm-9">
 		    	<input type="file" class="form-control" name="pic" required>
 		    </div>
+		    <div class="col-sm-9 col-lg-9">
+		    	<input type="file" class="form-control" id="plane_graph" onchange='showPlane()' name="plane_graph">
+		    </div>
+		    <div class="col-sm-9" style="margin:10px 0 0 25%;">
+		    	<p style="margin: 0;">当前文件为<span class="plane_graph_img_file" style="margin-left:20px;">{{form.plane_graph.value|default:''}}</span></p>
+		    </div>
+			<div class="col-sm-9" style="margin:10px 0 0 25%;">
+			 	<img src='{{MEDIA_URL}}{{object.plane_graph}}' alt='' id='plane_graph_img' />
+		    </div>
 		</div>
 		<div class="modal-footer">
 	    	<input type="submit" class="btn btn-primary" value="确定"></input>

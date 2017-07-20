@@ -51,7 +51,7 @@
 					<th>楼层</th>
 					<th>房号</th>
 					<th>是否已售</th>
-					<th>原价</th>
+					<th>单价</th>
 					<th>建筑面积</th>
 					<th>收藏人数</th>
 					<th>公测是否已售</th>
@@ -76,7 +76,7 @@ $(document).ready(function(){
 		success:function(results){
 			var result =results.data;
 			for(var i=0; i<result.length; i++){
-				$(".selectInp").append("<option value='"+result[i].id+"'>"+result[i].name+"</option>")
+				$(".selectInp").prepend("<option value='"+result[i].id+"'>"+result[i].name+"</option>")
 			};
 			$(".selectInp option:first").attr("selected","selected");
 		},
