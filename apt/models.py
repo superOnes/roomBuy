@@ -85,8 +85,8 @@ class HouseType(models.Model):
 class EventDetail(models.Model):
     building = models.CharField('楼号', max_length=50)
     unit = models.CharField('单元', max_length=100)
-    floor = models.CharField('楼层', max_length=100)
-    room_num = models.CharField('房号', max_length=50)
+    floor = models.IntegerField('楼层')
+    room_num = models.IntegerField('房号', max_length=50)
     status = models.BooleanField('上架状态', default=False)
     event = models.ForeignKey(Event, verbose_name='所属活动')
     is_sold = models.BooleanField('是否被卖', default=False)
