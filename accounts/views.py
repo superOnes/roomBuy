@@ -17,7 +17,7 @@ from django.core.urlresolvers import reverse
 from apt.models import Event, EventDetail
 from aptm import settings
 from .models import User, Customer, Order
-from .decorators import superadmin_required, customer_login_time
+from .decorators import superadmin_required, login_time
 
 
 class LoginView(View):
@@ -169,7 +169,7 @@ class LogoutView(View):
         logout(request)
         return JsonResponse({'success': True, 'msg': '退出登录成功'})
 
-
+@method_decorator(login_time, name='dispatch')
 class CustomerLoginView(View):
     '''
     顾客登录
@@ -185,14 +185,17 @@ class CustomerLoginView(View):
             return JsonResponse({'response_state': 400})
         else:
             userobj = customer.user
-            eventid = customer.event_id
-            user = authenticate(
-                username=userobj.username,
-                password=identication)
-            if user:
-                if not user.is_admin:
-                    login(request, user)
-                    return JsonResponse({'response_state': 200, 'id': eventid})
+            if customer.event.is_pub:
+                eventid = customer.event_id
+                user = authenticate(
+                    username=userobj.username,
+                    password=identication)
+                if user:
+                    if not user.is_admin:
+                        login(request, user)
+                        return JsonResponse(
+                            {'response_state': 200, 'id': eventid})
+                    return JsonResponse({'response_state': 400})
                 return JsonResponse({'response_state': 400})
             return JsonResponse({'response_state': 400})
 
@@ -207,7 +210,9 @@ class DeleteTestView(View):
         id = request.POST.get('id')
         eventdetail = EventDetail.objects.filter(event_id=id)
         if eventdetail:
-            Order.objects.filter(eventdetail=eventdetail, is_test=False).delete()
+            Order.objects.filter(
+                eventdetail=eventdetail,
+                is_test=False).delete()
             return JsonResponse({'success': True})
         return JsonResponse({'success': False})
 

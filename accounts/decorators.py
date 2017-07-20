@@ -3,6 +3,7 @@ from functools import wraps
 from django.http import JsonResponse
 from django.shortcuts import redirect, resolve_url
 from django.core.urlresolvers import reverse
+from .models import Customer
 
 
 RETURN_JSON = 1
@@ -48,18 +49,30 @@ def customer_login_time(func):
     @wraps(func)
     def wrapper(request, *args, **kwargs):
         user = request.user
-        if time.strftime('%Y%m%d %H:%M:%S') <= user.customer.event.test_start.strftime(
-                '%Y%m%d %H:%M:%S'):
-            return JsonResponse({'response_state': 403})
-        elif time.strftime('%Y%m%d %H:%M:%S') <= user.customer.event.test_end.strftime('%Y%m%d %H:%M:%S'):
-            return func(request, *args, **kwargs)
-        elif time.strftime('%Y%m%d %H:%M:%S') > user.customer.event.test_end.strftime('%Y%m%d %H:%M:%S'):
-            if time.strftime('%Y%m%d %H:%M:%S') <= user.customer.event.event_star.strftime(
-                    '%Y%m%d %H:%M:%S'):
+        if time.strftime('%Y%m%d %H:%M:%S') <= user.customer.event.event_end.strftime('%Y%m%d %H:%M:%S'):
+            if time.strftime('%Y%m%d %H:%M:%S') <= user.customer.event.event_start.strftime('%Y%m%d %H:%M:%S'):
                 return JsonResponse({'response_state': 403})
-            elif time.strftime('%Y%m%d %H:%M:%S') <= user.customer.event.event_end.strftime('%Y%m%d %H:%M:%S'):
+            else:
                 return func(request, *args, **kwargs)
-            elif time.strftime('%Y%m%d %H:%M:%S') > user.customer.event.event_end.strftime('%Y%m%d %H:%M:%S'):
-                return JsonResponse({'response_state': 403})
+        else:
             return JsonResponse({'response_state': 403})
     return wrapper
+
+
+def login_time(func):
+    @wraps(func)
+    def wrapper(request, *args, **kwargs):
+        mobile = request.POST.get('tel')
+        identication = request.POST.get('personId')
+        try:
+            customer = Customer.objects.get(
+                mobile=mobile, identication=identication)
+        except BaseException:
+            return JsonResponse({'response_state': 400})
+        else:
+            if time.strftime('%Y%m%d %H:%M:%S') <= customer.event.event_end.strftime('%Y%m%d %H:%M:%S'):
+                return func(request, *args, **kwargs)
+            else:
+                return JsonResponse({'response_state': 403})
+    return wrapper
+

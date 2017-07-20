@@ -1,5 +1,5 @@
-import uuid
 import time
+
 from django import forms
 from django.db import transaction
 from django.shortcuts import resolve_url

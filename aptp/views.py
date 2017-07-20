@@ -18,18 +18,25 @@ class AppEventDetailView(View):
 
     def get(self, request, pk):
         obj = Event.get(pk)
-        value = [{'test_start': obj.test_start,
-                  'test_ent': obj.test_end,
-                  'event_start': obj.event_start,
-                  'event_end': obj.event_end,
-                  'notice': obj.notice,
-                  'description': obj.description,
-                  'tip': obj.tip,
-                  'name': obj.name,
-                  'plane_graph': obj.plane_graph.url,
-                  }]
+        value = [
+            {
+                'test_start': (
+                    obj.test_start).strftime("%Y/%m/%d %H:%M:%S"),
+                'test_ent': (
+                    obj.test_end).strftime("%Y/%m/%d %H:%M:%S"),
+                'event_start': (
+                    obj.event_start).strftime("%Y/%m/%d %H:%M:%S"),
+                'event_end': (
+                        obj.event_end).strftime("%Y/%m/%d %H:%M:%S"),
+                'notice': obj.notice,
+                'description': obj.description,
+                'tip': obj.tip,
+                'name': obj.name,
+                'plane_graph': obj.plane_graph.url,
+            }]
         context = {}
         context['objects'] = value
+        context['response_state'] = 200
         return JsonResponse(context)
 
 
@@ -53,6 +60,7 @@ class AppEventDetailListView(View):
             'building': list(set(buildinglist)),
         }]
         context['objects'] = value
+        context['response_state'] = 200
         return JsonResponse(context)
 
 
@@ -75,6 +83,7 @@ class AppEventDetailUnitListView(View):
             'unit': list(set(unitlist))
         }]
         context['objects'] = value
+        context['response_state'] = 200
         return JsonResponse(context)
 
 
@@ -93,13 +102,15 @@ class AppEventDetailHouseListView(View):
             event_id=eventid, building=building, unit=unit)
         room_num_list = []
         for obj in eventdetobj:
-            value = [{
-                'house': obj.id,
-                'floor_room_num': obj.floor + '-' + obj.room_num,
-                'is_sold': obj.is_sold,
-            }]
-            room_num_list.append(value)
+            if obj.status:
+                value = [{
+                    'house': obj.id,
+                    'floor_room_num': obj.floor + '-' + obj.room_num,
+                    'is_sold': obj.is_sold,
+                }]
+                room_num_list.append(value)
         context['objects'] = room_num_list
+        context['response_state'] = 200
         return JsonResponse(context)
 
 
@@ -122,31 +133,27 @@ class AppEventDetailHouseInfoView(View):
             is_followed = False,
         else:
             is_followed = True,
-        value = [{
-            'event': user.customer.event.name,
-            'realname': user.customer.realname,
-            'mobile': user.customer.mobile,
-            'identication': user.customer.identication,
-            'building_unit': eventdetobj.building +
-            '-' +
-            eventdetobj.unit +
-            '-' +
-            eventdetobj.floor +
-            '-' + house,
-            'total': '***' if test and not eventdetobj.event.test_price else eventdetobj.total,
-            'house_type': '三室两厅',  # 这里还需要改
-            'pic': '这是图片',  # 这里需要改
-            'floor': eventdetobj.floor,
-            'area': eventdetobj.area if eventdetobj.event.covered_space else '***',
-            'unit_price': eventdetobj.unit_price if eventdetobj.event.covered_space_price else '***',
-            'looking': eventdetobj.looking,
-            'term': eventdetobj.term,
-            'is_sold': eventdetobj.is_sold,
-            'is_followed': is_followed,
-        }]
+        value = [{'event': user.customer.event.name,
+                  'realname': user.customer.realname,
+                  'mobile': user.customer.mobile,
+                  'identication': user.customer.identication,
+                  'building_unit': eventdetobj.building + '-' + eventdetobj.unit + '-' + eventdetobj.floor + '-' + house,
+                  'total': '***' if test and not eventdetobj.event.test_price else (int(eventdetobj.area) * int(eventdetobj.unit_price)),
+                  'house_type': eventdetobj.house_type.name,
+                  'pic': eventdetobj.house_type.pic.url,
+                  'floor': eventdetobj.floor,
+                  'area': eventdetobj.area if eventdetobj.event.covered_space else '***',
+                  'unit_price': eventdetobj.unit_price if eventdetobj.event.covered_space_price else '***',
+                  'looking': eventdetobj.looking,
+                  'term': eventdetobj.term,
+                  'is_sold': eventdetobj.is_sold,
+                  'is_followed': is_followed,
+                  'sign': True if eventdetobj.sign else False,
+                  }]
 
         context = {}
         context['objects'] = value
+        context['response_state'] = 200
         return JsonResponse(context)
 
 
@@ -168,13 +175,13 @@ class AddFollow(View):
                     Follow.objects.create(
                         user=request.user, eventdetail=eventdetail)
                 else:
-                    return JsonResponse({'msg': '收藏过多！'})
+                    return JsonResponse({'response_state': 400})
             else:
-                return JsonResponse({'msg': '您已经收藏！'})
+                return JsonResponse({'response_state': 400})
         except BaseException:
-            return JsonResponse({'success': False})
+            return JsonResponse({'response_state': 400})
         else:
-            return JsonResponse({'success': True})
+            return JsonResponse({'response_state': 200})
 
 
 @method_decorator(customer_login_required, name='dispatch')
@@ -189,18 +196,25 @@ class FollowView(View):
         context = {}
         list = []
         for obj in objs:
-            value = [{
-                'eventdetail': (obj.eventdetail.building +
-                                '-' +
-                                obj.eventdetail.unit +
-                                '-' +
-                                obj.eventdetail.floor +
-                                '-' +
-                                obj.eventdetail.room_num),
-                'price': obj.eventdetail.total,
-            }]
+            value = [
+                {
+                    'eventdetail': (
+                        obj.eventdetail.building +
+                        '-' +
+                        obj.eventdetail.unit +
+                        '-' +
+                        obj.eventdetail.floor +
+                        '-' +
+                        obj.eventdetail.room_num),
+                    'price': (
+                        int(
+                            obj.eventdetail.area) *
+                        int(
+                            obj.eventdetail.unit_price)),
+                }]
             list.append(value)
         context['objects'] = list
+        context['response_state'] = 200
         return JsonResponse(context)
 
 
@@ -224,26 +238,28 @@ class AppHouseChoiceConfirmView(View):
                         a = Order.objects.create(
                             user=user,
                             eventdetail=eventdetail,
-                            event=eventdetail.event,  # 需要去掉event
                             order_num=time.strftime('%Y%m%d%H%M%S'))
-                        if a.time <= a.event.test_end:
+                        eventdetail.is_sold = True
+                        eventdetail.save()
+                        if a.time.strftime('%Y%m%d %H:%M:%S') <= a.eventdetail.event.test_end.strftime(
+                                '%Y%m%d %H:%M:%S'):
                             a.is_test = True
                             a.save()
                         else:
                             a.is_test = False
                             a.save()
                     else:
-                        return JsonResponse({'success': False})
+                        return JsonResponse({'response_state': 400})
                 else:
-                    return JsonResponse({'success': False})
+                    return JsonResponse({'response_state': 400})
             else:
-                return JsonResponse({'success': False})
+                return JsonResponse({'response_state': 400})
         except BaseException:
-            return JsonResponse({'success': False})
+            return JsonResponse({'response_state': 400})
         else:
             return JsonResponse(
                 {
-                    'success': True,
+                    'response_state': 200,
                     'room_info': (
                         eventdetail.building +
                         '-' +
@@ -284,10 +300,12 @@ class AppOrderListView(View):
                 'event': obj.eventdetail.event.name,
                 'unit_price': obj.eventdetail.unit_price if obj.eventdetail.event.covered_space_price else '',
                 'choice_num': '0000000000000001',  # 这里需要确认一下
+                'orderid': obj.id,
             }]
             valuelist.append(value)
         context = {}
         context['objects'] = valuelist
+        context['response_state'] = 200
         return JsonResponse(context)
 
 
@@ -306,8 +324,10 @@ class AppOrderInfoView(View):
                 'eventname': obj.eventdetail.event.name,
                 'unit_price': obj.eventdetail.unit_price,
                 'limit': obj.eventdetail.event.limit,
-                'ordertime': obj.time.strftime('%Y%m%d %H:%M:%S'),
+                'ordertime': obj.time.strftime('%Y/%m/%d %H:%M:%S'),
                 'room_info': (
+                    obj.eventdetail.event.name +
+                    '-' +
                     obj.eventdetail.building +
                     '-' +
                     obj.eventdetail.unit +
@@ -315,18 +335,17 @@ class AppOrderInfoView(View):
                     obj.eventdetail.floor +
                     '-' +
                     obj.eventdetail.room_num),
-                'houst_type': '三室两厅',  # 这里需要改
+                'houst_type': obj.eventdetail.house_type.name,
                 'area': obj.eventdetail.area,
                 'customer': obj.user.customer.realname,
                 'mobile': obj.user.customer.mobile,
                 'iidentication': obj.user.customer.identication,
                 'order_num': obj.order_num,
-                'orderid': obj.id,
             }]
             context = {}
             context['objects'] = value
-            context['success'] = True
+            context['response_state'] = 200
         except BaseException:
-            return JsonResponse({'success': False})
+            return JsonResponse({'response_state': 400})
         else:
             return JsonResponse(context)
