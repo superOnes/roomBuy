@@ -8,7 +8,8 @@ from accounts.views import (LoginView,
                             PersonalSettingsView,
                             CustomerLoginView,
                             DeleteTestView,
-                            ImportView,)
+                            ImportView,
+                            GetCustomerInfo)
 
 urlpatterns = [
 
@@ -22,5 +23,6 @@ urlpatterns = [
     url(r'^logout/', LogoutView.as_view(), name='acc_logout'),
     url(r'^cuslog/', CustomerLoginView.as_view(), name='acc_cuslog'),
     url(r'^ctdelete/', DeleteTestView.as_view(), name='acc_delete'),
-    url(r'^import/', ImportView.as_view(), name='acc_import')
+    url(r'^import/', ImportView.as_view(), name='acc_import'),
+    url(r'^info/', GetCustomerInfo.as_view()),
 ]

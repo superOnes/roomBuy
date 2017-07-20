@@ -25,6 +25,11 @@ class Customer(models.Model):
         return cls.objects.filter(is_delete=0).order_by('-id')
 
     @classmethod
+    def get_by_event(cls, eid, id):
+        return cls.objects.filter(event_id=eid,
+                                  identication=id).first()
+
+    @classmethod
     def remove(cls, id):
         obj = cls.get(id)
         obj.is_delete = True

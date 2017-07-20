@@ -3,6 +3,7 @@ import qrcode
 import xlrd
 from xlwt import Workbook
 from io import BytesIO
+from copy import copy
 
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
@@ -20,7 +21,8 @@ from aptp.models import Follow
 from accounts.models import Order, Customer
 from .models import Event, EventDetail, HouseType
 from accounts.decorators import admin_required
-from .forms import EventForm, EventDetailForm, CustomerForm, HouseTypeForm
+from .forms import (EventForm, EventDetailForm, CustomerForm, HouseTypeForm,
+                    EventDetailSignForm)
 
 
 class DialogMixin(object):
@@ -142,6 +144,20 @@ class EventDetailRemarkUpdateView(DialogMixin, UpdateView):
     template_name = 'popup/eventdetail_remark.html'
     model = EventDetail
     fields = ['remark', 'image']
+
+
+class EventDetailSignUpdateView(DialogMixin, UpdateView):
+    '''
+    备注
+    '''
+    template_name = 'popup/eventdetail_sign.html'
+    model = EventDetail
+    form_class = EventDetailSignForm
+
+    def get_initial(self):
+        initial = super(EventDetailSignUpdateView, self).get_initial()
+        initial['object'] = copy(self.object)
+        return initial
 
 
 @method_decorator(admin_required, name='dispatch')

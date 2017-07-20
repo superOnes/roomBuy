@@ -70,12 +70,12 @@
 			<td><p>单价：{{ obj.unit_price }}</p>
 			<td>{{ obj.status|yesno:"上架,未上架"}}</td>
 			<td>TODO</td>
-			<td>TODO</td>
+			<td>{% if obj.sign %}<i class="icon icon-check"></i>{% endif %}</td>
 			<td>qr</td>
 			<td>
-                <p><a href="javascript:void(0)" data-id="{{obj.id}}" class="status">{% if obj.status == False %}上架{% else %}取消上架{% endif %}</a></p>
+        <p><a href="javascript:void(0)" data-id="{{obj.id}}" class="status">{{obj.status|yesno:'取消上架,上架'}}</a></p>
 				<p><a data-iframe="{% url 'room_remark_update' pk=obj.id %}" data-toggle="modal">情况描述</a></p>
-				<p><a data-iframe="{% url 'event_term_update' pk=obj.id%}" data-toggle="modal">备注</a></p>
+				<p><a data-iframe="{% url 'room_sign_update' pk=obj.id %}" data-toggle="modal" data-size="sm" data-fade="false">备注</a></p>
 				<p><a data-target="#deleteModal" data-toggle="modal" data-id="{{obj.id}}" class="delete">删除</a></p>
 			</td>
 		</tr>
@@ -118,7 +118,7 @@
 		</div>
 		<!-- <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#myModal">启动对话框</button> -->
 
-		<!-- 对话框HTML -->
+		<!-- 一键关注户型 -->
 		<div class="modal fade" id="house-type-modal">
 		  <div class="modal-dialog modal-sm">
 		    <div class="modal-content">

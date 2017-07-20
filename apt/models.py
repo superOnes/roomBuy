@@ -1,5 +1,6 @@
 from django.db import models
 from django.shortcuts import get_object_or_404
+from aptm.settings import CUSTOMER_MODEL
 
 
 class Company(models.Model):
@@ -102,6 +103,8 @@ class EventDetail(models.Model):
     term = models.CharField('使用年限', max_length=50)
     area = models.CharField('建筑面积', max_length=50)
     unit_price = models.CharField('面积单价', max_length=100)
+    sign = models.ForeignKey(CUSTOMER_MODEL, related_name='sign',
+                             null=True, blank=True)
 
     @classmethod
     def get(cls, id):

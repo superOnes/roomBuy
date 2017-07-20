@@ -1,8 +1,9 @@
 import uuid
 from django import forms
 from django.db import transaction
+from django.shortcuts import resolve_url
 from .models import Event, EventDetail, HouseType
-from accounts.models import Customer, User
+from accounts.models import Customer, User, Order
 
 
 class EventForm(forms.ModelForm):
@@ -23,6 +24,39 @@ class EventDetailForm(forms.ModelForm):
             self.instance.event = self.initial['event']
             instance = super(EventDetailForm, self).save(commit)
             return instance
+
+
+class EventDetailSignForm(forms.ModelForm):
+
+    class Meta:
+        model = EventDetail
+        fields = ['sign']
+
+    def clean_sign(self):
+        if self.instance.event.is_pub:
+            raise forms.ValidationError('该活动已经发布，不能备注')
+        customer = self.cleaned_data['sign']
+        if customer:
+            if Order.objects.filter(eventdetail=self.instance,
+                                    is_test=False).exists():
+                raise forms.ValidationError('该房源或车位已被选购')
+            elif customer.user.order_set.count() >= customer.count:
+                raise forms.ValidationError('该用户已购房')
+        return customer
+
+    def save(self, commit=True):
+        with transaction.atomic():
+            instance = super(EventDetailSignForm, self).save(commit)
+            if instance.sign:
+                Order.objects.create(eventdetail=instance,
+                                     user=instance.sign.user,
+                                     is_test=False)
+            elif self.initial['object'].sign:
+                Order.objects.filter(eventdetail=instance,
+                                     user=self.initial['object'].sign.user,
+                                     is_test=False).delete()
+            return instance
+        return resolve_url('dialog_success')
 
 
 class CustomerForm(forms.ModelForm):

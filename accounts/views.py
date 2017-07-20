@@ -256,3 +256,23 @@ class ImportView(View):
                                              is_admin=False)
             return JsonResponse({'success': True})
         return JsonResponse({'success': False})
+
+
+class GetCustomerInfo(View):
+    def get(self, request):
+        identication = request.GET.get('id')
+        event_id = request.GET.get('eid')
+        customer = Customer.get_by_event(event_id, identication)
+        if customer:
+            result = {
+                'id': customer.id,
+                'realname': customer.realname,
+                'mobile': customer.mobile,
+                'identication': customer.identication,
+            }
+            if customer.user.order_set.count() >= customer.count:
+                return JsonResponse({'response_state': 301,
+                                     'result': result,
+                                     'msg': '该用户已备注，不可再次备注'})
+            return JsonResponse({'response_state': 200, 'result': result})
+        return JsonResponse({'response_state': 300, 'msg': '未找到相关用户'})
