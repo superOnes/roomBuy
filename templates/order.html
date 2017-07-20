@@ -3,8 +3,7 @@
 <div>
   <ol class="breadcrumb">
 	  <i class="icon icon-home"></i>
-	  <li><a href=""><h3>看盘订单</h3></a></li>
-	  <li class="active">开盘订单管理</li>
+	  <li><a href=""><h3>开盘订单管理</h3></a></li>
     <div style="float:right;line-height:60px;">
       <a class="btn btn-primary" id="exportEach">导出</a>
     </div>
@@ -18,15 +17,13 @@
     <select class="form-control" name="value" id="orderList"></select>
   </div>
   <div class="col-lg-3 col-md-offset-3" style="float: right;">
-	    <!--<form class="form-horizontal searchWrap" method="get" action="">-->
 		    <div class="input-group" style="margin:0 !important;">
-			      <input type="text" class="form-control" placeholder="购买人或手机号进行搜索" id="searchInput" name="value">
-			      <span class="input-group-btn">
-			         <button class="btn btn-default" type="submit" id="searchBtn">搜索</button>
-			      </span>
-			   </div>
-		  <!--</form>-->
-    </div>
+		      <input type="text" class="form-control" placeholder="购买人或手机号进行搜索" id="searchInput" name="value">
+		      <span class="input-group-btn">
+	         <button class="btn btn-default" type="submit" id="searchBtn">搜索</button>
+			    </span>
+			  </div>
+  </div>
 </div>
 <table class="table datatable">
 	<thead>
@@ -34,7 +31,8 @@
 			<th>序号</th>
 			<th>选房时间</th>
 			<th>车位/房间号</th>
-			<th>线上总价</th>
+			<th>单价</th>
+			<th>建筑面积</th>
 			<th>认购者</th>
 			<th>手机号</th>
 			<th>证件号码</th>
@@ -50,6 +48,15 @@
 {% block js %}
 <script type="text/javascript">
 $(document).ready(function(){
+	$("#exportEach").click(function(){
+		var thisVal = $("#eventList").val();
+		$.ajax({
+			type:"get",
+			url:"",
+			async:true,
+			data:{id:thisVal}
+		});
+	})
   getorderList();
   getorderSelect();
 	$("#navActive li").eq(2).addClass("active");

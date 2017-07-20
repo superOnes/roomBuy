@@ -98,9 +98,9 @@ class EventDetailListView(ListView):
     def get_queryset(self):
         self.value = self.request.GET.get('value')
         self.event = Event.get(self.kwargs['pk'])
-        queryset = self.model.objects.filter(event=self.event)
+        queryset = self.model.objects.filter(event=self.event).order_by('-id')
         if self.value:
-            queryset = queryset.filter(Q(room_num__contains=self.value))
+            queryset = queryset.filter(Q(room_num__contains=self.value)).order_by('-id')
         return queryset
 
     def get_context_data(self):
@@ -459,11 +459,11 @@ class CustomListView(ListView):
     def get_queryset(self):
         self.value = self.request.GET.get('value')
         self.event = Event.get(self.kwargs['pk'])
-        queryset = self.model.objects.filter(event=self.event)
+        queryset = self.model.objects.filter(event=self.event).order_by('-id')
         if self.value:
             queryset = queryset.filter(Q(realname__icontains=self.value) |
                                        Q(mobile__icontains=self.value) |
-                                       Q(identication__icontains=self.value))
+                                       Q(identication__icontains=self.value)).order_by('-id')
         return queryset
 
     def get_context_data(self):

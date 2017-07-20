@@ -1,7 +1,10 @@
 {% extends 'include/main_base.html' %}
 {% block right %}
 <div>
-	<h3>活动列表</h3>
+	<ol class="breadcrumb">
+	  <i class="icon icon-home"></i>
+	  <li><a href="{% url 'event_list' %}"><h3>活动列表</h3></a></li>
+	</ol>
 </div>
 <div class="row" style="padding:10px">
 	<a class="btn btn-primary" data-moveable="true" data-iframe="{% url 'event_create' %}" data-toggle="modal">创建活动</a>
@@ -50,7 +53,7 @@
 				<p><a href="javascript:void(0)" data-id="{{obj.id}}" class="is_pub">{% if obj.is_pub == False %}发布{% else %}取消发布{% endif %}</a></p>
 				<p><a data-iframe="{% url 'event_update' pk=obj.id %}" data-toggle="modal">编辑活动</a></p>
 				<p><a data-iframe="{% url 'event_term_update' pk=obj.id %}" data-toggle="modal">编辑协议</a></p>
-				<p><a data-toggle="modal" data-target="#deleteModal">清除公测名单</a></p>
+				<p><a data-toggle="modal" data-target="#deleteModal" data-id="{{obj.id}}" class="deleteOrder">清除公测名单</a></p>
 			</td>
 		</tr>
 		<!--取消发布-->
@@ -85,7 +88,8 @@
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-		        <button type="button" class="btn btn-primary" onclick="deleteOrder({{obj.id}},'/acc/ctdelete/')">确认</button>
+		        <button type="button" class="btn btn-primary" id="is_clear">确认</button>
+		        <input type="hidden" value="" id="is_clear_status">
 		      </div>
 		    </div>
 		  </div>
@@ -99,9 +103,10 @@
 $(document).ready(function(){
 	$("#navActive li").eq(0).addClass("active");
 	$('table.datatable').datatable({ sortable: true, });
+//	是否发布
 	$('.is_pub').on('click', function(e){
 		$("#is_pub_status").val($(e.currentTarget).data("id"));
-    $("#is_pub_issue").modal();
+    	$("#is_pub_issue").modal();
 	});
 	$(".is_pub_confirm").on("click", function(e){
 		var id = $("#is_pub_status").val();
@@ -118,6 +123,14 @@ $(document).ready(function(){
 			}
 		});
 	});
+//	清除公测名单
+	$(".deleteOrder").click(function(e){
+		$("#is_clear_status").val($(e.currentTarget).data("id"));
+	});
+	$("#is_clear").click(function(){
+		var thisId = $("#is_clear_status").val();
+		deleteOrder(thisId);
+	})
 });
 </script>
 {% endblock %}

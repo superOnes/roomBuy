@@ -2,8 +2,9 @@
 {% block right %}
 <div>
 	<ol class="breadcrumb">
-	  <li><h3>车位房源</h3></li>
-	  <li class="active"><a href="{% url 'event_list' %}">{{ event.name }}</a></li>
+	  <i class="icon icon-home"></i>
+	  <li><a href="{% url 'event_list' %}"><h3>{{event.name}}</h3></a></li>
+	  <li class="active">车位房源</li>
 	</ol>
 </div>
 <div class="row" style="padding:10px;margin-top:-20px;">

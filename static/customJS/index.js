@@ -51,12 +51,12 @@ function roomPriceFile(thisID){
 };
 
 //清除公测名单
-function deleteOrder(thisID,url){
+function deleteOrder(thisId){
 	$.ajax({
 		type:"POST",
-		url:url,
+		url:'/acc/ctdelete/',
 		async:true,
-		data:{id:thisID},
+		data:{id:thisId},
 		cache: false,
         processData: false,//发送的数据将被序列化，false就是序列化数据，默认为true
         contentType: false,
@@ -88,7 +88,7 @@ function statisticsData(thisId){
 				result[i].is_sold=  result[i].is_sold==true?"是":"否";
 				result[i].is_testsold= result[i].is_testsold==true?"是":"否";
 				$listHouse.append("<tr><td>"+(i+1)+"</td><td>"+result[i].building+"</td><td>"+result[i].unit+"</td><td>"+result[i].floor+"</td>"+
-				"<td>"+result[i].num+"</td><td>"+result[i].is_sold+"</td><td>"+result[i].price+"</td><td>"+result[i].total+"</td><td>"+result[i].room_num+"</td>"+
+				"<td>"+result[i].num+"</td><td>"+result[i].is_sold+"</td><td>"+result[i].price+"</td><td>"+result[i].area+"</td><td>"+result[i].room_num+"</td>"+
 				"<td>"+result[i].is_testsold+"</td></tr>");
 			}
 		},
@@ -168,7 +168,7 @@ function getorderList(thisId,is_test,searchValue){
 			$openList.children("tr").remove();
 			for (var i = 0; i < result.length; i++) {
 				result[i].status= result[i].status==true ?"已售":"未售";
-				$openList.append("<tr><td>"+(i+1)+"</td><td>"+result[i].time+"</td><td>"+result[i].room_num+"</td><td>"+result[i].total+"</td><td>"+result[i].realname+"</td>"+
+				$openList.append("<tr><td>"+(i+1)+"</td><td>"+result[i].time+"</td><td>"+result[i].room_num+"</td><td>"+result[i].price+"</td><td>"+result[i].area+"</td><td>"+result[i].realname+"</td>"+
 				"<td>"+result[i].mobile+"</td><td>"+result[i].identication+"</td><td>"+result[i].remark+"</td><td>"+result[i].status+"</td></tr>")
 			}
 		},
@@ -177,3 +177,68 @@ function getorderList(thisId,is_test,searchValue){
 		}
 	})
 }
+
+//文件图片上传显示
+	function getPath(obj,fileQuery,transImg) {
+	  var imgSrc = '', imgArr = [], strSrc = '' ;
+	 
+	  if(window.navigator.userAgent.indexOf("MSIE")>=1){ // IE浏览器判断
+	  if(obj.select){
+	   obj.select();
+	   var path=document.selection.createRange().text;
+	   alert(path) ;
+	   obj.removeAttribute("src");
+	   imgSrc = fileQuery.value ;
+	   imgArr = imgSrc.split('.') ;
+	   strSrc = imgArr[imgArr.length - 1].toLowerCase() ;
+	   if(strSrc.localeCompare('jpg') === 0 || strSrc.localeCompare('jpeg') === 0 || strSrc.localeCompare('gif') === 0 || strSrc.localeCompare('png') === 0){
+	   obj.setAttribute("src",transImg);
+	   obj.style.filter=
+	    "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+path+"', sizingMethod='scale');"; // IE通过滤镜的方式实现图片显示
+	   }else{
+	   //try{
+	   throw new Error('File type Error! please image file upload..'); 
+	   //}catch(e){
+	   // alert('name: ' + e.name + 'message: ' + e.message) ;
+	   //}
+	   }
+	  }else{
+	   // alert(fileQuery.value) ;
+	   imgSrc = fileQuery.value ;
+	   imgArr = imgSrc.split('.') ;
+	   strSrc = imgArr[imgArr.length - 1].toLowerCase() ;
+	   if(strSrc.localeCompare('jpg') === 0 || strSrc.localeCompare('jpeg') === 0 || strSrc.localeCompare('gif') === 0 || strSrc.localeCompare('png') === 0){
+	   obj.src = fileQuery.value ;
+	   }else{
+	   //try{
+	   throw new Error('File type Error! please image file upload..') ;
+	   //}catch(e){
+	   // alert('name: ' + e.name + 'message: ' + e.message) ;
+	   //}
+	   }
+	 
+	  }
+	 
+	  } else{
+	  var file =fileQuery.files[0];
+	  var reader = new FileReader();
+	  reader.onload = function(e){
+	 
+	   imgSrc = fileQuery.value ;
+	   imgArr = imgSrc.split('.') ;
+	   strSrc = imgArr[imgArr.length - 1].toLowerCase() ;
+	   if(strSrc.localeCompare('jpg') === 0 || strSrc.localeCompare('jpeg') === 0 || strSrc.localeCompare('gif') === 0 || strSrc.localeCompare('png') === 0){
+	   obj.setAttribute("src", e.target.result) ;
+	   }else{
+	   //try{
+	   throw new Error('File type Error! please image file upload..') ;
+	   //}catch(e){
+	   // alert('name: ' + e.name + 'message: ' + e.message) ;
+	   //}
+	   }
+	 
+	   // alert(e.target.result); 
+	  }
+	  reader.readAsDataURL(file);
+	  }
+	 };

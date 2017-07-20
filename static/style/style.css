@@ -35,12 +35,20 @@ input::-webkit-inner-spin-button{
 .form-group>.col-sm-9{
 	width: 70% !important;
 	display: inline-block !important;
-	vertical-align: top;
+	vertical-align: middle;
 }
 .form-group>.col-sm-3{
-	vertical-align: top;
+	display: inline-block !important;
 	width: 25% !important;
 	text-align: right;
+	vertical-align: middle;
+}
+
+.labelCenter{
+	width: 50px;
+	text-align: center;
+	display: inline-block !important;
+	vertical-align: middle;
 }
 
 
@@ -177,9 +185,9 @@ input::-webkit-inner-spin-button{
 	border-bottom: 1px solid #CCCCCC;
 }
 
-@media only screen and (max-width: 1950px) {
+@media only screen and (max-width: 1920px) {
 	#listContent{
-		min-height: 760px;
+		min-height: 810px;
 	}
 }
 @media only screen and (max-width: 1440px) {

@@ -1,7 +1,10 @@
 {% extends 'include/main_base.html' %}
 {% block right %}
 <div class="page-header" style="border-bottom: 0;">
-  <h2><span class="code">统计管理</span></h2>
+  <ol class="breadcrumb">
+	  <i class="icon icon-home"></i>
+	  <li><a href="{% url 'event_list' %}"><h3>开盘统计管理</h3></a></li>
+	</ol>
 </div>
 <ul class="nav nav-tabs">
     <li class="active"><a data-tab href="#tabContent1">购房者热度统计</a></li>
@@ -49,7 +52,7 @@
 					<th>房号</th>
 					<th>是否已售</th>
 					<th>原价</th>
-					<th>线上总价</th>
+					<th>建筑面积</th>
 					<th>收藏人数</th>
 					<th>公测是否已售</th>
 				</tr>

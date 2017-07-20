@@ -1,5 +1,12 @@
 {% extends 'include/base.html' %}
 {% block main %}
+<style type="text/css">
+	.col-sm-4{
+		width: 30% !important;
+		display: inline-block !important;
+		vertical-align: middle;
+	}
+</style>
 <div style="padding:20px">
 	<form class="form-horizontal" method="post" enctype="multipart/form-data">
 		{% csrf_token %}
@@ -20,25 +27,23 @@
 		</div>
 		<div class="form-group">
 		    <label class="col-sm-3 col-lg-3 control-label">咨询电话</label>
-		    <div class="col-sm-9 col-lg-9">
+		    <div class="col-sm-9">
 		    	<input type="tel" class="form-control" placeholder="咨询电话" name="phone_num" value="{{form.phone_num.value|default:''}}" required>
 		    </div>
 		</div>
 		<div class="form-group">
-		    <label class="col-sm-3 col-lg-3 control-label">公测开始时间</label>
-		    <div class="col-sm-9 col-lg-9">
-		    	<input type="text" class="form-control form-datetime" name="test_start" value="{{form.test_start.value|default:''|date:'Y-m-d h:i'}}" required>
+		    <label class="col-sm-3 control-label">公测时间</label>
+		    <div class="col-sm-4">
+	    		<input type="text" class="form-control form-datetime" name="test_start" value="{{form.test_start.value|default:''|date:'Y-m-d h:i'}}" required>
+		    </div>
+		    <div class="labelCenter">至</div>
+		    <div class="col-sm-4">
+	    		<input type="text" class="form-control form-datetime" name="test_end" value="{{form.test_end.value|default:''|date:'Y-m-d h:i'}}" required>
 		    </div>
 		</div>
 		<div class="form-group">
-		    <label class="col-sm-3 col-lg-3 control-label">公测结束时间</label>
-		    <div class="col-sm-9 col-lg-9">
-		    	<input type="text" class="form-control form-datetime" name="test_end" value="{{form.test_end.value|default:''|date:'Y-m-d h:i'}}" required>
-		    </div>
-		</div>
-		<div class="form-group">
-		    <label class="col-sm-3 col-lg-3 control-label">是否显示公测放价</label>
-		    <div class="col-sm-9 col-lg-9">
+		    <label class="col-sm-3 control-label">是否显示公测放价</label>
+		    <div class="col-sm-9">
 			    <label class="checkbox-inline">
 			    	<input type="radio" class="input-group-sm" name="test_price" {% if object.test_price == True %}checked{% endif %}> 是
 				</label>
@@ -48,33 +53,53 @@
 		    </div>
 		</div>
 		<div class="form-group">
-		    <label class="col-sm-3 col-lg-3 control-label">活动开始时间</label>
-		    <div class="col-sm-9 col-lg-9">
+		    <label class="col-sm-3 control-label">活动开始时间</label>
+		    <div class="col-sm-4">
 		    	<input type="text" class="form-control form-datetime" name="event_start" value="{{form.event_start.value|default:''|date:'Y-m-d h:i'}}" required>
 		    </div>
-		</div>
-		<div class="form-group">
-		    <label class="col-sm-3 col-lg-3 control-label">活动结束时间</label>
-		    <div class="col-sm-9 col-lg-9">
+		    <div class="labelCenter">至</div>
+		    <div class="col-sm-4">
 		    	<input type="text" class="form-control form-datetime" name="event_end" value="{{form.event_end.value|default:''|date:'Y-m-d h:i'}}" required>
 		    </div>
 		</div>
 		<div class="form-group">
-		    <label class="col-sm-3 col-lg-3 control-label">选房完成期限</label>
-		    <div class="col-sm-9 col-lg-9">
+		    <label class="col-sm-3 control-label">选房完成期限</label>
+		    <div class="col-sm-9">
 		    	<input type="number" class="form-control" placeholder="小时" min="0" name="limit" value="{{form.limit.value|default:''}}" required>
 		    </div>
 		</div>
 		<div class="form-group">
-		    <label class="col-sm-3 col-lg-3 control-label">支持设备登录数</label>
-		    <div class="col-sm-9 col-lg-9">
+		    <label class="col-sm-3 control-label">支持设备登录数</label>
+		    <div class="col-sm-9">
 		    	<input type="number" class="form-control"  min="0" placeholder="支持设备登录数" name="equ_login_num" value="{{form.equ_login_num.value|default:''}}" required>
 		    </div>
 		</div>
 		<div class="form-group">
-		    <label class="col-sm-3 col-lg-3 control-label">同一账号允许收藏数</label>
-		    <div class="col-sm-9 col-lg-9">
+		    <label class="col-sm-3 control-label">同一账号允许收藏数</label>
+		    <div class="col-sm-9">
 		    	<input type="number" class="form-control"  min="0" placeholder="同一账号允许收藏数" name="follow_num" value="{{form.follow_num.value|default:''}}" required>
+		    </div>
+		</div>
+		<div class="form-group">
+		    <label class="col-sm-3 control-label">登录短信提醒</label>
+		    <div class="col-sm-9">
+			    <label class="checkbox-inline">
+		    		<input type="radio" class="input-group-sm" name="login_msg" {% if object.login_msg == True %}checked{% endif %}> 是
+				</label>
+			    <label class="checkbox-inline">
+			    	<input type="radio" class="input-group-sm" name="login_msg" {% if object.login_msg == False %}checked{% endif %}> 否
+				</label>
+		    </div>
+		</div>
+		<div class="form-group">
+		    <label class="col-sm-3 control-label" >是否显示原价</label>
+		    <div class="col-sm-9">
+			    <label class="checkbox-inline">
+			    	<input type="radio" class="input-group-sm" name="price" {% if object.price == True %}checked{% endif %}> 是
+				</label>
+			    <label class="checkbox-inline">
+			    	<input type="radio" class="input-group-sm" name="price" {% if object.price == False %}checked{% endif %}> 否
+				</label>
 		    </div>
 		</div>
 		<div class="form-group">
@@ -102,31 +127,43 @@
 		<div class="form-group">
 		    <label class="col-sm-3 col-lg-3 control-label">活动细则</label>
 		    <div class="col-sm-9 col-lg-9">
-		    	<textarea class="form-control" rows="3" placeholder="请填写活动细则" name="description" required >{{form.description.value|default:''}}</textarea>
+		    	<textarea class="form-control" style="height:100px;" rows="3" placeholder="请填写活动细则" name="description" required >{{form.description.value|default:''}}</textarea>
 		    </div>
 		</div>
 		<div class="form-group">
 		    <label class="col-sm-3 col-lg-3 control-label">认购须知</label>
 		    <div class="col-sm-9 col-lg-9">
-		    	<textarea class="form-control" rows="3" placeholder="请填写认购须知" name="notice" required>{{form.notice.value|default:''}}</textarea>
+		    	<textarea class="form-control" style="height:100px;" rows="3" placeholder="请填写认购须知" name="notice" required>{{form.notice.value|default:''}}</textarea>
 		    </div>
 		</div>
 		<div class="form-group">
 		    <label class="col-sm-3 col-lg-3 control-label">温馨提示</label>
 		    <div class="col-sm-9 col-lg-9">
-		    	<textarea class="form-control" rows="3" placeholder="请填写温馨提示" name="tip">{{form.tip.value|default:''}}</textarea>
+		    	<textarea class="form-control" style="height:100px;" rows="3" placeholder="请填写温馨提示" name="tip">{{form.tip.value|default:''}}</textarea>
 		    </div>
 		</div>
 		<div class="form-group">
 		    <label class="col-sm-3 col-lg-3 control-label">活动封面</label>
 		    <div class="col-sm-9 col-lg-9">
-		    	<input type="file" class="form-control" id="inputNumber3" name="cover" required>
+		    	<input type="file" class="form-control" id="cover" onchange='showCover()' name="cover">
+		    </div>
+		    <div class="col-sm-9" style="margin:10px 0 0 25%;">
+		    	<p style="margin: 0;">当前文件为<span class="coverImgFile" style="margin-left:20px;">{{form.cover.value|default:''}}</span></p>
+		    </div>
+		    <div class="col-sm-9" style="margin:10px 0 0 25%;">
+			 	<img src='{{MEDIA_URL}}{{object.cover}}' alt='' id='coverImg' />
 		    </div>
 		</div>
 		<div class="form-group">
 		    <label class="col-sm-3 col-lg-3 control-label">平面图</label>
 		    <div class="col-sm-9 col-lg-9">
-		    	<input type="file" class="form-control" id="inputNumber3" name="plane_graph" value="{{form.plane_graph.value|default:''}}" required>
+		    	<input type="file" class="form-control" id="plane_graph" onchange='showPlane()' name="plane_graph">
+		    </div>
+		    <div class="col-sm-9" style="margin:10px 0 0 25%;">
+		    	<p style="margin: 0;">当前文件为<span class="plane_graph_img_file" style="margin-left:20px;">{{form.plane_graph.value|default:''}}</span></p>
+		    </div>
+			<div class="col-sm-9" style="margin:10px 0 0 25%;">
+			 	<img src='{{MEDIA_URL}}{{object.plane_graph}}' alt='' id='plane_graph_img' />
 		    </div>
 		</div>
 		<input type="text" name="company" value="{{form.company.value|default:''}}" style="display:none">
@@ -136,16 +173,40 @@
 </form>
 </div>
 <script type="text/javascript">
-	// 选择时间和日期
-$(".form-datetime").datetimepicker({
-    weekStart: 1,
-    todayBtn:  1,
-    autoclose: 1,
-    todayHighlight: 1,
-    startView: 2,
-    forceParse: 0,
-    showMeridian: 1,
-    format: "yyyy-mm-dd hh:ii"
-})
+$(document).ready(function(){
+//	封面图
+	var coverImgFile = $(".coverImgFile").html();
+	var coverImgFiles = coverImgFile.slice(17);//截取获取文件的文件名
+	$(".coverImgFile").html(coverImgFiles);
+//	平面图
+	var plane_graph_img_file = $(".plane_graph_img_file").html();
+	var plane_graph_img_files = plane_graph_img_file.slice(22);//截取获取文件的文件名
+	$(".plane_graph_img_file").html(plane_graph_img_files);
+});
+	//平面图显示
+	function showPlane(){
+	  //以下即为完整客户端路径
+	  var file_img=document.getElementById("plane_graph_img"),
+	  iptfileupload = document.getElementById('plane_graph') ;
+	  getPath(file_img,iptfileupload,file_img) ;
+	 };
+	//活动封面显示
+	function showCover(){
+	  //以下即为完整客户端路径
+	  var file_img=document.getElementById("coverImg"),
+	  iptfileupload = document.getElementById('cover') ;
+	  getPath(file_img,iptfileupload,file_img) ;
+	 };
+		// 选择时间和日期
+	$(".form-datetime").datetimepicker({
+	    weekStart: 1,
+	    todayBtn:  1,
+	    autoclose: 1,
+	    todayHighlight: 1,
+	    startView: 2,
+	    forceParse: 0,
+	    showMeridian: 1,
+	    format: "yyyy-mm-dd hh:ii"
+	})
 </script>
 {% endblock %}
