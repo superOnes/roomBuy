@@ -47,6 +47,7 @@ class EventDetailSignForm(forms.ModelForm):
 
     def save(self, commit=True):
         with transaction.atomic():
+            self.instance.is_sold = True
             instance = super(EventDetailSignForm, self).save(commit)
             if instance.sign:
                 Order.objects.create(eventdetail=instance,
