@@ -1,4 +1,5 @@
 import uuid
+import time
 from django import forms
 from django.db import transaction
 from django.shortcuts import resolve_url
@@ -50,7 +51,8 @@ class EventDetailSignForm(forms.ModelForm):
             if instance.sign:
                 Order.objects.create(eventdetail=instance,
                                      user=instance.sign.user,
-                                     is_test=False)
+                                     is_test=False,
+                                     order_num=time.strftime('%Y%m%d%H%M%S'))
             elif self.initial['object'].sign:
                 Order.objects.filter(eventdetail=instance,
                                      user=self.initial['object'].sign.user,
