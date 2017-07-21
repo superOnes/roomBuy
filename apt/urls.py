@@ -12,7 +12,7 @@ from .views import (EventListView, EventCreateView, ImportPriceView,
                     HouseTypeUpdateView, CustomerCountUpdateView,
                     ExportBuyHotView, HouseTypeRelatedView,
                     EventDetailHTUpdateView, PurcharseHeatView, GetEventView,
-                    OrderListView, GetOrderView, EventDetailSignUpdateView,
+                    OrderListView, EventDetailSignUpdateView,
                     DeleteHouseTypeView)
 
 
@@ -55,7 +55,6 @@ urlpatterns = [
     url(r'^purcharseheat/', PurcharseHeatView.as_view(), name='purcharseheat'),
     url(r'^orderlist/', OrderListView.as_view(), name='orderlist'),
     url(r'^getevent/', GetEventView.as_view()),
-    url(r'^getorder/', GetOrderView.as_view()),
     # 认筹
     url(r'^(?P<pk>\d+)/customs/$', CustomListView.as_view(),
         name='event_customs'),

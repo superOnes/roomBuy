@@ -727,12 +727,4 @@ class OrderListView(View):
         return JsonResponse({'success': False})
 
 
-@method_decorator(admin_required, name='dispatch')
-class GetOrderView(View):
-    '''
-    获取订单状态列表
-    '''
-    def get(self, requests, *args, **kwargs):
-        order = [{'id': 0, 'is_test': False},
-                 {'id': 1, 'is_test': True}]
-        return JsonResponse({'success': True, 'data': order})
+
