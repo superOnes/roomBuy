@@ -132,13 +132,13 @@ class EventDetailCreateView(DialogMixin, CreateView):
 
 @method_decorator(admin_required, name='dispatch')
 class EventDetailTotalUpdateView(DialogMixin, UpdateView):
-    # '''
-    # 编辑线上总价
-    # '''
-    # template_name = 'popup/eventdetail_total.html'
-    # fields = ['unit_price', 'total']
-    # model = EventDetail
-    pass
+    '''
+    编辑线上总价
+    '''
+    template_name = 'popup/eventdetail_total.html'
+    fields = ['unit_price']
+    model = EventDetail
+    # pass
 
 
 @method_decorator(admin_required, name='dispatch')
