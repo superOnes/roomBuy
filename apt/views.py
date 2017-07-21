@@ -259,6 +259,8 @@ class ImportPriceView(View):
                                                              room_num=ed[4],
                                                              unit_price=ed[5],
                                                              area=ed[6],
+                                                             looking=ed[7],
+                                                             term=ed[8],
                                                              event=event)
                 eventdetail.save()
             return JsonResponse({'success': True})
