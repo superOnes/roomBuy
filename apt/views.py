@@ -280,7 +280,7 @@ class ExportView(View):
         if objs:
             sheet = Workbook(encoding='utf-8')
             s = sheet.add_sheet('数据表')
-            list = ['选房房源id', '楼栋', '单元', '楼层', '房号', '面积单价', '建筑面积']
+            list = ['选房房源id', '楼栋', '单元', '楼层', '房号', '面积单价', '建筑面积','朝向','使用年限']
             col = 0
             for i in list:
                 s.write(0, col, i)
@@ -294,6 +294,8 @@ class ExportView(View):
                 s.write(row, 4, obj.room_num)
                 s.write(row, 5, obj.unit_price)
                 s.write(row, 6, obj.area)
+                s.write(row, 5, obj.looking)
+                s.write(row, 6, obj.term)
                 row += 1
             sio = BytesIO()
             sheet.save(sio)
