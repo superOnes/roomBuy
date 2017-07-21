@@ -61,9 +61,12 @@
 		      <input type="text" class="form-control" placeholder="面积" name="area" required>
 		    </div>
 		</div>
+		{% if form.non_field_errors %}
+		<div class="alert alert-info">{{form.non_field_errors}}</div>
+		{% endif %}
 		<div class="modal-footer">
 	    	<input type="submit" class="btn btn-primary" value="确定"></input>
-	    </div>
+	  </div>
 	</form>
 </div>
 {% endblock %}

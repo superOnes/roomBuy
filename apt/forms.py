@@ -20,6 +20,13 @@ class EventDetailForm(forms.ModelForm):
         model = EventDetail
         fields = ['building', 'unit', 'floor', 'room_num', 'unit_price', 'area']
 
+    def clean(self):
+        cleaned_data = super(EventDetailForm, self).clean()
+        event = self.initial['event']
+        if event.eventdetail_set.count() >= int(event.house_limit):
+            raise forms.ValidationError('房源数量超出上限，不可添加')
+        return cleaned_data
+
     def save(self, commit=True):
         if not self.instance.id:
             self.instance.event = self.initial['event']
