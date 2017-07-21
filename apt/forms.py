@@ -16,7 +16,8 @@ class EventDetailForm(forms.ModelForm):
 
     class Meta:
         model = EventDetail
-        fields = [f.name for f in model._meta.fields]
+        fields = ['building', 'unit', 'floor', 'room_num', 'looking',
+                  'unit_price', 'term', 'area']
 
     def clean(self):
         cleaned_data = super(EventDetailForm, self).clean()
