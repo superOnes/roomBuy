@@ -105,7 +105,7 @@ class AppEventDetailHouseListView(View):
             if obj.status:
                 value = [{
                     'house': obj.id,
-                    'floor_room_num': obj.floor + '-' + obj.room_num,
+                    'floor_room_num': str(obj.floor) + '-' + str(obj.room_num),
                     'is_sold': obj.is_sold,
                 }]
                 room_num_list.append(value)
@@ -125,6 +125,8 @@ class AppEventDetailHouseInfoView(View):
         user = request.user
         house = request.GET.get('house')
         eventdetobj = EventDetail.get(house)
+        eventdetobj.visit_num=eventdetobj.visit_num+1
+        eventdetobj.save()
         test = True if time.strftime('%Y%m%d %H:%M:%S') <= eventdetobj.event.test_end.strftime(
             '%Y%m%d %H:%M:%S') else False
         try:
@@ -137,7 +139,7 @@ class AppEventDetailHouseInfoView(View):
                   'realname': user.customer.realname,
                   'mobile': user.customer.mobile,
                   'identication': user.customer.identication,
-                  'building_unit': eventdetobj.building + '-' + eventdetobj.unit + '-' + eventdetobj.floor + '-' + house,
+                  'building_unit': eventdetobj.building + '-' + eventdetobj.unit + '-' + str(eventdetobj.floor) + '-' + house,
                   'total': '***' if test and not eventdetobj.event.test_price else (int(eventdetobj.area) * int(eventdetobj.unit_price)),
                   'house_type': eventdetobj.house_type.name,
                   'pic': eventdetobj.house_type.pic.url,
@@ -203,14 +205,15 @@ class FollowView(View):
                         '-' +
                         obj.eventdetail.unit +
                         '-' +
-                        obj.eventdetail.floor +
+                        str(obj.eventdetail.floor) +
                         '-' +
-                        obj.eventdetail.room_num),
+                        str(obj.eventdetail.room_num)),
                     'price': (
                         int(
                             obj.eventdetail.area) *
                         int(
                             obj.eventdetail.unit_price)),
+                    'house':obj.eventdetail.id,
                 }]
             list.append(value)
         context['objects'] = list
@@ -244,7 +247,9 @@ class AppHouseChoiceConfirmView(View):
                         if a.time.strftime('%Y%m%d %H:%M:%S') <= a.eventdetail.event.test_end.strftime(
                                 '%Y%m%d %H:%M:%S'):
                             a.is_test = True
+                            eventdetail.is_testsold=True
                             a.save()
+                            eventdetail.save()
                         else:
                             a.is_test = False
                             a.save()
@@ -265,9 +270,9 @@ class AppHouseChoiceConfirmView(View):
                         '-' +
                         eventdetail.unit +
                         '-' +
-                        eventdetail.floor +
+                        str(eventdetail.floor) +
                         '-' +
-                        eventdetail.room_num),
+                        str(eventdetail.room_num)),
                     'limit': eventdetail.event.limit,
                     'ordertime': a.time,
                     'orderid': a.id,
@@ -293,9 +298,9 @@ class AppOrderListView(View):
                     '-' +
                     obj.eventdetail.unit +
                     '-' +
-                    obj.eventdetail.floor +
+                    str(obj.eventdetail.floor) +
                     '-' +
-                    obj.eventdetail.room_num),
+                    str(obj.eventdetail.room_num)),
                 'time': obj.time,
                 'event': obj.eventdetail.event.name,
                 'unit_price': obj.eventdetail.unit_price if obj.eventdetail.event.covered_space_price else '',
@@ -332,9 +337,9 @@ class AppOrderInfoView(View):
                     '-' +
                     obj.eventdetail.unit +
                     '-' +
-                    obj.eventdetail.floor +
+                    str(obj.eventdetail.floor) +
                     '-' +
-                    obj.eventdetail.room_num),
+                    str(obj.eventdetail.room_num)),
                 'houst_type': obj.eventdetail.house_type.name,
                 'area': obj.eventdetail.area,
                 'customer': obj.user.customer.realname,

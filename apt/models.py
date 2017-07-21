@@ -86,7 +86,7 @@ class EventDetail(models.Model):
     building = models.CharField('楼号', max_length=50)
     unit = models.CharField('单元', max_length=100)
     floor = models.IntegerField('楼层')
-    room_num = models.IntegerField('房号', max_length=50)
+    room_num = models.IntegerField('房号')
     status = models.BooleanField('上架状态', default=False)
     event = models.ForeignKey(Event, verbose_name='所属活动')
     is_sold = models.BooleanField('是否被卖', default=False)

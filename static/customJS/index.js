@@ -141,7 +141,7 @@ function getorderSelect(){
 			success:function(results){
 				var result =results.data;
 				for(var i=0; i<result.length; i++){
-					result[i].is_test = result[i].is_test==true?"开盘":"公测";
+					result[i].is_test = result[i].is_test==true?"公测":"开盘";
 					$("#orderList").prepend("<option value='"+result[i].id+"'>"+result[i].is_test+"</option>")
 				};
 				$("#orderList option:first").attr("selected","selected");

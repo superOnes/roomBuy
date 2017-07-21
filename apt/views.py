@@ -17,7 +17,6 @@ from django.http import QueryDict
 from django.utils.decorators import method_decorator
 
 from aptm import settings
-from aptp.models import Follow
 from accounts.models import Order, Customer
 from .models import Event, EventDetail, HouseType
 from accounts.decorators import admin_required
@@ -133,12 +132,13 @@ class EventDetailCreateView(DialogMixin, CreateView):
 
 @method_decorator(admin_required, name='dispatch')
 class EventDetailTotalUpdateView(DialogMixin, UpdateView):
-    '''
-    编辑线上总价
-    '''
-    template_name = 'popup/eventdetail_total.html'
-    fields = ['unit_price']
-    model = EventDetail
+    # '''
+    # 编辑线上总价
+    # '''
+    # template_name = 'popup/eventdetail_total.html'
+    # fields = ['unit_price', 'total']
+    # model = EventDetail
+    pass
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -371,8 +371,8 @@ class ExportHouseHotView(View):
                     s.write(row, 4, '未售')
                 s.write(row, 5, obj.unit_price)
                 s.write(row, 6, obj.area)
-                s.write(row, 7, Follow.objects.filter(eventdetail=obj).count())
-                if Order.objects.get(eventdetail=obj).is_test:
+                s.write(row, 7, obj.follow_set.count())
+                if obj.is_testsold:
                     s.write(row, 8, '公测已售')
                 else:
                     s.write(row, 8, '公测未售')
@@ -419,18 +419,18 @@ class ExportBuyHotView(View):
                 s.write(row, 1, obj.user.customer.mobile)
                 s.write(row, 2, obj.user.customer.identication)
                 s.write(row, 3, obj.user.customer.protime)
-                s.write(row, 4, Follow.objects.filter(user=obj.user).count())
+                s.write(row, 4, obj.user.follow_set.count())
                 s.write(row, 5, obj.eventdetail.visit_num)
-                if obj.is_test:
+                if obj.eventdetail.is_testsold:
                     s.write(row, 6,
                             obj.eventdetail.building +
                             '楼' +
                             obj.eventdetail.unit +
                             '单元' +
-                            obj.eventdetail.floor +
+                            str(obj.eventdetail.floor) +
                             '层' +
-                            obj.eventdetail.room_num + '号')
-                    s.write(row, 7, (obj.time).strftime("%Y %m %d %H:%M:%S"))
+                            str(obj.eventdetail.room_num) + '号')
+                    s.write(row, 7, (obj.time).strftime("%Y/%m/%d %H:%M:%S"))
                     s.write(row, 8, None)
                     s.write(row, 9, None)
                 else:
@@ -441,10 +441,10 @@ class ExportBuyHotView(View):
                             '楼' +
                             obj.eventdetail.unit +
                             '单元' +
-                            obj.eventdetail.floor +
+                            str(obj.eventdetail.floor) +
                             '层' +
-                            obj.eventdetail.room_num + '号')
-                    s.write(row, 9, (obj.time).strftime("%Y %m %d %H:%M:%S"))
+                            str(obj.eventdetail.room_num) + '号')
+                    s.write(row, 9, (obj.time).strftime("%Y/%m/%d %H:%M:%S"))
                 row += 1
             sio = BytesIO()
             sheet.save(sio)
