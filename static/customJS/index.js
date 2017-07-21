@@ -41,8 +41,13 @@ function roomPriceFile(thisID){
 		cache: false,
         processData: false,//发送的数据将被转换为对象，false就是不转化，默认为true
         contentType: false,
-		success:function(){
-			window.location.reload();
+		success:function(data){
+			var result =data.JsonResponse;
+			if(result.success == True){
+				window.location.reload();
+			}else{
+				alert("房源数量超出限制！")
+			}
 		},
 		error:function(){
 			alert("未知错误");
@@ -117,57 +122,42 @@ function statisticsData(thisId){
 
 //订单下拉框数据显示
 function getorderSelect(){
-	//	活动下拉框列表的显示请求
-		$.ajax({
-			type:"get",
-			url:"/event/getevent/",
-			async:true,
-			success:function(results){
-				var result =results.data;
-				for(var i=0; i<result.length; i++){
-					$("#eventList").prepend("<option value='"+result[i].id+"'>"+result[i].name+"</option>")
-				};
-				$("#eventList option:first").attr("selected","selected");
-			},
-			error:function(){
-				alert("获取活动列表失败");
-			}
-		});
-	//	公测列表的显示请求
-		$.ajax({
-			type:"get",
-			url:"/event/getorder/",
-			async:true,
-			success:function(results){
-				var result =results.data;
-				for(var i=0; i<result.length; i++){
-					result[i].is_test = result[i].is_test==true?"公测":"开盘";
-					$("#orderList").prepend("<option value='"+result[i].id+"'>"+result[i].is_test+"</option>")
-				};
-				$("#orderList option:first").attr("selected","selected");
-			},
-			error:function(){
-				alert("获取公测列表失败");
-			}
-		});
+//	活动下拉框列表的显示请求
+	$.ajax({
+		type:"get",
+		url:"/event/getevent/",
+		async:true,
+		success:function(results){
+			var result =results.data;
+			for(var i=0; i<result.length; i++){
+				$("#eventList").append("<option value='"+result[i].id+"'>"+result[i].name+"</option>")
+			};
+			$("#eventList option:first").attr("selected","selected");
+		},
+		error:function(){
+			alert("获取活动列表失败");
+		}
+	});
 }
 
 //订单数据列表显示
 function getorderList(thisId,is_test,searchValue){
 	var $openList = $("#openList");
+	var $exportEach = $("#exportEach");
 	$.ajax({
 		type:"get",
 		data:{id:thisId,is_test:is_test,value:searchValue},
 		url:"/event/orderlist/",
 		asunc:true,
 		success:function(results){
+			$exportEach.attr("href","/event/exportorder/?id="+thisId+"&is_test="+is_test+"&value="+searchValue);
 			var result =results.data;
 			$openList.children("tr").remove();
 			for (var i = 0; i < result.length; i++) {
 				result[i].status= result[i].status==true ?"已售":"未售";
 				$openList.append("<tr><td>"+(i+1)+"</td><td>"+result[i].time+"</td><td>"+result[i].room_num+"</td><td>"+result[i].unit_price+"</td><td>"+result[i].area+"</td><td>"+result[i].realname+"</td>"+
 				"<td>"+result[i].mobile+"</td><td>"+result[i].identication+"</td><td>"+result[i].remark+"</td><td>"+result[i].status+"</td></tr>")
-			}
+			};
 		},
 		error:function(){
 			alert("获取开盘数据失败！！！")

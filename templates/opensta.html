@@ -68,6 +68,7 @@
 <script type="text/javascript">
 $(document).ready(function(){
 	$("#navActive li").eq(1).addClass("active");
+	var $exportEach = $("#exportEach");
 //	活动下拉框列表的显示请求
 	$.ajax({
 		type:"get",
@@ -75,9 +76,11 @@ $(document).ready(function(){
 		async:true,
 		success:function(results){
 			var result =results.data;
+			console.log(result.length)
 			for(var i=0; i<result.length; i++){
-				$(".selectInp").prepend("<option value='"+result[i].id+"'>"+result[i].name+"</option>")
+				$(".selectInp").append("<option value='"+result[i].id+"'>"+result[i].name+"</option>");
 			};
+			$exportEach.attr("href","/event/exportbuyhot?id="+result.length)
 			$(".selectInp option:first").attr("selected","selected");
 		},
 		error:function(){
@@ -86,36 +89,23 @@ $(document).ready(function(){
 	})
 //	默认获取的数据
 	statisticsData();
+	
 //	活动列表选择时数据的切换显示
 	$(".selectInp").change(function(){
 		var val = $(this).val();
+		$exportEach.attr("href","/event/exportbuyhot?id="+val);
 		//	获取数据
 		statisticsData(val);
 	});
 //		导出下载url改变
-	var urls = "/event/exportbuyhot/";
 	$("ul.nav-tabs li").click(function(){
+		var id = $(".selectInp").val();
 		if($(this).index() == 0){
-			urls="/event/exportbuyhot/";
+			$exportEach.attr("href","/event/exportbuyhot?id="+id)
 		}else{
-			urls="/event/exporthousehot/";
+			$exportEach.attr("href","/event/exporthousehot?id="+id)
 		};
 	});
-	$("#exportEach").click(function(){
-		var eventId = $(".selectInp").val();
-		$.ajax({
-			type:"get",
-			data:{id:eventId},
-			url:urls,
-			async:true,
-			success:function(){
-				window.open(urls);
-			},
-			error:function(){
-				alert("下载失败")
-			}
-		});
-	})
 });
 </script>
 {% endblock %}

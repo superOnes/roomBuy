@@ -11,14 +11,17 @@
 </div>
 <div class="row" id="selectInp">
   <div class="col-lg-3 col-md-3">
-    <select class="form-control" name="value" id="eventList"></select>
+    <select class="form-control" id="eventList"></select>
   </div>
   <div class="col-lg-3 col-md-3">
-    <select class="form-control" name="value" id="orderList"></select>
+    <select class="form-control" id="orderList">
+    	<option value="0">开盘</option>
+    	<option value="1">公测</option>
+    </select>
   </div>
   <div class="col-lg-3 col-md-offset-3" style="float: right;">
 		    <div class="input-group" style="margin:0 !important;">
-		      <input type="text" class="form-control" placeholder="购买人或手机号进行搜索" id="searchInput" name="value">
+		      <input type="text" class="form-control" placeholder="购买人/手机号/证件号" id="searchInput" name="value">
 		      <span class="input-group-btn">
 	         <button class="btn btn-default" type="submit" id="searchBtn">搜索</button>
 			    </span>
@@ -48,15 +51,6 @@
 {% block js %}
 <script type="text/javascript">
 $(document).ready(function(){
-	$("#exportEach").click(function(){
-		var thisVal = $("#eventList").val();
-		$.ajax({
-			type:"get",
-			url:"",
-			async:true,
-			data:{id:thisVal}
-		});
-	})
   getorderList();
   getorderSelect();
 	$("#navActive li").eq(2).addClass("active");
@@ -72,7 +66,7 @@ $(document).ready(function(){
 	$("#searchInput").keydown(function(event){
 		var event=event||window.event;
 		if(event.keyCode == 13){ filterData() };
-	})
+	});
 });
 </script>
 {% endblock %}

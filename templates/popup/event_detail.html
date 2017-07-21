@@ -79,6 +79,19 @@
 		    </div>
 		</div>
 		<div class="form-group">
+		    <label class="col-sm-3 control-label">车位房源数量限制</label>
+		    <div class="col-sm-9">
+		    	<select class="form-control" name="house_num" id="type" readonly>
+		    		<option value="1" {% if object.house_num == 1 %}selected{% endif %}>500</option>
+		    		<option value="2" {% if object.house_num == 2 %}selected{% endif %}>1000</option>
+		    		<option value="3" {% if object.house_num == 3 %}selected{% endif %}>1500</option>
+		    		<option value="4" {% if object.house_num == 4 %}selected{% endif %}>2000</option>
+		    		<option value="5" {% if object.house_num == 5 %}selected{% endif %}>2500</option>
+		    		<option value="6" {% if object.house_num == 6 %}selected{% endif %}>3000</option>
+		    	</select>
+		    </div>
+		</div>
+		<div class="form-group">
 		    <label for="inputNumber3" class="col-sm-3 col-lg-3 control-label">登录短信提醒</label>
 		    <div class="col-sm-9">
 			    <label class="checkbox-inline">
