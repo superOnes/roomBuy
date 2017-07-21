@@ -1,8 +1,5 @@
-import time
-
 from django import forms
 from django.db import transaction
-from django.shortcuts import resolve_url
 from .models import Event, EventDetail, HouseType
 from accounts.models import Customer, User, Order
 
@@ -18,7 +15,7 @@ class EventDetailForm(forms.ModelForm):
 
     class Meta:
         model = EventDetail
-        fields = ['building', 'unit', 'floor', 'room_num', 'unit_price', 'area']
+        fields = [f.name for f in model._meta.fields]
 
     def clean(self):
         cleaned_data = super(EventDetailForm, self).clean()
@@ -51,23 +48,6 @@ class EventDetailSignForm(forms.ModelForm):
             elif customer.user.order_set.count() >= customer.count:
                 raise forms.ValidationError('该用户已购房')
         return customer
-
-    def save(self, commit=True):
-        with transaction.atomic():
-            if self.instance.sign:
-                self.instance.is_sold = True
-                Order.objects.create(eventdetail=self.instance,
-                                     user=self.instance.sign.user,
-                                     is_test=False,
-                                     order_num=time.strftime('%Y%m%d%H%M%S'))
-            elif self.initial['object'].sign:
-                self.instance.is_sold = False
-                Order.objects.filter(eventdetail=self.instance,
-                                     user=self.initial['object'].sign.user,
-                                     is_test=False).delete()
-            instance = super(EventDetailSignForm, self).save(commit)
-            return instance
-        return resolve_url('dialog_success')
 
 
 class CustomerForm(forms.ModelForm):
