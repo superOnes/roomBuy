@@ -6,13 +6,13 @@ from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.views.generic import View, ListView
 from django.contrib.auth import authenticate, login, logout
-from django.http import JsonResponse
+from django.http import JsonResponse, QueryDict
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.http import QueryDict
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.db import transaction
 
 from apt.models import Event, EventDetail
 from aptm import settings
@@ -169,6 +169,7 @@ class LogoutView(View):
         logout(request)
         return JsonResponse({'success': True, 'msg': '退出登录成功'})
 
+
 @method_decorator(login_time, name='dispatch')
 class CustomerLoginView(View):
     '''
@@ -249,16 +250,17 @@ class ImportView(View):
                 if Customer.objects.filter(event_id=id, mobile=ct[1]).exists():
                     continue
                 else:
-                    customer = Customer.objects.create(realname=ct[0],
-                                                       mobile=ct[1],
-                                                       identication=ct[2],
-                                                       remark=ct[3],
-                                                       event=event)
-                    customer.save()
-                    User.objects.create_user(username=uuid.uuid1(),
-                                             password=customer.identication,
-                                             customer=customer,
-                                             is_admin=False)
+                    with transaction.atomic:
+                        customer = Customer.objects.create(realname=ct[0],
+                                                           mobile=ct[1],
+                                                           identication=ct[2],
+                                                           remark=ct[3],
+                                                           event=event)
+                        customer.save()
+                        User.objects.create_user(username=uuid.uuid1(),
+                                                 password=customer.identication,
+                                                 customer=customer,
+                                                 is_admin=False)
             return JsonResponse({'success': True})
         return JsonResponse({'success': False})
 
