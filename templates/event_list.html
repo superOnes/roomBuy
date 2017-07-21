@@ -6,7 +6,7 @@
 	  <li><a href="{% url 'event_list' %}"><h3>活动列表</h3></a></li>
 	</ol>
 </div>
-<div class="row" style="padding:10px">
+<div class="row" style="padding:10px;margin-top:-20px">
 	<a class="btn btn-primary" data-moveable="true" data-iframe="{% url 'event_create' %}" data-toggle="modal">创建活动</a>
 	<div class="col-lg-3" style="float: right;">
 	    <form class="form-horizontal searchWrap" method="get" action="">
@@ -22,15 +22,15 @@
 <table class="table datatable">
 	<thead>
 		<tr>
-			<th>序号</th>
+			<th data-width="5%">序号</th>
 			<th>活动名称</th>
 			<th>公测时间</th>
 			<th>活动时间</th>
-			<th>认筹名单</th>
-			<th>车位房源</th>
-			<th>活动状态</th>
+			<th data-width="7%">认筹名单</th>
+			<th data-width="7%">车位房源</th>
+			<th data-width="7%">活动状态</th>
 			<th>二维码</th>
-			<th>操作</th>
+			<th data-width="10%">操作</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -102,7 +102,7 @@
 <script type="text/javascript">
 $(document).ready(function(){
 	$("#navActive li").eq(0).addClass("active");
-	$('table.datatable').datatable({ sortable: true, });
+	$('table.datatable').datatable();
 //	是否发布
 	$('.is_pub').on('click', function(e){
 		$("#is_pub_status").val($(e.currentTarget).data("id"));
