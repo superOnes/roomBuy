@@ -248,23 +248,24 @@ class ImportPriceView(View):
                     value = sheet.cell(rowx=rx, colx=cx).value
                     li.append(value)
                 data.append(li)
-            for ed in data:
-                if EventDetail.objects.filter(
-                        event_id=id, room_num=ed[4]).exists():
-                    continue
-                else:
-                    eventdetail = EventDetail.objects.create(building=ed[1],
-                                                             unit=ed[2],
-                                                             floor=ed[3],
-                                                             room_num=ed[4],
-                                                             unit_price=ed[5],
-                                                             area=ed[6],
-                                                             looking=ed[7],
-                                                             term=ed[8],
-                                                             event=event)
-                eventdetail.save()
-            return JsonResponse({'success': True})
-        return JsonResponse({'success': False})
+            if row < int(event.house_limit):
+                for ed in data:
+                    if EventDetail.objects.filter(
+                            event_id=id, room_num=ed[4]).exists():
+                        continue
+                    else:
+                        eventdetail = EventDetail.objects.create(building=ed[1],
+                                                                 unit=ed[2],
+                                                                 floor=ed[3],
+                                                                 room_num=ed[4],
+                                                                 unit_price=ed[5],
+                                                                 area=ed[6],
+                                                                 looking=ed[7],
+                                                                 term=ed[8],
+                                                                 event=event)
+                    eventdetail.save()
+                return JsonResponse({'success': True})
+        return JsonResponse({'success': False, 'msg': '传入数据超额！'})
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -588,10 +589,10 @@ class PurcharseHeatView(View):
                        'openroom': ''
                        }
             if testorder:
-                ct_list['testtime'] = testorder.time
+                ct_list['testtime'] = testorder.time.strftime("%Y/%m/%d %H:%M:%S")
                 ct_list['testroom'] = testorder.eventdetail.room_num
             if openorder:
-                ct_list['opentime'] = openorder.time
+                ct_list['opentime'] = openorder.time.strftime("%Y/%m/%d %H:%M:%S")
                 ct_list['openroom'] = openorder.eventdetail.room_num
             li.append(ct_list)
         return JsonResponse({'success': True, 'data': li})
