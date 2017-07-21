@@ -47,17 +47,18 @@ class EventDetailSignForm(forms.ModelForm):
 
     def save(self, commit=True):
         with transaction.atomic():
-            self.instance.is_sold = True
-            instance = super(EventDetailSignForm, self).save(commit)
-            if instance.sign:
-                Order.objects.create(eventdetail=instance,
-                                     user=instance.sign.user,
+            if self.instance.sign:
+                self.instance.is_sold = True
+                Order.objects.create(eventdetail=self.instance,
+                                     user=self.instance.sign.user,
                                      is_test=False,
                                      order_num=time.strftime('%Y%m%d%H%M%S'))
             elif self.initial['object'].sign:
-                Order.objects.filter(eventdetail=instance,
+                self.instance.is_sold = False
+                Order.objects.filter(eventdetail=self.instance,
                                      user=self.initial['object'].sign.user,
                                      is_test=False).delete()
+            instance = super(EventDetailSignForm, self).save(commit)
             return instance
         return resolve_url('dialog_success')
 
