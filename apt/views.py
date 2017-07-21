@@ -106,7 +106,8 @@ class EventDetailListView(ListView):
         self.event = Event.get(self.kwargs['pk'])
         queryset = self.model.objects.filter(event=self.event).order_by('-id')
         if self.value:
-            queryset = queryset.filter(Q(room_num__contains=self.value)).order_by('-id')
+            queryset = queryset.filter(
+                Q(room_num__contains=self.value)).order_by('-id')
         return queryset
 
     def get_context_data(self):
@@ -138,7 +139,6 @@ class EventDetailTotalUpdateView(DialogMixin, UpdateView):
     template_name = 'popup/eventdetail_total.html'
     fields = ['unit_price']
     model = EventDetail
-    # pass
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -254,16 +254,17 @@ class ImportPriceView(View):
                             event_id=id, room_num=ed[4]).exists():
                         continue
                     else:
-                        eventdetail = EventDetail.objects.create(building=ed[1],
-                                                                 unit=ed[2],
-                                                                 floor=ed[3],
-                                                                 room_num=ed[4],
-                                                                 unit_price=ed[5],
-                                                                 area=ed[6],
-                                                                 looking=ed[7],
-                                                                 term=ed[8],
-                                                                 event=event)
-                    eventdetail.save()
+                        eventdetail = EventDetail.objects.create(
+                            building=ed[1],
+                            unit=ed[2],
+                            floor=ed[3],
+                            room_num=ed[4],
+                            unit_price=ed[5],
+                            area=ed[6],
+                            looking=ed[7],
+                            term=ed[8],
+                            event=event)
+                        eventdetail.save()
                 return JsonResponse({'success': True})
         return JsonResponse({'success': False, 'msg': '传入数据超额！'})
 
@@ -460,6 +461,64 @@ class ExportBuyHotView(View):
 
 
 @method_decorator(admin_required, name='dispatch')
+class ExportOrderView(View):
+    '''
+    导出订单条目
+    '''
+
+    def get(self, request, **kwargs):
+        id = request.GET.get('id')
+        is_test = request.GET.get('is_test')
+        value = request.GET.get('value')
+        queryset = Order.objects.filter(
+            eventdetail__event_id=id, is_test=is_test)
+        if value:
+            objs = queryset.filter(Q(user__customer__realname__icontains=value) |
+                                   Q(user__customer__mobile__icontains=value) |
+                                   Q(user__customer__identication__icontains=value))
+        else:
+            objs = queryset
+        print(objs)
+        if objs:
+            sheet = Workbook(encoding='utf-8')
+            s = sheet.add_sheet('数据表')
+            list = [
+                '选房时间',
+                '车位/房间号',
+                '单价',
+                '建筑面积',
+                '认购者',
+                '手机号',
+                '证件号码',
+                '认筹人备注',
+                '状态']
+            col = 0
+            for i in list:
+                s.write(0, col, i)
+                col += 1
+            row = 1
+            for obj in objs:
+                s.write(row, 0, obj.time)
+                s.write(row, 1, obj.eventdetail.room_num)
+                s.write(row, 2, obj.eventdetail.unit_price)
+                s.write(row, 3, obj.eventdetail.area)
+                s.write(row, 4, obj.user.customer.realname)
+                s.write(row, 5, obj.user.customer.mobile)
+                s.write(row, 6, obj.user.customer.identication)
+                s.write(row, 7, obj.user.customer.remark)
+                s.write(row, 8, obj.eventdetail.is_sold)
+                row += 1
+            sio = BytesIO()
+            sheet.save(sio)
+            sio.seek(0)
+            response = HttpResponse(content_type='application/vnd.ms-excel')
+            response['Content-Disposition'] = 'attachment;filename=daochudingdan.xls'
+            response.write(sio.getvalue())
+            return response
+        return JsonResponse({'msg': '内容为空！'})
+
+
+@method_decorator(admin_required, name='dispatch')
 def url2qrcode(request, data):
     '''
     二维码
@@ -526,6 +585,7 @@ class DeleteCustomerView(View):
     '''
     删除认筹名单
     '''
+
     def post(self, request):
         id = request.POST.get('id')
         if id:
@@ -539,6 +599,7 @@ class HouseHeatView(View):
     '''
     房源热度统计
     '''
+
     def get(self, request, *args, **kwargs):
         event_id = request.GET.get('id')
         if event_id:
@@ -565,6 +626,7 @@ class PurcharseHeatView(View):
     '''
     购房者热度统计
     '''
+
     def get(self, request, *args, **kwargs):
         event_id = request.GET.get('id')
         li = []
@@ -603,6 +665,7 @@ class GetEventView(View):
     '''
     获取活动列表
     '''
+
     def get(self, request, *args, **kwargs):
         event_list = Event.get_all_by_company(request.user.company.id)
         event = [{'id': et.id,
@@ -664,6 +727,7 @@ class DeleteHouseTypeView(View):
     '''
     删除户型
     '''
+
     def post(self, request):
         id = request.POST.get('id')
         if id:
@@ -698,19 +762,23 @@ class OrderListView(View):
     '''
     订单管理列表
     '''
-    def get(self, request, *args, **kwargs):
+
+    def get(self, request,):
         event_id = request.GET.get('id')
         is_test = request.GET.get('is_test')
         value = request.GET.get('value')
 
         if event_id and is_test:
-            queryset = Order.objects.filter(eventdetail__event_id=event_id, is_test=is_test)
+            queryset = Order.objects.filter(
+                eventdetail__event_id=event_id, is_test=is_test)
         else:
             last_event = Event.get_last_event(request.user.company.id)
-            queryset = Order.objects.filter(eventdetail__event=last_event, is_test=1)
+            queryset = Order.objects.filter(
+                eventdetail__event=last_event, is_test=1)
         if value:
             queryset = queryset.filter(Q(user__customer__realname__icontains=value) |
-                                       Q(user__customer__mobile__icontains=value))
+                                       Q(user__customer__mobile__icontains=value) |
+                                       Q(user__customer__identication__icontains=value))
         if queryset:
             order_list = [{'id': od.id,
                            'time': od.time.strftime("%Y-%m-%d %H:%M:%S"),
@@ -725,6 +793,3 @@ class OrderListView(View):
                            } for od in queryset]
             return JsonResponse({'success': True, 'data': order_list})
         return JsonResponse({'success': False})
-
-
-

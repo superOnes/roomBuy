@@ -125,7 +125,7 @@ class AppEventDetailHouseInfoView(View):
         user = request.user
         house = request.GET.get('house')
         eventdetobj = EventDetail.get(house)
-        eventdetobj.visit_num=eventdetobj.visit_num+1
+        eventdetobj.visit_num = eventdetobj.visit_num + 1
         eventdetobj.save()
         test = True if time.strftime('%Y%m%d %H:%M:%S') <= eventdetobj.event.test_end.strftime(
             '%Y%m%d %H:%M:%S') else False
@@ -139,7 +139,7 @@ class AppEventDetailHouseInfoView(View):
                   'realname': user.customer.realname,
                   'mobile': user.customer.mobile,
                   'identication': user.customer.identication,
-                  'building_unit': eventdetobj.building + '-' + eventdetobj.unit + '-' + str(eventdetobj.floor) + '-' + house,
+                  'building_unit': eventdetobj.building + '号楼' + eventdetobj.unit + '单元' + str(eventdetobj.floor) + '层' + house + '室',
                   'total': '***' if test and not eventdetobj.event.test_price else (int(eventdetobj.area) * int(eventdetobj.unit_price)),
                   'house_type': eventdetobj.house_type.name,
                   'pic': eventdetobj.house_type.pic.url,
@@ -202,18 +202,18 @@ class FollowView(View):
                 {
                     'eventdetail': (
                         obj.eventdetail.building +
-                        '-' +
+                        '号楼' +
                         obj.eventdetail.unit +
-                        '-' +
+                        '单元' +
                         str(obj.eventdetail.floor) +
-                        '-' +
-                        str(obj.eventdetail.room_num)),
+                        '层' +
+                        str(obj.eventdetail.room_num)) + '室',
                     'price': (
                         int(
                             obj.eventdetail.area) *
                         int(
                             obj.eventdetail.unit_price)),
-                    'house':obj.eventdetail.id,
+                    'house': obj.eventdetail.id,
                 }]
             list.append(value)
         context['objects'] = list
@@ -233,32 +233,42 @@ class AppHouseChoiceConfirmView(View):
         house = request.POST.get('house')
         try:
             eventdetail = EventDetail.get(house)
-            if not eventdetail.is_sold:
-                if not Order.objects.filter(
-                        user=user,
-                        eventdetail=eventdetail):
-                    if user.order_set.count() < user.customer.count:
-                        a = Order.objects.create(
-                            user=user,
-                            eventdetail=eventdetail,
-                            order_num=time.strftime('%Y%m%d%H%M%S'))
-                        eventdetail.is_sold = True
-                        eventdetail.save()
-                        if a.time.strftime('%Y%m%d %H:%M:%S') <= a.eventdetail.event.test_end.strftime(
-                                '%Y%m%d %H:%M:%S'):
-                            a.is_test = True
-                            eventdetail.is_testsold=True
-                            a.save()
-                            eventdetail.save()
-                        else:
-                            a.is_test = False
-                            a.save()
-                    else:
-                        return JsonResponse({'response_state': 400})
-                else:
-                    return JsonResponse({'response_state': 400})
-            else:
+            if eventdetail.sign:
+                Order.objects.create(
+                    user=eventdetail.sign,
+                    eventdetail=eventdetail,
+                    order_num=time.strftime('%Y%m%d%H%M%S'))
+                eventdetail.is_sold = True
+                eventdetail.save()
                 return JsonResponse({'response_state': 400})
+            else:
+                if not eventdetail.is_sold:
+                    if not Order.objects.filter(
+                            user=user,
+                            eventdetail=eventdetail):
+                        if user.order_set.count() < user.customer.count:
+                            a = Order.objects.create(
+                                user=user,
+                                eventdetail=eventdetail,
+                                order_num=time.strftime('%Y%m%d%H%M%S'))
+                            eventdetail.is_sold = True
+                            eventdetail.save()
+                            if a.time.strftime('%Y%m%d %H:%M:%S') <= a.eventdetail.event.test_end.strftime(
+                                    '%Y%m%d %H:%M:%S'):  # 判断是否是公测订单还是开盘订单
+                                a.is_test = True
+                                eventdetail.is_testsold = True
+                                a.save()
+                                eventdetail.save()
+                            else:
+                                a.is_test = False
+                                a.save()
+                        else:
+                            return JsonResponse(
+                                {'response_state': 400})  # 购买超过限制数
+                    else:
+                        return JsonResponse({'response_state': 400})  # 已经购买了
+                else:
+                    return JsonResponse({'response_state': 400})  # 被卖了
         except BaseException:
             return JsonResponse({'response_state': 400})
         else:
