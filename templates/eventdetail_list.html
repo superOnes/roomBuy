@@ -49,14 +49,14 @@
 <table class="table datatable">
 	<thead>
 		<tr>
-			<th>序号</th>
+			<th data-width="5%">序号</th>
 			<th>车位/房间号</th>
 			<th>关联户型</th>
-			<th>价格</th>
+			<th>单价</th>
+			<th>建筑面积</th>
 			<th>上架状态</th>
 			<th>选购状态</th>
 			<th>备注状态</th>
-			<th>二维码</th>
 			<th>操作</th>
 		</tr>
 	</thead>
@@ -67,13 +67,13 @@
 			<td>{{ obj.room_num }}</td>
 			<td><a data-iframe="{% url 'room_ht_update' pk=obj.id %}" data-toggle="modal" data-title="关联户型">
 				{{ obj.house_type.name }} <i class="icon icon-edit"></i></a></td>
-			<td><p>单价：<a data-iframe="{% url 'room_price_update' pk=obj.id %}"
+			<td><p><a data-iframe="{% url 'room_price_update' pk=obj.id %}"
                     data-toggle="modal" data-title="编辑单价">{{ obj.unit_price }}
                  <i class="icon icon-pencil"/></a></p></td>
+			<td>{{obj.area}} 平米</td>
 			<td>{{ obj.status|yesno:"上架,未上架"}}</td>
-			<td>TODO</td>
+			<td>{{obj.is_sole|yesno:"已选购,未选购"}}</td>
 			<td>{% if obj.sign %}<i class="icon icon-check"></i>{% endif %}</td>
-			<td>qr</td>
 			<td>
         <p><a href="javascript:void(0)" data-id="{{obj.id}}" class="status">{{obj.status|yesno:'取消上架,上架'}}</a></p>
 				<p><a data-iframe="{% url 'room_remark_update' pk=obj.id %}" data-toggle="modal">情况描述</a></p>
@@ -145,7 +145,7 @@
 {% block js %}
 <script type="text/javascript">
 $(document).ready(function(){
-	$('table.datatable').datatable({ sortable: true, });
+	$('table.datatable').datatable();
 	$('.status').on('click', function(e){
 		$("#status_status").val($(e.currentTarget).data("id"));
         $("#status_issue").modal();

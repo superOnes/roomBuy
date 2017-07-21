@@ -684,7 +684,8 @@ class HouseTypeRelatedView(View):
         if event.type == Event.APT:
             eventdetails = event.eventdetail_set.all()
             for ed in eventdetails:
-                house_type = HouseType.get_obj_by_num(str(ed.room_num)[-1])
+                house_type = HouseType.get_obj_by_num(str(ed.room_num)[-1],
+                                                      event_id)
                 if house_type and not ed.house_type:
                     ed.house_type = house_type
                     ed.save()

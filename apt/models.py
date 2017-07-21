@@ -71,8 +71,8 @@ class HouseType(models.Model):
     num = models.IntegerField('编号', null=True, blank=True)
 
     @classmethod
-    def get_obj_by_num(cls, num):
-        return cls.objects.filter(num=num).first()
+    def get_obj_by_num(cls, num, eid):
+        return cls.objects.filter(num=num, event_id=eid).first()
 
     @classmethod
     def get(cls, id):
