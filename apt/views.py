@@ -712,7 +712,7 @@ class OrderListView(View):
                                        Q(user__customer__mobile__icontains=value))
         if queryset:
             order_list = [{'id': od.id,
-                           'time': od.time.strftime("%Y %m %d %H:%M:%S"),
+                           'time': od.time.strftime("%Y-%m-%d %H:%M:%S"),
                            'room_num': od.eventdetail.room_num,
                            'unit_price': od.eventdetail.unit_price,
                            'area': od.eventdetail.area,
