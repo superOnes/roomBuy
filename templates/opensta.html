@@ -72,7 +72,7 @@ $(document).ready(function(){
 //	活动下拉框列表的显示请求
 	$.ajax({
 		type:"get",
-		url:"/event/getevent/",
+		url:"/getevent/",
 		async:true,
 		success:function(results){
 			var result =results.data;
@@ -88,7 +88,7 @@ $(document).ready(function(){
 	})
 //	默认获取的数据
 	statisticsData();
-	
+
 //	活动列表选择时数据的切换显示
 	$(".selectInp").change(function(){
 		var val = $(this).val();
@@ -100,9 +100,9 @@ $(document).ready(function(){
 	$("ul.nav-tabs li").click(function(){
 		var id = $(".selectInp").val();
 		if($(this).index() == 0){
-			$exportEach.attr("href","/event/exportbuyhot?id="+id)
+			$exportEach.attr("href","/export/buyhot/?id="+id)
 		}else{
-			$exportEach.attr("href","/event/exporthousehot?id="+id)
+			$exportEach.attr("href","/export/househot/?id="+id)
 		};
 	});
 });

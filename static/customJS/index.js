@@ -35,7 +35,7 @@ function roomPriceFile(thisID){
     data.append('id', thisID);
 	$.ajax({
 		type:"POST",
-		url:"/event/importprice/",
+		url:"/import/rooms/",
 		async:true,
 		data:data,
 		cache: false,
@@ -80,7 +80,7 @@ function statisticsData(thisId){
 	$.ajax({
 		type:"get",
 		data:{id:thisId},
-		url:"/event/househeat/",
+		url:"/househeat/",
 		async:true,
 		dataType:'JSON',
 		success:function(results){
@@ -102,7 +102,7 @@ function statisticsData(thisId){
 	$.ajax({
 		type:"get",
 		data:{id:thisId},
-		url:"/event/purcharseheat/",
+		url:"/purcharseheat/",
 		async:true,
 		dataType:'JSON',
 		success:function(results){
@@ -125,7 +125,7 @@ function getorderSelect(){
 //	活动下拉框列表的显示请求
 	$.ajax({
 		type:"get",
-		url:"/event/getevent/",
+		url:"/getevent/",
 		async:true,
 		success:function(results){
 			var result =results.data;
@@ -147,7 +147,7 @@ function getorderList(thisId,is_test,searchValue){
 	$.ajax({
 		type:"get",
 		data:{id:thisId,is_test:is_test,value:searchValue},
-		url:"/event/orderlist/",
+		url:"/orderlist/",
 		asunc:true,
 		success:function(results){
 			$exportEach.attr("href","/event/exportorder/?id="+thisId+"&is_test="+is_test+"&value="+searchValue);
@@ -168,7 +168,7 @@ function getorderList(thisId,is_test,searchValue){
 //文件图片上传显示
 	function getPath(obj,fileQuery,transImg) {
 	  var imgSrc = '', imgArr = [], strSrc = '' ;
-	 
+
 	  if(window.navigator.userAgent.indexOf("MSIE")>=1){ // IE浏览器判断
 	  if(obj.select){
 	   obj.select();
@@ -184,7 +184,7 @@ function getorderList(thisId,is_test,searchValue){
 	    "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+path+"', sizingMethod='scale');"; // IE通过滤镜的方式实现图片显示
 	   }else{
 	   //try{
-	   throw new Error('File type Error! please image file upload..'); 
+	   throw new Error('File type Error! please image file upload..');
 	   //}catch(e){
 	   // alert('name: ' + e.name + 'message: ' + e.message) ;
 	   //}
@@ -203,14 +203,14 @@ function getorderList(thisId,is_test,searchValue){
 	   // alert('name: ' + e.name + 'message: ' + e.message) ;
 	   //}
 	   }
-	 
+
 	  }
-	 
+
 	  } else{
 	  var file =fileQuery.files[0];
 	  var reader = new FileReader();
 	  reader.onload = function(e){
-	 
+
 	   imgSrc = fileQuery.value ;
 	   imgArr = imgSrc.split('.') ;
 	   strSrc = imgArr[imgArr.length - 1].toLowerCase() ;
@@ -223,8 +223,8 @@ function getorderList(thisId,is_test,searchValue){
 	   // alert('name: ' + e.name + 'message: ' + e.message) ;
 	   //}
 	   }
-	 
-	   // alert(e.target.result); 
+
+	   // alert(e.target.result);
 	  }
 	  reader.readAsDataURL(file);
 	  }

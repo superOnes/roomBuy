@@ -94,6 +94,23 @@ class EventTermUpdateView(DialogMixin, UpdateView):
 
 
 @method_decorator(admin_required, name='dispatch')
+class EventStatus(View):
+    '''
+    活动发布情况 发布/未发布
+    '''
+
+    def put(self, request):
+        put = QueryDict(request.body, encoding=request.encoding)
+        id = put.get('id')
+        if id:
+            obj = Event.get(id)
+            obj.is_pub = not obj.is_pub
+            obj.save()
+            return JsonResponse({'success': True})
+        return JsonResponse({'success': False})
+
+
+@method_decorator(admin_required, name='dispatch')
 class EventDetailListView(ListView):
     '''
     房源/车位列表
@@ -132,7 +149,7 @@ class EventDetailCreateView(DialogMixin, CreateView):
 
 
 @method_decorator(admin_required, name='dispatch')
-class EventDetailTotalUpdateView(DialogMixin, UpdateView):
+class EventDetailPriceUpdateView(DialogMixin, UpdateView):
     '''
     编辑线上总价
     '''
@@ -151,6 +168,7 @@ class EventDetailRemarkUpdateView(DialogMixin, UpdateView):
     fields = ['remark', 'image']
 
 
+@method_decorator(admin_required, name='dispatch')
 class EventDetailSignUpdateView(DialogMixin, UpdateView):
     '''
     备注
@@ -173,24 +191,7 @@ class EventDetailHTUpdateView(DialogMixin, UpdateView):
 
 
 @method_decorator(admin_required, name='dispatch')
-class EventStatus(View):
-    '''
-    活动发布情况 发布/未发布
-    '''
-
-    def put(self, request):
-        put = QueryDict(request.body, encoding=request.encoding)
-        id = put.get('id')
-        if id:
-            obj = Event.get(id)
-            obj.is_pub = not obj.is_pub
-            obj.save()
-            return JsonResponse({'success': True})
-        return JsonResponse({'success': False})
-
-
-@method_decorator(admin_required, name='dispatch')
-class EventDelStatus(View):
+class EventDetailStatus(View):
     '''
     车位/房源  上架/下架
     '''
@@ -207,7 +208,7 @@ class EventDelStatus(View):
 
 
 @method_decorator(admin_required, name='dispatch')
-class EventDelDel(View):
+class EventDetailDel(View):
     '''
     车位/房源  删除
     '''
@@ -221,9 +222,9 @@ class EventDelDel(View):
 
 
 @method_decorator(admin_required, name='dispatch')
-class ImportPriceView(View):
+class ImportEventDetailView(View):
     '''
-    导入数据
+    导入车位房源
     '''
 
     def post(self, request, *args, **kwargs):
@@ -270,9 +271,9 @@ class ImportPriceView(View):
 
 
 @method_decorator(admin_required, name='dispatch')
-class ExportView(View):
+class ExportEventDetailView(View):
     '''
-    导出房价
+    导出车位房源
     '''
 
     def get(self, request, pk):
@@ -299,10 +300,75 @@ class ExportView(View):
             sheet.save(sio)
             sio.seek(0)
             response = HttpResponse(content_type='application/vnd.ms-excel')
-            response['Content-Disposition'] = 'attachment;filename=fangyuanxinxi.xls'
+            response['Content-Disposition'] = 'attachment;filename=\
+                                               fangyuanxinxi.xls'
             response.write(sio.getvalue())
             return response
         return JsonResponse({'msg': '内容为空！'})
+
+
+@method_decorator(admin_required, name='dispatch')
+class CustomListView(ListView):
+    '''
+    认筹名单列表
+    '''
+    template_name = 'customer_list.html'
+    model = Customer
+
+    def get_queryset(self):
+        self.value = self.request.GET.get('value')
+        self.event = Event.get(self.kwargs['pk'])
+        queryset = self.model.objects.filter(event=self.event).order_by('-id')
+        if self.value:
+            queryset = queryset.filter(Q(realname__icontains=self.value) |
+                                       Q(mobile__icontains=self.value) |
+                                       Q(identication__icontains=self.value)
+                                       ).order_by('-id')
+        return queryset
+
+    def get_context_data(self):
+        context = super(CustomListView, self).get_context_data()
+        context['event'] = self.event
+        context['value'] = self.value
+        return context
+
+
+@method_decorator(admin_required, name='dispatch')
+class CustomCreateView(DialogMixin, CreateView):
+    '''
+    添加认筹名单
+    '''
+    form_class = CustomerForm
+    template_name = 'popup/customer_create.html'
+
+    def get_initial(self):
+        initial = super(CustomCreateView, self).get_initial()
+        initial['event'] = Event.get(self.kwargs['pk'])
+        return initial
+
+
+@method_decorator(admin_required, name='dispatch')
+class CustomerCountUpdateView(DialogMixin, UpdateView):
+    '''
+    修改可选套数
+    '''
+    template_name = 'popup/customer_count.html'
+    model = Customer
+    fields = ['count']
+
+
+@method_decorator(admin_required, name='dispatch')
+class CustomerDeleteView(View):
+    '''
+    删除认筹名单
+    '''
+
+    def post(self, request):
+        id = request.POST.get('id')
+        if id:
+            Customer.get(id).delete()
+            return JsonResponse({'success': True})
+        return JsonResponse({'success': False})
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -529,69 +595,6 @@ def url2qrcode(request, data):
     image_stream = buf.getvalue()
     response = HttpResponse(image_stream, content_type="image/png")
     return response
-
-
-@method_decorator(admin_required, name='dispatch')
-class CustomListView(ListView):
-    '''
-    认筹名单列表
-    '''
-    template_name = 'customer_list.html'
-    model = Customer
-
-    def get_queryset(self):
-        self.value = self.request.GET.get('value')
-        self.event = Event.get(self.kwargs['pk'])
-        queryset = self.model.objects.filter(event=self.event).order_by('-id')
-        if self.value:
-            queryset = queryset.filter(Q(realname__icontains=self.value) |
-                                       Q(mobile__icontains=self.value) |
-                                       Q(identication__icontains=self.value)).order_by('-id')
-        return queryset
-
-    def get_context_data(self):
-        context = super(CustomListView, self).get_context_data()
-        context['event'] = self.event
-        context['value'] = self.value
-        return context
-
-
-@method_decorator(admin_required, name='dispatch')
-class CustomCreateView(DialogMixin, CreateView):
-    '''
-    添加认筹名单
-    '''
-    form_class = CustomerForm
-    template_name = 'popup/customer_create.html'
-
-    def get_initial(self):
-        initial = super(CustomCreateView, self).get_initial()
-        initial['event'] = Event.get(self.kwargs['pk'])
-        return initial
-
-
-@method_decorator(admin_required, name='dispatch')
-class CustomerCountUpdateView(DialogMixin, UpdateView):
-    '''
-    修改可选套数
-    '''
-    template_name = 'popup/customer_count.html'
-    model = Customer
-    fields = ['count']
-
-
-@method_decorator(admin_required, name='dispatch')
-class DeleteCustomerView(View):
-    '''
-    删除认筹名单
-    '''
-
-    def post(self, request):
-        id = request.POST.get('id')
-        if id:
-            Customer.get(id).delete()
-            return JsonResponse({'success': True})
-        return JsonResponse({'success': False})
 
 
 @method_decorator(admin_required, name='dispatch')
