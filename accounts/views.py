@@ -31,7 +31,7 @@ class LoginView(View):
     def post(self, request, *args, **kwargs):
         username = request.POST.get('username')
         password = request.POST.get('password')
-        nxt = request.POST.get('next', '/event/list/')
+        nxt = request.POST.get('next', '/')
         user = authenticate(username=username, password=password)
         if user:
             if user.is_admin:

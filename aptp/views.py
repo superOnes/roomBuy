@@ -139,7 +139,7 @@ class AppEventDetailHouseInfoView(View):
                   'realname': user.customer.realname,
                   'mobile': user.customer.mobile,
                   'identication': user.customer.identication,
-                  'building_unit': eventdetobj.building + '号楼' + eventdetobj.unit + '单元' + str(eventdetobj.floor) + '层' + house + '室',
+                  'building_unit': eventdetobj.building + '号楼 ' + eventdetobj.unit + '单元 ' + str(eventdetobj.floor) + '层 ' + house + '室',
                   'total': '***' if test and not eventdetobj.event.test_price else (int(eventdetobj.area) * int(eventdetobj.unit_price)),
                   'house_type': eventdetobj.house_type.name,
                   'pic': eventdetobj.house_type.pic.url,
