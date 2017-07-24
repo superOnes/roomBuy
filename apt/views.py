@@ -326,8 +326,8 @@ class ExportEventDetailView(View):
                 s.write(row, 4, obj.room_num)
                 s.write(row, 5, obj.unit_price)
                 s.write(row, 6, obj.area)
-                s.write(row, 5, obj.looking)
-                s.write(row, 6, obj.term)
+                s.write(row, 7, obj.looking)
+                s.write(row, 8, obj.term)
                 row += 1
             sio = BytesIO()
             sheet.save(sio)
@@ -869,7 +869,13 @@ class OrderListView(View):
         if queryset:
             order_list = [{'id': od.id,
                            'time': od.time.strftime("%Y-%m-%d %H:%M:%S"),
-                           'room_num': od.eventdetail.room_num,
+                           'room_num': od.eventdetail.building +
+                           '-' +
+                           od.eventdetail.unit +
+                           '-' +
+                           str(od.eventdetail.floor) +
+                           '-' +
+                           str(od.eventdetail.room_num),
                            'unit_price': od.eventdetail.unit_price,
                            'area': od.eventdetail.area,
                            'realname': od.user.customer.realname,

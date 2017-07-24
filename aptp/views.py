@@ -252,11 +252,9 @@ class AppHouseChoiceConfirmView(View):
                                 eventdetail=eventdetail,
                                 order_num=time.strftime('%Y%m%d%H%M%S'))
                             eventdetail.is_sold = True
-                            user.customer.protime = time.time()
-                            user.save()  # 同意协议时间
                             eventdetail.save()
                             if a.time.strftime('%Y%m%d %H:%M:%S') <= a.eventdetail.event.test_end.strftime(
-                                    '%Y%m%d %H:%M:%S'):  # 判断是否是公测订单还是开盘订单
+                                    '%Y%m%d %H:%M:%S'):  # 判断是公测订单还是开盘订单
                                 a.is_test = True
                                 eventdetail.is_testsold = True
                                 a.save()

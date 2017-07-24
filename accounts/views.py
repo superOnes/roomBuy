@@ -193,7 +193,9 @@ class CustomerLoginView(View):
                     password=identication)
                 if user:
                     if not user.is_admin:
+
                         login(request, user)
+                        request.session.set_expiry(300)#session 过期时间
                         return JsonResponse(
                             {'response_state': 200, 'id': eventid})
                     return JsonResponse({'response_state': 400})
