@@ -148,13 +148,13 @@
 		<div class="form-group">
 		    <label class="col-sm-3 col-lg-3 control-label">平面图</label>
 		    <div class="col-sm-9 col-lg-9">
-		    	<input type="file" class="form-control" id="plane_graph" onchange='showPlane()' name="plane_graph">
+		    	<input type="file" class="form-control" id="plane_graph" name="plane_graph" multiple="multiple">
 		    </div>
 		    <div class="col-sm-9" style="margin:10px 0 0 25%;">
 		    	<p style="margin: 0;">当前文件为<span class="plane_graph_img_file" style="margin-left:20px;">{{form.plane_graph.value|default:''}}</span></p>
 		    </div>
-			<div class="col-sm-9" style="margin:10px 0 0 25%;">
-			 	<img src='{{MEDIA_URL}}{{object.plane_graph}}' alt='' id='plane_graph_img' />
+			<div class="col-sm-9" style="margin:10px 0 0 25%;" id="plane_graph_img">
+			 	<!--<img width="45%" style="margin: 5px;" src='{{MEDIA_URL}}{{object.plane_graph}}' alt='' class='plane_graph_img' />-->
 		    </div>
 		</div>
 		<input type="text" name="company" value="{{form.company.value|default:''}}" style="display:none">
@@ -169,25 +169,37 @@ $(document).ready(function(){
 	var coverImgFile = $(".coverImgFile").html();
 	var coverImgFiles = coverImgFile.slice(17);//截取获取文件的文件名
 	$(".coverImgFile").html(coverImgFiles);
-//	平面图
-	var plane_graph_img_file = $(".plane_graph_img_file").html();
-	var plane_graph_img_files = plane_graph_img_file.slice(22);//截取获取文件的文件名
-	$(".plane_graph_img_file").html(plane_graph_img_files);
+//	封面图
+	var coverImgFile = $(".plane_graph_img_file").html();
+	var plane_graphs = coverImgFile.slice(22);//截取获取文件的文件名
+	$(".plane_graph_img_file").html(coverImgFiles);
+	
+//	平面图显示
+	$("#plane_graph_img").append("<img width='45%' style='margin: 5px;' src='{{MEDIA_URL}}{{object.plane_graph}}' alt=''/>");
 });
-	//平面图显示
-	function showPlane(){
-	  //以下即为完整客户端路径
-	  var file_img=document.getElementById("plane_graph_img"),
-	  iptfileupload = document.getElementById('plane_graph') ;
-	  getPath(file_img,iptfileupload,file_img) ;
-	 };
 	//活动封面显示
 	function showCover(){
 	  //以下即为完整客户端路径
-	  var file_img=document.getElementById("coverImg"),
-	  iptfileupload = document.getElementById('cover') ;
-	  getPath(file_img,iptfileupload,file_img) ;
-	 };
+  	var file_img=document.getElementById("coverImg");
+  		iptfileupload = document.getElementById('cover');
+  		getPath(file_img,iptfileupload,file_img) ;
+ 	};
+	 
+// 	多个图片上传显示
+ 	$("#plane_graph").change(function () {
+		var fil = this.files; //获取文件的详细信息
+		for (var i = 0; i < fil.length; i++) {
+			reads(fil[i]);
+		}
+	});
+	function reads(fil){
+		var reader = new FileReader();
+		reader.readAsDataURL(fil);
+		reader.onload = function(){
+			$("#plane_graph_img").append("<img width='45%' style='margin: 5px;' src="+reader.result+" alt=''/>");
+		};
+ 	}
+ 	 
 		// 选择时间和日期
 	$(".form-datetime").datetimepicker({
 	    weekStart: 1,
@@ -198,6 +210,6 @@ $(document).ready(function(){
 	    forceParse: 0,
 	    showMeridian: 1,
 	    format: "yyyy-mm-dd hh:ii"
-	})
+	});
 </script>
 {% endblock %}
