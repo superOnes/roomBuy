@@ -76,7 +76,6 @@ $(document).ready(function(){
 		async:true,
 		success:function(results){
 			var result =results.data;
-			console.log(result.length)
 			for(var i=0; i<result.length; i++){
 				$(".selectInp").append("<option value='"+result[i].id+"'>"+result[i].name+"</option>");
 			};
