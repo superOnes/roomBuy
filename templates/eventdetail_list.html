@@ -68,9 +68,9 @@
 			<td>{{ forloop.counter }}</td>
 			<td>{{ obj.room_num }}</td>
 			<td><p><a data-iframe="{% url 'room_price_update' pk=obj.id %}"
-                    data-toggle="modal" data-title="编辑单价">{{ obj.unit_price }}
+                    data-toggle="modal" data-title="编辑单价">{{ obj.unit_price }}元/㎡
                  <i class="icon icon-pencil"/></a></p></td>
-			<td>{{obj.area}} 平米</td>
+			<td>{{obj.area}} ㎡</td>
 			<td>朝  {{obj.looking}}</td>
 			<td>{{obj.term}} 年</td>
 			<td>{{ obj.status|yesno:"上架,未上架"}}</td>
