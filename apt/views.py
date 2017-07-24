@@ -1,4 +1,5 @@
 import os
+import base64
 import qrcode
 import xlrd
 from xlwt import Workbook
@@ -29,6 +30,24 @@ class DialogMixin(object):
         return resolve_url('dialog_success')
 
 
+def url2qrcode(data):
+    '''
+    二维码
+    '''
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=1
+    )
+    qr.add_data(data)
+    img = qr.make_image()
+    buf = BytesIO()
+    img.save(buf)
+    image_stream = buf.getvalue()
+    return base64.b64encode(image_stream)
+
+
 @method_decorator(admin_required, name='dispatch')
 class EventListView(ListView):
     '''
@@ -42,6 +61,9 @@ class EventListView(ListView):
         queryset = self.model.get_all_by_company(self.request.user.company.id)
         if self.value:
             queryset = queryset.filter(Q(name__contains=self.value))
+        for obj in queryset:
+            obj.qr = url2qrcode('10.7.10.193:8000/app/' + str(obj.id))
+            obj.save()
         return queryset
 
     def get_context_data(self):
@@ -281,7 +303,16 @@ class ExportEventDetailView(View):
         if objs:
             sheet = Workbook(encoding='utf-8')
             s = sheet.add_sheet('数据表')
-            list = ['选房房源id', '楼栋', '单元', '楼层', '房号', '面积单价', '建筑面积','朝向','使用年限']
+            list = [
+                '选房房源id',
+                '楼栋',
+                '单元',
+                '楼层',
+                '房号',
+                '面积单价',
+                '建筑面积',
+                '朝向',
+                '使用年限']
             col = 0
             for i in list:
                 s.write(0, col, i)
@@ -566,7 +597,7 @@ class ExportOrderView(View):
                 col += 1
             row = 1
             for obj in objs:
-                s.write(row, 0, obj.time)
+                s.write(row, 0, obj.time.strftime("%Y/%m/%d %H:%M:%S"))
                 s.write(row, 1, obj.eventdetail.room_num)
                 s.write(row, 2, obj.eventdetail.unit_price)
                 s.write(row, 3, obj.eventdetail.area)
@@ -586,17 +617,66 @@ class ExportOrderView(View):
         return JsonResponse({'msg': '内容为空！'})
 
 
+class CustomListView(ListView):
+    '''
+    认筹名单列表
+    '''
+    template_name = 'customer_list.html'
+    model = Customer
+
+    def get_queryset(self):
+        self.value = self.request.GET.get('value')
+        self.event = Event.get(self.kwargs['pk'])
+        queryset = self.model.objects.filter(event=self.event).order_by('-id')
+        if self.value:
+            queryset = queryset.filter(Q(realname__icontains=self.value) |
+                                       Q(mobile__icontains=self.value) |
+                                       Q(identication__icontains=self.value)).order_by('-id')
+        return queryset
+
+    def get_context_data(self):
+        context = super(CustomListView, self).get_context_data()
+        context['event'] = self.event
+        context['value'] = self.value
+        return context
+
+
 @method_decorator(admin_required, name='dispatch')
-def url2qrcode(request, data):
+class CustomCreateView(DialogMixin, CreateView):
     '''
-    二维码
+    添加认筹名单
     '''
-    img = qrcode.make(data)
-    buf = BytesIO()
-    img.save(buf)
-    image_stream = buf.getvalue()
-    response = HttpResponse(image_stream, content_type="image/png")
-    return response
+    form_class = CustomerForm
+    template_name = 'popup/customer_create.html'
+
+    def get_initial(self):
+        initial = super(CustomCreateView, self).get_initial()
+        initial['event'] = Event.get(self.kwargs['pk'])
+        return initial
+
+
+@method_decorator(admin_required, name='dispatch')
+class CustomerCountUpdateView(DialogMixin, UpdateView):
+    '''
+    修改可选套数
+    '''
+    template_name = 'popup/customer_count.html'
+    model = Customer
+    fields = ['count']
+
+
+@method_decorator(admin_required, name='dispatch')
+class DeleteCustomerView(View):
+    '''
+    删除认筹名单
+    '''
+
+    def post(self, request):
+        id = request.POST.get('id')
+        if id:
+            Customer.get(id).delete()
+            return JsonResponse({'success': True})
+        return JsonResponse({'success': False})
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -656,10 +736,12 @@ class PurcharseHeatView(View):
                        'openroom': ''
                        }
             if testorder:
-                ct_list['testtime'] = testorder.time.strftime("%Y/%m/%d %H:%M:%S")
+                ct_list['testtime'] = testorder.time.strftime(
+                    "%Y/%m/%d %H:%M:%S")
                 ct_list['testroom'] = testorder.eventdetail.room_num
             if openorder:
-                ct_list['opentime'] = openorder.time.strftime("%Y/%m/%d %H:%M:%S")
+                ct_list['opentime'] = openorder.time.strftime(
+                    "%Y/%m/%d %H:%M:%S")
                 ct_list['openroom'] = openorder.eventdetail.room_num
             li.append(ct_list)
         return JsonResponse({'success': True, 'data': li})
