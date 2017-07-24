@@ -215,7 +215,7 @@ function getorderList(thisId,is_test,searchValue){
 	   imgArr = imgSrc.split('.') ;
 	   strSrc = imgArr[imgArr.length - 1].toLowerCase() ;
 	   if(strSrc.localeCompare('jpg') === 0 || strSrc.localeCompare('jpeg') === 0 || strSrc.localeCompare('gif') === 0 || strSrc.localeCompare('png') === 0){
-	   obj.setAttribute("src", e.target.result) ;
+	   		obj.setAttribute("src", e.target.result) ;
 	   }else{
 	   //try{
 	   throw new Error('File type Error! please image file upload..') ;
