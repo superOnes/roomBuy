@@ -274,7 +274,7 @@ class ImportView(View):
                 if Customer.objects.filter(event_id=id, mobile=ct[1]).exists():
                     continue
                 else:
-                    with transaction.atomic:
+                    with transaction.atomic():
                         customer = Customer.objects.create(realname=ct[0],
                                                            mobile=ct[1],
                                                            identication=ct[2],
