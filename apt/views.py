@@ -861,7 +861,7 @@ class OrderListView(View):
         else:
             last_event = Event.get_last_event(request.user.company.id)
             queryset = Order.objects.filter(
-                eventdetail__event=last_event, is_test=1)
+                eventdetail__event=last_event, is_test=0)
         if value:
             queryset = queryset.filter(Q(user__customer__realname__icontains=value) |
                                        Q(user__customer__mobile__icontains=value) |
