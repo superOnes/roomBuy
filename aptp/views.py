@@ -1,12 +1,14 @@
 import time
+from datetime import datetime
 
 from django.views.generic import View
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
+from django.db import connection, transaction
 
 from apt.models import Event, EventDetail
 from aptp.models import Follow
-from accounts.models import Order
+from accounts.models import Order, Customer
 from accounts.decorators import customer_login_required, customer_login_time
 
 
@@ -229,64 +231,68 @@ class AppHouseChoiceConfirmView(View):
     '''
 
     def post(self, request):
-        user = request.user
         house = request.POST.get('house')
-        try:
-            eventdetail = EventDetail.get(house)
-            if eventdetail.sign:
-                Order.objects.create(
-                    user=eventdetail.sign,
-                    eventdetail=eventdetail,
-                    order_num=time.strftime('%Y%m%d%H%M%S'))
-                eventdetail.is_sold = True
-                eventdetail.save()
-                return JsonResponse({'response_state': 400})
-            else:
-                if not eventdetail.is_sold:
-                    if not Order.objects.filter(
-                            user=user,
-                            eventdetail=eventdetail):
-                        if user.order_set.count() < user.customer.count:
-                            a = Order.objects.create(
-                                user=user,
-                                eventdetail=eventdetail,
-                                order_num=time.strftime('%Y%m%d%H%M%S'))
-                            eventdetail.is_sold = True
-                            eventdetail.save()
-                            if a.time.strftime('%Y%m%d %H:%M:%S') <= a.eventdetail.event.test_end.strftime(
-                                    '%Y%m%d %H:%M:%S'):  # 判断是公测订单还是开盘订单
-                                a.is_test = True
-                                eventdetail.is_testsold = True
-                                a.save()
-                                eventdetail.save()
-                            else:
-                                a.is_test = False
-                                a.save()
-                        else:
-                            return JsonResponse(
-                                {'response_state': 400})  # 购买超过限制数
-                    else:
-                        return JsonResponse({'response_state': 400})  # 已经购买了
-                else:
-                    return JsonResponse({'response_state': 400})  # 被卖了
-        except BaseException:
-            return JsonResponse({'response_state': 400})
-        else:
-            return JsonResponse(
-                {
-                    'response_state': 200,
-                    'room_info': (
-                        eventdetail.building +
-                        '-' +
-                        eventdetail.unit +
-                        '-' +
-                        str(eventdetail.floor) +
-                        '-' +
-                        str(eventdetail.room_num)),
-                    'limit': eventdetail.event.limit,
-                    'ordertime': a.time,
-                    'orderid': a.id,
-                })
+        cursor = connection.cursor()
+        cursor.execute('SELECT id,is_sold,sign_id,event_id,is_testsold,\
+                        building,unit,floor,room_num FROM apt_eventdetail \
+                        where id=%s FOR UPDATE' % house)
+        # cursor.execute('SELECT id,is_sold,sign_id,event_id,is_testsold,\
+        #                 building,unit,floor,room_num FROM apt_eventdetail \
+        #                 where id=%s' % house)
+        obj = cursor.fetchone()
+        if obj is None:
+            return JsonResponse({'response_state': 404, 'msg': '目标不存在'})
+        event = Event.get(obj[3])
+        now = datetime.now()
+        if (now >= event.test_start) and (now <= event.test_end):
+            if not obj[4]:
+                with transaction.atomic():
+                    order = Order.objects.get_or_create(user=request.user,
+                                                        eventdetail_id=obj[0],
+                                                        order_num=time.strftime
+                                                        ('%Y%m%d%H%M%S'))
+                    cursor.execute('UPDATE apt_eventdetail set is_testsold=1 \
+                                    where id=%s' % house)
+                return JsonResponse({'response_state': 200,
+                                     'room_info': ('%s-%s-%s-%s') %
+                                                  (obj[5], obj[6], obj[7],
+                                                   obj[8]),
+                                     'limit': event.limit,
+                                     'ordertime': order.time,
+                                     'orderid': order.order_num,
+                                     })
+        elif (now >= event.event_start) and (now <= event.event_end):
+            if not obj[1] and not obj[2]:
+                with transaction.atomic():
+                    order = Order.objects.create(user=request.user,
+                                                 eventdetail_id=obj[0],
+                                                 order_num=time.strftime
+                                                 ('%Y%m%d%H%M%S'),
+                                                 is_test=False)
+                    cursor.execute('UPDATE apt_eventdetail set is_sold=1 \
+                                    where id=%s' % house)
+                return JsonResponse({'response_state': 200,
+                                     'room_info': ('%s-%s-%s-%s') %
+                                                  (obj[5], obj[6], obj[7],
+                                                   obj[8]),
+                                     'limit': event.limit,
+                                     'ordertime': order.time,
+                                     'orderid': order.order_num,
+                                     })
+            elif obj[2]:
+                with transaction.atomic():
+                    customer = Customer.get(obj[2])
+                    Order.objects.create(user_id=customer.user.id,
+                                         eventdetail_id=obj[0],
+                                         order_num=time.strftime
+                                         ('%Y%m%d%H%M%S'),
+                                         is_test=False)
+                    cursor.execute('UPDATE apt_eventdetail set is_sold=1 \
+                                    where id=%s' % house)
+                return JsonResponse({'response_state': 400,
+                                     'msg': '购买失败，房屋已卖出'})
+
+        return JsonResponse({'response_state': 400, 'msg': '购买失败'})
 
 
 @method_decorator(customer_login_time, name='dispatch')

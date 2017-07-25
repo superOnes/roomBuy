@@ -76,7 +76,7 @@
 			<td>{{ obj.status|yesno:"上架,未上架"}}</td>
 			<td><a data-iframe="{% url 'room_ht_update' pk=obj.id %}" data-toggle="modal" data-title="关联户型">
 				{{ obj.house_type.name }} <i class="icon icon-edit"></i></a></td>
-			<td>{{obj.is_sole|yesno:"已选购,未选购"}}</td>
+			<td>{{obj.is_sold|yesno:"已选购,未选购"}}</td>
 			<td>{% if obj.sign %}<i class="icon icon-check"></i>{% endif %}</td>
 			<td>
         <p><a href="javascript:void(0)" data-id="{{obj.id}}" class="status">{{obj.status|yesno:'取消上架,上架'}}</a></p>

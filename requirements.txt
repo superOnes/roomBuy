@@ -1,6 +1,8 @@
 Django==1.10.7
 olefile==0.44
 Pillow==4.2.0
+psycopg2==2.7.3
+qrcode==5.3
+six==1.10.0
 xlrd==1.0.0
 xlwt==1.2.0
-qrcode==5.3
