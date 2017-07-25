@@ -4,7 +4,7 @@ from .views import (EventListView, EventCreateView, ImportEventDetailView,
                     ExportEventDetailView, ExportCustomerView, EventUpdateView,
                     EventDetailView, EventDetailListView,
                     EventDetailPriceUpdateView, EventTermUpdateView,
-                    url2qrcode, EventDetailCreateView,
+                    EventDetailCreateView,
                     EventDetailRemarkUpdateView, CustomListView,
                     CustomCreateView, EventStatus, EventDetailStatus,
                     EventDetailDel,
@@ -27,7 +27,6 @@ urlpatterns = [
     url(r'^(?P<pk>\d+)/termupdate/', EventTermUpdateView.as_view(),
         name='event_term_update'),
     url(r'^pubstatus/', EventStatus.as_view(), name='event_status'),
-    url(r'^qrcode/(.+)', url2qrcode, name='qrcode'),
 
     # 车位房源
     url(r'^(?P<pk>\d+)/rooms/$', EventDetailListView.as_view(),

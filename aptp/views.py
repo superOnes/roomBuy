@@ -1,5 +1,6 @@
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
+
 
 from django.views.generic import View
 from django.http import JsonResponse
@@ -179,7 +180,7 @@ class AddFollow(View):
                     Follow.objects.create(
                         user=request.user, eventdetail=eventdetail)
                 else:
-                    return JsonResponse({'response_state': 400})
+                    return JsonResponse({'response_state': 403})  # 收藏超过限制
             else:
                 return JsonResponse({'response_state': 400})
         except BaseException:
@@ -291,7 +292,6 @@ class AppHouseChoiceConfirmView(View):
                                     where id=%s' % house)
                 return JsonResponse({'response_state': 400,
                                      'msg': '购买失败，房屋已卖出'})
-
         return JsonResponse({'response_state': 400, 'msg': '购买失败'})
 
 
@@ -317,7 +317,7 @@ class AppOrderListView(View):
                     str(obj.eventdetail.floor) +
                     '-' +
                     str(obj.eventdetail.room_num)),
-                'time': obj.time,
+                'time': obj.time.strftime('%Y/%m/%d %H:%M:%S'),
                 'event': obj.eventdetail.event.name,
                 'unit_price': obj.eventdetail.unit_price if obj.eventdetail.event.covered_space_price else '',
                 'choice_num': '0000000000000001',  # 这里需要确认一下
@@ -344,8 +344,8 @@ class AppOrderInfoView(View):
             value = [{
                 'eventname': obj.eventdetail.event.name,
                 'unit_price': obj.eventdetail.unit_price,
-                'limit': obj.eventdetail.event.limit,
-                'ordertime': obj.time.strftime('%Y/%m/%d %H:%M:%S'),
+                'limit': (obj.time + timedelta(hours=obj.eventdetail.event.limit)).strftime('%Y年%m月%d日 %H:%M:%S'),
+                'ordertime': obj.time.strftime('%Y%m/%d %H:%M:%S'),
                 'room_info': (
                     obj.eventdetail.event.name +
                     '-' +

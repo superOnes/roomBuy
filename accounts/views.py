@@ -1,6 +1,8 @@
 import os
 import xlrd
 import uuid
+import time
+from collections import Counter
 
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
@@ -17,7 +19,7 @@ from django.db import transaction
 from apt.models import Event, EventDetail
 from aptm import settings
 from .models import User, Customer, Order
-from .decorators import superadmin_required, login_time
+from .decorators import superadmin_required, login_time, customer_login_required
 
 
 class LoginView(View):
@@ -182,6 +184,13 @@ class CustomerLoginView(View):
         try:
             customer = Customer.objects.get(
                 mobile=mobile, identication=identication)
+            request.session[time.strftime("%Y%m%d%H%M%S")] = customer.realname + \
+                customer.mobile + customer.identication
+            count = Counter(
+                request.session.values()).get(
+                customer.realname +
+                customer.mobile +
+                customer.identication)
         except BaseException:
             return JsonResponse({'response_state': 400})
         else:
@@ -193,14 +202,27 @@ class CustomerLoginView(View):
                     password=identication)
                 if user:
                     if not user.is_admin:
-
-                        login(request, user)
-                        request.session.set_expiry(300)#session 过期时间
-                        return JsonResponse(
-                            {'response_state': 200, 'id': eventid})
+                        if count > Event.get(eventid).equ_login_num:
+                            return JsonResponse({'response_state': 402})
+                        else:
+                            login(request, user)
+                            request.session.set_expiry(300)
+                            return JsonResponse(
+                                {'response_state': 200, 'id': eventid})
                     return JsonResponse({'response_state': 400})
                 return JsonResponse({'response_state': 400})
             return JsonResponse({'response_state': 400})
+
+
+@method_decorator(customer_login_required, name='dispatch')
+class CustomerLogoutView(View):
+    '''
+    顾客退出登录
+    '''
+
+    def post(self, request):
+        logout(request)
+        return JsonResponse({'response_state': 200})
 
 
 @method_decorator(login_required, name='dispatch')
@@ -259,10 +281,11 @@ class ImportView(View):
                                                            remark=ct[3],
                                                            event=event)
                         customer.save()
-                        User.objects.create_user(username=uuid.uuid1(),
-                                                 password=customer.identication,
-                                                 customer=customer,
-                                                 is_admin=False)
+                        User.objects.create_user(
+                            username=uuid.uuid1(),
+                            password=customer.identication,
+                            customer=customer,
+                            is_admin=False)
             return JsonResponse({'success': True})
         return JsonResponse({'success': False})
 
