@@ -25,7 +25,7 @@ SECRET_KEY = '7wv3i-(8hj8lbev9&7!fsh8!&&up*k3ps27l))uxer-@x-)orn'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.7.10.193','0.0.0.0','127.0.0.1','10.7.10.198']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -78,23 +78,23 @@ WSGI_APPLICATION = 'aptm.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'aptm',
-#         'USER': '',
-#         'PASSWORD': '',
-#         'HOST': '10.7.1.34',
-#         'PORT': '',
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'aptm',
+        'USER': 'aptm',
+        'PASSWORD': 'xuanfang',
+        'HOST': 'localhost',
+        'PORT': '',
+    }
+}
 
 
 # Password validation
