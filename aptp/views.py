@@ -9,11 +9,11 @@ from django.db import connection, transaction
 
 from apt.models import Event, EventDetail
 from aptp.models import Follow
-from accounts.models import Order, Customer
+from accounts.models import Order, Customer, User
 from accounts.decorators import customer_login_required, customer_login_time
 
 
-@method_decorator(customer_login_required, name='dispatch')
+# @method_decorator(customer_login_required, name='dispatch')
 class AppEventDetailView(View):
     '''
     显示活动
@@ -36,14 +36,20 @@ class AppEventDetailView(View):
                 'tip': obj.tip,
                 'name': obj.name,
                 'plane_graph': obj.plane_graph.url,
+                'phone': obj.phone_num,
             }]
         context = {}
         context['objects'] = value
         context['response_state'] = 200
-        return JsonResponse(context)
+        response = JsonResponse(context)
+        response["Access-Control-Allow-Headers"] = '*'
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
+        return response
+
+# @method_decorator(customer_login_required, name='dispatch')
 
 
-@method_decorator(customer_login_required, name='dispatch')
 class AppEventDetailListView(View):
     '''
     车位/房源 楼号列表
@@ -60,14 +66,18 @@ class AppEventDetailListView(View):
             'event_name': eventobj.name,
             'customer_count': eventobj.customer_set.count(),
             'event_start': (eventobj.event_start).strftime("%Y/%m/%d %H:%M:%S"),
-            'building': list(set(buildinglist)),
+            'building': sorted(list(set(buildinglist))),
         }]
         context['objects'] = value
         context['response_state'] = 200
-        return JsonResponse(context)
+        response = JsonResponse(context)
+        response["Access-Control-Allow-Headers"] = '*'
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
+        return response
 
 
-@method_decorator(customer_login_required, name='dispatch')
+# @method_decorator(customer_login_required, name='dispatch')
 class AppEventDetailUnitListView(View):
     '''
     车位/房源 单元列表
@@ -87,10 +97,14 @@ class AppEventDetailUnitListView(View):
         }]
         context['objects'] = value
         context['response_state'] = 200
-        return JsonResponse(context)
+        response = JsonResponse(context)
+        response["Access-Control-Allow-Headers"] = '*'
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
+        return response
 
 
-@method_decorator(customer_login_required, name='dispatch')
+# @method_decorator(customer_login_required, name='dispatch')
 class AppEventDetailHouseListView(View):
     '''
     车位/房源 房号列表
@@ -114,18 +128,23 @@ class AppEventDetailHouseListView(View):
                 room_num_list.append(value)
         context['objects'] = room_num_list
         context['response_state'] = 200
-        return JsonResponse(context)
+        response = JsonResponse(context)
+        response["Access-Control-Allow-Headers"] = '*'
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
+        return response
 
 
-@method_decorator(customer_login_time, name='dispatch')
-@method_decorator(customer_login_required, name='dispatch')
+# @method_decorator(customer_login_time, name='dispatch')
+# @method_decorator(customer_login_required, name='dispatch')
 class AppEventDetailHouseInfoView(View):
     '''
     车位/房源 详情
     '''
 
     def get(self, request):
-        user = request.user
+        userid = request.GET.get('userid')
+        user = User.get(userid)
         house = request.GET.get('house')
         eventdetobj = EventDetail.get(house)
         eventdetobj.visit_num = eventdetobj.visit_num + 1
@@ -142,7 +161,7 @@ class AppEventDetailHouseInfoView(View):
                   'realname': user.customer.realname,
                   'mobile': user.customer.mobile,
                   'identication': user.customer.identication,
-                  'building_unit': eventdetobj.building + '号楼 ' + eventdetobj.unit + '单元 ' + str(eventdetobj.floor) + '层 ' + house + '室',
+                  'building_unit': eventdetobj.building + '号楼 ' + eventdetobj.unit + '单元 ' + str(eventdetobj.floor) + '层 ' + str(eventdetobj.room_num) + '室',
                   'total': '***' if test and not eventdetobj.event.test_price else (int(eventdetobj.area) * int(eventdetobj.unit_price)),
                   'house_type': eventdetobj.house_type.name,
                   'pic': eventdetobj.house_type.pic.url,
@@ -159,10 +178,15 @@ class AppEventDetailHouseInfoView(View):
         context = {}
         context['objects'] = value
         context['response_state'] = 200
-        return JsonResponse(context)
+        response = JsonResponse(context)
+        response["Access-Control-Allow-Headers"] = '*'
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
+        return response
+
+# @method_decorator(customer_login_required, name='dispatch')
 
 
-@method_decorator(customer_login_required, name='dispatch')
 class AddFollow(View):
     '''
     添加收藏
@@ -170,7 +194,8 @@ class AddFollow(View):
 
     def post(self, request):
         house = request.POST.get('house')
-        user = request.user
+        userid = request.POST.get('userid')
+        user = User.get(userid)
         try:
             eventdetail = EventDetail.get(house)
             if not Follow.objects.filter(
@@ -178,7 +203,7 @@ class AddFollow(View):
                     eventdetail=eventdetail):
                 if user.follow_set.count() < user.customer.event.follow_num:
                     Follow.objects.create(
-                        user=request.user, eventdetail=eventdetail)
+                        user=user, eventdetail=eventdetail)
                 else:
                     return JsonResponse({'response_state': 403})  # 收藏超过限制
             else:
@@ -186,17 +211,22 @@ class AddFollow(View):
         except BaseException:
             return JsonResponse({'response_state': 400})
         else:
-            return JsonResponse({'response_state': 200})
+            response = JsonResponse({'response_state': 200})
+            response["Access-Control-Allow-Headers"] = '*'
+            response["Access-Control-Allow-Origin"] = "*"
+            response["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
+            return response
 
 
-@method_decorator(customer_login_required, name='dispatch')
+# @method_decorator(customer_login_required, name='dispatch')
 class FollowView(View):
     '''
     用户收藏列表信息
     '''
 
     def get(self, request):
-        user = request.user
+        userid = request.GET.get('userid')
+        user = User.get(userid)
         objs = user.follow_set.all()
         context = {}
         list = []
@@ -221,11 +251,15 @@ class FollowView(View):
             list.append(value)
         context['objects'] = list
         context['response_state'] = 200
-        return JsonResponse(context)
+        response = JsonResponse(context)
+        response["Access-Control-Allow-Headers"] = '*'
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
+        return response
 
 
-@method_decorator(customer_login_time, name='dispatch')
-@method_decorator(customer_login_required, name='dispatch')
+# @method_decorator(customer_login_time, name='dispatch')
+# @method_decorator(customer_login_required, name='dispatch')
 class AppHouseChoiceConfirmView(View):
     '''
     订单确认
@@ -233,13 +267,15 @@ class AppHouseChoiceConfirmView(View):
 
     def post(self, request):
         house = request.POST.get('house')
+        userid = request.POST.get('userid')
+        user = User.get(userid)
         cursor = connection.cursor()
-        cursor.execute('SELECT id,is_sold,sign_id,event_id,is_testsold,\
-                        building,unit,floor,room_num FROM apt_eventdetail \
-                        where id=%s FOR UPDATE' % house)
         # cursor.execute('SELECT id,is_sold,sign_id,event_id,is_testsold,\
         #                 building,unit,floor,room_num FROM apt_eventdetail \
-        #                 where id=%s' % house)
+        #                 where id=%s FOR UPDATE' % house)
+        cursor.execute('SELECT id,is_sold,sign_id,event_id,is_testsold,\
+                        building,unit,floor,room_num FROM apt_eventdetail \
+                        where id=%s' % house)
         obj = cursor.fetchone()
         if obj is None:
             return JsonResponse({'response_state': 404, 'msg': '目标不存在'})
@@ -248,10 +284,10 @@ class AppHouseChoiceConfirmView(View):
         if (now >= event.test_start) and (now <= event.test_end):
             if not obj[4]:
                 with transaction.atomic():
-                    order = Order.objects.get_or_create(user=request.user,
-                                                        eventdetail_id=obj[0],
-                                                        order_num=time.strftime
-                                                        ('%Y%m%d%H%M%S'))
+                    order = Order.objects.create(user=user,
+                                                 eventdetail_id=obj[0],
+                                                 order_num=time.strftime
+                                                 ('%Y%m%d%H%M%S'))
                     cursor.execute('UPDATE apt_eventdetail set is_testsold=1 \
                                     where id=%s' % house)
                 return JsonResponse({'response_state': 200,
@@ -260,26 +296,30 @@ class AppHouseChoiceConfirmView(View):
                                                    obj[8]),
                                      'limit': event.limit,
                                      'ordertime': order.time,
-                                     'orderid': order.order_num,
+                                     'orderid': order.id,
                                      })
         elif (now >= event.event_start) and (now <= event.event_end):
             if not obj[1] and not obj[2]:
                 with transaction.atomic():
-                    order = Order.objects.create(user=request.user,
+                    order = Order.objects.create(user=user,
                                                  eventdetail_id=obj[0],
                                                  order_num=time.strftime
                                                  ('%Y%m%d%H%M%S'),
                                                  is_test=False)
                     cursor.execute('UPDATE apt_eventdetail set is_sold=1 \
                                     where id=%s' % house)
-                return JsonResponse({'response_state': 200,
-                                     'room_info': ('%s-%s-%s-%s') %
-                                                  (obj[5], obj[6], obj[7],
-                                                   obj[8]),
-                                     'limit': event.limit,
-                                     'ordertime': order.time,
-                                     'orderid': order.order_num,
-                                     })
+                    response = JsonResponse({'response_state': 200,
+                                             'room_info': ('%s-%s-%s-%s') %
+                                             (obj[5], obj[6], obj[7],
+                                              obj[8]),
+                                             'limit': event.limit,
+                                             'ordertime': order.time,
+                                             'orderid': order.id,
+                                             })
+                    response["Access-Control-Allow-Headers"] = '*'
+                    response["Access-Control-Allow-Origin"] = "*"
+                    response["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
+                return response
             elif obj[2]:
                 with transaction.atomic():
                     customer = Customer.get(obj[2])
@@ -295,15 +335,16 @@ class AppHouseChoiceConfirmView(View):
         return JsonResponse({'response_state': 400, 'msg': '购买失败'})
 
 
-@method_decorator(customer_login_time, name='dispatch')
-@method_decorator(customer_login_required, name='dispatch')
+# @method_decorator(customer_login_time, name='dispatch')
+# @method_decorator(customer_login_required, name='dispatch')
 class AppOrderListView(View):
     '''
     订单列表
     '''
 
     def get(self, request):
-        user = request.user
+        userid = request.GET.get('userid')
+        user = User.get(userid)
         objs = user.order_set.all()
         valuelist = []
         for obj in objs:
@@ -327,11 +368,15 @@ class AppOrderListView(View):
         context = {}
         context['objects'] = valuelist
         context['response_state'] = 200
-        return JsonResponse(context)
+        response = JsonResponse(context)
+        response["Access-Control-Allow-Headers"] = '*'
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
+        return response
 
 
-@method_decorator(customer_login_time, name='dispatch')
-@method_decorator(customer_login_required, name='dispatch')
+# @method_decorator(customer_login_time, name='dispatch')
+# @method_decorator(customer_login_required, name='dispatch')
 class AppOrderInfoView(View):
     '''
     订单详情
@@ -369,4 +414,8 @@ class AppOrderInfoView(View):
         except BaseException:
             return JsonResponse({'response_state': 400})
         else:
-            return JsonResponse(context)
+            response = JsonResponse(context)
+            response["Access-Control-Allow-Headers"] = '*'
+            response["Access-Control-Allow-Origin"] = "*"
+            response["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
+            return response

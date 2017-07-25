@@ -62,7 +62,7 @@ class EventListView(ListView):
         if self.value:
             queryset = queryset.filter(Q(name__contains=self.value))
         for obj in queryset:
-            obj.qr = url2qrcode('10.7.10.193:8000/app/' + str(obj.id))
+            obj.qr = url2qrcode('http://hd.edu2act.cn/app_register2/views/houseList.html?id='+str(obj.id))
             obj.save()
         return queryset
 

@@ -48,6 +48,10 @@ class User(AbstractUser):
         obj.is_delete = True
         obj.save()
 
+    @classmethod
+    def get(cls, id):
+        return get_object_or_404(cls.objects, id=id)
+
 
 class Order(models.Model):
     user = models.ForeignKey(User)

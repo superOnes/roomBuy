@@ -172,7 +172,7 @@ class LogoutView(View):
         return JsonResponse({'success': True, 'msg': '退出登录成功'})
 
 
-@method_decorator(login_time, name='dispatch')
+# @method_decorator(login_time, name='dispatch')
 class CustomerLoginView(View):
     '''
     顾客登录
@@ -207,8 +207,12 @@ class CustomerLoginView(View):
                         else:
                             login(request, user)
                             request.session.set_expiry(300)
-                            return JsonResponse(
-                                {'response_state': 200, 'id': eventid})
+                            response = JsonResponse(
+                                {'response_state': 200, 'id': eventid , 'userid':user.id})
+                            response["Access-Control-Allow-Headers"] = '*'
+                            response["Access-Control-Allow-Origin"] = "*"
+                            response["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
+                            return response
                     return JsonResponse({'response_state': 400})
                 return JsonResponse({'response_state': 400})
             return JsonResponse({'response_state': 400})
