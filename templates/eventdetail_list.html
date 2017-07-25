@@ -50,7 +50,7 @@
 	<thead>
 		<tr>
 			<th data-width="5%">序号</th>
-			<th>车位/房间号</th>
+			<th data-width="12%">车位/房间号</th>
 			<th>单价</th>
 			<th>建筑面积</th>
 			<th>朝向</th>
@@ -66,7 +66,7 @@
 		{% for obj in object_list %}
 		<tr>
 			<td>{{ forloop.counter }}</td>
-			<td>{{ obj.room_num }}</td>
+			<td>{{ obj.building }}栋{{ obj.unit }}单元<br/>{{ obj.floor }}层{{ obj.room_num }}</td>
 			<td><p><a data-iframe="{% url 'room_price_update' pk=obj.id %}"
                     data-toggle="modal" data-title="编辑单价">{{ obj.unit_price }}元/㎡
                  <i class="icon icon-pencil"/></a></p></td>

@@ -197,7 +197,7 @@ input[type="number"]{
 @media only screen and (max-width: 1920px) {
 	#listContent{
 		width:85%;
-		min-height: 834px;
+		min-height: 846px;
 	}
 }
 @media only screen and (max-width: 1440px) {
@@ -208,7 +208,7 @@ input[type="number"]{
 }
 @media only screen and (max-width: 1320px) {
 	#listContent{
-		min-height: 520px;
+		min-height: 560px;
 	}
 }
 

@@ -63,7 +63,10 @@ function deleteOrder(thisId){
 		async:true,
 		data:{id:thisId},
 		success:function(){
-			window.location.reload();
+			alert("清除公测名单成功！！！");
+			setTimeout(function(){
+				window.location.reload();
+			},1500)
 		},
 		error:function(){
 			alert("未知错误")
