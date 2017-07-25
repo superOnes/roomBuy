@@ -77,7 +77,7 @@
 		<div class="form-group">
 		    <label class="col-sm-3 control-label">同一账号允许收藏数</label>
 		    <div class="col-sm-9">
-		    	<input type="number" class="form-control"  min="0" placeholder="同一账号允许收藏数" name="follow_num" value="{{form.follow_num.value|default:''}}" required>
+		    	<input type="number" class="form-control form_num"  min="0" placeholder="同一账号允许收藏数" name="follow_num" value="{{form.follow_num.value|default:''}}" required>
 		    </div>
 		</div>
 		<div class="form-group">
@@ -177,6 +177,15 @@ $(document).ready(function(){
 //	平面图显示
 	$("#plane_graph_img").append("<img width='45%' style='margin: 5px;' src='{{MEDIA_URL}}{{object.plane_graph}}' alt=''/>");
 });
+
+//去除火狐input number的滚轮事件
+$("input[type='number']").on('DOMMouseScroll', MouseWheel, false);
+function MouseWheel(event) {
+    event = event || window.event;
+    event.preventDefault();
+}
+
+
 function pattTel(value){
 	var pattTel =/(\d{3}-(\d){8})|(\d{4}-\d{7})|(\d{7,8})/;
 	if(pattTel.test(value) == false){
