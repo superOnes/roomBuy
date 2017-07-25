@@ -28,7 +28,7 @@
 		<div class="form-group">
 		    <label class="col-sm-3 col-lg-3 control-label">咨询电话</label>
 		    <div class="col-sm-9">
-		    	<input type="number" class="form-control" oninput="if(value.length>11)value=value.slice(0,11)" placeholder="咨询电话" name="phone_num" value="{{form.phone_num.value|default:''}}" required>
+		    	<input type="number" class="form-control" min="0" onchange="pattTel(value)" oninput="if(value.length>13)value=value.slice(0,13)" placeholder="咨询电话" name="phone_num" value="{{form.phone_num.value|default:''}}" required>
 		    </div>
 		</div>
 		<div class="form-group">
@@ -42,13 +42,13 @@
 		    </div>
 		</div>
 		<div class="form-group">
-		    <label class="col-sm-3 control-label">是否显示公测放价</label>
+		    <label class="col-sm-3 control-label">是否显示公测房价</label>
 		    <div class="col-sm-9">
-			    <label class="checkbox-inline">
-			    	<input type="radio" class="input-group-sm" name="test_price" {% if object.test_price == True %}checked{% endif %}> 是
+			    <label class="radio-inline">
+			    	<input type="radio" class="input-group-sm" name="test_price" value="1" {% if object.test_price == True %}checked{% endif %}> 是
 				</label>
-			    <label class="checkbox-inline">
-				  	<input type="radio" class="input-group-sm" name="test_price" {% if object.test_price == False %}checked{% endif %}> 否
+			    <label class="radio-inline">
+				  	<input type="radio" class="input-group-sm" name="test_price" value="0" {% if object.test_price == False %}checked{% endif %}> 否
 				</label>
 		    </div>
 		</div>
@@ -96,22 +96,22 @@
 		<div class="form-group">
 		    <label class="col-sm-3 col-lg-3 control-label">是否显示建筑面积</label>
 		    <div class="col-sm-9 col-lg-9">
-			    <label class="checkbox-inline">
-			    	<input type="radio" class="input-group-sm" name="covered_space" {% if object.covered_space == True %}checked{% endif %}> 是
+			    <label class="radio-inline">
+			    	<input type="radio" class="input-group-sm" name="covered_space" value="1" {% if object.covered_space == True %}checked{% endif %}> 是
 				</label>
-			    <label class="checkbox-inline">
-			    	<input type="radio" class="input-group-sm" name="covered_space" {% if object.covered_space == False %}checked{% endif %}> 否
+			    <label class="radio-inline">
+			    	<input type="radio" class="input-group-sm" name="covered_space" value="0" {% if object.covered_space == False %}checked{% endif %}> 否
 				</label>
 		    </div>
 		</div>
 		<div class="form-group">
 		    <label class="col-sm-3 col-lg-3 control-label">是否显示建筑面积单价</label>
 		    <div class="col-sm-9 col-lg-9">
-			    <label class="checkbox-inline">
-			    	<input type="radio" class="input-group-sm" name="covered_space_price" {% if object.covered_space_price == True %}checked{% endif %}> 是
+			    <label class="radio-inline">
+			    	<input type="radio" class="input-group-sm" name="covered_space_price" value="1" {% if object.covered_space_price == True %}checked{% endif %}> 是
 				</label>
-			    <label class="checkbox-inline">
-			    	<input type="radio" class="input-group-sm" name="covered_space_price" {% if object.covered_space_price == False %}checked{% endif %}> 否
+			    <label class="radio-inline">
+			    	<input type="radio" class="input-group-sm" name="covered_space_price" value="0" {% if object.covered_space_price == False %}checked{% endif %}> 否
 				</label>
 		    </div>
 		</div>
@@ -173,18 +173,27 @@ $(document).ready(function(){
 	var coverImgFile = $(".plane_graph_img_file").html();
 	var plane_graphs = coverImgFile.slice(22);//截取获取文件的文件名
 	$(".plane_graph_img_file").html(coverImgFiles);
-	
+
 //	平面图显示
 	$("#plane_graph_img").append("<img width='45%' style='margin: 5px;' src='{{MEDIA_URL}}{{object.plane_graph}}' alt=''/>");
 });
+function pattTel(value){
+	var pattTel =/(\d{3}-(\d){8})|(\d{4}-\d{7})|(\d{7,8})/;
+	if(pattTel.test(value) == false){
+		alert("电话格式不正确！");
+		$(".btn-primary").attr("disabled","disabled")
+	}else {
+		$(".btn-primary").removeAttr("disabled","disabled")
+	}
+}
 	//活动封面显示
 	function showCover(){
 	  //以下即为完整客户端路径
-  	var file_img=document.getElementById("coverImg");
+  		var file_img=document.getElementById("coverImg");
   		iptfileupload = document.getElementById('cover');
   		getPath(file_img,iptfileupload,file_img) ;
  	};
-	 
+
 // 	多个图片上传显示
  	$("#plane_graph").change(function () {
 		var fil = this.files; //获取文件的详细信息
@@ -199,7 +208,7 @@ $(document).ready(function(){
 			$("#plane_graph_img").append("<img width='45%' style='margin: 5px;' src="+reader.result+" alt=''/>");
 		};
  	}
- 	 
+
 		// 选择时间和日期
 	$(".form-datetime").datetimepicker({
 	    weekStart: 1,

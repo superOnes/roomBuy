@@ -24,6 +24,15 @@ input::-webkit-inner-spin-button{
     -webkit-appearance: none !important;
     margin: 0;
 }
+input[type="number"]{
+    -moz-appearance: textfield;
+}
+
+/*退出按钮*/
+.quit{
+	font-size: 16px !important;	
+}
+
 
 .page-header{
 	margin:0 !important;
@@ -74,7 +83,7 @@ input::-webkit-inner-spin-button{
 .Xlogo h1 small{
 	float:right;
 	margin-top:15px;
-	margin-right:10%;
+	margin-right:5%;
 	color:#FFFFFF;
 }
 .Xlogo h1 small>a{
