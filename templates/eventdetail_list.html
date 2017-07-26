@@ -66,7 +66,7 @@
 		{% for obj in object_list %}
 		<tr>
 			<td>{{ forloop.counter }}</td>
-			<td>{{ obj.building }}{{ obj.unit }}<br/>{{ obj.floor }}{{ obj.room_num }}</td>
+			<td>{{ obj.building }}{{ obj.unit }}<br/>{{ obj.floor }}-{{ obj.room_num }}</td>
 			<td><p><a data-iframe="{% url 'room_price_update' pk=obj.id %}"
                     data-toggle="modal" data-title="编辑单价">{{ obj.unit_price }}元/㎡
                  <i class="icon icon-pencil"/></a></p></td>

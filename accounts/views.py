@@ -212,7 +212,7 @@ class CustomerLoginView(View):
         return JsonResponse({'response_state': 400, 'msg': '活动还未正式推出。'})
 
 
-@method_decorator(customer_login_required, name='dispatch')
+# @method_decorator(customer_login_required, name='dispatch')
 class CustomerLogoutView(View):
     '''
     顾客退出登录

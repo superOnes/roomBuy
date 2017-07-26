@@ -187,6 +187,7 @@ class AppEventDetailHouseInfoView(View):
                   'term': eventdetobj.term,
                   'is_sold': eventdetobj.is_sold,
                   'is_followed': is_followed,
+                  'is_testsold':eventdetobj.is_testsold,
                   }]
 
         context = {}
@@ -286,6 +287,10 @@ class AppHouseChoiceConfirmView(View):
         if (now >= event.test_start) and (now <= event.test_end):
             if not obj[4]:
                 with transaction.atomic():
+                    purchased = user.order_set.filter(is_test=True).count()
+                    if purchased >= user.customer.count:
+                        return JsonResponse({'response_state': 400,
+                                             'msg': '不可再次购买'})
                     order = Order.objects.create(user=user,
                                                  eventdetail_id=obj[0],
                                                  order_num=time.strftime
@@ -300,9 +305,17 @@ class AppHouseChoiceConfirmView(View):
                                      'ordertime': order.time,
                                      'orderid': order.id,
                                      })
+            elif Order.objects.filter(user=user, eventdetail_id=obj[0],
+                                      is_test=True).exists():
+                return JsonResponse({'response_state': 400,
+                                     'msg': '已购买,不要重复购买'})
         elif (now >= event.event_start) and (now <= event.event_end):
             if not obj[1] and not obj[2]:
                 with transaction.atomic():
+                    purchased = user.order_set.filter(is_test=False).count()
+                    if purchased >= user.customer.count:
+                        return JsonResponse({'response_state': 400,
+                                             'msg': '不可再次购买'})
                     order = Order.objects.create(user=user,
                                                  eventdetail_id=obj[0],
                                                  order_num=time.strftime
@@ -331,6 +344,10 @@ class AppHouseChoiceConfirmView(View):
                         house)
                 return JsonResponse(
                     {'response_state': 400, 'msg': '购买失败，房屋已卖出'})
+            elif Order.objects.filter(user=user, eventdetail_id=obj[0],
+                                      is_test=False).exists():
+                return JsonResponse({'response_state': 400,
+                                     'msg': '已购买,不要重复购买'})
         return JsonResponse({'response_state': 400, 'msg': '购买失败'})
 
 
@@ -410,33 +427,30 @@ class AppOrderInfoView(View):
                 house_type = obj.eventdetail.house_type.name
             except BaseException:
                 house_type = ''
-            else:
-                value = [{
-                    'eventname': obj.eventdetail.event.name,
-                    'unit_price': obj.eventdetail.unit_price,
-                    'limit': (obj.time + timedelta(hours=obj.eventdetail.event.limit)).strftime('%Y年%m月%d日 %H:%M:%S'),
-                    'ordertime': obj.time.strftime('%Y%m/%d %H:%M:%S'),
-                    'room_info': (
-                        obj.eventdetail.event.name +
-                        '-' +
-                        obj.eventdetail.building +
-                        '-' +
-                        obj.eventdetail.unit +
-                        '-' +
-                        str(obj.eventdetail.floor) +
-                        '-' +
-                        str(obj.eventdetail.room_num)),
-                    'houst_type': house_type,
-                    'area': obj.eventdetail.area,
-                    'customer': obj.user.customer.realname,
-                    'mobile': obj.user.customer.mobile,
-                    'iidentication': obj.user.customer.identication,
-                    'order_num': obj.order_num,
-                    'total': ((obj.eventdetail.area) * (obj.eventdetail.unit_price))
-                }]
-
-            context = {}
-            context['objects'] = value
-            context['response_state'] = 200
-
-            return JsonResponse(context)
+            value = [{
+                'eventname': obj.eventdetail.event.name,
+                'unit_price': obj.eventdetail.unit_price,
+                'limit': (obj.time + timedelta(hours=obj.eventdetail.event.limit)).strftime('%Y年%m月%d日 %H:%M:%S'),
+                'ordertime': obj.time.strftime('%Y%m/%d %H:%M:%S'),
+                'room_info': (
+                    obj.eventdetail.event.name +
+                    '-' +
+                    obj.eventdetail.building +
+                    '-' +
+                    obj.eventdetail.unit +
+                    '-' +
+                    str(obj.eventdetail.floor) +
+                    '-' +
+                    str(obj.eventdetail.room_num)),
+                'houst_type': house_type,
+                'area': obj.eventdetail.area,
+                'customer': obj.user.customer.realname,
+                'mobile': obj.user.customer.mobile,
+                'iidentication': obj.user.customer.identication,
+                'order_num': obj.order_num,
+                'total': ((obj.eventdetail.area) * (obj.eventdetail.unit_price))
+            }]
+        context = {}
+        context['objects'] = value
+        context['response_state'] = 200
+        return JsonResponse(context)

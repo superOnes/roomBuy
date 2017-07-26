@@ -60,6 +60,13 @@
 	console.log(id);
 
 	$(function(){
+		$.get(http+"/app/"+id+"/detail/",function(result){
+			console.log(result);
+			data5(result.objects[0]);
+			console.log($(".test_start").html());
+
+		});
+
 		$.ajax({
 			type:"get",
 			url:http+"/app/houseinfo/",
@@ -75,6 +82,7 @@
 					$(".userId").html(userid);
 					$(".idd").html(id);
 
+
 				}else{
 					alert(data.msg);
 				}
@@ -85,11 +93,7 @@
 
 		});
 
-		$.get(http+"/app/"+id+"/detail/",function(result){
-			console.log(result);
-			data5(result.objects[0]);
 
-		});
 
 	});
 
