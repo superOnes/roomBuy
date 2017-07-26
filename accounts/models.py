@@ -52,6 +52,10 @@ class User(AbstractUser):
     def get(cls, id):
         return get_object_or_404(cls.objects, id=id)
 
+    def get_order_count(self):
+        print(self)
+        return self.order_set.filter(is_test=False).count()
+
 
 class Order(models.Model):
     user = models.ForeignKey(User)
