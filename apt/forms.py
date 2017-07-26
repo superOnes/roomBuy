@@ -1,4 +1,6 @@
 import uuid
+from datetime import datetime
+
 from django import forms
 from django.db import transaction
 from .models import Event, EventDetail, HouseType
@@ -10,6 +12,18 @@ class EventForm(forms.ModelForm):
     class Meta:
         model = Event
         fields = [f.name for f in model._meta.fields]
+
+    def clean(self):
+        cleaned_data = super(EventForm, self).clean()
+        if cleaned_data['test_start'] < datetime.now():
+            raise forms.ValidationError('开始时间为今天以后！')
+        if cleaned_data['test_start'] > cleaned_data['test_end']:
+            raise forms.ValidationError('公测结束时间不能提前于公测开始时间！')
+        if cleaned_data['event_start'] < datetime.now():
+            raise forms.ValidationError('活动开始时间为今天以后！')
+        if cleaned_data['event_start'] > cleaned_data['event_end']:
+            raise forms.ValidationError('活动结束时间不能提前于活动开始时间！')
+        return cleaned_data
 
 
 class EventDetailForm(forms.ModelForm):
