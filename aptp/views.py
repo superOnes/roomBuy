@@ -427,33 +427,30 @@ class AppOrderInfoView(View):
                 house_type = obj.eventdetail.house_type.name
             except BaseException:
                 house_type = ''
-            else:
-                value = [{
-                    'eventname': obj.eventdetail.event.name,
-                    'unit_price': obj.eventdetail.unit_price,
-                    'limit': (obj.time + timedelta(hours=obj.eventdetail.event.limit)).strftime('%Y年%m月%d日 %H:%M:%S'),
-                    'ordertime': obj.time.strftime('%Y%m/%d %H:%M:%S'),
-                    'room_info': (
-                        obj.eventdetail.event.name +
-                        '-' +
-                        obj.eventdetail.building +
-                        '-' +
-                        obj.eventdetail.unit +
-                        '-' +
-                        str(obj.eventdetail.floor) +
-                        '-' +
-                        str(obj.eventdetail.room_num)),
-                    'houst_type': house_type,
-                    'area': obj.eventdetail.area,
-                    'customer': obj.user.customer.realname,
-                    'mobile': obj.user.customer.mobile,
-                    'identication': obj.user.customer.identication,
-                    'order_num': obj.order_num,
-                    'total': ((obj.eventdetail.area) * (obj.eventdetail.unit_price))
-                }]
-
-            context = {}
-            context['objects'] = value
-            context['response_state'] = 200
-
-            return JsonResponse(context)
+            value = [{
+                'eventname': obj.eventdetail.event.name,
+                'unit_price': obj.eventdetail.unit_price,
+                'limit': (obj.time + timedelta(hours=obj.eventdetail.event.limit)).strftime('%Y年%m月%d日 %H:%M:%S'),
+                'ordertime': obj.time.strftime('%Y%m/%d %H:%M:%S'),
+                'room_info': (
+                    obj.eventdetail.event.name +
+                    '-' +
+                    obj.eventdetail.building +
+                    '-' +
+                    obj.eventdetail.unit +
+                    '-' +
+                    str(obj.eventdetail.floor) +
+                    '-' +
+                    str(obj.eventdetail.room_num)),
+                'houst_type': house_type,
+                'area': obj.eventdetail.area,
+                'customer': obj.user.customer.realname,
+                'mobile': obj.user.customer.mobile,
+                'iidentication': obj.user.customer.identication,
+                'order_num': obj.order_num,
+                'total': ((obj.eventdetail.area) * (obj.eventdetail.unit_price))
+            }]
+        context = {}
+        context['objects'] = value
+        context['response_state'] = 200
+        return JsonResponse(context)
