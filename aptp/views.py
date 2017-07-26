@@ -187,6 +187,7 @@ class AppEventDetailHouseInfoView(View):
                   'term': eventdetobj.term,
                   'is_sold': eventdetobj.is_sold,
                   'is_followed': is_followed,
+                  'is_testsold':eventdetobj.is_testsold,
                   }]
 
         context = {}
@@ -446,7 +447,7 @@ class AppOrderInfoView(View):
                     'area': obj.eventdetail.area,
                     'customer': obj.user.customer.realname,
                     'mobile': obj.user.customer.mobile,
-                    'iidentication': obj.user.customer.identication,
+                    'identication': obj.user.customer.identication,
                     'order_num': obj.order_num,
                     'total': ((obj.eventdetail.area) * (obj.eventdetail.unit_price))
                 }]
