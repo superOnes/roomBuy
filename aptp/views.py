@@ -13,6 +13,31 @@ from accounts.models import Order, Customer, User
 from accounts.decorators import customer_login_required, customer_login_time
 
 
+class ProView(View):
+    '''
+    显示协议
+    '''
+
+    def get(self, request):
+        mobile = request.GET.get('tel')
+        identication = request.GET.get('personId')
+        try:
+            customer = Customer.objects.get(
+                mobile=mobile, identication=identication)
+        except BaseException:
+            return JsonResponse({'response_state': 400, 'msg': '认筹名单中没有该用户'})
+        else:
+            value = [{
+                'termname': customer.event.termname,
+                'term': customer.event.term,
+                'userid':customer.user.id,
+            }]
+            context = {}
+            context['objects'] = value
+            context['response_state'] = 200
+            return JsonResponse(context)
+
+
 # @method_decorator(customer_login_required, name='dispatch')
 class AppEventDetailView(View):
     '''
@@ -41,11 +66,7 @@ class AppEventDetailView(View):
         context = {}
         context['objects'] = value
         context['response_state'] = 200
-        response = JsonResponse(context)
-        response["Access-Control-Allow-Headers"] = '*'
-        response["Access-Control-Allow-Origin"] = "*"
-        response["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
-        return response
+        return JsonResponse(context)
 
 # @method_decorator(customer_login_required, name='dispatch')
 
@@ -70,11 +91,7 @@ class AppEventDetailListView(View):
         }]
         context['objects'] = value
         context['response_state'] = 200
-        response = JsonResponse(context)
-        response["Access-Control-Allow-Headers"] = '*'
-        response["Access-Control-Allow-Origin"] = "*"
-        response["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
-        return response
+        return JsonResponse(context)
 
 
 # @method_decorator(customer_login_required, name='dispatch')
@@ -93,15 +110,11 @@ class AppEventDetailUnitListView(View):
         for obj in eventdetobj:
             unitlist.append((obj.unit))
         value = [{
-            'unit': list(set(unitlist))
+            'unit': sorted(list(set(unitlist)))
         }]
         context['objects'] = value
         context['response_state'] = 200
-        response = JsonResponse(context)
-        response["Access-Control-Allow-Headers"] = '*'
-        response["Access-Control-Allow-Origin"] = "*"
-        response["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
-        return response
+        return JsonResponse(context)
 
 
 # @method_decorator(customer_login_required, name='dispatch')
@@ -128,11 +141,7 @@ class AppEventDetailHouseListView(View):
                 room_num_list.append(value)
         context['objects'] = room_num_list
         context['response_state'] = 200
-        response = JsonResponse(context)
-        response["Access-Control-Allow-Headers"] = '*'
-        response["Access-Control-Allow-Origin"] = "*"
-        response["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
-        return response
+        return JsonResponse(context)
 
 
 # @method_decorator(customer_login_time, name='dispatch')
@@ -178,11 +187,7 @@ class AppEventDetailHouseInfoView(View):
         context = {}
         context['objects'] = value
         context['response_state'] = 200
-        response = JsonResponse(context)
-        response["Access-Control-Allow-Headers"] = '*'
-        response["Access-Control-Allow-Origin"] = "*"
-        response["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
-        return response
+        return JsonResponse(context)
 
 # @method_decorator(customer_login_required, name='dispatch')
 
@@ -205,17 +210,14 @@ class AddFollow(View):
                     Follow.objects.create(
                         user=user, eventdetail=eventdetail)
                 else:
-                    return JsonResponse({'response_state': 403})  # 收藏超过限制
+                    return JsonResponse(
+                        {'response_state': 403, 'msg': '收藏超过限制'})
             else:
-                return JsonResponse({'response_state': 400})
+                return JsonResponse({'response_state': 400, 'msg': '已经收藏'})
         except BaseException:
             return JsonResponse({'response_state': 400})
         else:
-            response = JsonResponse({'response_state': 200})
-            response["Access-Control-Allow-Headers"] = '*'
-            response["Access-Control-Allow-Origin"] = "*"
-            response["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
-            return response
+            return JsonResponse({'response_state': 200,'msg':'收藏成功'})
 
 
 # @method_decorator(customer_login_required, name='dispatch')
@@ -251,11 +253,7 @@ class FollowView(View):
             list.append(value)
         context['objects'] = list
         context['response_state'] = 200
-        response = JsonResponse(context)
-        response["Access-Control-Allow-Headers"] = '*'
-        response["Access-Control-Allow-Origin"] = "*"
-        response["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
-        return response
+        return JsonResponse(context)
 
 
 # @method_decorator(customer_login_time, name='dispatch')
@@ -308,7 +306,7 @@ class AppHouseChoiceConfirmView(View):
                                                  is_test=False)
                     cursor.execute('UPDATE apt_eventdetail set is_sold=1 \
                                     where id=%s' % house)
-                    response = JsonResponse({'response_state': 200,
+                return JsonResponse({'response_state': 200,
                                              'room_info': ('%s-%s-%s-%s') %
                                              (obj[5], obj[6], obj[7],
                                               obj[8]),
@@ -316,10 +314,6 @@ class AppHouseChoiceConfirmView(View):
                                              'ordertime': order.time,
                                              'orderid': order.id,
                                              })
-                    response["Access-Control-Allow-Headers"] = '*'
-                    response["Access-Control-Allow-Origin"] = "*"
-                    response["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
-                return response
             elif obj[2]:
                 with transaction.atomic():
                     customer = Customer.get(obj[2])
@@ -368,11 +362,7 @@ class AppOrderListView(View):
         context = {}
         context['objects'] = valuelist
         context['response_state'] = 200
-        response = JsonResponse(context)
-        response["Access-Control-Allow-Headers"] = '*'
-        response["Access-Control-Allow-Origin"] = "*"
-        response["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
-        return response
+        return JsonResponse(context)
 
 
 # @method_decorator(customer_login_time, name='dispatch')
@@ -408,14 +398,12 @@ class AppOrderInfoView(View):
                 'iidentication': obj.user.customer.identication,
                 'order_num': obj.order_num,
             }]
+
+
             context = {}
             context['objects'] = value
             context['response_state'] = 200
         except BaseException:
             return JsonResponse({'response_state': 400})
         else:
-            response = JsonResponse(context)
-            response["Access-Control-Allow-Headers"] = '*'
-            response["Access-Control-Allow-Origin"] = "*"
-            response["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
-            return response
+            return JsonResponse(context)

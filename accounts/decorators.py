@@ -2,8 +2,10 @@ import time
 from functools import wraps
 from django.http import JsonResponse
 from django.shortcuts import redirect, resolve_url
+from django.http import QueryDict
 from django.core.urlresolvers import reverse
-from .models import Customer
+
+from .models import Customer, User
 
 
 RETURN_JSON = 1
@@ -38,24 +40,32 @@ def admin_required(func):
 def customer_login_required(func):
     @wraps(func)
     def wrapper(request, *args, **kwargs):
-        if request.user.is_authenticated():
-            if not request.user.is_admin:
+        dict = QueryDict(request.body, encoding=request.encoding)
+        userid = dict.get('userid')
+        user = User.get(userid)
+        if user.is_authenticated():
+            if not user.is_admin:
                 return func(request, *args, **kwargs)
-        return JsonResponse({'response_state': 403})
+        return redirect(
+            'http://hd.edu2act.cn/app_register2/views/houseList.html?id=' + str(user.customer.event.id))
     return wrapper
 
 
 def customer_login_time(func):
     @wraps(func)
     def wrapper(request, *args, **kwargs):
-        user = request.user
-        if time.strftime('%Y%m%d %H:%M:%S') <= user.customer.event.event_end.strftime('%Y%m%d %H:%M:%S'):
-            if time.strftime('%Y%m%d %H:%M:%S') <= user.customer.event.event_start.strftime('%Y%m%d %H:%M:%S'):
-                return JsonResponse({'response_state': 403})
+        dict = QueryDict(request.body, encoding=request.encoding)
+        userid = dict.get('userid')
+        user = User.get(userid)
+        if time.strftime('%Y%m%d %H:%M:%S') <= user.customer.event.event_end.strftime(
+                '%Y%m%d %H:%M:%S'):
+            if time.strftime('%Y%m%d %H:%M:%S') <= user.customer.event.event_start.strftime(
+                    '%Y%m%d %H:%M:%S'):
+                return JsonResponse({'response_state': 403, 'msg': '活动尚未开始'})
             else:
                 return func(request, *args, **kwargs)
         else:
-            return JsonResponse({'response_state': 403})
+            return JsonResponse({'response_state': 403, 'msg': '活动已经结束'})
     return wrapper
 
 
@@ -68,11 +78,11 @@ def login_time(func):
             customer = Customer.objects.get(
                 mobile=mobile, identication=identication)
         except BaseException:
-            return JsonResponse({'response_state': 400})
+            return JsonResponse({'response_state': 400, 'msg': '认筹名单中没有该用户'})
         else:
-            if time.strftime('%Y%m%d %H:%M:%S') <= customer.event.event_end.strftime('%Y%m%d %H:%M:%S'):
+            if time.strftime('%Y%m%d %H:%M:%S') <= customer.event.event_end.strftime(
+                    '%Y%m%d %H:%M:%S'):
                 return func(request, *args, **kwargs)
             else:
-                return JsonResponse({'response_state': 403})
+                return JsonResponse({'response_state': 403, 'msg': '活动已经结束'})
     return wrapper
-

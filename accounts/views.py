@@ -178,12 +178,12 @@ class CustomerLoginView(View):
     顾客登录
     '''
 
-    def post(self, request, *args, **kwargs):
-        mobile = request.POST.get('tel')
-        identication = request.POST.get('personId')
+    def post(self, request):
+        userid=request.POST.get('userid')
+        customer=User.get(userid).customer
         try:
-            customer = Customer.objects.get(
-                mobile=mobile, identication=identication)
+            # customer = Customer.objects.get(
+            #     mobile=mobile, identication=identication)
             request.session[time.strftime("%Y%m%d%H%M%S")] = customer.realname + \
                 customer.mobile + customer.identication
             count = Counter(
@@ -192,30 +192,26 @@ class CustomerLoginView(View):
                 customer.mobile +
                 customer.identication)
         except BaseException:
-            return JsonResponse({'response_state': 400})
+            return JsonResponse({'response_state': 400, 'msg': '认筹名单中没有该用户'})
         else:
             userobj = customer.user
             if customer.event.is_pub:
                 eventid = customer.event_id
                 user = authenticate(
                     username=userobj.username,
-                    password=identication)
+                    password=customer.identication)
                 if user:
                     if not user.is_admin:
                         if count > Event.get(eventid).equ_login_num:
-                            return JsonResponse({'response_state': 402})
+                            return JsonResponse(
+                                {'response_state': 402, 'msg': '帐号同时在线超出限制'})
                         else:
                             login(request, user)
                             request.session.set_expiry(300)
-                            response = JsonResponse(
-                                {'response_state': 200, 'id': eventid , 'userid':user.id})
-                            response["Access-Control-Allow-Headers"] = '*'
-                            response["Access-Control-Allow-Origin"] = "*"
-                            response["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
-                            return response
+                            return JsonResponse({'response_state': 200, 'id': eventid, 'userid': user.id, 'msg': '登录成功'})
                     return JsonResponse({'response_state': 400})
-                return JsonResponse({'response_state': 400})
-            return JsonResponse({'response_state': 400})
+                return JsonResponse({'response_state': 400, 'msg': '未通过认证'})
+            return JsonResponse({'response_state': 400, 'msg': '活动还未发布'})
 
 
 @method_decorator(customer_login_required, name='dispatch')
@@ -226,7 +222,7 @@ class CustomerLogoutView(View):
 
     def post(self, request):
         logout(request)
-        return JsonResponse({'response_state': 200})
+        return JsonResponse({'response_state': 200, 'msg': '退出成功'})
 
 
 @method_decorator(login_required, name='dispatch')
