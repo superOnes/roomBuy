@@ -1,7 +1,7 @@
 var id;
 var userid;
-var http="";//正式
-//var http="http://10.7.10.193:8000"; //测试
+//var http="";//正式
+var http="http://10.7.10.193:8000"; //测试
 $(function(){
 
 	$(".btnLogin").click(function(){
@@ -218,7 +218,7 @@ function createList(data){
 
 }
 function data3(result){
-	var datap=$('<p class="eventStart" style="display:none">'+result.event_start+'</p>'+
+	var datap=$('<p class="event_start" style="display:none">'+result.event_start+'</p>'+
 				'<p class="event_end" style="display:none">'+result.event_end+'</p>'+
 			'<p class="test_ent" style="display:none">'+result.test_ent+'</p>'+
 			'<p class="test_start" style="display:none">'+result.test_start+'</p>'
@@ -226,7 +226,7 @@ function data3(result){
 	$("#houseList").append(datap);
 }
 function myOrder() {
-	if((new Date($(".eventStart").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime())||
+	if((new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime())||
 		(new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() <new Date($(".test_ent").html()).getTime())){
 		window.location.href="order.html?id="+$(".idNum").html()+"&userid="+$(".userid").html();
 	}else{
@@ -316,7 +316,7 @@ function myShare(){
 				}
 				$(".shareCar-list").each(function(){
 					$(this).click(function(){
-						if((new Date($(".eventStart").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime())||
+						if((new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime())||
 							(new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() <new Date($(".test_ent").html()).getTime())){
 							window.location.href="houseInfo.html?house="+$(this).find(".shareId").html()+"&id="+$(".idNum").html()+"&userid="+$(".userid").html();
 						}else{
@@ -417,7 +417,7 @@ function houseList(data){
 									$(".unite").after(romms);
 									for(var i=0;i<data.objects.length;i++){
 										$(".floorChose").append("<li>"+data.objects[i][0].floor_room_num+"</li>");
-										if(new Date($(".eventStart").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime()){
+										if(new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime()){
 											if(data.objects[i][0].is_sold){
 												$(".floorChose li").eq(i).addClass("floorLi-red");
 											}
@@ -431,7 +431,7 @@ function houseList(data){
 
 									}
 
-									if((new Date($(".eventStart").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime())||
+									if((new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime())||
 										(new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() <new Date($(".test_ent").html()).getTime())){
 										var aLis=$(".floorChose").find("li");
 										aLis.each(function(){
@@ -551,19 +551,22 @@ function houseInfo(data){
 	);
 	$("#houseInfo").after(infoBlack);
 	$("#houseInfo").append(houseInfo);
-	if(new Date($(".eventStart").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime()){
+	if(new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime()){
 		if(data.is_sold){
 			$(".houseInfoOther").after($('<div class="houseBtnN">房间已售</div>'));
 		}else{
 			$(".houseInfoOther").after($('<div class="houseBtnY" onclick="buyNow()">立即选择</div>'));
 		}
-	}
-	if(new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() <new Date($(".test_ent").html()).getTime()){
+
+	}else if(new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() <new Date($(".test_ent").html()).getTime()){
 		if(data.is_testsold){
 			$(".houseInfoOther").after($('<div class="houseBtnN">房间已售</div>'));
 		}else{
 			$(".houseInfoOther").after($('<div class="houseBtnY" onclick="buyNow()">立即选择</div>'));
 		}
+
+	}else{
+		$(".houseInfoOther").after($('<div class="houseBtnN">活动未开始</div>'));
 	}
 
 	if(data.is_followed[0]){
