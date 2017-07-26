@@ -1,0 +1,136 @@
+{% extends 'include/main_base.html' %}
+{% block right %}
+<div>
+	<ol class="breadcrumb">
+	  <i class="icon icon-home"></i>
+	  <li><a href="{% url 'event_list' %}"><h3>活动列表</h3></a></li>
+	</ol>
+</div>
+<div class="row" style="padding:10px;margin-top:-20px">
+	<a class="btn btn-primary" data-moveable="true" data-iframe="{% url 'event_create' %}" data-toggle="modal">创建活动</a>
+	<div class="col-lg-3" style="float: right;">
+	    <form class="form-horizontal searchWrap" method="get" action="">
+		    <div class="input-group">
+			  <input type="text" class="form-control" placeholder="活动名称" id="searchInput" name="value" value="{{value|default:''}}">
+			  <span class="input-group-btn">
+			    <button class="btn btn-default" type="submit">搜索</button>
+			  </span>
+			</div>
+		</form>
+    </div>
+</div>
+<table class="table datatable">
+	<thead>
+		<tr>
+			<th data-width="5%">序号</th>
+			<th>活动名称</th>
+			<th>公测时间</th>
+			<th>活动时间</th>
+			<th data-width="7%">认筹名单</th>
+			<th data-width="7%">车位房源</th>
+			<th data-width="7%">活动状态</th>
+			<th>二维码</th>
+			<th data-width="10%">操作</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for obj in object_list %}
+		<tr>
+			<td>{{ forloop.counter }}</td>
+			<td>{{ obj.name }}</td>
+			<td><p>{{ obj.test_start }}</p>
+			<p>至</p>
+			<p>{{ obj.test_end }}</p></td>
+			<td><p>{{ obj.event_start }}</p>
+			<p>至</p>
+			<p>{{ obj.event_end }}</p></td>
+			<td><a href="{% url 'event_customs' pk=obj.id %}">{{ obj.customer_set.count }} <i class='icon-edit'></i></a></td>
+			<td><a href="{% url 'room_list' pk=obj.id %}">{{ obj.eventdetail_set.count }} <i class='icon-edit'></i></a></td>
+			<td>{{ obj.is_pub|yesno:"发布,未发布"}}</td>
+            <td><img width="90" height="90" src="data:image/jpeg;base64,{{ obj.qr }}"/></td>
+			<td>
+				<p><a data-iframe="{% url 'event_detail' pk=obj.id %}" data-toggle="modal" data-title="活动详情">查看</a></p>
+				<p><a href="javascript:void(0)" data-id="{{obj.id}}" class="is_pub">{% if obj.is_pub == False %}发布{% else %}取消发布{% endif %}</a></p>
+				<p><a data-iframe="{% url 'event_update' pk=obj.id %}" data-toggle="modal">编辑活动</a></p>
+				<p><a data-iframe="{% url 'event_term_update' pk=obj.id %}" data-toggle="modal">编辑协议</a></p>
+				<p><a data-toggle="modal" data-target="#deleteModal" data-id="{{obj.id}}" class="deleteOrder">清除公测名单</a></p>
+			</td>
+		</tr>
+		<!--取消发布-->
+		<div class="modal fade" id="is_pub_issue">
+		  <div class="modal-dialog modal-sm">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+		        <h4 class="modal-title">是否发布</h4>
+		      </div>
+		      <div class="modal-body">
+		        <p>确定{{ obj.is_pub|yesno:"取消发布,发布"}}？</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+		        <button type="button" class="btn btn-primary is_pub_confirm">确认</button>
+						<input type="hidden" value="" id="is_pub_status">
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		<!--清除公测名单-->
+		<div class="modal fade" id="deleteModal" data-id="">
+		  <div class="modal-dialog modal-sm">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+		        <h4 class="modal-title">清除公测名单</h4>
+		      </div>
+		      <div class="modal-body">
+		        <p>确认清除公测名单？</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+		        <button type="button" class="btn btn-primary" id="is_clear">确认</button>
+		        <input type="hidden" value="" id="is_clear_status">
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		{% endfor %}
+	</tbody>
+</table>
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#navActive li").eq(0).addClass("active");
+	$('table.datatable').datatable();
+//	是否发布
+	$('.is_pub').on('click', function(e){
+		$("#is_pub_status").val($(e.currentTarget).data("id"));
+    	$("#is_pub_issue").modal();
+	});
+	$(".is_pub_confirm").on("click", function(e){
+		var id = $("#is_pub_status").val();
+		$.ajax({
+			type:"PUT",
+			url:"../pubstatus/",
+			async:true,
+			data:{id:id},
+			success:function(){
+				window.location.reload();
+			},
+			error:function(){
+				alert("未知错误")
+			}
+		});
+	});
+//	清除公测名单
+	$(".deleteOrder").click(function(e){
+		$("#is_clear_status").val($(e.currentTarget).data("id"));
+	});
+	$("#is_clear").click(function(){
+		var thisId = $("#is_clear_status").val();
+		deleteOrder(thisId);
+	})
+});
+</script>
+{% endblock %}

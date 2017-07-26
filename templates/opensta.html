@@ -1,0 +1,110 @@
+{% extends 'include/main_base.html' %}
+{% block right %}
+<div class="page-header" style="border-bottom: 0;">
+  <ol class="breadcrumb">
+	  <i class="icon icon-home"></i>
+	  <li><a href="{% url 'event_list' %}"><h3>开盘统计管理</h3></a></li>
+	</ol>
+</div>
+<ul class="nav nav-tabs">
+    <li class="active"><a data-tab href="#tabContent1">购房者热度统计</a></li>
+    <li><a data-tab href="#tabContent2">房源热度统计</a></li>
+    <div class="row" style="float:right;margin:0;width: 400px;">
+    	<div class="col-lg-6 col-md-6 col-lg-offset-4">
+			  <select class="form-control selectInp" name="value"></select>
+			</div>
+			<div class=" col-lg-2">
+	    	<a class="btn btn-primary" id="exportEach">导出</a>
+			</div>
+		</div>
+</ul>
+<div class="tab-content">
+	<div class="tab-pane fade active in" id="tabContent1">
+		<table class="table datatable">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>姓名</th>
+					<th>手机号</th>
+					<th>证件号码</th>
+					<th>同意协议时间</th>
+					<th>收藏房间数</th>
+					<th>访问热度</th>
+					<th>公测选择房间</th>
+					<th>公测订单时间</th>
+					<th>开盘选择房间</th>
+					<th>开盘订单时间</th>
+				</tr>
+			</thead>
+			<tbody id="buyer">
+				<tr> </tr>
+			</tbody>
+		</table>
+    </div>
+    <div class="tab-pane fade" id="tabContent2">
+    	<table class="table datatable">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>楼栋</th>
+					<th>单元</th>
+					<th>楼层</th>
+					<th>房号</th>
+					<th>是否已售</th>
+					<th>单价</th>
+					<th>建筑面积</th>
+					<th>收藏人数</th>
+					<th>公测是否已售</th>
+				</tr>
+			</thead>
+			<tbody id="houseHot">
+				<tr> </tr>
+			</tbody>
+		</table>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#navActive li").eq(1).addClass("active");
+	var $exportEach = $("#exportEach");
+//	活动下拉框列表的显示请求
+	$.ajax({
+		type:"get",
+		url:"/getevent/",
+		async:true,
+		success:function(results){
+			var result =results.data;
+			for(var i=0; i<result.length; i++){
+				$(".selectInp").append("<option value='"+result[i].id+"'>"+result[i].name+"</option>");
+			};
+			$exportEach.attr("href","/event/exportbuyhot?id="+result.length)
+			$(".selectInp option:first").attr("selected","selected");
+		},
+		error:function(){
+			alert("获取活动列表失败")
+		}
+	})
+//	默认获取的数据
+	statisticsData();
+
+//	活动列表选择时数据的切换显示
+	$(".selectInp").change(function(){
+		var val = $(this).val();
+		$exportEach.attr("href","/event/exportbuyhot/?id="+val);
+		//	获取数据
+		statisticsData(val);
+	});
+//		导出下载url改变
+	$("ul.nav-tabs li").click(function(){
+		var id = $(".selectInp").val();
+		if($(this).index() == 0){
+			$exportEach.attr("href","/export/buyhot/?id="+id)
+		}else{
+			$exportEach.attr("href","/export/househot/?id="+id)
+		};
+	});
+});
+</script>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends 'include/base.html' %}
+{% block main %}
+<style type="text/css">
+	.Xlogo{display: none !important;}
+	.loginFotter{display: none !important;}
+</style>
+<header class="Xlogo">
+	<h1>
+		<div>
+			<img src=""/>
+			<a href="###">XXX</a>
+		</div>
+		<small>欢迎来到XXX</small>
+	</h1>
+</header>
+<section class="login-wrap" id="login-wrap">
+	<div class="loginBack">
+		<h3>选房后台操作系统</h3>
+		<p>Choose room background operation system</p>
+	</div>
+	<div class="login">
+		<form class="form-horizontal login-form" method="post" action="{% url 'acc_login' %}">
+			{% csrf_token %}
+			<div class="loginTitle">
+		    	<h3>用户登录</h3>
+		    </div>
+		  <div class="form-group">
+		    <label for="inputText3" class="col-sm-2 control-label">用户名</label>
+		    <div class="col-sm-10">
+		      <input type="text" class="form-control" id="inputText3" placeholder="用户名" name="username">
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="inputPassword3" class="col-sm-2 control-label">密码</label>
+		    <div class="col-sm-10">
+		      <input type="password" class="form-control" id="inputPassword3" placeholder="密码" name="password">
+		    </div>
+		  </div>
+    	{% if messages %}
+		  <div class="form-group" id="messages">
+		    <label for="inputMessages" class="col-sm-2 control-label">提示</label>
+		    <div class="col-sm-10">
+				{% for msg in messages %}
+		        <p style="margin-top:6px;color: red;">{{ msg }}</p>
+				{% endfor %}
+		    </div>
+		  </div>
+    	{% endif %}
+			{% if next %}
+			<input type="text" name="next" value="{{next}}" style="display:None">
+			{% endif %}
+		  <div class="form-group">
+		    <div class="col-sm-offset-2 col-sm-10">
+		      <button type="submit" class="btn btn-sm btn-primary" id="loginBtn">登录</button>
+					<button type="reset" class="btn btn-sm btn-default">重置</button>
+		    </div>
+		  </div>
+		</form>
+	</div>
+</section>
+<footer class="loginFotter">
+	<h4>承接单位：石家庄佳诚网络技术有限公司</h4>
+</footer>
+{% endblock %}

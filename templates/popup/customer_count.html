@@ -1,0 +1,25 @@
+{% extends 'include/base.html' %}
+{% block main %}
+<style type="text/css">
+	.form-group>.col-sm-9{
+		width: 80% !important;
+	}
+	.form-group>.col-sm-3{
+		width: 15% !important;
+	}
+</style>
+<div style="padding:20px">
+	<form class="form-horizontal" method="post" action="">
+		{% csrf_token %}
+		<div class="form-group">
+		    <label class="col-sm-3">可选套数<i>*</i></label>
+		    <div class="col-sm-9">
+		      <input type="number" class="form-control" placeholder="可选套数" name="count" value="{{form.count.value|default:''}}" required />
+		    </div>
+		</div>
+	<div class="modal-footer">
+    	<input type="submit" class="btn btn-primary" value="确定"></input>
+    </div>
+</form>
+</div>
+{% endblock %}

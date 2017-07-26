@@ -1,0 +1,67 @@
+{% extends 'include/base.html' %}
+{% block main %}
+<header class="Xlogo">
+  <h1>
+    <div>
+      <!--<img src=""/>-->
+      <a href="{% url 'event_list' %}">云盘服务</a>
+    </div>
+    <small><a href="#">{{ request.user.username }}</a>欢迎来到云盘服务<a data-toggle="modal" data-target="#quit" class="quit">退出</a></small>
+  </h1>
+</header>
+    <!--退出-->
+		<div class="modal fade" id="quit">
+		  <div class="modal-dialog  modal-sm">
+		    <div class="modal-content">
+		    	<div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+		        <h4 class="modal-title">退出当前用户</h4>
+		      </div>
+		      <div class="modal-body">
+		        <p style="text-align: center;font-size: 20px;">确定退出？</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+		        <button type="button" class="btn btn-primary" onclick="quit()">确认</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+<section id="listContent">
+  <div class="row">
+    <div class="col-md-2 col-lg-2">
+      <div class="gridTitle">
+        <h3>在线开盘</h3>
+      </div>
+      <div class="navList">
+        <ul class="nav nav-pills nav-stacked" id="navActive">
+          <li><a href="{% url 'event_list' %}">活动介绍</a></li>
+          <li><a href="{% url 'event_opensta' %}">开盘统计管理</a></li>
+          <li><a href="{% url 'event_order' %}">开盘订单管理</a></li>
+          <li><a href="###">自定义电视墙</a></li>
+      </ul>
+      </div>
+    </div>
+    <div class="col-md-10  col-lg-10">{% block right %}{% endblock %}</div>
+  </div>
+</section>
+<footer class="loginFotter">
+  <h4>承接单位：石家庄佳诚网络技术有限公司</h4>
+</footer>
+<script type="text/javascript">
+	function quit(){
+	$.ajax({
+		type:"POST",
+		url:"/acc/logout/",
+		async:true,
+		success:function(){
+			window.location.href="/acc/login/";
+		},
+		error:function(){
+			alert("退出失败！")
+		}
+	});
+}
+
+</script>
+{% endblock %}

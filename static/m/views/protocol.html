@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+<meta name="format-detection" content="telephone=no, email=no" />
+<title>资格审核</title>
+<link type="text/css" rel="stylesheet" href="../css/reset.css"/>
+</head>
+<body>
+	<!--<div class="protocol">-->
+		<!--<h1>活动协议</h1>-->
+		<!--<p>-->
+			<!--1、本次为线上选房，客户需要在选房结束后3日内，到**营销中心缴纳房源保留金，如未按期缴纳则所选房源无效。<br/>-->
+			<!--2、本次线上选房，一组看客户仅能选择一套房源，不可重复选定。<br/>-->
+			<!--3、客户最终付款方式以正式签订《商品房买卖合同》的约定为准，并按签订合同的银行政策缴纳首付款。-->
+		<!--</p>-->
+
+	<!--</div>-->
+	<script type="text/javascript" src="../js/jquery-1.12.4.min.js"></script>
+	<script type="text/javascript" src="../js/login.js"></script>
+
+<script>
+	// 获取地址栏的参数数组
+	function getUrlParams()
+	{
+		var search = window.location.search ;
+		// 写入数据字典
+		var tmparray = search.substr(1,search.length).split("&");
+		var paramsArray = new Array;
+		if( tmparray != null)
+		{
+			for(var i = 0;i<tmparray.length;i++)
+			{
+				var reg = /[=|^==]/;    // 用=进行拆分，但不包括==
+				var set1 = tmparray[i].replace(reg,'&');
+				var tmpStr2 = set1.split('&');
+				var array = new Array ;
+				array[tmpStr2[0]] = tmpStr2[1] ;
+				paramsArray.push(array);
+			}
+		}
+		// 将参数数组进行返回
+		return paramsArray ;
+	}
+
+	// 根据参数名称获取参数值
+	function getParamValue(name)
+	{
+		var paramsArray = getUrlParams();
+		if(paramsArray != null)
+		{
+			for(var i = 0 ; i < paramsArray.length ; i ++ )
+			{
+				for(var  j in paramsArray[i] )
+				{
+					if( j == name )
+					{
+						return paramsArray[i][j] ;
+					}
+				}
+			}
+		}
+		return null ;
+	}
+	var userid = getParamValue("userid");
+	$.ajax({
+		type:"get",
+		url:http+"/app/orderpro/",
+		data:{
+			userid:userid
+		},
+		success:function(data){
+			if(data.response_state==200){
+				console.log(data);
+				$("body").append($('<div class="prols">'+
+										'<h1>'+data.objects[0].termname+'</h1>'+
+										'<p>'+data.objects[0].term+'</p>'+
+								  '</div>'
+				));
+			}else{
+				alert(data.msg);
+			}
+
+
+		},
+		error:function(){
+			alert("页面出错，请重试！");
+		}
+
+	});
+</script>
+</body>
+</html>

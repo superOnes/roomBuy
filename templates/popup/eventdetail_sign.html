@@ -1,0 +1,69 @@
+{% extends 'include/base.html' %}
+{% block main %}
+<div style="padding:10px">
+  <form method="post">
+    {% if object.sign %}
+    <div style="min-height:90px;background-color:#ddf3f5;padding:10px" class="sign-info">
+      <div><label>姓名：</label><span>{{object.sign.realname}}</span></div>
+      <div><label>手机号：</label><span>{{object.sign.mobile}}</span></div>
+      <div><label>身份证号：</label><span>{{object.sign.identication}}</span></div>
+      <div><input type="text" name="sign" value="" style="display:none"/></div>
+    </div>
+    <div class="modal-footer">
+      <span style="color:red">{{ form.sign.errors }}</span>
+      <button type="submit" class="btn btn-sm btn-primary sign-info-save">取消备注</button>
+    </div>
+    {% else %}
+    <div class="input-group">
+      <input type="text" class="form-control" placeholder="请输入身份证号">
+      <span class="input-group-btn">
+        <button class="btn btn-default sign-customer-search" type="button" data-event-id="{{object.event.id}}">搜索</button>
+      </span>
+    </div>
+    <div style="min-height:107px;background-color:#ddf3f5;padding:10px" class="sign-info"></div>
+    <div class="modal-footer">
+      <span style="color:red">{{ form.sign.errors }}</span>
+      <button type="submit" class="btn btn-sm btn-primary sign-info-save" disabled>保存</button>
+    </div>
+    {% endif %}
+</form>
+</div>
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function() {
+  $(".sign-customer-search").on('click', function(e) {
+    var obj = $(e.currentTarget);
+    $.ajax({
+      url: '/acc/info/',
+      method: 'GET',
+      data: {id: obj.parent().prev().val(),
+             eid: obj.data('event-id')},
+      success: function(data) {
+        if(data.response_state == 200){
+          var result = data.result;
+          var tmp = "<div><label>姓名：</label><span>" + result.realname + "</span></div>" +
+                    "<div><label>手机号：</label><span>" + result.mobile + "</span></div>" +
+                    "<div><label>身份证号：</label><span>" + result.identication + "</span></div>" +
+                    "<div><input name='sign' style='display:none' value='" + result.id + "'></div>";
+          $(".sign-info").html(tmp);
+          $(".sign-info-save").attr('disabled', false);
+        } else if(data.response_state == 301) {
+          var result = data.result;
+          var tmp = "<div><label>姓名：</label><span>" + result.realname + "</span></div>" +
+                    "<div><label>手机号：</label><span>" + result.mobile + "</span></div>" +
+                    "<div><label>身份证号：</label><span>" + result.identication + "</span></div>" +
+                    "<span style='color:#03a2b6'>" + data.msg + "</span>";
+          $(".sign-info").html(tmp);
+          $(".sign-info-save").attr('disabled', true);
+        }
+        else {
+          $(".sign-info").html("<p>" + data.msg + "</p>");
+          $(".sign-info-save").attr('disabled', true);
+        }
+      },
+    });
+  });
+});
+</script>
+{% endblock %}
