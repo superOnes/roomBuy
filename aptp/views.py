@@ -305,8 +305,9 @@ class AppHouseChoiceConfirmView(View):
                                      'orderid': order.id,
                                      })
             elif Order.objects.filter(user=user, eventdetail_id=obj[0],
-                                      is_test=False).exists():
-                return JsonResponse({'response_state': 400, 'msg': '已购买'})
+                                      is_test=True).exists():
+                return JsonResponse({'response_state': 400,
+                                     'msg': '已购买,不要重复购买'})
         elif (now >= event.event_start) and (now <= event.event_end):
             if not obj[1] and not obj[2]:
                 with transaction.atomic():
@@ -343,8 +344,9 @@ class AppHouseChoiceConfirmView(View):
                 return JsonResponse(
                     {'response_state': 400, 'msg': '购买失败，房屋已卖出'})
             elif Order.objects.filter(user=user, eventdetail_id=obj[0],
-                                      is_test=True).exists():
-                return JsonResponse({'response_state': 400, 'msg': '已购买'})
+                                      is_test=False).exists():
+                return JsonResponse({'response_state': 400,
+                                     'msg': '已购买,不要重复购买'})
         return JsonResponse({'response_state': 400, 'msg': '购买失败'})
 
 
