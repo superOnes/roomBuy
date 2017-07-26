@@ -84,7 +84,7 @@ class EventDetail(models.Model):
     unit = models.CharField('单元', max_length=100)
     floor = models.IntegerField('楼层')
     room_num = models.IntegerField('房号')
-    status = models.BooleanField('上架状态', default=False)
+    status = models.BooleanField('上架状态', default=True)
     event = models.ForeignKey(Event, verbose_name='所属活动')
     is_sold = models.BooleanField('是否被卖', default=False)
     is_testsold = models.BooleanField('公测是否已售', default=False)
@@ -97,8 +97,8 @@ class EventDetail(models.Model):
     house_type = models.ForeignKey(HouseType, null=True, blank=True)
     looking = models.CharField('朝向', max_length=100)
     term = models.CharField('使用年限', max_length=50)
-    area = models.CharField('建筑面积', max_length=50)
-    unit_price = models.CharField('面积单价', max_length=100)
+    area = models.FloatField('建筑面积', max_length=50)
+    unit_price = models.FloatField('面积单价', max_length=100)
     sign = models.ForeignKey(CUSTOMER_MODEL, related_name='sign',
                              null=True, blank=True)
 

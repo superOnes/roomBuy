@@ -10,7 +10,8 @@ from .views import (
     AppOrderInfoView,
     FollowView,
     AppEventDetailUnitListView,
-    AppEventDetailHouseListView)
+    AppEventDetailHouseListView,
+    OrderProView)
 
 urlpatterns = [
     url(r'^(?P<pk>\d+)/detail/', AppEventDetailView.as_view(), name='app_eventdetail'),
@@ -23,5 +24,6 @@ urlpatterns = [
     url(r'^followlist/', FollowView.as_view(), name='app_follow_view'),
     url(r'^orderconfirm/', AppHouseChoiceConfirmView.as_view(), name='app_follow_view'),
     url(r'^orderinfo/', AppOrderInfoView.as_view(), name='app_order_info'),
+    url(r'^orderpro/', OrderProView.as_view(), name='app_order_pro'),
     url(r'^orderslist', AppOrderListView.as_view(), name='app_order_list'),
 ]

@@ -1,9 +1,9 @@
-import time
 from functools import wraps
+from datetime import datetime
+
 from django.http import JsonResponse
-from django.shortcuts import redirect, resolve_url
+from django.shortcuts import redirect
 from django.http import QueryDict
-from django.core.urlresolvers import reverse
 
 from .models import Customer, User
 
@@ -57,10 +57,9 @@ def customer_login_time(func):
         dict = QueryDict(request.body, encoding=request.encoding)
         userid = dict.get('userid')
         user = User.get(userid)
-        if time.strftime('%Y%m%d %H:%M:%S') <= user.customer.event.event_end.strftime(
-                '%Y%m%d %H:%M:%S'):
-            if time.strftime('%Y%m%d %H:%M:%S') <= user.customer.event.event_start.strftime(
-                    '%Y%m%d %H:%M:%S'):
+        now = datetime.now()
+        if now <= user.customer.event.event_end:
+            if now <= user.customer.event.event_start:
                 return JsonResponse({'response_state': 403, 'msg': '活动尚未开始'})
             else:
                 return func(request, *args, **kwargs)
@@ -77,11 +76,11 @@ def login_time(func):
         try:
             customer = Customer.objects.get(
                 mobile=mobile, identication=identication)
+            now = datetime.now()
         except BaseException:
-            return JsonResponse({'response_state': 400, 'msg': '认筹名单中没有该用户'})
+            return JsonResponse({'response_state': 400, 'msg': '认筹名单中没有此用户'})
         else:
-            if time.strftime('%Y%m%d %H:%M:%S') <= customer.event.event_end.strftime(
-                    '%Y%m%d %H:%M:%S'):
+            if now <= customer.event.event_end:
                 return func(request, *args, **kwargs)
             else:
                 return JsonResponse({'response_state': 403, 'msg': '活动已经结束'})

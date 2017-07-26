@@ -1,7 +1,6 @@
 import time
 from datetime import datetime, timedelta
 
-
 from django.views.generic import View
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
@@ -25,12 +24,12 @@ class ProView(View):
             customer = Customer.objects.get(
                 mobile=mobile, identication=identication)
         except BaseException:
-            return JsonResponse({'response_state': 400, 'msg': '认筹名单中没有该用户'})
+            return JsonResponse({'response_state': 400, 'msg': '认筹名单中没有该用户！'})
         else:
             value = [{
                 'termname': customer.event.termname,
                 'term': customer.event.term,
-                'userid':customer.user.id,
+                'userid': customer.user.id,
             }]
             context = {}
             context['objects'] = value
@@ -170,8 +169,8 @@ class AppEventDetailHouseInfoView(View):
                   'realname': user.customer.realname,
                   'mobile': user.customer.mobile,
                   'identication': user.customer.identication,
-                  'building_unit': eventdetobj.building + '号楼 ' + eventdetobj.unit + '单元 ' + str(eventdetobj.floor) + '层 ' + str(eventdetobj.room_num) + '室',
-                  'total': '***' if test and not eventdetobj.event.test_price else (int(eventdetobj.area) * int(eventdetobj.unit_price)),
+                  'building_unit': eventdetobj.building + eventdetobj.unit + str(eventdetobj.floor) + '层 ' + str(eventdetobj.room_num) + '室',
+                  'total': '***' if test and not eventdetobj.event.test_price else ((eventdetobj.area) * (eventdetobj.unit_price)),
                   'house_type': eventdetobj.house_type.name,
                   'pic': eventdetobj.house_type.pic.url,
                   'floor': eventdetobj.floor,
@@ -181,7 +180,6 @@ class AppEventDetailHouseInfoView(View):
                   'term': eventdetobj.term,
                   'is_sold': eventdetobj.is_sold,
                   'is_followed': is_followed,
-                  'sign': True if eventdetobj.sign else False,
                   }]
 
         context = {}
@@ -211,13 +209,14 @@ class AddFollow(View):
                         user=user, eventdetail=eventdetail)
                 else:
                     return JsonResponse(
-                        {'response_state': 403, 'msg': '收藏超过限制'})
+                        {'response_state': 403, 'msg': '收藏数量超过限制'})
             else:
-                return JsonResponse({'response_state': 400, 'msg': '已经收藏'})
+                return JsonResponse(
+                    {'response_state': 400, 'msg': '您已收藏过该商品！'})
         except BaseException:
             return JsonResponse({'response_state': 400})
         else:
-            return JsonResponse({'response_state': 200,'msg':'收藏成功'})
+            return JsonResponse({'response_state': 200, 'msg': '收藏成功'})
 
 
 # @method_decorator(customer_login_required, name='dispatch')
@@ -237,16 +236,14 @@ class FollowView(View):
                 {
                     'eventdetail': (
                         obj.eventdetail.building +
-                        '号楼' +
                         obj.eventdetail.unit +
-                        '单元' +
                         str(obj.eventdetail.floor) +
                         '层' +
                         str(obj.eventdetail.room_num)) + '室',
                     'price': (
-                        int(
+                        (
                             obj.eventdetail.area) *
-                        int(
+                        (
                             obj.eventdetail.unit_price)),
                     'house': obj.eventdetail.id,
                 }]
@@ -307,13 +304,13 @@ class AppHouseChoiceConfirmView(View):
                     cursor.execute('UPDATE apt_eventdetail set is_sold=1 \
                                     where id=%s' % house)
                 return JsonResponse({'response_state': 200,
-                                             'room_info': ('%s-%s-%s-%s') %
-                                             (obj[5], obj[6], obj[7],
-                                              obj[8]),
-                                             'limit': event.limit,
-                                             'ordertime': order.time,
-                                             'orderid': order.id,
-                                             })
+                                     'room_info': ('%s-%s-%s-%s') %
+                                     (obj[5], obj[6], obj[7],
+                                      obj[8]),
+                                     'limit': event.limit,
+                                     'ordertime': order.time,
+                                     'orderid': order.id,
+                                     })
             elif obj[2]:
                 with transaction.atomic():
                     customer = Customer.get(obj[2])
@@ -322,15 +319,39 @@ class AppHouseChoiceConfirmView(View):
                                          order_num=time.strftime
                                          ('%Y%m%d%H%M%S'),
                                          is_test=False)
-                    cursor.execute('UPDATE apt_eventdetail set is_sold=1 \
-                                    where id=%s' % house)
-                return JsonResponse({'response_state': 400,
-                                     'msg': '购买失败，房屋已卖出'})
+                    cursor.execute(
+                        'UPDATE apt_eventdetail set is_sold=1 where id=%s' %
+                        house)
+                return JsonResponse(
+                    {'response_state': 400, 'msg': '购买失败，房屋已卖出'})
         return JsonResponse({'response_state': 400, 'msg': '购买失败'})
 
 
+class OrderProView(View):
+    '''
+    订单中协议
+    '''
+
+    def get(self, request):
+        userid = request.GET.get('userid')
+        try:
+            customer = User.get(userid).customer
+        except BaseException:
+            return JsonResponse({'response_state': 400, 'msg': '认筹名单中没有该用户！'})
+        else:
+            value = [{
+                'termname': customer.event.termname,
+                'term': customer.event.term,
+            }]
+            context = {}
+            context['objects'] = value
+            context['response_state'] = 200
+            return JsonResponse(context)
+
 # @method_decorator(customer_login_time, name='dispatch')
 # @method_decorator(customer_login_required, name='dispatch')
+
+
 class AppOrderListView(View):
     '''
     订单列表
@@ -355,7 +376,6 @@ class AppOrderListView(View):
                 'time': obj.time.strftime('%Y/%m/%d %H:%M:%S'),
                 'event': obj.eventdetail.event.name,
                 'unit_price': obj.eventdetail.unit_price if obj.eventdetail.event.covered_space_price else '',
-                'choice_num': '0000000000000001',  # 这里需要确认一下
                 'orderid': obj.id,
             }]
             valuelist.append(value)
@@ -397,13 +417,13 @@ class AppOrderInfoView(View):
                 'mobile': obj.user.customer.mobile,
                 'iidentication': obj.user.customer.identication,
                 'order_num': obj.order_num,
+                'total':((obj.eventdetail.area) * (obj.eventdetail.unit_price))
             }]
-
 
             context = {}
             context['objects'] = value
             context['response_state'] = 200
         except BaseException:
-            return JsonResponse({'response_state': 400})
+            return JsonResponse({'response_state': 400, 'msg': '没有找到该订单！'})
         else:
             return JsonResponse(context)
