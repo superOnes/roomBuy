@@ -356,7 +356,8 @@ function houseList(data){
 				url:http+"/app/unit/",
 				data:{
 					building:$(this).text(),
-					id:$(".idNum").html()
+					id:$(".idNum").html(),
+					userid:$(".userid").html()
 				},
 				dataType:'JSON',
 				success: function (data) {
@@ -396,7 +397,8 @@ function houseList(data){
 								data:{
 									building:build,
 									unit:$(this).html(),
-									id:$(".idNum").html()
+									id:$(".idNum").html(),
+									userid:$(".userid").html()
 								},
 								success:function(data){
 									console.log(data);
@@ -549,11 +551,21 @@ function houseInfo(data){
 	);
 	$("#houseInfo").after(infoBlack);
 	$("#houseInfo").append(houseInfo);
-	if(data.is_sold){
-		$(".houseInfoOther").after($('<div class="houseBtnN">房间已售</div>'));
-	}else{
-		$(".houseInfoOther").after($('<div class="houseBtnY" onclick="buyNow()">立即选择</div>'));
+	if(new Date($(".eventStart").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime()){
+		if(data.is_sold){
+			$(".houseInfoOther").after($('<div class="houseBtnN">房间已售</div>'));
+		}else{
+			$(".houseInfoOther").after($('<div class="houseBtnY" onclick="buyNow()">立即选择</div>'));
+		}
 	}
+	if(new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() <new Date($(".test_ent").html()).getTime()){
+		if(data.is_testsold){
+			$(".houseInfoOther").after($('<div class="houseBtnN">房间已售</div>'));
+		}else{
+			$(".houseInfoOther").after($('<div class="houseBtnY" onclick="buyNow()">立即选择</div>'));
+		}
+	}
+
 	if(data.is_followed[0]){
 		$(".shareBt").unbind("click",shareBtn);
 		$(".shareBt").html("已收藏").css({background:"#999",border:"none",color:"#fff"})
