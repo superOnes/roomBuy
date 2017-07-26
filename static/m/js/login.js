@@ -149,7 +149,7 @@ function telp (){
 function quit(){
 	$.ajax({
 		type:"POST",
-		url:"http://10.7.10.193:8000/acc/cusout/",
+		url:http + "/acc/cusout/",
 		data:{
 			userid:$(".userid1").html()
 		},
