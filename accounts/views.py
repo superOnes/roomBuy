@@ -276,8 +276,8 @@ class ImportView(View):
                 else:
                     with transaction.atomic():
                         customer = Customer.objects.create(realname=ct[0],
-                                                           mobile=ct[1],
-                                                           identication=ct[2],
+                                                           mobile=str(int(ct[1])),
+                                                           identication=str(int(ct[2])),
                                                            remark=ct[3],
                                                            event=event)
                         customer.save()
