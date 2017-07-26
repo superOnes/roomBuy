@@ -168,6 +168,9 @@
 			 	<!--<img width="45%" style="margin: 5px;" src='{{MEDIA_URL}}{{object.plane_graph}}' alt='' class='plane_graph_img' />-->
 		    </div>
 		</div>
+		{% if form.non_field_errors %}
+		<div class="alert alert-info">{{form.non_field_errors}}</div>
+		{% endif %}
 		<input type="text" name="company" value="{{form.company.value|default:''}}" style="display:none">
 	<div class="modal-footer">
     	<input type="submit" class="btn btn-primary" value="确定"></input>
@@ -186,7 +189,7 @@ $(document).ready(function(){
 	   str += (Minutes>=10?Minutes = Minutes:Minutes= "0"+Minutes);
 	  console.log(str)
 	  $(".form-datetime").attr("min",mydate)
-	
+
 //	封面图
 	var coverImgFile = $(".coverImgFile").html();
 	var coverImgFiles = coverImgFile.slice(17);//截取获取文件的文件名
