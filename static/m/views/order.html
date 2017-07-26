@@ -65,14 +65,12 @@
                 if(data.response_state==200){
                     console.log(data);
                     order(data);
-                    console.log($(".order-all").length);
-                    console.log(new Date($(".eventStart").html()).getTime()<new Date().getTime()&&new Date().getTime()< new Date($(".event_end").html()));
                     $(".order-all").each(function(){
                         $(this).click(function(){
 
                             if((new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime())||
                                     (new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".test_ent").html()).getTime())){
-                            window.location.href="orderinfo.html?orderId="+$(this).find(".oferId").html();
+                            window.location.href="orderinfo.html?orderId="+$(this).find(".oferId").html()+"&id="+id+"&userid="+userid;
 	                    }else{
                           alert("活动尚未开始");
                       }

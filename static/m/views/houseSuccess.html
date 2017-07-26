@@ -56,6 +56,7 @@
         return null ;
     }
     var id = getParamValue("house");
+    var idd=getParamValue("id");
     var userid = getParamValue("userid");
 
     $(function(){
@@ -68,9 +69,10 @@
             url:http+"/app/orderconfirm/",
             dataType:'JSON',
             success: function (data) {
-                console.log(data);
                 if(data.response_state==200){
                     orderSu(data);
+                    $(".id1").html(idd);
+                    $(".user1").html(userid);
 
                 }else{
                     $(".success-container").append('<div class="noOne"><img src="../images/none.png" /><p>购买失败！</p></div>');
