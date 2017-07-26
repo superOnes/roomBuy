@@ -136,6 +136,7 @@ class AppEventDetailHouseListView(View):
                     'house': obj.id,
                     'floor_room_num': str(obj.floor) + '-' + str(obj.room_num),
                     'is_sold': obj.is_sold,
+                    'is_testsold': obj.is_testsold
                 }]
                 room_num_list.append(value)
         context['objects'] = room_num_list
