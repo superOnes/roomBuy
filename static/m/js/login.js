@@ -1,7 +1,8 @@
 var id;
 var userid;
 var http="";//正式
-// var http="http://10.7.10.193:8000"; //测试
+//var http="http://10.7.10.193:8000"; //测试
+//var http="http://10.7.1.34";
 $(function(){
 
 	$(".btnLogin").click(function(){
@@ -551,6 +552,7 @@ function houseInfo(data){
 	);
 	$("#houseInfo").after(infoBlack);
 	$("#houseInfo").append(houseInfo);
+
 	if(new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime()){
 		if(data.is_sold){
 			$(".houseInfoOther").after($('<div class="houseBtnN">房间已售</div>'));
@@ -564,10 +566,13 @@ function houseInfo(data){
 		}else{
 			$(".houseInfoOther").after($('<div class="houseBtnY" onclick="buyNow()">立即选择</div>'));
 		}
+		console.log(data.is_testsold);
 
 	}else{
 		$(".houseInfoOther").after($('<div class="houseBtnN">活动未开始</div>'));
 	}
+
+
 
 	if(data.is_followed[0]){
 		$(".shareBt").unbind("click",shareBtn);
