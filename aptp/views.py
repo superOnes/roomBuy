@@ -165,14 +165,20 @@ class AppEventDetailHouseInfoView(View):
             is_followed = False,
         else:
             is_followed = True,
+        try:
+            house_type = eventdetobj.house_type.name
+            pic = eventdetobj.house_type.pic.url
+        except BaseException:
+            house_type = ''
+            pic = ''
         value = [{'event': user.customer.event.name,
                   'realname': user.customer.realname,
                   'mobile': user.customer.mobile,
                   'identication': user.customer.identication,
                   'building_unit': eventdetobj.building + eventdetobj.unit + str(eventdetobj.floor) + '层 ' + str(eventdetobj.room_num) + '室',
                   'total': '***' if test and not eventdetobj.event.test_price else ((eventdetobj.area) * (eventdetobj.unit_price)),
-                  'house_type': eventdetobj.house_type.name,
-                  'pic': eventdetobj.house_type.pic.url,
+                  'house_type': house_type,
+                  'pic': pic,
                   'floor': eventdetobj.floor,
                   'area': eventdetobj.area if eventdetobj.event.covered_space else '***',
                   'unit_price': eventdetobj.unit_price if eventdetobj.event.covered_space_price else '***',
@@ -396,34 +402,40 @@ class AppOrderInfoView(View):
         orderid = request.GET.get('orderId')
         try:
             obj = Order.get(orderid)
-            value = [{
-                'eventname': obj.eventdetail.event.name,
-                'unit_price': obj.eventdetail.unit_price,
-                'limit': (obj.time + timedelta(hours=obj.eventdetail.event.limit)).strftime('%Y年%m月%d日 %H:%M:%S'),
-                'ordertime': obj.time.strftime('%Y%m/%d %H:%M:%S'),
-                'room_info': (
-                    obj.eventdetail.event.name +
-                    '-' +
-                    obj.eventdetail.building +
-                    '-' +
-                    obj.eventdetail.unit +
-                    '-' +
-                    str(obj.eventdetail.floor) +
-                    '-' +
-                    str(obj.eventdetail.room_num)),
-                'houst_type': obj.eventdetail.house_type.name,
-                'area': obj.eventdetail.area,
-                'customer': obj.user.customer.realname,
-                'mobile': obj.user.customer.mobile,
-                'iidentication': obj.user.customer.identication,
-                'order_num': obj.order_num,
-                'total':((obj.eventdetail.area) * (obj.eventdetail.unit_price))
-            }]
+        except BaseException:
+            return JsonResponse({'response_state': 400, 'msg': '没有找到该订单！'})
+        else:
+            try:
+                house_type = obj.eventdetail.house_type.name
+            except BaseException:
+                house_type = ''
+            else:
+                value = [{
+                    'eventname': obj.eventdetail.event.name,
+                    'unit_price': obj.eventdetail.unit_price,
+                    'limit': (obj.time + timedelta(hours=obj.eventdetail.event.limit)).strftime('%Y年%m月%d日 %H:%M:%S'),
+                    'ordertime': obj.time.strftime('%Y%m/%d %H:%M:%S'),
+                    'room_info': (
+                        obj.eventdetail.event.name +
+                        '-' +
+                        obj.eventdetail.building +
+                        '-' +
+                        obj.eventdetail.unit +
+                        '-' +
+                        str(obj.eventdetail.floor) +
+                        '-' +
+                        str(obj.eventdetail.room_num)),
+                    'houst_type': house_type,
+                    'area': obj.eventdetail.area,
+                    'customer': obj.user.customer.realname,
+                    'mobile': obj.user.customer.mobile,
+                    'iidentication': obj.user.customer.identication,
+                    'order_num': obj.order_num,
+                    'total': ((obj.eventdetail.area) * (obj.eventdetail.unit_price))
+                }]
 
             context = {}
             context['objects'] = value
             context['response_state'] = 200
-        except BaseException:
-            return JsonResponse({'response_state': 400, 'msg': '没有找到该订单！'})
-        else:
+
             return JsonResponse(context)
