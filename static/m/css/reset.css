@@ -86,17 +86,17 @@ a, img {-webkit-touch-callout: none;}
     overflow:hidden;
 }
 /*.wapLogin>img{*/
-    /*width:120%;*/
-    /*height:120%;*/
-    /*background-position: center;*/
-    /*background-size: cover;*/
-    /*-ms-filter: blur(14px);*/
-    /*filter: blur(14px);*/
-    /*position:fixed;*/
-    /*left:-10%;*/
-    /*top:-10%;*/
-    /*z-index:-1;*/
-    /*opacity:0.85;*/
+/*width:120%;*/
+/*height:120%;*/
+/*background-position: center;*/
+/*background-size: cover;*/
+/*-ms-filter: blur(14px);*/
+/*filter: blur(14px);*/
+/*position:fixed;*/
+/*left:-10%;*/
+/*top:-10%;*/
+/*z-index:-1;*/
+/*opacity:0.85;*/
 /*}*/
 .login{ text-align:center;margin-top:15%;position:relative; }
 .loginLogo {
@@ -138,17 +138,17 @@ a, img {-webkit-touch-callout: none;}
 .tipbox input::-webkit-input-placeholder { color: #bfbfbf;}
 .tipbox input:-moz-placeholder { color: #bfbfbf; }
 .tipbox input:-ms-input-placeholder {  color: #bfbfbf;}​,
-.btnLogin{
-    width:80%;
-    margin:10%;
-    height:2rem;
-    line-height:2rem;
-    text-align:center;
-    font-size:.9rem;
-    background:#f75c2e;
-    border-radius:100px;
-    color:#fff;
-}
+                                                       .btnLogin{
+                                                           width:80%;
+                                                           margin:10%;
+                                                           height:2rem;
+                                                           line-height:2rem;
+                                                           text-align:center;
+                                                           font-size:.9rem;
+                                                           background:#f75c2e;
+                                                           border-radius:100px;
+                                                           color:#fff;
+                                                       }
 .proBox{
     width:80%;
     height:70%;
@@ -316,7 +316,7 @@ a, img {-webkit-touch-callout: none;}
     left: -0.4rem;
 }
 .wapline .btnline{
-    height:2.0rem;
+    height:2.2rem;
     width:100%;
     background: #f75c2e;
     margin-top: 0.7rem;
@@ -326,7 +326,7 @@ a, img {-webkit-touch-callout: none;}
 }
 .wapline .btnline a{
     font-size: 0.8rem;
-    line-height: 2.0rem;
+    line-height: 2.2rem;
     text-align: center;
     float: left;
     width: 100%;
@@ -636,7 +636,7 @@ div.shoued i{
 .legend span{
     padding-left:14px;
 }
-    /*收藏页*/
+/*收藏页*/
 .shareCarList{
     float: left;
     width:100%;
@@ -907,6 +907,17 @@ div.shoued i{
     color: #a8a8a8;
     left:80%;
 }
+.checkoderBtn,.backIndex{
+    font-size:.7rem;
+    text-align:center;
+    width:120px;
+    height:32px;
+    margin:10px auto;
+    line-height:32px;
+    color:#fff;
+    background:#f75c2e;
+    border-radius:100px;
+}
 /*订单详情*/
 .order-top2{
     width:95%;
@@ -1001,6 +1012,7 @@ div.shoued i{
     border-top:none;
     overflow:hidden;
 }
+
 /*订单确认*/
 .windowBlack{
     background:rgba(0,0,0,0.5);

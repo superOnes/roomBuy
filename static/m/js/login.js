@@ -1,6 +1,7 @@
 var id;
 var userid;
-var http= "";
+var http="";//正式
+//var http="http://10.7.10.193:8000"; //测试
 $(function(){
 
 	$(".btnLogin").click(function(){
@@ -69,7 +70,7 @@ $(function(){
 
 				},
 				error:function(){
-					alert(tel+personId+"页面出错，请重试");
+					alert("页面出错，请重试");
 				}
 
 			});
@@ -80,6 +81,7 @@ $(function(){
 });
 
 function prol(data){
+	$(".prols").empty();
 	$(".prols").append($('<h1>'+data.termname+'</h1>'+
 						'<p>'+data.term+'</p>'+
 						'<p style="display:none" class="userid">'+data.userid+'</p>'
@@ -413,9 +415,18 @@ function houseList(data){
 									$(".unite").after(romms);
 									for(var i=0;i<data.objects.length;i++){
 										$(".floorChose").append("<li>"+data.objects[i][0].floor_room_num+"</li>");
-										if(data.objects[i][0].is_sold){
-											$(".floorChose li").eq(i).addClass("floorLi-red");
+										if(new Date($(".eventStart").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime()){
+											if(data.objects[i][0].is_sold){
+												$(".floorChose li").eq(i).addClass("floorLi-red");
+											}
 										}
+										if(new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() <new Date($(".test_ent").html()).getTime()){
+											if(data.objects[i][0].is_testsold){
+												$(".floorChose li").eq(i).addClass("floorLi-red");
+											}
+										}
+
+
 									}
 
 									if((new Date($(".eventStart").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime())||
@@ -503,7 +514,8 @@ function houseInfo(data){
 						'</ul>'+
 					'</div>'+
 					'<p class="houseID" style="display:none"></p>'+
-					'<p class="userId" style="display:none"></p>'
+					'<p class="userId" style="display:none"></p>'+
+				    '<p class="idd" style="display:none"></p>'
 	);
 	var infoBlack=$('<div class="windowBlack" id="houseInfoBlack">'+
 						'<div class="dialog">'+
@@ -577,38 +589,39 @@ function buyNow(){
 function confrim(){
 	var id=$(".houseID").html();
 	var userid=$(".userId").html();
+	var idd=$(".idd").html();
 	if(!$(".dialog-check").prop("checked")){
 		alert("请同意《活动协议》");
 	}else{
 		if((new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime())||
 			(new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".test_ent").html()).getTime())){
-			window.location.href = "houseSuccess.html?house="+id+"&userid="+userid;
+			window.location.href = "houseSuccess.html?house="+id+"&userid="+userid+"&id="+idd;
 		}else{
 			alert("活动尚未开始");
 		}
 	}
 }
-
-/*订单成功*/
-Date.prototype.Format = function (fmt) { //author: meizz
+Date.prototype.Format = function(fmt)
+{ //author: meizz
 	var o = {
-		"M+": this.getMonth() + 1, //月份
-		"d+": this.getDate(), //日
-		"h+": this.getHours(), //小时
-		"m+": this.getMinutes(), //分
-		"s+": this.getSeconds(), //秒
-		"q+": Math.floor((this.getMonth() + 3) / 3), //季度
-		"S": this.getMilliseconds() //毫秒
+		"M+" : this.getMonth()+1,                 //月份
+		"d+" : this.getDate(),                    //日
+		"h+" : this.getHours(),                   //小时
+		"m+" : this.getMinutes(),                 //分
+		"s+" : this.getSeconds(),                 //秒
+		"q+" : Math.floor((this.getMonth()+3)/3), //季度
+		"S"  : this.getMilliseconds()             //毫秒
 	};
-	if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-	for (var k in o)
-		if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+	if(/(y+)/.test(fmt))
+		fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
+	for(var k in o)
+		if(new RegExp("("+ k +")").test(fmt))
+			fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
 	return fmt;
 };
-
 function orderSu(data){
 	var sucess=$('<div class="prompt">'+
-						'<img src="images/success.png">'+
+						'<img src="../images/success.png">'+
 						'<div class="prompt-text">'+
 							'<span>恭喜您，选择成功</span><br>'+
 							'<span>'+data.room_info+'</span>'+
@@ -620,6 +633,8 @@ function orderSu(data){
 							'<a href="javascript:;" onclick="orderInfos()">订单详情</a>'+
 						'</div>'+
 						'<p class="orderid" style="display:none;">'+data.orderid+'</p>'+
+						'<p class="id1" style="display:none"></p>'+
+						'<p class="user1" style="display:none"></p>'+
 					'</div>'
 	);
 
@@ -629,7 +644,7 @@ function orderSu(data){
 
 }
 function orderInfos(){
-	window.location.href="orderinfo.html?orderId="+$(".orderid").html();
+	window.location.href="orderinfo.html?orderId="+$(".orderid").html()+"&id="+$(".id1").html()+"&userid="+$(".user1").html();
 }
 
 /*订单*/
@@ -660,7 +675,7 @@ function order(data){
 											'<td>￥'+data.objects[i][0].unit_price+'/m²</td>'+
 										'</tr>'+
 									'</table>'+
-									'<p>查看订单详情</p>'+
+									'<p class="checkoderBtn">查看订单详情</p>'+
 								'</div>'+
 
 								'<p class="oferId" style="display:none">'+data.objects[i][0].orderid+'</p>'+
@@ -736,6 +751,7 @@ function checkInfo(data){
 								'</table>'+
 							'</div>'+
 						'</div>'+
+						'<p class="backIndex">返回列表页</p>'+
 				'</div>'
 	);
 	$(".orderInfoBox").append(orderInfo);
@@ -745,7 +761,8 @@ function checkInfo(data){
 		var h=date.getHours(),m=date.getMinutes(),s=date.getSeconds();
 		$(".order-2").html((h<10?"0"+h:h)+":"+(m<10?"0"+m:m)+":"+(s<10?"0"+s:s));
 	},1000);
-	var time1=data.limit*3600*1000+new Date(data.ordertime).getTime();
-	console.log(new Date(data.ordertime).getTime())
-//	$(".order-middle2 span").html(new Date(time1).Format("yyyy-MM-dd hh:mm:ss"));
+
 }
+
+
+

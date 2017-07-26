@@ -181,35 +181,35 @@ class CustomerLoginView(View):
     def post(self, request):
         userid=request.POST.get('userid')
         customer=User.get(userid).customer
-        try:
-            request.session[time.strftime("%Y%m%d%H%M%S")] = customer.realname + \
-                customer.mobile + customer.identication
-            count = Counter(
-                request.session.values()).get(
-                customer.realname +
-                customer.mobile +
-                customer.identication)
-        except BaseException:
-            return JsonResponse({'response_state': 400, 'msg': '认筹名单中没有此用户！'})
-        else:
-            userobj = customer.user
-            if customer.event.is_pub:
-                eventid = customer.event_id
-                user = authenticate(
-                    username=userobj.username,
-                    password=customer.identication)
-                if user:
-                    if not user.is_admin:
-                        if count > Event.get(eventid).equ_login_num:
-                            return JsonResponse(
-                                {'response_state': 402, 'msg': '帐号同时在线数量超出限制！'})
-                        else:
-                            login(request, user)
-                            request.session.set_expiry(300)
-                            return JsonResponse({'response_state': 200, 'id': eventid, 'userid': user.id, 'msg': '登录成功'})
-                    return JsonResponse({'response_state': 400})
-                return JsonResponse({'response_state': 400, 'msg': '该电话号与证件号未通过认证。'})
-            return JsonResponse({'response_state': 400, 'msg': '活动还未正式推出。'})
+        # try:
+        #     request.session[time.strftime("%Y%m%d%H%M%S")] = customer.realname + \
+        #         customer.mobile + customer.identication
+        #     count = Counter(
+        #         request.session.values()).get(
+        #         customer.realname +
+        #         customer.mobile +
+        #         customer.identication)
+        # except BaseException:
+        #     return JsonResponse({'response_state': 400, 'msg': '认筹名单中没有此用户！'})
+        # else:
+        userobj = customer.user
+        if customer.event.is_pub:
+            eventid = customer.event_id
+            user = authenticate(
+                username=userobj.username,
+                password=customer.identication)
+            if user:
+                if not user.is_admin:
+                    # if count > Event.get(eventid).equ_login_num:
+                    #     return JsonResponse(
+                    #         {'response_state': 402, 'msg': '帐号同时在线数量超出限制！'})
+                    # else:
+                    login(request, user)
+                    request.session.set_expiry(300)
+                    return JsonResponse({'response_state': 200, 'id': eventid, 'userid': user.id, 'msg': '登录成功'})
+                return JsonResponse({'response_state': 400})
+            return JsonResponse({'response_state': 400, 'msg': '该电话号与证件号未通过认证。'})
+        return JsonResponse({'response_state': 400, 'msg': '活动还未正式推出。'})
 
 
 @method_decorator(customer_login_required, name='dispatch')

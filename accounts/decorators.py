@@ -40,22 +40,26 @@ def admin_required(func):
 def customer_login_required(func):
     @wraps(func)
     def wrapper(request, *args, **kwargs):
-        dict = QueryDict(request.body, encoding=request.encoding)
-        userid = dict.get('userid')
-        user = User.get(userid)
-        if user.is_authenticated():
-            if not user.is_admin:
-                return func(request, *args, **kwargs)
-        return redirect(
-            'http://hd.edu2act.cn/app_register2/views/houseList.html?id=' + str(user.customer.event.id))
+        try:
+            userid=request.GET.get('userid')
+        except:
+            userid=request.POST.get('userid')
+        # userid = request.GET.get('userid', request.POST.get('userid'))
+        else:
+            user = User.get(userid)
+            if user.is_authenticated():
+                if not user.is_admin:
+                    return func(request, *args, **kwargs)
+            return redirect(
+                'http://%s/static/m/views/login.html' %
+                                    (request.get_host()))
     return wrapper
 
 
 def customer_login_time(func):
     @wraps(func)
     def wrapper(request, *args, **kwargs):
-        dict = QueryDict(request.body, encoding=request.encoding)
-        userid = dict.get('userid')
+        userid = request.GET.get('userid', request.POST.get('userid'))
         user = User.get(userid)
         now = datetime.now()
         if now <= user.customer.event.event_end:

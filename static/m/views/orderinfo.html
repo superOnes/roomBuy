@@ -55,6 +55,8 @@
         return null ;
     }
     var id = getParamValue("orderId");
+    var idd=getParamValue("id");
+    var userid=getParamValue("userid");
 
     $(function(){
         $.ajax({
@@ -67,8 +69,10 @@
             success: function (data) {
                 if(data.response_state==200){
                     console.log(data);
-                    //var data1=JSON.parse(data);
                     checkInfo(data.objects[0]);
+                    $(".backIndex").click(function(){
+                        window.location.href="houseList.html?id="+idd+"&userid="+userid;
+                    })
                 }else{
                     alert(data.msg);
                 }
