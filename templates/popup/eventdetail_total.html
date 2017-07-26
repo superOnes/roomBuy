@@ -4,7 +4,7 @@
 	<form class="form-horizontal" method="post">
 		{% csrf_token %}
 		<div class="input-group">
-		    <label for="inputText3" class="input-group-addon">房源单价</label>
+		    <label for="inputText3" class="input-group-addon">房源单价<i>*</i></label>
 	    	<input type="number" class="form-control" placeholder="房源单价" name="unit_price" required value="{{ object.unit_price }}">
 		</div>
 	<div class="modal-footer">

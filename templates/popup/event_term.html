@@ -12,13 +12,13 @@
 	<form class="form-horizontal" method="post" action="">
 		{% csrf_token %}
 		<div class="form-group">
-		    <label class="col-sm-3">协议名称</label>
+		    <label class="col-sm-3">协议名称<i>*</i></label>
 		    <div class="col-sm-9">
 		      <input type="text" class="form-control" placeholder="协议名称" name="termname" value="{{form.termname.value|default:''}}" required />
 		    </div>
 		</div>
 		<div class="form-group">
-			<label class="col-sm-3">协议内容</label>
+			<label class="col-sm-3">协议内容<i>*</i></label>
 		    <div class="col-sm-9">
 		    	<textarea class="form-control" style="height:150px;" name="term" required>{{form.term.value|default:''}}</textarea>
 		    </div>

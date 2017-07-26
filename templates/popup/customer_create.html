@@ -16,25 +16,25 @@
 	<form class="form-horizontal" method="post">
 		{% csrf_token %}
 		<div class="form-group">
-		    <label class="col-sm-2">姓名</label>
+		    <label class="col-sm-2">姓名<i>*</i></label>
 		    <div class="col-sm-10">
 		      <input type="text" class="form-control" placeholder="姓名" name="realname" required>
 		    </div>
 		</div>
 		<div class="form-group">
-		    <label class="col-sm-2">手机号</label>
+		    <label class="col-sm-2">手机号<i>*</i></label>
 		    <div class="col-sm-10">
 		      <input type="number" class="form-control" placeholder="11位手机号" oninput="if(value.length>11)value=value.slice(0,11)" name="mobile" required>
 		    </div>
 		</div>
 		<div class="form-group">
-		    <label class="col-sm-2">身份证</label>
+		    <label class="col-sm-2">身份证<i>*</i></label>
 		    <div class="col-sm-10">
 		      <input type="text" class="form-control" placeholder="身份证" maxlength="18" name="identication" required>
 		    </div>
 		</div>
 		<div class="form-group">
-		    <label class="col-sm-2">可购买套数</label>
+		    <label class="col-sm-2">可购买套数<i>*</i></label>
 		    <div class="col-sm-10">
 		      <input type="number" class="form-control" placeholder="可购买套数" name="count" required>
 		    </div>

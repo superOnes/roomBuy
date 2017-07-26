@@ -5,8 +5,12 @@ $(document).ready(function(){
 	});
 })
 
+
+
 //上传认筹名单文件
-function submitFile(thisID){
+function submitFile(event,thisID){
+	alert("正在准备上传，请稍等！");
+	$(event).attr("disabled","disabled");
 	var files = $("#files")[0].files;
 	var data = new FormData(); //转化为表单格式的数据
     data.append('filename', files[0]);
@@ -28,7 +32,9 @@ function submitFile(thisID){
 	});
 };
 //导入房价文件
-function roomPriceFile(thisID){
+function roomPriceFile(event,thisID){
+	alert("正在上传，请稍等！");
+	$(event).attr("disabled","disabled");
 	var files = $("#priceFile")[0].files;
 	var data = new FormData(); //转化为表单格式的数据
     data.append('file', files[0]);
