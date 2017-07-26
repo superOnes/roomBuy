@@ -2,9 +2,16 @@
 {% block main %}
 <style type="text/css">
 	.col-sm-4{
-		width: 30% !important;
+		width: 33% !important;
 		display: inline-block !important;
 		vertical-align: middle;
+		padding:0 10px !important;
+	}
+	.form-datetime{
+		width:75% !important;
+	}
+	.input-group-addon{
+		padding: 9px 12px !important;
 	}
 </style>
 <div style="padding:20px">
@@ -33,12 +40,14 @@
 		</div>
 		<div class="form-group">
 		    <label class="col-sm-3 control-label">公测时间</label>
-		    <div class="col-sm-4">
+		    <div class="input-group col-sm-4">
 	    		<input type="text" class="form-control form-datetime" name="test_start" value="{{form.test_start.value|default:''|date:'Y-m-d h:i'}}" required>
+		    	<span class="input-group-addon"><span class="icon-calendar"></span></span>
 		    </div>
 		    <div class="labelCenter">至</div>
-		    <div class="col-sm-4">
+		    <div class="input-group col-sm-4">
 	    		<input type="text" class="form-control form-datetime" name="test_end" value="{{form.test_end.value|default:''|date:'Y-m-d h:i'}}" required>
+    			<span class="input-group-addon"><span class="icon-calendar"></span></span>
 		    </div>
 		</div>
 		<div class="form-group">
@@ -54,12 +63,14 @@
 		</div>
 		<div class="form-group">
 		    <label class="col-sm-3 control-label">活动开始时间</label>
-		    <div class="col-sm-4">
+		    <div class="input-group col-sm-4">
 		    	<input type="text" class="form-control form-datetime" name="event_start" value="{{form.event_start.value|default:''|date:'Y-m-d h:i'}}" required>
+    			<span class="input-group-addon"><span class="icon-calendar"></span></span>
 		    </div>
 		    <div class="labelCenter">至</div>
-		    <div class="col-sm-4">
+		    <div class="input-group col-sm-4">
 		    	<input type="text" class="form-control form-datetime" name="event_end" value="{{form.event_end.value|default:''|date:'Y-m-d h:i'}}" required>
+    			<span class="input-group-addon"><span class="icon-calendar"></span></span>
 		    </div>
 		</div>
 		<div class="form-group">
@@ -165,6 +176,17 @@
 </div>
 <script type="text/javascript">
 $(document).ready(function(){
+	   var  mydate = new Date();
+	   var str = "" + mydate.getFullYear() + "-";
+	   str += (mydate.getMonth()+1) + "-";
+	   str += mydate.getDate() + " ";
+	   Hours = mydate.getHours();
+	   Minutes = mydate.getMinutes()
+	   str += (Hours>=10?Hours = Hours:Hours= "0"+Hours) + ":";
+	   str += (Minutes>=10?Minutes = Minutes:Minutes= "0"+Minutes);
+	  console.log(str)
+	  $(".form-datetime").attr("min",mydate)
+	
 //	封面图
 	var coverImgFile = $(".coverImgFile").html();
 	var coverImgFiles = coverImgFile.slice(17);//截取获取文件的文件名

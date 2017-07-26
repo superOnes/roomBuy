@@ -42,8 +42,7 @@ function roomPriceFile(thisID){
         processData: false,//发送的数据将被转换为对象，false就是不转化，默认为true
         contentType: false,
 		success:function(data){
-			var result =data.JsonResponse;
-			if(result.success == True){
+			if(data.success){
 				window.location.reload();
 			}else{
 				alert("房源数量超出限制！")

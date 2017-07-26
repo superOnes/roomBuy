@@ -92,7 +92,7 @@ $(document).ready(function(){
 //	活动列表选择时数据的切换显示
 	$(".selectInp").change(function(){
 		var val = $(this).val();
-		$exportEach.attr("href","/event/exportbuyhot?id="+val);
+		$exportEach.attr("href","/event/exportbuyhot/?id="+val);
 		//	获取数据
 		statisticsData(val);
 	});

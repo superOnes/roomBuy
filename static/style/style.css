@@ -54,7 +54,7 @@ input[type="number"]{
 }
 
 .labelCenter{
-	width: 50px;
+	width: 20px;
 	text-align: center;
 	display: inline-block !important;
 	vertical-align: middle;
