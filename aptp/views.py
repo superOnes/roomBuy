@@ -286,6 +286,10 @@ class AppHouseChoiceConfirmView(View):
         if (now >= event.test_start) and (now <= event.test_end):
             if not obj[4]:
                 with transaction.atomic():
+                    purchased = user.order_set.filter(is_test=True).count()
+                    if purchased >= user.customer.count:
+                        return JsonResponse({'response_state': 400,
+                                             'msg': '不可再次购买'})
                     order = Order.objects.create(user=user,
                                                  eventdetail_id=obj[0],
                                                  order_num=time.strftime
@@ -300,9 +304,16 @@ class AppHouseChoiceConfirmView(View):
                                      'ordertime': order.time,
                                      'orderid': order.id,
                                      })
+            elif Order.objects.filter(user=user, eventdetail_id=obj[0],
+                                      is_test=False).exists():
+                return JsonResponse({'response_state': 400, 'msg': '已购买'})
         elif (now >= event.event_start) and (now <= event.event_end):
             if not obj[1] and not obj[2]:
                 with transaction.atomic():
+                    purchased = user.order_set.filter(is_test=False).count()
+                    if purchased >= user.customer.count:
+                        return JsonResponse({'response_state': 400,
+                                             'msg': '不可再次购买'})
                     order = Order.objects.create(user=user,
                                                  eventdetail_id=obj[0],
                                                  order_num=time.strftime
@@ -331,6 +342,9 @@ class AppHouseChoiceConfirmView(View):
                         house)
                 return JsonResponse(
                     {'response_state': 400, 'msg': '购买失败，房屋已卖出'})
+            elif Order.objects.filter(user=user, eventdetail_id=obj[0],
+                                      is_test=True).exists():
+                return JsonResponse({'response_state': 400, 'msg': '已购买'})
         return JsonResponse({'response_state': 400, 'msg': '购买失败'})
 
 
