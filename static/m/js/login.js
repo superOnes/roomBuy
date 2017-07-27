@@ -149,7 +149,7 @@ function telp (){
 function quit(){
 	$.ajax({
 		type:"POST",
-		url:http + "/acc/cusout/",
+		url:http+"/acc/cusout/",
 		data:{
 			userid:$(".userid1").html()
 		},
@@ -749,7 +749,7 @@ function checkInfo(data){
 										'<td>'+data.area+' m²</td>'+
 									'</tr>'+
 									'<tr>' +
-										'<td>价格</td>'+
+										'<td>价格:</td>'+
 										'<td>￥'+data.unit_price+'/m²</td>'+
 									'</tr>'+
 								'</table>'+
