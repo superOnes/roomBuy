@@ -60,10 +60,27 @@
 	console.log(id);
 
 	$(function(){
-		$.get(http+"/app/"+id+"/detail/",function(result){
-			console.log(result);
-			data5(result.objects[0]);
-			console.log($(".test_start").html());
+
+		$.ajax({
+			type:"get",
+			url:http+"/app/detail/",
+			data:{
+				userid:userid,
+				id:id
+			},
+			success:function(data){
+				if(data.response_state==200){
+					data5(data.objects[0]);
+
+				}else if(data.response_state==401){
+					window.location.href="login.html";
+				}else{
+					alert(data.msg);
+				}
+			},
+			error:function(){
+				alert("页面错误,请重试！");
+			}
 
 		});
 
@@ -75,7 +92,6 @@
 				userid:userid
 			},
 			success:function(data){
-				console.log(data);
 				if(data.response_state==200){
 					houseInfo(data.objects[0]);
 					$(".houseID").html(houseId);
@@ -83,6 +99,8 @@
 					$(".idd").html(id);
 
 
+				}else if(data.response_state==401){
+					window.location.href="login.html";
 				}else{
 					alert(data.msg);
 				}
@@ -110,6 +128,8 @@
 				if(data.response_state==200){
 					$(".shareBt").html("已收藏").css({background:"#999",border:"none",color:"#fff"});
 					$(".shareBt").unbind("click");
+				}else if(data.response_state==401){
+					window.location.href="login.html";
 				}else{
 					alert(data.msg);
 				}

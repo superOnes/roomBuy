@@ -62,17 +62,19 @@
         $.ajax({
             type:'get',
             data:{
-                orderId:id
+                orderId:id,
+                userid:userid
             },
             url:http+"/app/orderinfo/",
             dataType:'JSON',
             success: function (data) {
                 if(data.response_state==200){
-                    console.log(data);
                     checkInfo(data.objects[0]);
                     $(".backIndex").click(function(){
                         window.location.href="houseList.html?id="+idd+"&userid="+userid;
                     })
+                }else if(data.response_state==401){
+                    window.location.href="login.html";
                 }else{
                     alert(data.msg);
                 }

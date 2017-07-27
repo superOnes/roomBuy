@@ -67,9 +67,10 @@ var userid = getParamValue("userid");
 $(function(){
     $.ajax({
         type:"get",
-        url:http+"/app/"+id+"/detail/",
+        url:http+"/app/detail/",
         data:{
-            userid:userid
+            userid:userid,
+            id:id
         },
         success:function(data){
             if(data.response_state==200){
@@ -84,7 +85,10 @@ $(function(){
                 }else{
                     alert("活动未开始");
                 }
-            }else{
+            }else if(data.response_state==401){
+                window.location.href="login.html";
+            }
+            else{
                 alert(data.msg);
             }
         },

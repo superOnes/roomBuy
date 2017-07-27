@@ -40,6 +40,7 @@ $(function(){
 						});
 
 						$(".proSure").click(function(){
+							console.log($(".userid").html());
 							$.ajax({
 								type:"POST",
 								url:http+"/acc/cuslog/",
@@ -48,7 +49,6 @@ $(function(){
 								},
 								dataType:'JSON',
 								success: function (data) {
-									console.log(data);
 									if(data.response_state==200){
 										console.log(data);
 
