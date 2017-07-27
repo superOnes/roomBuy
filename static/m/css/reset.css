@@ -85,19 +85,6 @@ a, img {-webkit-touch-callout: none;}
     color:#222;
     overflow:hidden;
 }
-/*.wapLogin>img{*/
-/*width:120%;*/
-/*height:120%;*/
-/*background-position: center;*/
-/*background-size: cover;*/
-/*-ms-filter: blur(14px);*/
-/*filter: blur(14px);*/
-/*position:fixed;*/
-/*left:-10%;*/
-/*top:-10%;*/
-/*z-index:-1;*/
-/*opacity:0.85;*/
-/*}*/
 .login{ text-align:center;margin-top:15%;position:relative; }
 .loginLogo {
     width:108px;
@@ -138,17 +125,17 @@ a, img {-webkit-touch-callout: none;}
 .tipbox input::-webkit-input-placeholder { color: #bfbfbf;}
 .tipbox input:-moz-placeholder { color: #bfbfbf; }
 .tipbox input:-ms-input-placeholder {  color: #bfbfbf;}​,
-                                                       .btnLogin{
-                                                           width:80%;
-                                                           margin:10%;
-                                                           height:2rem;
-                                                           line-height:2rem;
-                                                           text-align:center;
-                                                           font-size:.9rem;
-                                                           background:#f75c2e;
-                                                           border-radius:100px;
-                                                           color:#fff;
-                                                       }
+ .btnLogin{
+         width:80%;
+         margin:10%;
+         height:2rem;
+         line-height:2rem;
+         text-align:center;
+         font-size:.9rem;
+         background:#f75c2e;
+         border-radius:100px;
+         color:#fff;
+ }
 .proBox{
     width:80%;
     height:70%;
@@ -494,8 +481,6 @@ a, img {-webkit-touch-callout: none;}
     width:33%;
     /*float: left;*/
     margin: 1.4rem auto 0;
-    background: url("../images/floorbg.png") no-repeat left top;
-    background-size: 100% 100%;
 }
 .floorList li{
     font-size:.7rem;
@@ -812,9 +797,8 @@ div.shoued i{
     line-height:1.6rem;
 }
 .houseInfoOther{
-    padding:0 5%;
+    padding:0 5% 2.5rem;
     font-size:.9rem;
-    margin-bottom:2.5rem;
 }
 .houseInfoOther1{margin-bottom:2.6rem;border-bottom:none;}
 .houseInfoOther p{line-height:2rem;}
