@@ -247,6 +247,10 @@ function updataTime(data) {
 		var date4 = new Date($(".test_ent").html()).getTime();//公测
 		var date5 = date2 - date;  //时间差的毫秒数
 		var date6 = date4 - date;
+		console.log(data.event_start);
+		console.log($(".event_end").html());
+		console.log($(".test_start").html());
+		console.log($(".test_ent").html());
 		//计算出相差天数
 		if(date<date3){
 			$('#endTimeing').html("公测活动未开始");
@@ -254,7 +258,7 @@ function updataTime(data) {
 			if (date6 > 0) {
 				var dayss = Math.floor(date6 / (24 * 3600 * 1000));
 				//计算出小时数
-				var leave11 = date5 % (24 * 3600 * 1000);   //计算天数后剩余的毫秒数
+				var leave11 = date6 % (24 * 3600 * 1000);   //计算天数后剩余的毫秒数
 				var hourss = Math.floor(leave11 / (3600 * 1000));
 				//计算相差分钟数
 				var leave22 = leave11 % (3600 * 1000);       //计算小时数后剩余的毫秒数
