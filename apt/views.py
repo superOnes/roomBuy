@@ -769,14 +769,32 @@ class PurcharseHeatView(View):
                        'opentime': '',
                        'openroom': ''
                        }
+            time = []
+            room = []
             if testorder:
-                ct_list['testtime'] = testorder.time.strftime(
-                    "%Y/%m/%d %H:%M:%S")
-                ct_list['testroom'] = testorder.eventdetail.room_num
+                order = customer.user.order_set.filter(is_test=True)
+                for td in order:
+                    time.append(td.time.strftime("%Y/%m/%d %H:%M:%S"))
+                    room.append(td.eventdetail.building +
+                                td.eventdetail.unit +
+                                str(td.eventdetail.floor) +
+                                '层' +
+                                str(td.eventdetail.room_num) +
+                                '号')
+                    ct_list['testtime'] = time
+                    ct_list['testroom'] = room
             if openorder:
-                ct_list['opentime'] = openorder.time.strftime(
-                    "%Y/%m/%d %H:%M:%S")
-                ct_list['openroom'] = openorder.eventdetail.room_num
+                order = customer.user.order_set.filter(is_test=False)
+                for od in order:
+                    time.append(od.time.strftime("%Y/%m/%d %H:%M:%S"))
+                    room.append(od.eventdetail.building +
+                                od.eventdetail.unit +
+                                str(od.eventdetail.floor) +
+                                '层' +
+                                str(od.eventdetail.room_num) +
+                                '号')
+                    ct_list['opentime'] = time
+                    ct_list['openroom'] = room
             li.append(ct_list)
         return JsonResponse({'success': True, 'data': li})
 
