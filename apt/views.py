@@ -62,8 +62,10 @@ class EventListView(ListView):
         if self.value:
             queryset = queryset.filter(Q(name__contains=self.value))
         for obj in queryset:
-            obj.qr = url2qrcode('http://%s/static/m/views/choiceHouse.html?id=%s' %
-                                (self.request.get_host(), str(obj.id)))
+            obj.qr = url2qrcode(
+                'http://%s/static/m/views/choiceHouse.html?id=%s' %
+                (self.request.get_host(), str(
+                    obj.id)))
             # obj.qr = url2qrcode('http://%s/static/m/views/login.html' %
             #                     (self.request.get_host()))
             obj.save()
@@ -277,7 +279,9 @@ class ImportEventDetailView(View):
             if row < int(event.house_limit):
                 for ed in data:
                     if EventDetail.objects.filter(
-                            event_id=id, room_num=ed[4]).exists():
+                            event_id=id, building=ed[1],
+                            unit=ed[2], floor=ed[3],
+                            room_num=ed[4]).exists():
                         continue
                     else:
                         eventdetail = EventDetail.objects.create(
@@ -429,7 +433,7 @@ class ExportCustomerView(View):
         for i in list:
             s.write(0, col, i)
             col += 1
-        if  not objs:
+        if not objs:
             sio = BytesIO()
             sheet.save(sio)
             sio.seek(0)
@@ -451,7 +455,6 @@ class ExportCustomerView(View):
         response['Content-Disposition'] = 'attachment;filename=renchoumingdan.xls'
         response.write(sio.getvalue())
         return response
-
 
 
 @method_decorator(admin_required, name='dispatch')
