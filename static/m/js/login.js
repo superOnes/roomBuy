@@ -572,13 +572,11 @@ function houseInfo(data){
 		$(".houseInfoOther").after($('<div class="houseBtnN">活动未开始</div>'));
 	}
 
-
+	$(".shareBt").bind("click",shareBtn);
 
 	if(data.is_followed[0]){
-		$(".shareBt").unbind("click",shareBtn);
+		//$(".shareBt").unbind("click",shareBtn);
 		$(".shareBt").html("已收藏").css({background:"#999",border:"none",color:"#fff"})
-	}else{
-		$(".shareBt").bind("click",shareBtn);
 
 	}
 

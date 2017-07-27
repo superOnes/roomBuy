@@ -117,7 +117,34 @@
 
 	/*收藏按钮*/
 	function shareBtn(){
-		$.ajax({
+		if($(".shareBt").html()=='已收藏') {
+			$.ajax({
+				type: "POST",
+				url: http + "/app/cancelfollow/",
+				data: {
+					house: houseId,
+					userid: userid
+				},
+				success: function (data) {
+					if (data.response_state == 200) {
+						$(".shareBt").html("收藏").css({
+							background: "#fff",
+							border: "solid 1px #f75c2e",
+							color: "#f75c2e"
+						});
+					} else if (data.response_state == 401) {
+						window.location.href = "login.html";
+					} else {
+						alert(data.msg);
+					}
+				},
+				error: function () {
+					alert('出错了，请重试！');
+				}
+			})
+		}else {
+			console.log($(".shareBt").html());
+			$.ajax({
 			type:"POST",
 			url:http+"/app/addfollow/",
 			data:{
@@ -125,9 +152,9 @@
 				userid:userid
 			},
 			success:function(data){
+				console.log(data);
 				if(data.response_state==200){
 					$(".shareBt").html("已收藏").css({background:"#999",border:"none",color:"#fff"});
-					$(".shareBt").unbind("click");
 				}else if(data.response_state==401){
 					window.location.href="login.html";
 				}else{
@@ -140,6 +167,8 @@
 				alert('出错了，请重试！');
 			}
 		})
+		}
+
 	}
 	function backList(){
 		window.location.href="houseList.html?id="+id+"&userid="+userid;
