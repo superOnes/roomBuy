@@ -764,7 +764,7 @@ function checkInfo(data){
 									'</tr>'+
 									'<tr>'+
 										'<td>证件号码：</td>'+
-										'<td>'+data.iidentication+'</td>'+
+										'<td>'+data.identication+'</td>'+
 									'</tr>'+
 								'</table>'+
 							'</div>'+
