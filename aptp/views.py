@@ -227,6 +227,32 @@ class AddFollow(View):
 
 
 @method_decorator(customer_login_required, name='dispatch')
+class CancelFollow(View):
+    '''
+    取消收藏
+    '''
+
+    def post(self, request):
+        userid = request.POST.get('userid')
+        house = request.POST.get('house')
+        user = User.objects.get(username=userid)
+        try:
+            eventdetail = EventDetail.get(house)
+        except BaseException:
+            return JsonResponse({'response_state': 403, 'msg': '没有该商品！'})
+        else:
+            follow = Follow.objects.filter(
+                    user=user,
+                    eventdetail=eventdetail)
+            if not follow:
+                return JsonResponse(
+                    {'response_state': 403, 'msg': '没有收藏该商品！'})
+            follow.delete()
+            return JsonResponse(
+                {'response_state': 200, 'msg': '成功取消收藏！'})
+
+
+@method_decorator(customer_login_required, name='dispatch')
 class FollowView(View):
     '''
     用户收藏列表信息
