@@ -303,44 +303,51 @@ class ExportEventDetailView(View):
 
     def get(self, request, pk):
         objs = EventDetail.objects.filter(event_id=pk)
-        if objs:
-            sheet = Workbook(encoding='utf-8')
-            s = sheet.add_sheet('数据表')
-            list = [
-                '选房房源id',
-                '楼栋',
-                '单元',
-                '楼层',
-                '房号',
-                '面积单价',
-                '建筑面积',
-                '朝向',
-                '使用年限']
-            col = 0
-            for i in list:
-                s.write(0, col, i)
-                col += 1
-            row = 1
-            for obj in objs:
-                s.write(row, 0, obj.id)
-                s.write(row, 1, obj.building)
-                s.write(row, 2, obj.unit)
-                s.write(row, 3, obj.floor)
-                s.write(row, 4, obj.room_num)
-                s.write(row, 5, obj.unit_price)
-                s.write(row, 6, obj.area)
-                s.write(row, 7, obj.looking)
-                s.write(row, 8, obj.term)
-                row += 1
+        sheet = Workbook(encoding='utf-8')
+        s = sheet.add_sheet('数据表')
+        list = [
+            '选房房源id',
+            '楼栋',
+            '单元',
+            '楼层',
+            '房号',
+            '面积单价',
+            '建筑面积',
+            '朝向',
+            '使用年限']
+        col = 0
+        for i in list:
+            s.write(0, col, i)
+            col += 1
+        if not objs:
             sio = BytesIO()
             sheet.save(sio)
             sio.seek(0)
             response = HttpResponse(content_type='application/vnd.ms-excel')
             response['Content-Disposition'] = 'attachment;filename=\
-                                               fangyuanxinxi.xls'
+                                                                  fangyuanxinxi.xls'
             response.write(sio.getvalue())
             return response
-        return JsonResponse({'msg': '内容为空！'})
+        row = 1
+        for obj in objs:
+            s.write(row, 0, obj.id)
+            s.write(row, 1, obj.building)
+            s.write(row, 2, obj.unit)
+            s.write(row, 3, obj.floor)
+            s.write(row, 4, obj.room_num)
+            s.write(row, 5, obj.unit_price)
+            s.write(row, 6, obj.area)
+            s.write(row, 7, obj.looking)
+            s.write(row, 8, obj.term)
+            row += 1
+        sio = BytesIO()
+        sheet.save(sio)
+        sio.seek(0)
+        response = HttpResponse(content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = 'attachment;filename=\
+                                           fangyuanxinxi.xls'
+        response.write(sio.getvalue())
+        return response
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -415,21 +422,14 @@ class ExportCustomerView(View):
 
     def get(self, request, pk):
         objs = Customer.objects.filter(event_id=pk)
-        if objs:
-            sheet = Workbook(encoding='utf-8')
-            s = sheet.add_sheet('数据表')
-            list = ['姓名', '手机号', '身份证号', '备注']
-            col = 0
-            for i in list:
-                s.write(0, col, i)
-                col += 1
-            row = 1
-            for obj in objs:
-                s.write(row, 0, obj.realname)
-                s.write(row, 1, obj.mobile)
-                s.write(row, 2, obj.identication)
-                s.write(row, 3, obj.remark)
-                row += 1
+        sheet = Workbook(encoding='utf-8')
+        s = sheet.add_sheet('数据表')
+        list = ['姓名', '手机号', '身份证号', '备注']
+        col = 0
+        for i in list:
+            s.write(0, col, i)
+            col += 1
+        if  not objs:
             sio = BytesIO()
             sheet.save(sio)
             sio.seek(0)
@@ -437,7 +437,21 @@ class ExportCustomerView(View):
             response['Content-Disposition'] = 'attachment;filename=renchoumingdan.xls'
             response.write(sio.getvalue())
             return response
-        return JsonResponse({'msg': '内容为空！'})
+        row = 1
+        for obj in objs:
+            s.write(row, 0, obj.realname)
+            s.write(row, 1, obj.mobile)
+            s.write(row, 2, obj.identication)
+            s.write(row, 3, obj.remark)
+            row += 1
+        sio = BytesIO()
+        sheet.save(sio)
+        sio.seek(0)
+        response = HttpResponse(content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = 'attachment;filename=renchoumingdan.xls'
+        response.write(sio.getvalue())
+        return response
+
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -448,41 +462,23 @@ class ExportHouseHotView(View):
 
     def get(self, request):
         objs = EventDetail.objects.all()
-        if objs:
-            sheet = Workbook(encoding='utf-8')
-            s = sheet.add_sheet('数据表')
-            list = [
-                '楼栋',
-                '单元',
-                '楼层',
-                '房号',
-                '是否已售',
-                '面积单价',
-                '建筑面积',
-                '收藏人数',
-                '公测是否已售']
-            col = 0
-            for i in list:
-                s.write(0, col, i)
-                col += 1
-            row = 1
-            for obj in objs:
-                s.write(row, 0, obj.building)
-                s.write(row, 1, obj.unit)
-                s.write(row, 2, obj.floor)
-                s.write(row, 3, obj.room_num)
-                if obj.is_sold:
-                    s.write(row, 4, '已售')
-                else:
-                    s.write(row, 4, '未售')
-                s.write(row, 5, obj.unit_price)
-                s.write(row, 6, obj.area)
-                s.write(row, 7, obj.follow_set.count())
-                if obj.is_testsold:
-                    s.write(row, 8, '公测已售')
-                else:
-                    s.write(row, 8, '公测未售')
-                row += 1
+        sheet = Workbook(encoding='utf-8')
+        s = sheet.add_sheet('数据表')
+        list = [
+            '楼栋',
+            '单元',
+            '楼层',
+            '房号',
+            '是否已售',
+            '面积单价',
+            '建筑面积',
+            '收藏人数',
+            '公测是否已售']
+        col = 0
+        for i in list:
+            s.write(0, col, i)
+            col += 1
+        if not objs:
             sio = BytesIO()
             sheet.save(sio)
             sio.seek(0)
@@ -490,7 +486,31 @@ class ExportHouseHotView(View):
             response['Content-Disposition'] = 'attachment;filename=fangyuanredu.xls'
             response.write(sio.getvalue())
             return response
-        return JsonResponse({'msg': '内容为空！'})
+        row = 1
+        for obj in objs:
+            s.write(row, 0, obj.building)
+            s.write(row, 1, obj.unit)
+            s.write(row, 2, obj.floor)
+            s.write(row, 3, obj.room_num)
+            if obj.is_sold:
+                s.write(row, 4, '已售')
+            else:
+                s.write(row, 4, '未售')
+            s.write(row, 5, obj.unit_price)
+            s.write(row, 6, obj.area)
+            s.write(row, 7, obj.follow_set.count())
+            if obj.is_testsold:
+                s.write(row, 8, '公测已售')
+            else:
+                s.write(row, 8, '公测未售')
+            row += 1
+        sio = BytesIO()
+        sheet.save(sio)
+        sio.seek(0)
+        response = HttpResponse(content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = 'attachment;filename=fangyuanredu.xls'
+        response.write(sio.getvalue())
+        return response
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -501,57 +521,24 @@ class ExportBuyHotView(View):
 
     def get(self, request):
         objs = Order.all()
-        if objs:
-            sheet = Workbook(encoding='utf-8')
-            s = sheet.add_sheet('数据表')
-            list = [
-                '姓名',
-                '手机号',
-                '证件号码',
-                '同意协议时间',
-                '收藏房间数',
-                '访问热度',
-                '公测选择房间',
-                '公测订单时间',
-                '开盘选择房间',
-                '开盘订单时间']
-            col = 0
-            for i in list:
-                s.write(0, col, i)
-                col += 1
-            row = 1
-            for obj in objs:
-                s.write(row, 0, obj.user.customer.realname)
-                s.write(row, 1, obj.user.customer.mobile)
-                s.write(row, 2, obj.user.customer.identication)
-                s.write(row, 3, obj.user.customer.protime)
-                s.write(row, 4, obj.user.follow_set.count())
-                s.write(row, 5, obj.eventdetail.visit_num)
-                if obj.eventdetail.is_testsold:
-                    s.write(row, 6,
-                            obj.eventdetail.building +
-                            '楼' +
-                            obj.eventdetail.unit +
-                            '单元' +
-                            str(obj.eventdetail.floor) +
-                            '层' +
-                            str(obj.eventdetail.room_num) + '号')
-                    s.write(row, 7, (obj.time).strftime("%Y/%m/%d %H:%M:%S"))
-                    s.write(row, 8, None)
-                    s.write(row, 9, None)
-                else:
-                    s.write(row, 6, None)
-                    s.write(row, 7, None)
-                    s.write(row, 8,
-                            obj.eventdetail.building +
-                            '楼' +
-                            obj.eventdetail.unit +
-                            '单元' +
-                            str(obj.eventdetail.floor) +
-                            '层' +
-                            str(obj.eventdetail.room_num) + '号')
-                    s.write(row, 9, (obj.time).strftime("%Y/%m/%d %H:%M:%S"))
-                row += 1
+        sheet = Workbook(encoding='utf-8')
+        s = sheet.add_sheet('数据表')
+        list = [
+            '姓名',
+            '手机号',
+            '证件号码',
+            '同意协议时间',
+            '收藏房间数',
+            '访问热度',
+            '公测选择房间',
+            '公测订单时间',
+            '开盘选择房间',
+            '开盘订单时间']
+        col = 0
+        for i in list:
+            s.write(0, col, i)
+            col += 1
+        if not objs:
             sio = BytesIO()
             sheet.save(sio)
             sio.seek(0)
@@ -559,7 +546,46 @@ class ExportBuyHotView(View):
             response['Content-Disposition'] = 'attachment;filename=goufangredu.xls'
             response.write(sio.getvalue())
             return response
-        return JsonResponse({'msg': '内容为空！'})
+        row = 1
+        for obj in objs:
+            s.write(row, 0, obj.user.customer.realname)
+            s.write(row, 1, obj.user.customer.mobile)
+            s.write(row, 2, obj.user.customer.identication)
+            s.write(row, 3, obj.user.customer.protime)
+            s.write(row, 4, obj.user.follow_set.count())
+            s.write(row, 5, obj.eventdetail.visit_num)
+            if obj.eventdetail.is_testsold:
+                s.write(row, 6,
+                        obj.eventdetail.building +
+                        '楼' +
+                        obj.eventdetail.unit +
+                        '单元' +
+                        str(obj.eventdetail.floor) +
+                        '层' +
+                        str(obj.eventdetail.room_num) + '号')
+                s.write(row, 7, (obj.time).strftime("%Y/%m/%d %H:%M:%S"))
+                s.write(row, 8, None)
+                s.write(row, 9, None)
+            else:
+                s.write(row, 6, None)
+                s.write(row, 7, None)
+                s.write(row, 8,
+                        obj.eventdetail.building +
+                        '楼' +
+                        obj.eventdetail.unit +
+                        '单元' +
+                        str(obj.eventdetail.floor) +
+                        '层' +
+                        str(obj.eventdetail.room_num) + '号')
+                s.write(row, 9, (obj.time).strftime("%Y/%m/%d %H:%M:%S"))
+            row += 1
+        sio = BytesIO()
+        sheet.save(sio)
+        sio.seek(0)
+        response = HttpResponse(content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = 'attachment;filename=goufangredu.xls'
+        response.write(sio.getvalue())
+        return response
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -580,36 +606,23 @@ class ExportOrderView(View):
                                    Q(user__customer__identication__icontains=value))
         else:
             objs = queryset
-        print(objs)
-        if objs:
-            sheet = Workbook(encoding='utf-8')
-            s = sheet.add_sheet('数据表')
-            list = [
-                '选房时间',
-                '车位/房间号',
-                '单价',
-                '建筑面积',
-                '认购者',
-                '手机号',
-                '证件号码',
-                '认筹人备注',
-                '状态']
-            col = 0
-            for i in list:
-                s.write(0, col, i)
-                col += 1
-            row = 1
-            for obj in objs:
-                s.write(row, 0, obj.time.strftime("%Y/%m/%d %H:%M:%S"))
-                s.write(row, 1, obj.eventdetail.room_num)
-                s.write(row, 2, obj.eventdetail.unit_price)
-                s.write(row, 3, obj.eventdetail.area)
-                s.write(row, 4, obj.user.customer.realname)
-                s.write(row, 5, obj.user.customer.mobile)
-                s.write(row, 6, obj.user.customer.identication)
-                s.write(row, 7, obj.user.customer.remark)
-                s.write(row, 8, obj.eventdetail.is_sold)
-                row += 1
+        sheet = Workbook(encoding='utf-8')
+        s = sheet.add_sheet('数据表')
+        list = [
+            '选房时间',
+            '车位/房间号',
+            '单价',
+            '建筑面积',
+            '认购者',
+            '手机号',
+            '证件号码',
+            '认筹人备注',
+            '状态']
+        col = 0
+        for i in list:
+            s.write(0, col, i)
+            col += 1
+        if not objs:
             sio = BytesIO()
             sheet.save(sio)
             sio.seek(0)
@@ -617,7 +630,25 @@ class ExportOrderView(View):
             response['Content-Disposition'] = 'attachment;filename=daochudingdan.xls'
             response.write(sio.getvalue())
             return response
-        return JsonResponse({'msg': '内容为空！'})
+        row = 1
+        for obj in objs:
+            s.write(row, 0, obj.time.strftime("%Y/%m/%d %H:%M:%S"))
+            s.write(row, 1, obj.eventdetail.room_num)
+            s.write(row, 2, obj.eventdetail.unit_price)
+            s.write(row, 3, obj.eventdetail.area)
+            s.write(row, 4, obj.user.customer.realname)
+            s.write(row, 5, obj.user.customer.mobile)
+            s.write(row, 6, obj.user.customer.identication)
+            s.write(row, 7, obj.user.customer.remark)
+            s.write(row, 8, obj.eventdetail.is_sold)
+            row += 1
+        sio = BytesIO()
+        sheet.save(sio)
+        sio.seek(0)
+        response = HttpResponse(content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = 'attachment;filename=daochudingdan.xls'
+        response.write(sio.getvalue())
+        return response
 
 
 class CustomListView(ListView):
