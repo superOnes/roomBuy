@@ -40,19 +40,12 @@ def admin_required(func):
 def customer_login_required(func):
     @wraps(func)
     def wrapper(request, *args, **kwargs):
-        try:
-            userid=request.GET.get('userid')
-        except:
-            userid=request.POST.get('userid')
-        # userid = request.GET.get('userid', request.POST.get('userid'))
-        else:
-            user = User.get(userid)
-            if user.is_authenticated():
-                if not user.is_admin:
-                    return func(request, *args, **kwargs)
-            return redirect(
-                'http://%s/static/m/views/login.html' %
-                                    (request.get_host()))
+        userid = request.GET.get('userid', request.POST.get('userid'))
+        if not userid:
+            return JsonResponse({'response_state': 401, 'msg': '用户没有登录！'})
+        if not User.objects.filter(username=userid):
+            return JsonResponse({'response_state': 401, 'msg': '用户没有登录！'})
+        return func(request, *args, **kwargs)
     return wrapper
 
 

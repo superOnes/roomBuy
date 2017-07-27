@@ -14,8 +14,8 @@ from .views import (
     OrderProView)
 
 urlpatterns = [
-    url(r'^(?P<pk>\d+)/detail/', AppEventDetailView.as_view(), name='app_eventdetail'),
-    url(r'^(?P<pk>\d+)/houses/', AppEventDetailListView.as_view(), name='app_building_list'),
+    url(r'^detail/', AppEventDetailView.as_view(), name='app_eventdetail'),
+    url(r'^houses/', AppEventDetailListView.as_view(), name='app_building_list'),
     url(r'^prodel/', ProView.as_view(), name='app_protocol_detail'),
     url(r'^unit/', AppEventDetailUnitListView.as_view(), name='app_unit_list'),
     url(r'^houselist/$', AppEventDetailHouseListView.as_view(), name='app_house_list'),

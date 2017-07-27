@@ -3,13 +3,13 @@ from datetime import datetime, timedelta
 
 from django.views.generic import View
 from django.http import JsonResponse
-from django.utils.decorators import method_decorator
 from django.db import connection, transaction
+from django.utils.decorators import method_decorator
 
 from apt.models import Event, EventDetail
 from aptp.models import Follow
 from accounts.models import Order, Customer, User
-from accounts.decorators import customer_login_required, customer_login_time
+from accounts.decorators import customer_login_required
 
 
 class ProView(View):
@@ -29,7 +29,7 @@ class ProView(View):
             value = [{
                 'termname': customer.event.termname,
                 'term': customer.event.term,
-                'userid': customer.user.id,
+                'userid': customer.user.username,
             }]
             context = {}
             context['objects'] = value
@@ -37,14 +37,15 @@ class ProView(View):
             return JsonResponse(context)
 
 
-# @method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_required, name='dispatch')
 class AppEventDetailView(View):
     '''
     显示活动
     '''
 
-    def get(self, request, pk):
-        obj = Event.get(pk)
+    def get(self, request):
+        eventid = request.GET.get('id')
+        obj = Event.get(eventid)
         value = [
             {
                 'test_start': (
@@ -67,18 +68,18 @@ class AppEventDetailView(View):
         context['response_state'] = 200
         return JsonResponse(context)
 
-# @method_decorator(customer_login_required, name='dispatch')
 
-
+@method_decorator(customer_login_required, name='dispatch')
 class AppEventDetailListView(View):
     '''
     车位/房源 楼号列表
     '''
 
-    def get(self, request, pk):
-        eventobj = Event.get(pk)
+    def get(self, request):
+        eventid = request.GET.get('id')
+        eventobj = Event.get(eventid)
         context = {}
-        eventdetobj = EventDetail.objects.filter(event_id=pk)
+        eventdetobj = EventDetail.objects.filter(event_id=eventid)
         buildinglist = []
         for obj in eventdetobj:
             buildinglist.append((obj.building))
@@ -93,7 +94,7 @@ class AppEventDetailListView(View):
         return JsonResponse(context)
 
 
-# @method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_required, name='dispatch')
 class AppEventDetailUnitListView(View):
     '''
     车位/房源 单元列表
@@ -116,7 +117,7 @@ class AppEventDetailUnitListView(View):
         return JsonResponse(context)
 
 
-# @method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_required, name='dispatch')
 class AppEventDetailHouseListView(View):
     '''
     车位/房源 房号列表
@@ -144,8 +145,7 @@ class AppEventDetailHouseListView(View):
         return JsonResponse(context)
 
 
-# @method_decorator(customer_login_time, name='dispatch')
-# @method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_required, name='dispatch')
 class AppEventDetailHouseInfoView(View):
     '''
     车位/房源 详情
@@ -153,7 +153,7 @@ class AppEventDetailHouseInfoView(View):
 
     def get(self, request):
         userid = request.GET.get('userid')
-        user = User.get(userid)
+        user = User.objects.get(username=userid)
         house = request.GET.get('house')
         eventdetobj = EventDetail.get(house)
         eventdetobj.visit_num = eventdetobj.visit_num + 1
@@ -161,7 +161,7 @@ class AppEventDetailHouseInfoView(View):
         test = True if time.strftime('%Y%m%d %H:%M:%S') <= eventdetobj.event.test_end.strftime(
             '%Y%m%d %H:%M:%S') else False
         try:
-            Follow.objects.get(user=request.user, eventdetail=eventdetobj)
+            Follow.objects.get(user=user, eventdetail=eventdetobj)
         except BaseException:
             is_followed = False,
         else:
@@ -172,7 +172,7 @@ class AppEventDetailHouseInfoView(View):
         except BaseException:
             house_type = ''
             pic = ''
-        value = [{'event': user.customer.event.name,
+        value = [{'event': eventdetobj.event.name,
                   'realname': user.customer.realname,
                   'mobile': user.customer.mobile,
                   'identication': user.customer.identication,
@@ -187,7 +187,7 @@ class AppEventDetailHouseInfoView(View):
                   'term': eventdetobj.term,
                   'is_sold': eventdetobj.is_sold,
                   'is_followed': is_followed,
-                  'is_testsold':eventdetobj.is_testsold,
+                  'is_testsold': eventdetobj.is_testsold,
                   }]
 
         context = {}
@@ -195,18 +195,17 @@ class AppEventDetailHouseInfoView(View):
         context['response_state'] = 200
         return JsonResponse(context)
 
-# @method_decorator(customer_login_required, name='dispatch')
 
-
+@method_decorator(customer_login_required, name='dispatch')
 class AddFollow(View):
     '''
     添加收藏
     '''
 
     def post(self, request):
-        house = request.POST.get('house')
         userid = request.POST.get('userid')
-        user = User.get(userid)
+        house = request.POST.get('house')
+        user = User.objects.get(username=userid)
         try:
             eventdetail = EventDetail.get(house)
             if not Follow.objects.filter(
@@ -227,7 +226,7 @@ class AddFollow(View):
             return JsonResponse({'response_state': 200, 'msg': '收藏成功'})
 
 
-# @method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_required, name='dispatch')
 class FollowView(View):
     '''
     用户收藏列表信息
@@ -235,7 +234,7 @@ class FollowView(View):
 
     def get(self, request):
         userid = request.GET.get('userid')
-        user = User.get(userid)
+        user = User.objects.get(username=userid)
         objs = user.follow_set.all()
         context = {}
         list = []
@@ -261,17 +260,16 @@ class FollowView(View):
         return JsonResponse(context)
 
 
-# @method_decorator(customer_login_time, name='dispatch')
-# @method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_required, name='dispatch')
 class AppHouseChoiceConfirmView(View):
     '''
     订单确认
     '''
 
     def post(self, request):
-        house = request.POST.get('house')
         userid = request.POST.get('userid')
-        user = User.get(userid)
+        house = request.POST.get('house')
+        user = User.objects.get(username=userid)
         cursor = connection.cursor()
         # cursor.execute('SELECT id,is_sold,sign_id,event_id,is_testsold,\
         #                 building,unit,floor,room_num FROM apt_eventdetail \
@@ -351,6 +349,7 @@ class AppHouseChoiceConfirmView(View):
         return JsonResponse({'response_state': 400, 'msg': '购买失败'})
 
 
+@method_decorator(customer_login_required, name='dispatch')
 class OrderProView(View):
     '''
     订单中协议
@@ -359,7 +358,7 @@ class OrderProView(View):
     def get(self, request):
         userid = request.GET.get('userid')
         try:
-            customer = User.get(userid).customer
+            customer = User.objects.get(username=userid).customer
         except BaseException:
             return JsonResponse({'response_state': 400, 'msg': '认筹名单中没有该用户！'})
         else:
@@ -372,10 +371,8 @@ class OrderProView(View):
             context['response_state'] = 200
             return JsonResponse(context)
 
-# @method_decorator(customer_login_time, name='dispatch')
-# @method_decorator(customer_login_required, name='dispatch')
 
-
+@method_decorator(customer_login_required, name='dispatch')
 class AppOrderListView(View):
     '''
     订单列表
@@ -383,7 +380,7 @@ class AppOrderListView(View):
 
     def get(self, request):
         userid = request.GET.get('userid')
-        user = User.get(userid)
+        user = User.objects.get(username=userid)
         objs = user.order_set.all()
         valuelist = []
         for obj in objs:
@@ -409,8 +406,7 @@ class AppOrderListView(View):
         return JsonResponse(context)
 
 
-# @method_decorator(customer_login_time, name='dispatch')
-# @method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_required, name='dispatch')
 class AppOrderInfoView(View):
     '''
     订单详情
@@ -446,7 +442,7 @@ class AppOrderInfoView(View):
                 'area': obj.eventdetail.area,
                 'customer': obj.user.customer.realname,
                 'mobile': obj.user.customer.mobile,
-                'iidentication': obj.user.customer.identication,
+                'identication': obj.user.customer.identication,
                 'order_num': obj.order_num,
                 'total': ((obj.eventdetail.area) * (obj.eventdetail.unit_price))
             }]

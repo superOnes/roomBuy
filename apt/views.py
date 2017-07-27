@@ -62,10 +62,10 @@ class EventListView(ListView):
         if self.value:
             queryset = queryset.filter(Q(name__contains=self.value))
         for obj in queryset:
-            # obj.qr = url2qrcode('http://%s/static/m/views/choiceHouse.html?id=%s' %
-            #                     (self.request.get_host(), str(obj.id)))
-            obj.qr = url2qrcode('http://%s/static/m/views/login.html' %
-                                (self.request.get_host()))
+            obj.qr = url2qrcode('http://%s/static/m/views/choiceHouse.html?id=%s' %
+                                (self.request.get_host(), str(obj.id)))
+            # obj.qr = url2qrcode('http://%s/static/m/views/login.html' %
+            #                     (self.request.get_host()))
             obj.save()
         return queryset
 

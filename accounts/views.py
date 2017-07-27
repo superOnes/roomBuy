@@ -19,7 +19,7 @@ from django.db import transaction
 from apt.models import Event, EventDetail
 from aptm import settings
 from .models import User, Customer, Order
-from .decorators import superadmin_required, login_time, customer_login_required
+from .decorators import superadmin_required, customer_login_required
 
 
 class LoginView(View):
@@ -172,15 +172,14 @@ class LogoutView(View):
         return JsonResponse({'success': True, 'msg': '退出登录成功'})
 
 
-# @method_decorator(login_time, name='dispatch')
 class CustomerLoginView(View):
     '''
     顾客登录
     '''
 
     def post(self, request):
-        userid=request.POST.get('userid')
-        customer=User.get(userid).customer
+        userid = request.POST.get('userid')
+        customer = User.objects.get(username=userid).customer
         # try:
         #     request.session[time.strftime("%Y%m%d%H%M%S")] = customer.realname + \
         #         customer.mobile + customer.identication
@@ -192,11 +191,10 @@ class CustomerLoginView(View):
         # except BaseException:
         #     return JsonResponse({'response_state': 400, 'msg': '认筹名单中没有此用户！'})
         # else:
-        userobj = customer.user
         if customer.event.is_pub:
             eventid = customer.event_id
             user = authenticate(
-                username=userobj.username,
+                username=userid,
                 password=customer.identication)
             if user:
                 if not user.is_admin:
@@ -206,19 +204,23 @@ class CustomerLoginView(View):
                     # else:
                     login(request, user)
                     request.session.set_expiry(300)
-                    return JsonResponse({'response_state': 200, 'id': eventid, 'userid': user.id, 'msg': '登录成功'})
+                    return JsonResponse(
+                        {'response_state': 200, 'id': eventid, 'msg': '登录成功'})
                 return JsonResponse({'response_state': 400})
-            return JsonResponse({'response_state': 400, 'msg': '该电话号与证件号未通过认证。'})
+            return JsonResponse(
+                {'response_state': 400, 'msg': '该电话号与证件号未通过认证。'})
         return JsonResponse({'response_state': 400, 'msg': '活动还未正式推出。'})
 
 
-# @method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_required, name='dispatch')
 class CustomerLogoutView(View):
     '''
     顾客退出登录
     '''
 
     def post(self, request):
+        if not request.POST.get('userid'):
+            return JsonResponse({'response_state': 401, 'msg': '用户没有登录！'})
         logout(request)
         return JsonResponse({'response_state': 200, 'msg': '退出成功'})
 
