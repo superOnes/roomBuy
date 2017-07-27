@@ -667,39 +667,44 @@ function orderInfos(){
 
 /*订单*/
 function order(data){
-	for(var i=0;i<data.objects.length;i++){
-		$("body").append($('<div class="order-all">' +
-								'<div>'+
-									'<div class="order-top">'+
-										'<a class="order1">'+
-											'<span >订单号:</span>&nbsp;<span>'+data.objects[i][0].order_num+'</span>'+
-											'<p>'+data.objects[i][0].time+'</p>'+
-										'</a>'+
-									'</div>'+
-									'<div class="order-right"></div>'+
-								'</div>'+
-								'<div class="order-middle">'+
-									'<table>'+
-										'<tr>'+
-											'<td>楼盘：</td>'+
-											'<td>'+data.objects[i][0].event+'</td>'+
-										'</tr>'+
-										'<tr class="order-table">'+
-											'<td>房间：</td>'+
-											'<td>'+data.objects[i][0].room_info+'</td>'+
-										'</tr>'+
-										'<tr>'+
-											'<td>单价：</td>'+
-											'<td>￥'+data.objects[i][0].unit_price+'/m²</td>'+
-										'</tr>'+
-									'</table>'+
-									'<p class="checkoderBtn">查看订单详情</p>'+
-								'</div>'+
+	if(data.objects.length==0){
+		$("body").append('<div class="noOne"><img src="../images/none.png" /><p>目前您没有任何订单！</p></div>');
+	}else{
+		for(var i=0;i<data.objects.length;i++){
+			$("body").append($('<div class="order-all">' +
+				'<div>'+
+				'<div class="order-top">'+
+				'<a class="order1">'+
+				'<span >订单号:</span>&nbsp;<span>'+data.objects[i][0].order_num+'</span>'+
+				'<p>'+data.objects[i][0].time+'</p>'+
+				'</a>'+
+				'</div>'+
+				'<div class="order-right"></div>'+
+				'</div>'+
+				'<div class="order-middle">'+
+				'<table>'+
+				'<tr>'+
+				'<td>楼盘：</td>'+
+				'<td>'+data.objects[i][0].event+'</td>'+
+				'</tr>'+
+				'<tr class="order-table">'+
+				'<td>房间：</td>'+
+				'<td>'+data.objects[i][0].room_info+'</td>'+
+				'</tr>'+
+				'<tr>'+
+				'<td>单价：</td>'+
+				'<td>￥'+data.objects[i][0].unit_price+'/m²</td>'+
+				'</tr>'+
+				'</table>'+
+				'<p class="checkoderBtn">查看订单详情</p>'+
+				'</div>'+
 
-								'<p class="oferId" style="display:none">'+data.objects[i][0].orderid+'</p>'+
-							'</div>'
-		));
+				'<p class="oferId" style="display:none">'+data.objects[i][0].orderid+'</p>'+
+				'</div>'
+			));
+		}
 	}
+
 
 }
 function data4(result){
