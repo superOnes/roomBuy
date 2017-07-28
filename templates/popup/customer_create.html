@@ -1,12 +1,12 @@
-{% extends 'include/base.html' %}
-{% block main %}
+{% extends 'include/base.html' %} {% block main %}
 <style type="text/css">
-	.form-group>.col-sm-10{
+	.form-group>.col-sm-10 {
 		width: 80% !important;
 		display: inline-block !important;
 		vertical-align: top;
 	}
-	.form-group>.col-sm-2{
+	
+	.form-group>.col-sm-2 {
 		vertical-align: top;
 		width: 15% !important;
 		text-align: right;
@@ -16,38 +16,38 @@
 	<form class="form-horizontal" method="post">
 		{% csrf_token %}
 		<div class="form-group">
-		    <label class="col-sm-2">姓名<i>*</i></label>
-		    <div class="col-sm-10">
-		      <input type="text" class="form-control" placeholder="姓名" name="realname" required>
-		    </div>
+			<label class="col-sm-2">姓名<i>*</i></label>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" placeholder="姓名" name="realname" required>
+			</div>
 		</div>
 		<div class="form-group">
-		    <label class="col-sm-2">手机号<i>*</i></label>
-		    <div class="col-sm-10">
-		      <input type="number" class="form-control" placeholder="11位手机号" oninput="if(value.length>11)value=value.slice(0,11)" name="mobile" required>
-		    </div>
+			<label class="col-sm-2">手机号<i>*</i></label>
+			<div class="col-sm-10">
+				<input type="number" class="form-control" placeholder="11位手机号" oninput="if(value.length > 11)value=value.slice(0,11)" name="mobile" required>
+			</div>
 		</div>
 		<div class="form-group">
-		    <label class="col-sm-2">身份证<i>*</i></label>
-		    <div class="col-sm-10">
-		      <input type="text" class="form-control" placeholder="身份证" maxlength="18" name="identication" required>
-		    </div>
+			<label class="col-sm-2">身份证<i>*</i></label>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" placeholder="身份证" maxlength="18" name="identication" required>
+			</div>
 		</div>
 		<div class="form-group">
-		    <label class="col-sm-2">可购买套数<i>*</i></label>
-		    <div class="col-sm-10">
-		      <input type="number" class="form-control" placeholder="可购买套数" name="count" required>
-		    </div>
+			<label class="col-sm-2">可购买套数<i>*</i></label>
+			<div class="col-sm-10">
+				<input type="number" class="form-control" placeholder="可购买套数" name="count" required>
+			</div>
 		</div>
 		<div class="form-group">
-		    <label class="col-sm-2">备注</label>
-		    <div class="col-sm-10">
-		      <textarea style="height: 150px;" type="text" class="form-control" placeholder="请填写备注" name="remark"></textarea>
-		    </div>
+			<label class="col-sm-2">备注</label>
+			<div class="col-sm-10">
+				<textarea style="height: 150px;" type="text" class="form-control" placeholder="请填写备注" name="remark"></textarea>
+			</div>
 		</div>
-	<div class="modal-footer">
-    	<input type="submit" class="btn btn-primary" value="确定"></input>
-    </div>
-</form>
+		<div class="modal-footer">
+			<input type="submit" class="btn btn-primary" value="确定"></input>
+		</div>
+	</form>
 </div>
 {% endblock %}
