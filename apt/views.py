@@ -131,14 +131,11 @@ class EventStatus(View):
         if not id:
             return JsonResponse({'success': False})
         obj = Event.get(id)
-        if obj.is_pub:
-            obj.is_pub = False
-            obj.save()
+        obj.is_pub = not obj.is_pub
+        obj.save()
         Event.objects.filter(
             company=user.company,
-            is_pub=True).update(is_pub=False)
-        obj.is_pub = True
-        obj.save()
+            is_pub=True).exclude(id=id).update(is_pub=False)
         return JsonResponse({'success': True})
 
 
@@ -275,7 +272,6 @@ class ImportEventDetailView(View):
             row = sheet.nrows
             col = sheet.ncols
             data = []
-            num = 0
             for rx in range(1, row):
                 li = []
                 for cx in range(0, col):
@@ -301,8 +297,7 @@ class ImportEventDetailView(View):
                             term=ed[8],
                             event=event)
                         eventdetail.save()
-                        num += 1
-                return JsonResponse({'success': True, 'data': num})
+                return JsonResponse({'success': True})
         return JsonResponse({'success': False, 'msg': '传入数据超额！'})
 
 
