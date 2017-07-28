@@ -62,7 +62,7 @@
 				<a data-iframe="{% url 'event_detail' pk=obj.id %}" data-toggle="modal" data-title="活动详情" title="查看活动详情"><i class="icon icon-file-o"></i></a>
 				<a href="javascript:void(0)" data-id="{{obj.id}}" class="is_pub" data-title="发布提示" title="{% if obj.is_pub == False %}发布{% else %}取消发布{% endif %}"><i class="icon icon-cloud-upload"></i></a>
 				<a data-iframe="{% url 'event_term_update' pk=obj.id %}" data-toggle="modal" data-title="编辑协议" title="编辑协议"><i class="icon icon-edit"></i></a>
-				<a data-toggle="modal" data-target="#deleteModal" data-id="{{obj.id}}" class="deleteOrder" data-title="清除公测名单" title="清除公测名单"><i class="icon icon-trash"></i></a>
+				<a data-toggle="modal" data-target="#deleteModal" data-id="{{obj.id}}" class="deleteOrder" data-title="清除公测订单" title="清除公测订单"><i class="icon icon-trash"></i></a>
 			</td>
 		</tr>
 		<!--取消发布-->
@@ -74,7 +74,7 @@
 						<h4 class="modal-title">是否发布</h4>
 					</div>
 					<div class="modal-body">
-						<p>确定{{ obj.is_pub|yesno:"取消发布,发布"}}？</p>
+						<p>发布该活动会把已发布的活动下架，确定发布该活动吗？</p>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -90,10 +90,10 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
-						<h4 class="modal-title">清除公测名单</h4>
+						<h4 class="modal-title">清除公测订单</h4>
 					</div>
 					<div class="modal-body">
-						<p>确认清除公测名单？</p>
+						<p>确认清除公测订单？</p>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -122,9 +122,7 @@
 				type: "PUT",
 				url: "../pubstatus/",
 				async: true,
-				data: {
-					id: id
-				},
+				data: { id: id },
 				success: function() {
 					window.location.reload();
 				},

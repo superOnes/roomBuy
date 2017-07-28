@@ -28,6 +28,11 @@ input[type="number"]{
     -moz-appearance: textfield;
 }
 
+/*登录 重置按钮样式*/
+.btn-sm{
+	margin: 0 10px !important;
+}
+
 /*退出按钮*/
 .quit{
 	font-size: 16px !important;	

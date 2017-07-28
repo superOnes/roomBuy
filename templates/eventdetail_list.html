@@ -70,10 +70,7 @@
 			<td>{{ forloop.counter }}</td>
 			<td>{{ obj.building }}{{ obj.unit }}<br/>{{ obj.floor }}-{{ obj.room_num }}</td>
 			<td>
-				<p>
-					<a data-iframe="{% url 'room_price_update' pk=obj.id %}" data-toggle="modal" data-title="编辑单价">{{ obj.unit_price }}元/㎡
-						<i class="icon icon-pencil" /></a>
-				</p>
+				<p> <a data-iframe="{% url 'room_price_update' pk=obj.id %}" data-toggle="modal" data-title="编辑单价">{{ obj.unit_price }}元/㎡ <i class="icon icon-pencil"></i></a> </p>
 			</td>
 			<td>{{obj.area}} ㎡</td>
 			<td>朝 {{obj.looking}}</td>

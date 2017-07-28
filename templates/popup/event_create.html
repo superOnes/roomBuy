@@ -9,7 +9,7 @@
 	.form-control[readonly]{background: none !important;}
 </style>
 <div style="padding:20px">
-	<form class="form-horizontal" method="post" enctype="multipart/form-data">
+	<form class="form-horizontal" method="post" enctype="multipart/form-data" id="createEvent">
 		{% csrf_token %}
 		<div class="form-group">
 			<label class="col-sm-3 col-lg-3 control-label">活动类型<i>*</i></label>
@@ -137,7 +137,7 @@
 		<div class="form-group">
 			<label class="col-sm-3 col-lg-3 control-label">活动封面<i>*</i></label>
 			<div class="col-sm-9 col-lg-9">
-				<input type="file" class="form-control" id="cover" onchange='showCover()' name="cover">
+				<input type="file" class="form-control myfileCover" id="cover" onchange='showCover()' name="cover">
 			</div>
 			<div class="col-sm-9" style="margin:10px 0 0 25%;">
 				<p style="margin: 0;">当前文件为<span class="coverImgFile" style="margin-left:20px;">{{form.cover.value|default:''}}</span></p>
@@ -149,7 +149,7 @@
 		<div class="form-group">
 			<label class="col-sm-3 col-lg-3 control-label">平面图<i>*</i></label>
 			<div class="col-sm-9 col-lg-9">
-				<input type="file" class="form-control" id="plane_graph" onchange='showPlane_graph()' name="plane_graph">
+				<input type="file" class="form-control myfilePlane_graph" id="plane_graph" onchange='showPlane_graph()' name="plane_graph">
 			</div>
 			<div class="col-sm-9" style="margin:10px 0 0 25%;">
 				<p style="margin: 0;">当前文件为<span class="plane_graph_img_file" style="margin-left:20px;">{{form.plane_graph.value|default:''}}</span></p>
@@ -169,6 +169,25 @@
 </div>
 <script type="text/javascript">
 	$(document).ready(function() {
+		//创建活动
+		$("#createEvent").submit(function(){
+		    　　if($(".myfileCover").val() == "") {
+		        　　	new $.zui.Messager('请添加封面', {
+		        	placement:'bottom',
+				    type: 'important' // 定义颜色主题
+				}).show();
+			　	return false;
+	        }else{
+	        	if($(".myfilePlane_graph").val() == "") {
+			        　　	new $.zui.Messager('请添加平面图', {
+			        	placement:'bottom',
+					    type: 'important' // 定义颜色主题
+					}).show();
+			        　	return false;
+		        }
+	        }
+		})
+		
 		//	封面图
 		var coverImgFile = $(".coverImgFile").html();
 		var coverImgFiles = coverImgFile.slice(17); //截取获取文件的文件名
@@ -184,7 +203,6 @@
 
 	//去除火狐input number的滚轮事件
 	$("input[type='number']").on('DOMMouseScroll', MouseWheel, false);
-
 	function MouseWheel(event) {
 		event = event || window.event;
 		event.preventDefault();

@@ -5,7 +5,20 @@ $(document).ready(function(){
 	});
 })
 
-
+//创建活动
+$("#createEvent").submit(function(){
+	if($(".myfile").length == 2){
+	    $(".myfile").each(function(){
+	    　　if($(this).val() == "") {
+	        　　	new $.zui.Messager('请添加文件', {
+			    type: 'important' // 定义颜色主题
+			}).show();
+	        　	return false;
+	    　　}
+	    }); 
+	   
+	}
+})
 
 //上传认筹名单文件
 function submitFile(event,thisID){
@@ -68,10 +81,11 @@ function deleteOrder(thisId){
 		async:true,
 		data:{id:thisId},
 		success:function(){
-			alert("清除公测名单成功！！！");
-			setTimeout(function(){
+			new $.zui.Messager('提示消息：成功', {
+			    type: 'success' // 定义颜色主题
+			}).show("",function(){
 				window.location.reload();
-			},1500)
+			});
 		},
 		error:function(){
 			alert("未知错误")
