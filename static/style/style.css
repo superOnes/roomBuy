@@ -33,6 +33,13 @@ input[type="number"]{
 	font-size: 16px !important;	
 }
 
+/*操作按钮样式*/
+.operation>a{
+	margin:0 5px;
+	line-height: 30px;
+}
+
+
 /*表单的必填项*/
 .form-group>label{padding-top: 0 !important;position: relative;}
 .form-group>label>i{position: absolute;right:0;top:0;font-size: 16px;color:red;}
