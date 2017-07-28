@@ -1,5 +1,6 @@
 from django.conf.urls import url
 from django.views.generic import TemplateView
+from accounts.decorators import admin_required
 from .views import (EventListView, EventCreateView, ImportEventDetailView,
                     ExportEventDetailView, ExportCustomerView, EventUpdateView,
                     EventDetailView, EventDetailListView,
@@ -71,7 +72,7 @@ urlpatterns = [
         name='delete_house_type'),
 
     # 开盘统计管理
-    url(r'^opensta/', TemplateView.as_view(template_name='opensta.html'),
+    url(r'^opensta/', admin_required(TemplateView.as_view(template_name='opensta.html')),
         name='event_opensta'),
     url(r'^househeat/', HouseHeatView.as_view()),
     url(r'^purcharseheat/', PurcharseHeatView.as_view()),
@@ -80,7 +81,7 @@ urlpatterns = [
     url(r'^export/buyhot/', ExportBuyHotView.as_view()),
 
     # 开盘订单管理
-    url(r'^order/', TemplateView.as_view(template_name='order.html'),
+    url(r'^order/', admin_required(TemplateView.as_view(template_name='order.html')),
         name='event_order'),
     url(r'^orderlist/', OrderListView.as_view(), name='orderlist'),
     url(r'^exportorder/', ExportOrderView.as_view()),
