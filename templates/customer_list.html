@@ -54,7 +54,6 @@
 			<th>手机号</th>
 			<th>证件号</th>
 			<th>备注</th>
-			<th>可选套数</th>
 			<th>状态</th>
 			<th>操作</th>
 		</tr>
@@ -67,16 +66,8 @@
 			<td>{{ obj.mobile }}</td>
 			<td>{{ obj.identication }}</td>
 			<td>{{ obj.remark }}</td>
-			<td>
-				<a data-iframe="{% url 'customer_count_update' pk=obj.id %}" data-toggle="modal" data-title="修改可选套数">
-					{{ obj.count }} <i class="icon icon-edit"></i></a>
-			</td>
-			<td>已选购 {{obj.user.get_order_count}} / {{ obj.count }}</td>
-			<td>
-				<p>
-					<a data-toggle="modal" data-target="#deleteModal" data-id="{{obj.id}}" class="delete">删除</a>
-				</p>
-			</td>
+			<td>已选购</td>
+			<td> <p> <a data-toggle="modal" data-target="#deleteModal" data-id="{{obj.id}}" class="delete">删除</a> </p> </td>
 		</tr>
 		<!--删除确认框-->
 		<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog">
