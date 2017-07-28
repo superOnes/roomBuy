@@ -1,3 +1,4 @@
+from system.storage import ImageStorage
 from django.db import models
 from django.shortcuts import get_object_or_404
 from aptm.settings import CUSTOMER_MODEL
@@ -34,8 +35,10 @@ class Event(models.Model):
     notice = models.TextField('认购须知')
     tip = models.TextField('温馨提示')
     cover = models.ImageField('活动封面', upload_to='cover/%Y/%m/%d/',
+                              storage=ImageStorage(),
                               null=True, blank=True)
     plane_graph = models.ImageField('平面图', upload_to='planeGraph/%Y/%m/%d/',
+                                    storage=ImageStorage(),
                                     null=True, blank=True)
     termname = models.CharField('协议名称', max_length=100, null=True, blank=True)
     term = models.TextField('协议内容', null=True, blank=True)
