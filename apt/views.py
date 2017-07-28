@@ -125,14 +125,21 @@ class EventStatus(View):
     '''
 
     def put(self, request):
+        user = request.user
         put = QueryDict(request.body, encoding=request.encoding)
         id = put.get('id')
-        if id:
-            obj = Event.get(id)
-            obj.is_pub = not obj.is_pub
+        if not id:
+            return JsonResponse({'success': False})
+        obj = Event.get(id)
+        if obj.is_pub:
+            obj.is_pub = False
             obj.save()
-            return JsonResponse({'success': True})
-        return JsonResponse({'success': False})
+        Event.objects.filter(
+            company=user.company,
+            is_pub=True).update(is_pub=False)
+        obj.is_pub = True
+        obj.save()
+        return JsonResponse({'success': True})
 
 
 @method_decorator(admin_required, name='dispatch')

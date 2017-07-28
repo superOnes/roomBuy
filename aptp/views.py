@@ -26,7 +26,7 @@ class ProView(View):
                 mobile=mobile, identication=identication, event_id=eventid)
         except BaseException:
             return JsonResponse(
-                {'response_state': 400, 'msg': '活动认筹名单中没有该用户！'})
+                {'response_state': 400, 'msg': '您没有参加这个活动！'})
         else:
             value = [{
                 'termname': customer.event.termname,
