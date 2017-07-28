@@ -296,13 +296,16 @@ class AppHouseChoiceConfirmView(View):
         userid = request.POST.get('userid')
         house = request.POST.get('house')
         user = User.objects.get(username=userid)
+        from aptm.settings import DATABASES
         cursor = connection.cursor()
-        # cursor.execute('SELECT id,is_sold,sign_id,event_id,is_testsold,\
-        #                 building,unit,floor,room_num FROM apt_eventdetail \
-        #                 where id=%s FOR UPDATE' % house)
-        cursor.execute('SELECT id,is_sold,sign_id,event_id,is_testsold,\
-                        building,unit,floor,room_num FROM apt_eventdetail \
-                        where id=%s' % house)
+        if (DATABASES['default']['NAME'] == 'aptm'):
+            cursor.execute('SELECT id,is_sold,sign_id,event_id,is_testsold,\
+                            building,unit,floor,room_num FROM apt_eventdetail \
+                            where id=%s FOR UPDATE' % house)
+        else:
+            cursor.execute('SELECT id,is_sold,sign_id,event_id,is_testsold,\
+                            building,unit,floor,room_num FROM apt_eventdetail \
+                            where id=%s' % house)
         obj = cursor.fetchone()
         if obj is None:
             return JsonResponse({'response_state': 404, 'msg': '目标不存在'})
