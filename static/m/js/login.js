@@ -305,16 +305,21 @@ function myShare(){
 			if(data.response_state==200){
 				console.log(data);
 				$(".shareCarList").empty();
-				for(var i=0;i<data.objects.length;i++){
-					$(".shareCarList").append($('<li class="shareCar-list">'+
-						'<a class="share-a">'+
+				if(data.objects.length==0){
+					$(".shareCarList").append('<div class="noOne"><img src="../images/none.png" /><p>目前您没有任何收藏！</p></div>');
+				}else{
+					for(var i=0;i<data.objects.length;i++){
+						$(".shareCarList").append($('<li class="shareCar-list">'+
+							'<a class="share-a">'+
 							'<p>'+data.objects[i][0].eventdetail+'</p>'+
 							'<span>￥'+data.objects[i][0].price+'</span>'+
 							'<p style="display:none" class="shareId">'+data.objects[i][0].house+'</p>'+
-						'</a>'+
-						'</li>'
-					))
+							'</a>'+
+							'</li>'
+						))
+					}
 				}
+
 				$(".shareCar-list").each(function(){
 					$(this).click(function(){
 						if((new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime())||
