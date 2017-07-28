@@ -39,7 +39,7 @@
 		{% for obj in object_list %}
 		<tr>
 			<td>{{ forloop.counter }}</td>
-			<td>{{ obj.name }}</td>
+			<td><a data-iframe="{% url 'event_update' pk=obj.id %}" data-toggle="modal" data-title="编辑活动" title="编辑活动">{{ obj.name }}&nbsp;&nbsp;<i class="icon icon-pencil"></i></a></td>
 			<td>
 				<p>{{ obj.test_start }}</p>
 				<p>至</p>
@@ -61,7 +61,6 @@
 			<td class="operation">
 				<a data-iframe="{% url 'event_detail' pk=obj.id %}" data-toggle="modal" data-title="活动详情" title="查看活动详情"><i class="icon icon-file-o"></i></a>
 				<a href="javascript:void(0)" data-id="{{obj.id}}" class="is_pub" data-title="发布提示" title="{% if obj.is_pub == False %}发布{% else %}取消发布{% endif %}"><i class="icon icon-cloud-upload"></i></a>
-				<a data-iframe="{% url 'event_update' pk=obj.id %}" data-toggle="modal" data-title="编辑活动" title="编辑活动"><i class="icon icon-pencil"></i></a>
 				<a data-iframe="{% url 'event_term_update' pk=obj.id %}" data-toggle="modal" data-title="编辑协议" title="编辑协议"><i class="icon icon-edit"></i></a>
 				<a data-toggle="modal" data-target="#deleteModal" data-id="{{obj.id}}" class="deleteOrder" data-title="清除公测名单" title="清除公测名单"><i class="icon icon-trash"></i></a>
 			</td>
