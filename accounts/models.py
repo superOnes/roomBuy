@@ -12,7 +12,7 @@ class Customer(models.Model):
     remark = models.TextField('备注', null=True, blank=True)
     protime = models.DateTimeField('同意协议时间', null=True, blank=True)
     heat = models.IntegerField('访问热度', default=0)
-    count = models.IntegerField('可选套数', default=0)
+    count = models.IntegerField('可选套数', default=1)
     event = models.ForeignKey(Event, verbose_name='关联活动')
     is_delete = models.BooleanField(default=False)
 

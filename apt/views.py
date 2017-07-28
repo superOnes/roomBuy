@@ -393,16 +393,6 @@ class CustomCreateView(DialogMixin, CreateView):
 
 
 @method_decorator(admin_required, name='dispatch')
-class CustomerCountUpdateView(DialogMixin, UpdateView):
-    '''
-    修改可选套数
-    '''
-    template_name = 'popup/customer_count.html'
-    model = Customer
-    fields = ['count']
-
-
-@method_decorator(admin_required, name='dispatch')
 class CustomerDeleteView(View):
     '''
     删除认筹名单
@@ -650,6 +640,7 @@ class ExportOrderView(View):
         response['Content-Disposition'] = 'attachment;filename=daochudingdan.xls'
         response.write(sio.getvalue())
         return response
+
 
 @method_decorator(admin_required, name='dispatch')
 class CustomListView(ListView):
