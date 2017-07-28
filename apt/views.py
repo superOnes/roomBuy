@@ -66,8 +66,6 @@ class EventListView(ListView):
                 'http://%s/static/m/views/choiceHouse.html?id=%s' %
                 (self.request.get_host(), str(
                     obj.id)))
-            # obj.qr = url2qrcode('http://%s/static/m/views/login.html' %
-            #                     (self.request.get_host()))
             obj.save()
         return queryset
 
@@ -653,7 +651,7 @@ class ExportOrderView(View):
         response.write(sio.getvalue())
         return response
 
-
+@method_decorator(admin_required, name='dispatch')
 class CustomListView(ListView):
     '''
     认筹名单列表

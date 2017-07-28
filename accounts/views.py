@@ -192,7 +192,6 @@ class CustomerLoginView(View):
         #     return JsonResponse({'response_state': 400, 'msg': '认筹名单中没有此用户！'})
         # else:
         if customer.event.is_pub:
-            eventid = customer.event_id
             user = authenticate(
                 username=userid,
                 password=customer.identication)
@@ -205,7 +204,7 @@ class CustomerLoginView(View):
                     login(request, user)
                     request.session.set_expiry(300)
                     return JsonResponse(
-                        {'response_state': 200, 'id': eventid, 'msg': '登录成功'})
+                        {'response_state': 200, 'msg': '登录成功'})
                 return JsonResponse({'response_state': 400})
             return JsonResponse(
                 {'response_state': 400, 'msg': '该电话号与证件号未通过认证。'})

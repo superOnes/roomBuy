@@ -20,11 +20,13 @@ class ProView(View):
     def get(self, request):
         mobile = request.GET.get('tel')
         identication = request.GET.get('personId')
+        eventid = request.GET.get('id')
         try:
             customer = Customer.objects.get(
-                mobile=mobile, identication=identication)
+                mobile=mobile, identication=identication, event_id=eventid)
         except BaseException:
-            return JsonResponse({'response_state': 400, 'msg': '认筹名单中没有该用户！'})
+            return JsonResponse(
+                {'response_state': 400, 'msg': '活动认筹名单中没有该用户！'})
         else:
             value = [{
                 'termname': customer.event.termname,
@@ -176,7 +178,7 @@ class AppEventDetailHouseInfoView(View):
                   'realname': user.customer.realname,
                   'mobile': user.customer.mobile,
                   'identication': user.customer.identication,
-                  'building_unit': eventdetobj.building + eventdetobj.unit + str(eventdetobj.floor) + '层 ' + str(eventdetobj.room_num) + '室',
+                  'building_unit': eventdetobj.building + eventdetobj.unit + '单元' + str(eventdetobj.floor) + '层 ' + str(eventdetobj.room_num) + '室',
                   'total': '***' if test and not eventdetobj.event.test_price else ((eventdetobj.area) * (eventdetobj.unit_price)),
                   'house_type': house_type,
                   'pic': pic,
@@ -189,7 +191,6 @@ class AppEventDetailHouseInfoView(View):
                   'is_followed': is_followed,
                   'is_testsold': eventdetobj.is_testsold,
                   }]
-
         context = {}
         context['objects'] = value
         context['response_state'] = 200
@@ -242,8 +243,8 @@ class CancelFollow(View):
             return JsonResponse({'response_state': 403, 'msg': '没有该商品！'})
         else:
             follow = Follow.objects.filter(
-                    user=user,
-                    eventdetail=eventdetail)
+                user=user,
+                eventdetail=eventdetail)
             if not follow:
                 return JsonResponse(
                     {'response_state': 403, 'msg': '没有收藏该商品！'})
@@ -270,6 +271,7 @@ class FollowView(View):
                     'eventdetail': (
                         obj.eventdetail.building +
                         obj.eventdetail.unit +
+                        '单元' +
                         str(obj.eventdetail.floor) +
                         '层' +
                         str(obj.eventdetail.room_num)) + '室',
@@ -417,12 +419,11 @@ class AppOrderListView(View):
                 'order_num': obj.order_num,
                 'room_info': (
                     obj.eventdetail.building +
-                    '-' +
                     obj.eventdetail.unit +
-                    '-' +
+                    '单元' +
                     str(obj.eventdetail.floor) +
-                    '-' +
-                    str(obj.eventdetail.room_num)),
+                    '层' +
+                    str(obj.eventdetail.room_num)) + '室',
                 'time': obj.time.strftime('%Y/%m/%d %H:%M:%S'),
                 'event': obj.eventdetail.event.name,
                 'unit_price': obj.eventdetail.unit_price if obj.eventdetail.event.covered_space_price else '',
@@ -452,29 +453,37 @@ class AppOrderInfoView(View):
                 house_type = obj.eventdetail.house_type.name
             except BaseException:
                 house_type = ''
-            value = [{
-                'eventname': obj.eventdetail.event.name,
-                'unit_price': obj.eventdetail.unit_price,
-                'limit': (obj.time + timedelta(hours=obj.eventdetail.event.limit)).strftime('%Y年%m月%d日 %H:%M:%S'),
-                'ordertime': obj.time.strftime('%Y%m/%d %H:%M:%S'),
-                'room_info': (
-                    obj.eventdetail.event.name +
-                    '-' +
-                    obj.eventdetail.building +
-                    '-' +
-                    obj.eventdetail.unit +
-                    '-' +
-                    str(obj.eventdetail.floor) +
-                    '-' +
-                    str(obj.eventdetail.room_num)),
-                'houst_type': house_type,
-                'area': obj.eventdetail.area,
-                'customer': obj.user.customer.realname,
-                'mobile': obj.user.customer.mobile,
-                'identication': obj.user.customer.identication,
-                'order_num': obj.order_num,
-                'total': ((obj.eventdetail.area) * (obj.eventdetail.unit_price))
-            }]
+            value = [
+                {
+                    'eventname': obj.eventdetail.event.name,
+                    'unit_price': obj.eventdetail.unit_price,
+                    'limit': (
+                        obj.time +
+                        timedelta(
+                            hours=obj.eventdetail.event.limit)).strftime('%Y年%m月%d日 %H:%M:%S'),
+                    'ordertime': obj.time.strftime('%Y%m/%d %H:%M:%S'),
+                    'room_info': (
+                        obj.eventdetail.event.name +
+                        '-' +
+                        obj.eventdetail.building +
+                        obj.eventdetail.unit +
+                        '单元' +
+                        str(
+                            obj.eventdetail.floor) +
+                        '层' +
+                        str(
+                            obj.eventdetail.room_num)) +
+                    '室',
+                    'houst_type': house_type,
+                    'area': obj.eventdetail.area,
+                    'customer': obj.user.customer.realname,
+                    'mobile': obj.user.customer.mobile,
+                    'identication': obj.user.customer.identication,
+                    'order_num': obj.order_num,
+                    'total': (
+                                (obj.eventdetail.area) *
+                                (
+                                    obj.eventdetail.unit_price))}]
         context = {}
         context['objects'] = value
         context['response_state'] = 200
