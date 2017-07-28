@@ -278,7 +278,6 @@ class ImportView(View):
                                                            mobile=str(int(ct[1])),
                                                            identication=str(int(ct[2])),
                                                            remark=ct[3],
-                                                           count=ct[4],
                                                            event=event)
                         customer.save()
                         User.objects.create_user(
