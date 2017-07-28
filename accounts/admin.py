@@ -9,20 +9,20 @@ class MyUserCreationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ("username", "is_admin", "password", "company")
+        fields = ('username', 'is_admin', 'password1', 'password2', 'company')
 
 
 class MyUserChangeForm(UserChangeForm):
 
     class Meta:
         model = User
-        fields = ("username", "is_admin", "password", "company")
+        fields = ('username', 'is_admin', 'password', 'company')
 
 
 class MyUserAdmin(UserAdmin):
 
-    form = MyUserCreationForm
-    add_form = MyUserChangeForm
+    form = MyUserChangeForm
+    add_form = MyUserCreationForm
 
     fieldsets = (
         (None, {'fields': ('username', 'is_admin', 'password',
