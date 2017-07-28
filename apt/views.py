@@ -268,6 +268,7 @@ class ImportEventDetailView(View):
             row = sheet.nrows
             col = sheet.ncols
             data = []
+            num = 0
             for rx in range(1, row):
                 li = []
                 for cx in range(0, col):
@@ -293,7 +294,8 @@ class ImportEventDetailView(View):
                             term=ed[8],
                             event=event)
                         eventdetail.save()
-                return JsonResponse({'success': True})
+                        num += 1
+                return JsonResponse({'success': True, 'data': num})
         return JsonResponse({'success': False, 'msg': '传入数据超额！'})
 
 

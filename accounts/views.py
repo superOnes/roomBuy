@@ -263,6 +263,7 @@ class ImportView(View):
             row = sheet.nrows
             col = sheet.ncols
             data = []
+            num = 0
             for rx in range(1, row):
                 li = []
                 for cx in range(0, col):
@@ -285,7 +286,8 @@ class ImportView(View):
                             password=customer.identication,
                             customer=customer,
                             is_admin=False)
-            return JsonResponse({'success': True})
+                        num += 1
+            return JsonResponse({'success': True, 'data': num})
         return JsonResponse({'success': False})
 
 
