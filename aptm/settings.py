@@ -120,7 +120,7 @@ DATABASES = {
         'NAME': 'aptm',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': '10.7.1.34',
+        'HOST': '127.0.0.1',
         'PORT': '5432',
     }
 }
