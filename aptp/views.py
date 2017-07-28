@@ -304,10 +304,12 @@ class AppHouseChoiceConfirmView(View):
             cursor.execute('SELECT id,is_sold,sign_id,event_id,is_testsold,\
                             building,unit,floor,room_num FROM apt_eventdetail \
                             where id=%s FOR UPDATE' % house)
+            bol = True
         else:
             cursor.execute('SELECT id,is_sold,sign_id,event_id,is_testsold,\
                             building,unit,floor,room_num FROM apt_eventdetail \
                             where id=%s' % house)
+            bol = 1
         obj = cursor.fetchone()
         if obj is None:
             return JsonResponse({'response_state': 404, 'msg': '目标不存在'})
@@ -324,8 +326,8 @@ class AppHouseChoiceConfirmView(View):
                                                  eventdetail_id=obj[0],
                                                  order_num=time.strftime
                                                  ('%Y%m%d%H%M%S'))
-                    cursor.execute('UPDATE apt_eventdetail set is_testsold=1 \
-                                    where id=%s' % house)
+                    cursor.execute('UPDATE apt_eventdetail set is_testsold=%s \
+                                    where id=%s' % (bol, house))
                 return JsonResponse({'response_state': 200,
                                      'room_info': ('%s-%s-%s-%s') %
                                                   (obj[5], obj[6], obj[7],
@@ -350,8 +352,8 @@ class AppHouseChoiceConfirmView(View):
                                                  order_num=time.strftime
                                                  ('%Y%m%d%H%M%S'),
                                                  is_test=False)
-                    cursor.execute('UPDATE apt_eventdetail set is_sold=1 \
-                                    where id=%s' % house)
+                    cursor.execute('UPDATE apt_eventdetail set is_sold=%s \
+                                    where id=%s' % (bol, house))
                 return JsonResponse({'response_state': 200,
                                      'room_info': ('%s-%s-%s-%s') %
                                      (obj[5], obj[6], obj[7],
@@ -369,8 +371,8 @@ class AppHouseChoiceConfirmView(View):
                                          ('%Y%m%d%H%M%S'),
                                          is_test=False)
                     cursor.execute(
-                        'UPDATE apt_eventdetail set is_sold=1 where id=%s' %
-                        house)
+                        'UPDATE apt_eventdetail set is_sold=%s where id=%s' %
+                        (bol, house))
                 return JsonResponse(
                     {'response_state': 400, 'msg': '购买失败，房屋已卖出'})
             elif Order.objects.filter(user=user, eventdetail_id=obj[0],
