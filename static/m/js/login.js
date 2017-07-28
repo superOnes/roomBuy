@@ -1,4 +1,3 @@
-var id;
 var userid;
 var http="";//正式
 //var http="http://10.7.10.193:8000"; //测试
@@ -27,10 +26,10 @@ $(function(){
 				url:http+"/app/prodel/",
 				data:{
 					tel:tel,
-					personId:personId
+					personId:personId,
+					id:$(".loginId").html()
 				},
 				success:function(data){
-					console.log(data);
 					if(data.response_state==200){
 						prol(data.objects[0]);
 
@@ -40,21 +39,19 @@ $(function(){
 						});
 
 						$(".proSure").click(function(){
-							console.log($(".userid").html());
 							$.ajax({
 								type:"POST",
 								url:http+"/acc/cuslog/",
 								data:{
-									userid:$(".userid").html()
+									userid:$(".userid").html(),
+									id:$(".loginId").html()
+
 								},
 								dataType:'JSON',
 								success: function (data) {
 									if(data.response_state==200){
-										console.log(data);
+										window.location.href = "choiceHouse.html?id="+$(".loginId").html()+"&userid="+$(".userid").html();
 
-										window.location.href = "choiceHouse.html?id="+data.id+"&userid="+$(".userid").html();
-										//id=data.id;
-										//userid=data.userid;
 									}else{
 										alert(data.msg);
 									}
@@ -233,8 +230,6 @@ function myOrder() {
 	}else{
 			alert("活动尚未开始");
 	}
-
-
 }
 function updataTime(data) {
 	setInterval(function() {
@@ -303,7 +298,6 @@ function myShare(){
 		},
 		success:function(data){
 			if(data.response_state==200){
-				console.log(data);
 				$(".shareCarList").empty();
 				if(data.objects.length==0){
 					$(".shareCarList").append('<div class="noOne"><img src="../images/none.png" /><p>目前您没有任何收藏！</p></div>');
@@ -340,17 +334,19 @@ function myShare(){
 		}
 	})
 }
-
-
-
-
 function houseList(data){
 
 	for(var i=0;i<data.building.length;i++){
 		$(".listTileDiv").append("<p class='shares'>"+data.building[i]+"</p>");
 	}
-
 	var aPp=$('.listTileDiv .shares');
+	if($(".listTileDiv").height()=="40"){
+		$(".click-down").hide();
+	}else{
+		$(".click-down").show();
+        $(".listTileDiv").css("height","2rem");
+	}
+
 	aPp.each(function(){
 		$(this).on("click",function(){
 			$(".sharees").removeClass("listTile-style");
@@ -367,7 +363,6 @@ function houseList(data){
 				},
 				dataType:'JSON',
 				success: function (data) {
-					console.log(data);
 					$(".houseUnit").remove();
 					if(data.objects[0].unit.length>0){
 						var unit = $('<div class="houseTap houseUnit">'+
@@ -388,15 +383,12 @@ function houseList(data){
 					for(var i=0;i<$(".shares").length;i++){
 						if($(".shares").eq(i).hasClass("listTile-style")){
 							build=$(".shares").eq(i).html();
-							console.log(build);
 						}
 					}
 					aPps.each(function(){
 						$(this).click(function(){
 							aPps.removeClass("listTile-style");
 							$(this).addClass("listTile-style");
-							console.log($(this).html());
-
 							$.ajax({
 								type:"get",
 								url:http+"/app/houselist/",
@@ -407,7 +399,6 @@ function houseList(data){
 									userid:$(".userid").html()
 								},
 								success:function(data){
-									console.log(data);
 									$(".houseChose").remove();
 									var romms=$('<div class="houseChose">'+
 														'<div class="floorListbox">'+
@@ -571,8 +562,6 @@ function houseInfo(data){
 		}else{
 			$(".houseInfoOther").after($('<div class="houseBtnY" onclick="buyNow()">立即选择</div>'));
 		}
-		console.log(data.is_testsold);
-
 	}else{
 		$(".houseInfoOther").after($('<div class="houseBtnN">活动未开始</div>'));
 	}

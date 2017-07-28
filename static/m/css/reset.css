@@ -183,7 +183,7 @@ a, img {-webkit-touch-callout: none;}
     font-size: 0.6rem;
     color:#222222;
 }
-.wapline div,.wapline h1 ,{
+.wapline div,.wapline h1 {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -191,7 +191,6 @@ a, img {-webkit-touch-callout: none;}
 .wapline .bannerline{
     width: 100%;
     height:10.2rem;
-    /*position:absolute;*/
 }
 .wapline .bannerline img{
     height:10.2rem;
@@ -390,7 +389,7 @@ a, img {-webkit-touch-callout: none;}
     border-bottom:solid 1px #eee;
     padding:.9rem 5% .2rem 5%;
 }
-.listTileDiv{width:90%;height:2rem;overflow:hidden;}
+.listTileDiv{width:90%;overflow:hidden;}
 .listTile p,.houseUnit p{
     float:left;
     height:1.5rem;

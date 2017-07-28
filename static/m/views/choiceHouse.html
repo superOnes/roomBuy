@@ -60,33 +60,39 @@ function getParamValue(name)
     }
     return null ;
 }
-var id = getParamValue("id");
-var userid = getParamValue("userid");
-
 
 $(function(){
+    var id = getParamValue("id");
+    var userid = getParamValue("userid");
+    if(userid){
+        localStorage.setItem("userid",userid);
+    }
+   var userid1=localStorage.getItem("userid");
+
+
     $.ajax({
         type:"get",
         url:http+"/app/detail/",
         data:{
-            userid:userid,
+            userid:userid1,
             id:id
         },
         success:function(data){
             if(data.response_state==200){
                 creatEle(data.objects[0]);
                 $(".userid1").html(userid);
+                $(".btnL").click(function(){
+                    if((new Date(data.objects[0].event_start).getTime()<new Date().getTime()&&new Date().getTime()<new Date(data.objects[0].event_end).getTime())||
+                            (new Date(data.objects[0].test_start).getTime()<new Date().getTime()&&new Date().getTime()<new Date(data.objects[0].test_ent).getTime())){
+                        window.location.href="houseList.html?id="+id+"&userid="+userid1;
+                    }else{
+                        alert("活动未开始");
+                    }
 
-                if((new Date(data.objects[0].event_start).getTime()<new Date().getTime()&&new Date().getTime()<new Date(data.objects[0].event_end).getTime())||
-                        (new Date(data.objects[0].test_start).getTime()<new Date().getTime()&&new Date().getTime()<new Date(data.objects[0].test_ent).getTime())){
-                    $(".btnL").click(function(){
-                        window.location.href="houseList.html?id="+id+"&userid="+userid;
-                    })
-                }else{
-                    alert("活动未开始");
-                }
+               })
+
             }else if(data.response_state==401){
-                window.location.href="login.html";
+                window.location.href="login.html?id="+id;
             }
             else{
                 alert(data.msg);
