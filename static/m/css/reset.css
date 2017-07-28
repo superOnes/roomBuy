@@ -176,6 +176,17 @@ a, img {-webkit-touch-callout: none;}
     width:90%;
     margin:20px 5%;
 }
+.errorPage{
+    text-align:center;
+    margin:30% auto;
+    font-size:.9rem;
+}
+.errorPage img{
+    width:152px;
+    margin:auto;
+    padding-bottom:20px;
+}
+
 /*在线选房*/
 .wapline{
     width:100%;

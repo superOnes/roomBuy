@@ -87,8 +87,13 @@
     $(function(){
         var id = getParamValue("id");
         $(".loginId").html(id);
-
+        if(!id){
+            $("body").empty();
+            $("body").append($("<div class='errorPage'><img src='../images/error.png' /><p>该地址无效！</p></div>"));
+		}
 	});
+
+
 
 </script>
 </body>
