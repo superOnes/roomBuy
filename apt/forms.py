@@ -17,11 +17,11 @@ class EventForm(forms.ModelForm):
         cleaned_data = super(EventForm, self).clean()
         if cleaned_data['test_start'] <= datetime.now():
             raise forms.ValidationError('公测开始时间不得早于当前时间！')
-        if cleaned_data['test_start'] > cleaned_data['test_end']:
+        if cleaned_data['test_start'] >= cleaned_data['test_end']:
             raise forms.ValidationError('公测结束时间不能提前于公测开始时间！')
         if cleaned_data['event_start'] <= cleaned_data['test_end']:
             raise forms.ValidationError('活动开始时间不得早于公测结束时间！')
-        if cleaned_data['event_start'] > cleaned_data['event_end']:
+        if cleaned_data['event_start'] >= cleaned_data['event_end']:
             raise forms.ValidationError('活动结束时间不能提前于活动开始时间！')
         return cleaned_data
 
