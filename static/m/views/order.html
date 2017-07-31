@@ -63,6 +63,7 @@
             },
             success:function(data){
                 if(data.response_state==200){
+                    console.log(data);
                     order(data);
                     $(".order-all").each(function(){
                         $(this).click(function(){

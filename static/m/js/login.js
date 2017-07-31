@@ -44,7 +44,8 @@ $(function(){
 								url:http+"/acc/cuslog/",
 								data:{
 									userid:$(".userid").html(),
-									id:$(".loginId").html()
+									id:$(".loginId").html(),
+                                    protime:new Date().Format("yyyy-MM-dd hh:mm:ss")
 
 								},
 								dataType:'JSON',
@@ -342,11 +343,11 @@ function houseList(data){
 		$(".listTileDiv").append("<p class='shares'>"+data.building[i]+"</p>");
 	}
 	var aPp=$('.listTileDiv .shares');
-	if($(".listTileDiv").height()=="40"){
+	if($(".listTileDiv").height()=="42"){
 		$(".click-down").hide();
 	}else{
 		$(".click-down").show();
-        $(".listTileDiv").css("height","2rem");
+        $(".listTileDiv").css("height","42");
 	}
 
 	aPp.each(function(){
@@ -472,7 +473,7 @@ function houseList(data){
 		} else{
 			$(this).attr('name','true');
 			$(this).addClass('click-down').removeClass('click-down-top');
-			$('.listTileDiv').css("height","2rem");
+			$('.listTileDiv').css("height","42");
 		}
 
 	});
@@ -641,7 +642,7 @@ function orderSu(data){
 							'<span>'+data.room_info+'</span>'+
 						'</div>'+
 						'<div class="prompt-warning">'+
-							'<p>请在<span></span>前，到项目现场办理正式手续。逾期未办理，视为放弃资格。</p>'+
+							'<p>请在<span>'+data.limit+'</span>前，到项目现场办理正式手续。逾期未办理，视为放弃资格。</p>'+
 						'</div>'+
 						'<div class="prompt-btn">'+
 							'<a href="javascript:;" onclick="orderInfos()">订单详情</a>'+
@@ -653,8 +654,6 @@ function orderSu(data){
 	);
 
 	$(".success-container").append(sucess);
-	var time1=data.limit*3600*1000+new Date(data.ordertime).getTime();
-	$(".prompt-warning span").html(new Date(time1).Format("yyyy-MM-dd hh:mm:ss"));
 
 }
 function orderInfos(){
@@ -698,6 +697,12 @@ function order(data){
 				'<p class="oferId" style="display:none">'+data.objects[i][0].orderid+'</p>'+
 				'</div>'
 			));
+
+			if(new Date(data.objects[i][0].time).getTime()>new Date($(".test_start").html()).getTime()&&
+                new Date(data.objects[i][0].time).getTime()<new Date($(".test_ent").html()).getTime()){
+				$(".order-all").eq(i).find(".order-right").append($('<img src="../images/test.png" />'));
+			}
+
 		}
 	}
 

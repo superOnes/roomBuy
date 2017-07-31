@@ -868,11 +868,13 @@ div.shoued i{
     left:1rem;
     top:1.2rem;
 }
+.order-right{
+    position:absolute;
+    top:0;
+    right:0;
+}
 .order-right img{
-    width:1rem;
-    position: relative;
-    left:90%;
-    top:-2.2rem;
+    width:40px;
 }
 .order-middle{
     position: relative;

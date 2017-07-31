@@ -69,6 +69,7 @@
             dataType:'JSON',
             success: function (data) {
                 if(data.response_state==200){
+                    console.log(data);
                     checkInfo(data.objects[0]);
                     $(".backIndex").click(function(){
                         window.location.href="houseList.html?id="+idd+"&userid="+userid;
