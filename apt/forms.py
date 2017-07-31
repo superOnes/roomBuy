@@ -36,8 +36,9 @@ class EventDetailForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super(EventDetailForm, self).clean()
         event = self.initial['event']
-        if event.eventdetail_set.count() >= int(event.house_limit):
-            raise forms.ValidationError('房源数量超出上限，不可添加')
+        current_user = self.initial['current_user']
+        if event.eventdetail_set.count() >= int(current_user.house_limit):
+            raise forms.ValidationError('车位/房源数量超出上限，不可添加')
         return cleaned_data
 
     def save(self, commit=True):

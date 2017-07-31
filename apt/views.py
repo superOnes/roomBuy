@@ -175,6 +175,7 @@ class EventDetailCreateView(DialogMixin, CreateView):
     def get_initial(self):
         initial = super(EventDetailCreateView, self).get_initial()
         initial['event'] = Event.get(self.kwargs['pk'])
+        initial['current_user'] = self.request.user
         return initial
 
 
