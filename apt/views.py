@@ -19,6 +19,7 @@ from django.utils.decorators import method_decorator
 
 from aptm import settings
 from accounts.models import Order, Customer
+from aptp.models import Follow
 from .models import Event, EventDetail, HouseType
 from accounts.decorators import admin_required
 from .forms import (EventForm, EventDetailForm, CustomerForm, HouseTypeForm,
@@ -753,6 +754,8 @@ class PurcharseHeatView(View):
         for customer in queryset:
             testorder = customer.user.order_set.filter(is_test=True).first()
             openorder = customer.user.order_set.filter(is_test=False).first()
+            follow = Follow.objects.filter(user_id=customer.id)
+            customer.count = len(follow)
             ct_list = {'id': customer.id,
                        'name': customer.realname,
                        'mobile': customer.mobile,

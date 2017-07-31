@@ -101,7 +101,7 @@ class EventDetail(models.Model):
     is_delete = models.BooleanField(default=False)
     house_type = models.ForeignKey(HouseType, null=True, blank=True)
     looking = models.CharField('朝向', max_length=100)
-    term = models.CharField('使用年限', max_length=50)
+    term = models.IntegerField('使用年限')
     area = models.FloatField('建筑面积', max_length=50)
     unit_price = models.FloatField('面积单价', max_length=100)
     sign = models.ForeignKey(CUSTOMER_MODEL, related_name='sign',
