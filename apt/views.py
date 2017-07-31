@@ -290,14 +290,14 @@ class ImportEventDetailView(View):
                     continue
                 if num > 0:
                     eventdetail = EventDetail.objects.create(
-                        building=ed[1],
-                        unit=ed[2],
-                        floor=ed[3],
-                        room_num=ed[4],
-                        unit_price=ed[5],
-                        area=ed[6],
-                        looking=ed[7],
-                        term=ed[8],
+                        building=ed[0],
+                        unit=ed[1],
+                        floor=ed[2],
+                        room_num=ed[3],
+                        unit_price=ed[4],
+                        area=ed[5],
+                        looking=ed[6],
+                        term=ed[7],
                         event=event)
                     eventdetail.save()
                     num -= 1
@@ -701,6 +701,8 @@ class PurcharseHeatView(View):
             last_event = Event.get_last_event(request.user.company.id)
             queryset = Customer.objects.filter(event_id=last_event)
         for customer in queryset:
+            # if customer.protime == None:
+            #     customer.protime = ''
             testorder = customer.user.order_set.filter(is_test=True).first()
             openorder = customer.user.order_set.filter(is_test=False).first()
             follow = Follow.objects.filter(user_id=customer.user.id)
@@ -709,7 +711,7 @@ class PurcharseHeatView(View):
                        'name': customer.realname,
                        'mobile': customer.mobile,
                        'identication': customer.identication,
-                       'protime': customer.protime,
+                       'protime': customer.protime if customer.protime else '',
                        'count': customer.count,
                        'testtime': '',
                        'testroom': '',
