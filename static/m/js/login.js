@@ -1,6 +1,6 @@
 var userid;
-var http="";//正式
-//var http="http://10.7.10.193:8000"; //测试
+//var http="";//正式
+var http="http://10.7.10.193:8000"; //测试
 //var http="http://10.7.1.34";
 $(function(){
 
@@ -112,6 +112,7 @@ function creatEle(data){
 					'<div class="floor"><span class="floor2 bder">温馨提示</span> <div class="flr hgt">'+data.tip+'</div></div>' +
 				'</div>'+
 				'<p class="userid1" style="display:none"></p>'+
+			     '<p class="ind1" style="display:none"></p>'+
 				'<div class="btnline"><a href="javascript:;" class="btnL">立即进入</a></div>'
 	);
 	$(".wapline").append(str1);
@@ -148,10 +149,11 @@ function quit(){
 		type:"POST",
 		url:http+"/acc/cusout/",
 		data:{
-			userid:$(".userid1").html()
+			userid:$(".userid1").html(),
+			id:$(".ind1").html()
 		},
 		success:function(data){
-			window.location.href="login.html";
+			window.location.href="login.html?id="+$(".ind1").html();
 		},
 		error:function(data){
 			alert("退出出现未知错误！");
@@ -258,7 +260,7 @@ function updataTime(data) {
 				var leave33 = leave22 % (60 * 1000);     //计算分钟数后剩余的毫秒数
 				var secondss = Math.round(leave33 / 1000);
 
-				$('#endTimeing').html("距公测动结束还有 " + (dayss < 10 ? "0" + dayss : dayss) + "天 " + (hourss < 10 ? "0" + hourss : hourss) + "小时 " + (minutess < 10 ? "0" + minutess : minutess) + " 分钟" + (secondss < 10 ? "0" + secondss : secondss) + " 秒");
+				$('#endTimeing').html("距公测结束还有 " + (dayss < 10 ? "0" + dayss : dayss) + "天 " + (hourss < 10 ? "0" + hourss : hourss) + "小时 " + (minutess < 10 ? "0" + minutess : minutess) + " 分钟" + (secondss < 10 ? "0" + secondss : secondss) + " 秒");
 			}
 		}else if(date>date4&&date<date1){
 			$('#endTimeing').html("开盘活动未开始");
@@ -275,7 +277,7 @@ function updataTime(data) {
 				var leave3 = leave2 % (60 * 1000);     //计算分钟数后剩余的毫秒数
 				var seconds = Math.round(leave3 / 1000);
 
-				$('#endTimeing').html("距开盘活动结束还有 " + (days < 10 ? "0" + days : days) + "天 " + (hours < 10 ? "0" + hours : hours) + "小时 " + (minutes < 10 ? "0" + minutes : minutes) + " 分钟" + (seconds < 10 ? "0" + seconds : seconds) + " 秒");
+				$('#endTimeing').html("距开盘结束还有 " + (days < 10 ? "0" + days : days) + "天 " + (hours < 10 ? "0" + hours : hours) + "小时 " + (minutes < 10 ? "0" + minutes : minutes) + " 分钟" + (seconds < 10 ? "0" + seconds : seconds) + " 秒");
 			}
 
 		}else {
