@@ -317,7 +317,6 @@ class ExportEventDetailView(View):
         sheet = Workbook(encoding='utf-8')
         s = sheet.add_sheet('数据表')
         list = [
-            '选房房源id',
             '楼栋',
             '单元',
             '楼层',
@@ -341,15 +340,14 @@ class ExportEventDetailView(View):
             return response
         row = 1
         for obj in objs:
-            s.write(row, 0, obj.id)
-            s.write(row, 1, obj.building)
-            s.write(row, 2, obj.unit)
-            s.write(row, 3, obj.floor)
-            s.write(row, 4, obj.room_num)
-            s.write(row, 5, obj.unit_price)
-            s.write(row, 6, obj.area)
-            s.write(row, 7, obj.looking)
-            s.write(row, 8, obj.term)
+            s.write(row, 0, obj.building)
+            s.write(row, 1, obj.unit)
+            s.write(row, 2, obj.floor)
+            s.write(row, 3, obj.room_num)
+            s.write(row, 4, obj.unit_price)
+            s.write(row, 5, obj.area)
+            s.write(row, 6, obj.looking)
+            s.write(row, 7, obj.term)
             row += 1
         sio = BytesIO()
         sheet.save(sio)

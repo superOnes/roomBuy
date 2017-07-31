@@ -84,6 +84,7 @@ class CustomerLoginView(View):
 
     def post(self, request):
         userid = request.POST.get('userid')
+        protime = request.POST.get('protime')
         customer = User.objects.get(username=userid).customer
         # try:
         #     request.session[time.strftime("%Y%m%d%H%M%S")] = customer.realname + \
@@ -106,6 +107,8 @@ class CustomerLoginView(View):
                     #     return JsonResponse(
                     #         {'response_state': 402, 'msg': '帐号同时在线数量超出限制！'})
                     # else:
+                    customer.protime=protime
+                    customer.save()
                     login(request, user)
                     request.session.set_expiry(300)
                     return JsonResponse(

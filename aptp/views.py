@@ -332,7 +332,10 @@ class AppHouseChoiceConfirmView(View):
                                      'room_info': ('%s-%s-%s-%s') %
                                                   (obj[5], obj[6], obj[7],
                                                    obj[8]),
-                                     'limit': event.limit,
+                                     'limit': (
+                                         order.time +
+                                         timedelta(
+                                             hours=event.limit)).strftime('%Y年%m月%d日 %H:%M:%S'),
                                      'ordertime': order.time,
                                      'orderid': order.id,
                                      })
@@ -358,7 +361,10 @@ class AppHouseChoiceConfirmView(View):
                                      'room_info': ('%s-%s-%s-%s') %
                                      (obj[5], obj[6], obj[7],
                                       obj[8]),
-                                     'limit': event.limit,
+                                     'limit': (
+                                         order.time +
+                                         timedelta(
+                                             hours=event.limit)).strftime('%Y年%m月%d日 %H:%M:%S'),
                                      'ordertime': order.time,
                                      'orderid': order.id,
                                      })
@@ -465,8 +471,6 @@ class AppOrderInfoView(View):
                             hours=obj.eventdetail.event.limit)).strftime('%Y年%m月%d日 %H:%M:%S'),
                     'ordertime': obj.time.strftime('%Y%m/%d %H:%M:%S'),
                     'room_info': (
-                        obj.eventdetail.event.name +
-                        '-' +
                         obj.eventdetail.building +
                         obj.eventdetail.unit +
                         '单元' +
