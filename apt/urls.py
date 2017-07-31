@@ -5,17 +5,16 @@ from .views import (EventListView, EventCreateView, ImportEventDetailView,
                     ExportEventDetailView, ExportCustomerView, EventUpdateView,
                     EventDetailView, EventDetailListView,
                     EventDetailPriceUpdateView, EventTermUpdateView,
-                    EventDetailCreateView,
-                    EventDetailRemarkUpdateView, CustomListView,
-                    CustomCreateView, EventStatus, EventDetailStatus,
-                    EventDetailDel,
-                    CustomerDeleteView, ExportHouseHotView, HouseHeatView,
-                    HouseTypeListView, HouseTypeCreateView,
-                    HouseTypeUpdateView,
-                    ExportBuyHotView, HouseTypeRelatedView,
-                    EventDetailHTUpdateView, PurcharseHeatView, GetEventView,
-                    OrderListView, EventDetailSignUpdateView,
-                    DeleteHouseTypeView, ExportOrderView)
+                    EventDetailCreateView, EventDetailRemarkUpdateView,
+                    CustomListView, CustomCreateView, EventStatus,
+                    EventDetailStatus, EventDetailDel, CustomerDeleteView,
+                    ExportHouseHotView, HouseHeatView, HouseTypeListView,
+                    HouseTypeCreateView, HouseTypeUpdateView, ExportBuyHotView,
+                    HouseTypeRelatedView, EventDetailHTUpdateView,
+                    PurcharseHeatView, GetEventView, OrderListView,
+                    EventDetailSignUpdateView, DeleteHouseTypeView,
+                    ExportOrderView, EventTVWall, EventTVWallInfoView,
+                    EventTVWallOrder, EventTVWallOrderView)
 
 
 urlpatterns = [
@@ -83,4 +82,10 @@ urlpatterns = [
         name='event_order'),
     url(r'^orderlist/', OrderListView.as_view(), name='orderlist'),
     url(r'^exportorder/', ExportOrderView.as_view()),
+
+    # 电视墙
+    url(r'^(?P<pk>\d+)/tvwall/', EventTVWall.as_view(), name='tv_wall'),
+    url(r'^(?P<pk>\d+)/tv/', EventTVWallInfoView.as_view()),
+    url(r'^tvwall/order/(?P<pk>\d+)/', EventTVWallOrder.as_view()),
+    url(r'^tv/(?P<pk>\d+)/order/', EventTVWallOrderView.as_view()),
 ]

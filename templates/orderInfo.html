@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <link type="text/css" rel="stylesheet" href="css/reset.css"/>
+</head>
+<body>
+<!--<div class="orderbox">-->
+    <!--<div class="order-top2">-->
+        <!--<span class="order-1">勒泰房产</span><span class="order-2"></span>-->
+        <!--<p>A区车位-1-018</p>-->
+        <!--<div>￥180,000元</div>-->
+    <!--</div>-->
+    <!--<div class="order-a">-->
+        <!--<div class="order-bottom2">-->
+
+            <!--<div class="order-bottom-1">-->
+                <!--<table>-->
+                    <!--<tr>-->
+                        <!--<td>选房号：</td>-->
+                        <!--<td style="color:#f75c2e">00045</td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                        <!--<td>订单号：</td>-->
+                        <!--<td>01700000000</td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                        <!--<td>选择时间：</td>-->
+                        <!--<td>2017-07-03 15:06:50</td>-->
+                    <!--</tr>-->
+                <!--</table>-->
+            <!--</div>-->
+            <!--<div class="order-bottom-2">-->
+                <!--<table>-->
+                    <!--<tr>-->
+                        <!--<td>户型：</td>-->
+                        <!--<td>一室一厅一卫</td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                        <!--<td>建筑面积：</td>-->
+                        <!--<td>1 m²</td>-->
+                    <!--</tr>-->
+
+                <!--</table>-->
+            <!--</div>-->
+            <!--<div class="order-bottom-3">-->
+                <!--<table>-->
+                    <!--<tr>-->
+                        <!--<td>客户：</td>-->
+                        <!--<td>体验001</td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                        <!--<td>手机号码：</td>-->
+                        <!--<td>01700000000</td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                        <!--<td>证件号码：</td>-->
+                        <!--<td>10000000000</td>-->
+                    <!--</tr>-->
+                <!--</table>-->
+            <!--</div>-->
+
+        <!--</div>-->
+        <!--<div class="order-last2">已选择</div>-->
+    <!--</div>-->
+<!--</div>-->
+<script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
+<script>
+    // 获取地址栏的参数数组
+    function getUrlParams()
+    {
+        var search = window.location.search ;
+        // 写入数据字典
+        var tmparray = search.substr(1,search.length).split("&");
+        var paramsArray = new Array;
+        if( tmparray != null)
+        {
+            for(var i = 0;i<tmparray.length;i++)
+            {
+                var reg = /[=|^==]/;    // 用=进行拆分，但不包括==
+                var set1 = tmparray[i].replace(reg,'&');
+                var tmpStr2 = set1.split('&');
+                var array = new Array ;
+                array[tmpStr2[0]] = tmpStr2[1] ;
+                paramsArray.push(array);
+            }
+        }
+        // 将参数数组进行返回
+        return paramsArray ;
+    }
+
+    // 根据参数名称获取参数值
+    function getParamValue(name)
+    {
+        var paramsArray = getUrlParams();
+        if(paramsArray != null)
+        {
+            for(var i = 0 ; i < paramsArray.length ; i ++ )
+            {
+                for(var  j in paramsArray[i] )
+                {
+                    if( j == name )
+                    {
+                        return paramsArray[i][j] ;
+                    }
+                }
+            }
+        }
+        return null ;
+    }
+
+    $(function(){
+        var id = getParamValue("id");
+        $.ajax({
+            type:"get",
+            url:"http://10.7.10.143:8000/event/tv/"+id+"/order/",
+            data:{},
+            success:function(data){
+                console.log(data);
+                if(data.response_state==200){
+                    createOrder(data.result);
+                }else{
+                    alert("页面有错误");
+                }
+
+            },
+            error:function(data){
+                console.log(data);
+                alert("出错了");
+            }
+        })
+    });
+
+    function createOrder(data){
+        var order=$('<div class="orderbox">'+
+                            '<div class="order-top2">'+
+                                '<span class="order-1">'+data.event+'</span><span class="order-2"></span>'+
+                                '<p>'+data.house+'</p>'+
+                                '<div>￥'+data.price+'</div>'+
+                            '</div>'+
+                            '<div class="order-a">'+
+                                 '<div class="order-bottom2">'+
+                                    '<div class="order-bottom-1">'+
+                                        '<table>'+
+                                            '<tr>'+
+                                                '<td>订单号：</td>'+
+                                                '<td>'+data.order_num+'</td>'+
+                                            '</tr>'+
+                                            '<tr>'+
+                                                '<td>选择时间：</td>'+
+                                                '<td>'+data.order_date+'</td>'+
+                                            '</tr>'+
+                                        '</table>'+
+                                    '</div>'+
+                                    '<div class="order-bottom-2">'+
+                                        '<table>'+
+                                            '<tr>'+
+                                                '<td>户型：</td>'+
+                                                '<td>'+data.house_type+'</td>'+
+                                            '</tr>'+
+                                            '<tr>'+
+                                                '<td>建筑面积：</td>'+
+                                                '<td>'+data.area+' m²</td>'+
+                                            '</tr>'+
+                                        '</table>'+
+                                    '</div>'+
+                                    '<div class="order-bottom-3">'+
+                                        '<table>'+
+                                            '<tr>'+
+                                                '<td>客户：</td>'+
+                                                '<td>'+data.user+'</td>'+
+                                            '</tr>'+
+                                            '<tr>'+
+                                                '<td>手机号码：</td>'+
+                                                '<td>'+data.user_mobile+'</td>'+
+                                            '</tr>'+
+                                            '<tr>'+
+                                                '<td>证件号码：</td>'+
+                                                '<td>'+data.user_id+'</td>'+
+                                            '</tr>'+
+                                        '</table>'+
+                                    '</div>'+
+                                 '</div>'+
+                            '</div>'+
+                       '</div>');
+        $("body").append(order);
+    }
+
+
+
+
+</script>
+</body>
+</html>

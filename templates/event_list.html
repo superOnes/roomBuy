@@ -59,9 +59,9 @@
 			<td>{{ obj.is_pub|yesno:"已发布,未发布"}}</td>
 			<td><img width="90" height="90" src="data:image/jpeg;base64,{{ obj.qr }}" /></td>
 			<td class="operation">
-				<p>
+				<!-- <p>
 					<a data-iframe="{% url 'event_detail' pk=obj.id %}" data-toggle="modal">查看</a>
-				</p>
+				</p> -->
 				<p>
 					<a href="javascript:void(0)" data-id="{{obj.id}}" class="is_pub">{% if obj.is_pub == False %}发布{% else %}取消发布{% endif %}</a>
 				</p>
@@ -70,6 +70,7 @@
 				<p>
 					<a data-toggle="modal" data-target="#deleteModal" data-id="{{obj.id}}" class="deleteOrder">清除公测订单</a>
 				</p>
+				<p><a href="{% url 'tv_wall' pk=obj.id %}" target="_blank">电视墙</a></p>
 			</td>
 		</tr>
 		<!--取消发布-->

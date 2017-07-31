@@ -10,7 +10,7 @@ from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.shortcuts import resolve_url
 from django.views import View
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, TemplateView
 from django.views.generic.edit import CreateView, UpdateView
 from django.http import JsonResponse, HttpResponse
 from django.db.models import Q
@@ -939,3 +939,71 @@ class OrderListView(View):
                            } for od in queryset]
             return JsonResponse({'success': True, 'data': order_list})
         return JsonResponse({'success': False})
+
+
+@method_decorator(admin_required, name='dispatch')
+class EventTVWall(TemplateView):
+    template_name = 'wallList.html'
+
+    def get_context_data(self, pk):
+        context = super(EventTVWall, self).get_context_data()
+        context['event_id'] = pk
+        return context
+
+
+@method_decorator(admin_required, name='dispatch')
+class EventTVWallInfoView(View):
+
+    def get(self, request, pk):
+        result = []
+        eventdetails = Event.get(pk).eventdetail_set.all()
+        buildings = list(set(eventdetails.values_list('building', flat=True)))
+        for b in buildings:
+            units = eventdetails.filter(building=b).order_by('unit') \
+                                .values_list('unit', flat=True)
+            units = list(set(units))
+            unit = []
+            for u in units:
+                rooms = eventdetails.filter(building=b, unit=u) \
+                                    .order_by('room_num')
+                room_dict = [{'id': r.id,
+                              'room_num': r.room_num,
+                              'is_sold': r.is_sold} for r in rooms]
+                unit_dict = {'unit': u, 'rooms': room_dict}
+                unit.append(unit_dict)
+            building_dict = {'building': b, 'units': unit}
+            result.append(building_dict)
+        return JsonResponse({'response_state': 200, 'result': result})
+
+
+@method_decorator(admin_required, name='dispatch')
+class EventTVWallOrder(TemplateView):
+    template_name = 'wallList.html'
+
+    def get_context_data(self, pk):
+        context = super(EventTVWallOrder, self).get_context_data()
+        context['edid'] = pk
+        return context
+
+
+class EventTVWallOrderView(View):
+
+    def get(self, request, pk):
+        try:
+            order = Order.objects.get(eventdetail_id=pk, is_test=False)
+        except:
+            return JsonResponse({'response_state': 400, 'msg': '未找到相关订单'})
+        ed = order.eventdetail
+        result = {
+            'order_num': order.order_num,
+            'order_date': order.time.strftime('%Y/%m/%d %H:%M:%S'),
+            'user': order.user.customer.realname,
+            'user_mobile': order.user.customer.mobile,
+            'user_id': order.user.customer.identication,
+            'house': ('%s楼-%s单元-%s') % (ed.building, ed.unit, ed.room_num),
+            'event': ed.event.name,
+            'house_type': ed.house_type.name,
+            'area': ed.area,
+            'price': ed.unit_price,
+        }
+        return JsonResponse({'response_state': 200, 'result': result})

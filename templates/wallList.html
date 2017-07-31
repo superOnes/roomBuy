@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <link type="text/css" rel="stylesheet" href="{{STATIC_URL}}css/reset.css"/>
+</head>
+<body>
+
+<script type="text/javascript" src="{{STATIC_URL}}src/jquery-3.2.1.min.js"></script>
+<script>
+    $(function(){
+        $.ajax({
+            type:"get",
+            url:"/{{event_id}}/tv/",
+            dataType:'JSON',
+
+            success:function(data){
+                console.log(data);
+                if(data.response_state==200){
+                    createWap(data.result);
+                }
+                $("span").each(function(){
+                    $(this).click(function(){
+                        if($(this).hasClass("cellList")){
+                            window.location.href="orderInfo.html?id="+$(this).find("i").html();
+                        }
+
+                    })
+                })
+
+
+            },
+            error:function(data){
+                console.log(data);
+                alert("出错了");
+            }
+
+        })
+    });
+
+
+    function createWap(data){
+        var wap=$('<div class="wap">'+
+                    '<div class="tips">'+
+                        '<p>未售</p>'+
+                        '<p class="bought">已售</p>'+
+                    '</div>'+
+                '</div>'
+        );
+        $("body").append(wap);
+
+        for(var i=0;i<data.length;i++){
+
+            $(".tips").after($('<div class="wapbox clear">'+
+                                    '<div class="title">'+data[i].building+'号楼</div>'+
+                                    '<div class="wallList fr"></div>'+
+                                '</div>'
+                        )
+            );
+
+            for(var j=0;j<data[i].units.length;j++){
+                    $(".wallList").append($('<dl class="unit">'+
+                                                '<dt class="unitName">'+data[i].units[j].unit+'单元</dt>'+
+                                                '<dd class="unitLists">'+
+                                                    '<div class="unitList"></div>'+
+                                                '</dd>'+
+
+                                            '</dl>'
+
+                                        )
+                    );
+
+                for(var n=0;n<data[i].units[j].rooms.length;n++){
+                    $(".unitList").append($('<span>'+data[i].units[j].rooms[n].room_num+
+                                                 '<i style="display:none;">'+data[i].units[j].rooms[n].id+'</i>'+
+                                             '</span>'));
+
+                    if(data[i].units[j].rooms[n].is_sold){
+                        $(".wapbox").eq(i).find(".unit").eq(j).find("span").eq(n).addClass("cellList");
+
+                    }
+
+                }
+            }
+        }
+    }
+
+    $(function(){
+        one(0);
+    });
+
+    function one(k){
+        var wapBox=$(".wapbox");
+        var unitList =wapBox.eq(k).find(".unitList");
+        for(var i = 0;i<unitList.length;i++){
+            timerfn($(unitList[i]))
+        }
+
+        var unit = wapBox.eq(k).find(".unit");
+        var num= 0,m=1;
+        if(unit.length<=3){
+            num=1;
+        }else{
+            if(unit.length%3==0){
+                num=unit.length/3;
+            }
+            if(unit.length%3==1){
+                num=parseInt(unit.length/3)+unit.length%3;
+            }
+            if(unit.length%3==2){
+                num=parseInt(unit.length/3)+1;
+            }
+        }
+
+        var time1=setInterval(function(){
+            $(".wapbox").eq(k).find(".wallList").css("margin-top","-900"*m+"px");
+            timerfn($(unitList));
+            m++;
+            if(m==num+1){
+                i=0;
+                if(k+1<$(".wapbox").length){
+                    $(".wapbox").eq(k).hide().eq(k+1).show();
+                    k++;
+                    one(k);
+                }else{
+                    window.location.reload();
+                }
+
+            }
+        },8000);
+
+    }
+
+
+    function timerfn(ele){
+        ele.timer = setInterval(fn,2000);
+        ele.timer?clearInterval(ele.timer):null;
+        ele.timer = setInterval(fn,2000);
+
+        function fn(){
+            var Ptop =  parseInt(ele.css("top"));
+            var heightL =  parseInt(ele.css("height"));
+            Ptop -= 840;
+            ele.css({"top":Ptop+"px"});
+            if(Math.abs(Ptop)>heightL-5){
+                ele.css({"top":"0px"});
+                ele.timer?clearInterval(ele.timer):null;
+            }
+        }
+
+
+    }
+</script>
+</body>
+</html>
