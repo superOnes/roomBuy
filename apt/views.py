@@ -458,8 +458,8 @@ class ExportHouseHotView(View):
     导出房源热度统计
     '''
 
-    def get(self, request):
-        objs = EventDetail.objects.all()
+    def get(self, request, pk):
+        objs = EventDetail.objects.filter(event_id=pk)
         sheet = Workbook(encoding='utf-8')
         s = sheet.add_sheet('数据表')
         list = [
@@ -517,8 +517,8 @@ class ExportBuyHotView(View):
     导出购房热度统计
     '''
 
-    def get(self, request):
-        objs = Order.all()
+    def get(self, request, pk):
+        objs = Order.objects.filter(eventdetail__event_id=pk)
         sheet = Workbook(encoding='utf-8')
         s = sheet.add_sheet('数据表')
         list = [
@@ -638,7 +638,10 @@ class ExportOrderView(View):
             s.write(row, 5, obj.user.customer.mobile)
             s.write(row, 6, obj.user.customer.identication)
             s.write(row, 7, obj.user.customer.remark)
-            s.write(row, 8, obj.eventdetail.is_sold)
+            if obj.eventdetail.is_sold:
+                s.write(row, 8, '已售')
+            else:
+                s.write(row, 8, '未售')
             row += 1
         sio = BytesIO()
         sheet.save(sio)
