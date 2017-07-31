@@ -71,7 +71,7 @@ class CustomerForm(forms.ModelForm):
 
     class Meta:
         model = Customer
-        fields = ['realname', 'mobile', 'identication', 'count', 'remark']
+        fields = ['realname', 'mobile', 'identication', 'remark']
 
     def save(self, commit=True):
         if not self.instance.id:

@@ -299,6 +299,7 @@ class ImportEventDetailView(View):
                             term=ed[8],
                             event=event)
                         eventdetail.save()
+                os.remove('media/price/price.xlsx')
                 return JsonResponse({'success': True})
         return JsonResponse({'success': False, 'msg': '传入数据超额！'})
 
