@@ -871,6 +871,7 @@ class DeleteHouseTypeView(View):
     def post(self, request):
         id = request.POST.get('id')
         if id:
+            EventDetail.objects.filter(house_type_id=id).update(house_type_id='')
             HouseType.get(id).delete()
             return JsonResponse({'success': True})
         return JsonResponse({'success': False})
