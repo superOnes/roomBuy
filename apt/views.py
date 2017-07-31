@@ -280,27 +280,29 @@ class ImportEventDetailView(View):
                     value = sheet.cell(rowx=rx, colx=cx).value
                     li.append(value)
                 data.append(li)
-            if row < int(request.user.house_limit):
-                for ed in data:
-                    if EventDetail.objects.filter(
-                            event_id=id, building=ed[1],
-                            unit=ed[2], floor=ed[3],
-                            room_num=ed[4]).exists():
-                        continue
-                    else:
-                        eventdetail = EventDetail.objects.create(
-                            building=ed[1],
-                            unit=ed[2],
-                            floor=ed[3],
-                            room_num=ed[4],
-                            unit_price=ed[5],
-                            area=ed[6],
-                            looking=ed[7],
-                            term=ed[8],
-                            event=event)
-                        eventdetail.save()
-                os.remove('media/price/price.xlsx')
-                return JsonResponse({'success': True})
+            for ed in data:
+                etdtnum = len(EventDetail.objects.filter(event_id=id))
+                num = request.user.house_limit - etdtnum
+                if EventDetail.objects.filter(
+                        event_id=id, building=ed[1],
+                        unit=ed[2], floor=ed[3],
+                        room_num=ed[4]).exists():
+                    continue
+                if num > 0:
+                    eventdetail = EventDetail.objects.create(
+                        building=ed[1],
+                        unit=ed[2],
+                        floor=ed[3],
+                        room_num=ed[4],
+                        unit_price=ed[5],
+                        area=ed[6],
+                        looking=ed[7],
+                        term=ed[8],
+                        event=event)
+                    eventdetail.save()
+                    num -= 1
+            os.remove('media/price/price.xlsx')
+            return JsonResponse({'success': True})
         return JsonResponse({'success': False, 'msg': '传入数据超额！'})
 
 
@@ -709,7 +711,6 @@ class PurcharseHeatView(View):
                        'identication': customer.identication,
                        'protime': customer.protime,
                        'count': customer.count,
-                       'heat': customer.heat,
                        'testtime': '',
                        'testroom': '',
                        'opentime': '',
