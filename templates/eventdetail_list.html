@@ -6,7 +6,11 @@
 			<a href="{% url 'event_list' %}">
 				<h3>{{event.name}}</h3></a>
 		</li>
-		<li class="active">车位房源</li>
+		<li class="active">车位房源
+			<span style="color:#2c669c;font-size:13px">
+				(已添加：{{event.eventdetail_set.count}}/{{request.user.house_limit}})
+			</span>
+		</li>
 	</ol>
 </div>
 <div class="row" style="padding:10px;margin-top:-20px;">
