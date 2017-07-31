@@ -606,9 +606,10 @@ class ExportOrderView(View):
         queryset = Order.objects.filter(
             eventdetail__event_id=id, is_test=is_test)
         if value:
-            objs = queryset.filter(Q(user__customer__realname__icontains=value) |
-                                   Q(user__customer__mobile__icontains=value) |
-                                   Q(user__customer__identication__icontains=value))
+            objs = queryset.filter(
+                Q(user__customer__realname__icontains=value) |
+                Q(user__customer__mobile__icontains=value) |
+                Q(user__customer__identication__icontains=value))
         else:
             objs = queryset
         sheet = Workbook(encoding='utf-8')
@@ -632,7 +633,8 @@ class ExportOrderView(View):
             sheet.save(sio)
             sio.seek(0)
             response = HttpResponse(content_type='application/vnd.ms-excel')
-            response['Content-Disposition'] = 'attachment;filename=daochudingdan.xls'
+            response['Content-Disposition'] = 'attachment;filename= \
+                                               daochudingdan.xls'
             response.write(sio.getvalue())
             return response
         row = 1
@@ -654,7 +656,8 @@ class ExportOrderView(View):
         sheet.save(sio)
         sio.seek(0)
         response = HttpResponse(content_type='application/vnd.ms-excel')
-        response['Content-Disposition'] = 'attachment;filename=daochudingdan.xls'
+        response['Content-Disposition'] = 'attachment;filename= \
+                                           daochudingdan.xls'
         response.write(sio.getvalue())
         return response
 
