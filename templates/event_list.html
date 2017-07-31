@@ -73,7 +73,10 @@
 				<p><a href="{% url 'tv_wall' pk=obj.id %}" target="_blank">电视墙</a></p>
 			</td>
 		</tr>
-		<!--取消发布-->
+		{% endfor %}
+	</tbody>
+</table>
+<!--取消发布-->
 		<div class="modal fade" id="is_pub_issue">
 			<div class="modal-dialog modal-sm">
 				<div class="modal-content">
@@ -82,7 +85,7 @@
 						<h4 class="modal-title">是否发布</h4>
 					</div>
 					<div class="modal-body">
-						<p>{{ obj.is_pub|yesno:"确定下架该活动吗？,发布该活动会把已发布的活动下架，确定发布该活动吗？"}}</p>
+						<p class="status_hint"></p>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -111,9 +114,6 @@
 				</div>
 			</div>
 		</div>
-		{% endfor %}
-	</tbody>
-</table>
 {% endblock %} {% block js %}
 <script type="text/javascript">
 	$(document).ready(function() {
@@ -122,6 +122,11 @@
 		//	是否发布
 		$('.is_pub').on('click', function(e) {
 			$("#is_pub_status").val($(e.currentTarget).data("id"));
+			if(e.currentTarget.text == "发布"){
+				$(".status_hint").html("发布该活动会把已发布的活动下架，确定发布该活动吗？");
+			}else{
+				$(".status_hint").html("确定下架该活动吗？");
+			}
 			$("#is_pub_issue").modal();
 		});
 		$(".is_pub_confirm").on("click", function(e) {

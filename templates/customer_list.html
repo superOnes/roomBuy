@@ -34,13 +34,13 @@
 				<div class="modal-body">
 					<form class="form-horizontal">
 						<div class="form-group">
-							<input type="file" name="file" id="files" />
+							<input type="file" name="file" id="files" onclick="$('.btn_up').removeAttr('disabled','disabled');" />
 						</div>
 					</form>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-default" onclick="submitFile(this,{{ event.id }})">确定</button>
+					<button type="button" class="btn btn-default btn_up" onclick="submitFile(this,{{ event.id }})">确定</button>
 				</div>
 			</div>
 		</div>

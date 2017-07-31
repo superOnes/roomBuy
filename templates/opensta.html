@@ -73,7 +73,7 @@
 				for(var i = 0; i < result.length; i++) {
 					$(".selectInp").append("<option value='" + result[i].id + "'>" + result[i].name + "</option>");
 				};
-				$exportEach.attr("href", "/event/exportbuyhot?id=" + result.length)
+				$exportEach.attr("href", "/export/buyhot/" + result.length)
 				$(".selectInp option:first").attr("selected", "selected");
 			},
 			error: function() {
@@ -86,7 +86,11 @@
 		//	活动列表选择时数据的切换显示
 		$(".selectInp").change(function() {
 			var val = $(this).val();
-			$exportEach.attr("href", "/event/exportbuyhot/?id=" + val);
+			if($("ul.nav-tabs li:first").hasClass("active")){
+				$exportEach.attr("href", "/export/buyhot/" + val);
+			}else{
+				$exportEach.attr("href", "/export/househot/" + val);
+			}
 			//	获取数据
 			statisticsData(val);
 		});
@@ -94,9 +98,9 @@
 		$("ul.nav-tabs li").click(function() {
 			var id = $(".selectInp").val();
 			if($(this).index() == 0) {
-				$exportEach.attr("href", "/export/buyhot/?id=" + id)
+				$exportEach.attr("href", "/export/buyhot/" + id)
 			} else {
-				$exportEach.attr("href", "/export/househot/?id=" + id)
+				$exportEach.attr("href", "/export/househot/" + id)
 			};
 		});
 	});

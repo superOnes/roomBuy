@@ -289,6 +289,19 @@ p[class='introduceHouse'] a{
 	color:#d3d3d3;
 }
 
+/*关联户型提示*/
+.house_hint{
+	padding: 20px 0 !important;
+}
+.house_hint>p{
+	text-indent: 2em !important;
+	text-align: center !important;
+	font-size: 16px !important;
+	line-height: 20px !important;
+}
+
+
+
 
 
 /*底部样式*/

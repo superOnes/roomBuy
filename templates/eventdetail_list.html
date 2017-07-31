@@ -15,8 +15,8 @@
 </div>
 <div class="row" style="padding:10px;margin-top:-20px;">
 	<a class="btn btn-primary" data-iframe="{% url 'room_create' pk=event.id %}" data-toggle=modal>添加房间/车位</a>
-	<button type="button" class="btn btn-default lead" data-toggle="modal" data-target="#exampleModal" data-moveable="true">导入房价</button>
-	<a href="{% url 'room_export' pk=event.id %}" class="btn btn-default">导出房价</a>
+	<button type="button" class="btn btn-default lead" data-toggle="modal" data-target="#exampleModal" data-moveable="true">导入房源</button>
+	<a href="{% url 'room_export' pk=event.id %}" class="btn btn-default">导出房源</a>
 	<a href="{% url 'event_house_type_list' pk=event.id %}" class="btn btn-default" target="_blank" data-moveable="true">编辑户型</a>
 	<a href="javascript:void(0)" class="btn btn-default house-type" data-id="{{event.id}}" data-target="#house-type-modal" data-moveable="true">一键关联户型</a>
 	<div class="col-lg-3" style="float: right;">
@@ -40,13 +40,13 @@
 				<div class="modal-body">
 					<form class="form-horizontal">
 						<div class="form-group">
-							<input type="file" name="file" id="priceFile" />
+							<input type="file" name="file" id="priceFile" onclick="$('.btn_up').removeAttr('disabled','disabled');"  />
 						</div>
 					</form>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-default" onclick="roomPriceFile(this,{{ event.id }})">确定</button>
+					<button type="button" class="btn btn-default btn_up" onclick="roomPriceFile(this,{{ event.id }})">确定</button>
 				</div>
 			</div>
 		</div>

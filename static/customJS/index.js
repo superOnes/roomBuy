@@ -26,18 +26,13 @@ $("#createEvent").submit(function(){
 
  function checkNumber(value){
  	if(value>0){
-	    if(!/^[0-9]{11}$/.test(value)){
+	    if(/^[0-9]{11}$/.test(value)){
 	       new $.zui.Messager('不可输入特殊字符和“-”', {
-	       		placement:'center',
+	       		placement:'top',
 			    type: 'important' // 定义颜色主题
 			}).show();
 	        return false;
 	    }
- 	}else{
- 		new $.zui.Messager('不可为空！', {
- 			placement:'center',
-		    type: 'important' // 定义颜色主题
-		}).show();
  	}
 }
 
@@ -46,7 +41,6 @@ $("#createEvent").submit(function(){
 //上传认筹名单文件
 function submitFile(event,thisID){
 	alert("正在准备上传，请稍等！");
-	$(event).attr("disabled","disabled");
 	var files = $("#files")[0].files;
 	var data = new FormData(); //转化为表单格式的数据
     data.append('filename', files[0]);
@@ -63,6 +57,7 @@ function submitFile(event,thisID){
 			window.location.reload();
 		},
 		error:function(){
+			$(event).attr("disabled","disabled");
 			alert("未知错误")
 		}
 	});
@@ -70,7 +65,6 @@ function submitFile(event,thisID){
 //导入房价文件
 function roomPriceFile(event,thisID){
 	alert("正在上传，请稍等！");
-	$(event).attr("disabled","disabled");
 	var files = $("#priceFile")[0].files;
 	var data = new FormData(); //转化为表单格式的数据
     data.append('file', files[0]);
@@ -84,13 +78,10 @@ function roomPriceFile(event,thisID){
         processData: false,//发送的数据将被转换为对象，false就是不转化，默认为true
         contentType: false,
 		success:function(data){
-			if(data.success){
-				window.location.reload();
-			}else{
-				alert("房源数量超出限制！")
-			}
+			window.location.reload();
 		},
 		error:function(){
+			$(event).attr("disabled","disabled");
 			alert("未知错误");
 		}
 	});
@@ -195,7 +186,7 @@ function getorderList(thisId,is_test,searchValue){
 		url:"/orderlist/",
 		asunc:true,
 		success:function(results){
-			$exportEach.attr("href","/event/exportorder/?id="+thisId+"&is_test="+is_test+"&value="+searchValue);
+			$exportEach.attr("href","/exportorder/"+thisId+"&is_test="+is_test+"&value="+searchValue);
 			var result =results.data;
 			$openList.children("tr").remove();
 			for (var i = 0; i < result.length; i++) {

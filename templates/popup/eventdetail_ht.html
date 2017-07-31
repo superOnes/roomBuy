@@ -13,6 +13,10 @@
 				</form>
 			</div>
 		</div>
+		{% empty %}
+		<div class="house_hint">
+			<p>没有可以关联的户型，如有需要请添加户型再关联户型。</p>
+		</div>
 		{% endfor %}
 	</div>
 </div>
