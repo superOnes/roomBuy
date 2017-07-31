@@ -43,7 +43,6 @@ class Event(models.Model):
     termname = models.CharField('协议名称', max_length=100, null=True, blank=True)
     term = models.TextField('协议内容', null=True, blank=True)
     is_pub = models.BooleanField('是否发布', default=False)
-    house_limit = models.CharField('房源数量限制', max_length=100)
     is_delete = models.BooleanField(default=False)
     company = models.ForeignKey(Company)
 
