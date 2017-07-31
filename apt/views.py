@@ -280,7 +280,7 @@ class ImportEventDetailView(View):
                     value = sheet.cell(rowx=rx, colx=cx).value
                     li.append(value)
                 data.append(li)
-            if row < int(event.house_limit):
+            if row < int(request.user.house_limit):
                 for ed in data:
                     if EventDetail.objects.filter(
                             event_id=id, building=ed[1],
