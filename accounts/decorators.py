@@ -1,5 +1,7 @@
 from functools import wraps
+from datetime import datetime
 
+from django.contrib.auth import logout
 from django.http import JsonResponse
 from django.shortcuts import redirect
 
@@ -15,7 +17,10 @@ def admin_required(func):
     def return_wrapper(request, *args, **kwargs):
         if request.user.is_authenticated():
             if request.user.is_admin:
-                return func(request, *args, **kwargs)
+                if request.user.expire_date is None \
+                   or request.user.expire_date > datetime.now():
+                    return func(request, *args, **kwargs)
+            logout(request)
         return redirect('/acc/login/?next=%s' % request.get_full_path())
     return return_wrapper
 

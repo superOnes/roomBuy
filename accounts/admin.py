@@ -10,14 +10,15 @@ class MyUserCreationForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'is_admin', 'password1', 'password2',
-                  'house_limit', 'company')
+                  'expire_date', 'house_limit', 'company')
 
 
 class MyUserChangeForm(UserChangeForm):
 
     class Meta:
         model = User
-        fields = ('username', 'is_admin', 'password', 'house_limit', 'company')
+        fields = ('username', 'is_admin', 'password', 'house_limit',
+                  'expire_date', 'company')
 
 
 class MyUserAdmin(UserAdmin):
@@ -27,14 +28,14 @@ class MyUserAdmin(UserAdmin):
 
     fieldsets = (
         (None, {'fields': ('username', 'is_admin', 'password', 'house_limit',
-                           'company')}),
+                           'expire_date', 'company')}),
     )
 
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
             'fields': ('username', 'is_admin', 'password1', 'password2',
-                       'house_limit', 'company')}
+                       'house_limit', 'expire_date', 'company')}
          ),
     )
 

@@ -41,6 +41,7 @@ class User(AbstractUser):
     is_admin = models.BooleanField(default=False)
     company = models.ForeignKey(Company, null=True, blank=True)
     house_limit = models.IntegerField('房源数量限制', default=0)
+    expire_date = models.DateTimeField('账号过期日期', null=True, blank=True)
     customer = models.OneToOneField(Customer, null=True, blank=True)
 
     @classmethod
