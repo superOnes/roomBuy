@@ -69,8 +69,8 @@ urlpatterns = [
         name='delete_house_type'),
 
     # 开盘统计管理
-    url(r'^opensta/', admin_required(TemplateView.as_view(template_name='opensta.html')),
-        name='event_opensta'),
+    url(r'^opensta/', admin_required(TemplateView.as_view(
+        template_name='opensta.html')), name='event_opensta'),
     url(r'^househeat/', HouseHeatView.as_view()),
     url(r'^purcharseheat/', PurcharseHeatView.as_view()),
     url(r'^getevent/', GetEventView.as_view()),
@@ -78,8 +78,8 @@ urlpatterns = [
     url(r'^export/buyhot/(?P<pk>\d+)/', ExportBuyHotView.as_view()),
 
     # 开盘订单管理
-    url(r'^order/', admin_required(TemplateView.as_view(template_name='order.html')),
-        name='event_order'),
+    url(r'^order/', admin_required(TemplateView.as_view(
+        template_name='order.html')), name='event_order'),
     url(r'^orderlist/', OrderListView.as_view(), name='orderlist'),
     url(r'^exportorder/', ExportOrderView.as_view()),
 

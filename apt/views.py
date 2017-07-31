@@ -334,7 +334,7 @@ class ExportEventDetailView(View):
             sio.seek(0)
             response = HttpResponse(content_type='application/vnd.ms-excel')
             response['Content-Disposition'] = 'attachment;filename=\
-                                                                  fangyuanxinxi.xls'
+                                               fangyuanxinxi.xls'
             response.write(sio.getvalue())
             return response
         row = 1
@@ -433,7 +433,8 @@ class ExportCustomerView(View):
             sheet.save(sio)
             sio.seek(0)
             response = HttpResponse(content_type='application/vnd.ms-excel')
-            response['Content-Disposition'] = 'attachment;filename=renchoumingdan.xls'
+            response['Content-Disposition'] = 'attachment;filename= \
+                                               renchoumingdan.xls'
             response.write(sio.getvalue())
             return response
         row = 1
@@ -447,7 +448,8 @@ class ExportCustomerView(View):
         sheet.save(sio)
         sio.seek(0)
         response = HttpResponse(content_type='application/vnd.ms-excel')
-        response['Content-Disposition'] = 'attachment;filename=renchoumingdan.xls'
+        response['Content-Disposition'] = 'attachment;filename= \
+                                           renchoumingdan.xls'
         response.write(sio.getvalue())
         return response
 
@@ -481,7 +483,8 @@ class ExportHouseHotView(View):
             sheet.save(sio)
             sio.seek(0)
             response = HttpResponse(content_type='application/vnd.ms-excel')
-            response['Content-Disposition'] = 'attachment;filename=fangyuanredu.xls'
+            response['Content-Disposition'] = 'attachment;filename= \
+                                               fangyuanredu.xls'
             response.write(sio.getvalue())
             return response
         row = 1
@@ -506,7 +509,8 @@ class ExportHouseHotView(View):
         sheet.save(sio)
         sio.seek(0)
         response = HttpResponse(content_type='application/vnd.ms-excel')
-        response['Content-Disposition'] = 'attachment;filename=fangyuanredu.xls'
+        response['Content-Disposition'] = 'attachment;filename= \
+                                           fangyuanredu.xls'
         response.write(sio.getvalue())
         return response
 
@@ -541,7 +545,8 @@ class ExportBuyHotView(View):
             sheet.save(sio)
             sio.seek(0)
             response = HttpResponse(content_type='application/vnd.ms-excel')
-            response['Content-Disposition'] = 'attachment;filename=goufangredu.xls'
+            response['Content-Disposition'] = 'attachment;filename= \
+                                               goufangredu.xls'
             response.write(sio.getvalue())
             return response
         row = 1
@@ -650,69 +655,6 @@ class ExportOrderView(View):
         response['Content-Disposition'] = 'attachment;filename=daochudingdan.xls'
         response.write(sio.getvalue())
         return response
-
-
-@method_decorator(admin_required, name='dispatch')
-class CustomListView(ListView):
-    '''
-    认筹名单列表
-    '''
-    template_name = 'customer_list.html'
-    model = Customer
-
-    def get_queryset(self):
-        self.value = self.request.GET.get('value')
-        self.event = Event.get(self.kwargs['pk'])
-        queryset = self.model.objects.filter(event=self.event).order_by('-id')
-        if self.value:
-            queryset = queryset.filter(Q(realname__icontains=self.value) |
-                                       Q(mobile__icontains=self.value) |
-                                       Q(identication__icontains=self.value)).order_by('-id')
-        return queryset
-
-    def get_context_data(self):
-        context = super(CustomListView, self).get_context_data()
-        context['event'] = self.event
-        context['value'] = self.value
-        return context
-
-
-@method_decorator(admin_required, name='dispatch')
-class CustomCreateView(DialogMixin, CreateView):
-    '''
-    添加认筹名单
-    '''
-    form_class = CustomerForm
-    template_name = 'popup/customer_create.html'
-
-    def get_initial(self):
-        initial = super(CustomCreateView, self).get_initial()
-        initial['event'] = Event.get(self.kwargs['pk'])
-        return initial
-
-
-@method_decorator(admin_required, name='dispatch')
-class CustomerCountUpdateView(DialogMixin, UpdateView):
-    '''
-    修改可选套数
-    '''
-    template_name = 'popup/customer_count.html'
-    model = Customer
-    fields = ['count']
-
-
-@method_decorator(admin_required, name='dispatch')
-class DeleteCustomerView(View):
-    '''
-    删除认筹名单
-    '''
-
-    def post(self, request):
-        id = request.POST.get('id')
-        if id:
-            Customer.get(id).delete()
-            return JsonResponse({'success': True})
-        return JsonResponse({'success': False})
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -874,7 +816,8 @@ class DeleteHouseTypeView(View):
     def post(self, request):
         id = request.POST.get('id')
         if id:
-            EventDetail.objects.filter(house_type_id=id).update(house_type_id='')
+            EventDetail.objects.filter(
+                house_type_id=id).update(house_type_id='')
             HouseType.get(id).delete()
             return JsonResponse({'success': True})
         return JsonResponse({'success': False})
@@ -920,9 +863,10 @@ class OrderListView(View):
             queryset = Order.objects.filter(
                 eventdetail__event=last_event, is_test=0)
         if value:
-            queryset = queryset.filter(Q(user__customer__realname__icontains=value) |
-                                       Q(user__customer__mobile__icontains=value) |
-                                       Q(user__customer__identication__icontains=value))
+            queryset = queryset.filter(
+                Q(user__customer__realname__icontains=value) |
+                Q(user__customer__mobile__icontains=value) |
+                Q(user__customer__identication__icontains=value))
         if queryset:
             order_list = [{'id': od.id,
                            'time': od.time.strftime("%Y-%m-%d %H:%M:%S"),
