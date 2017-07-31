@@ -1,6 +1,6 @@
 var userid;
-//var http="";//正式
-var http="http://10.7.10.193:8000"; //测试
+var http="";//正式
+//var http="http://10.7.10.193:8000"; //测试
 //var http="http://10.7.1.34";
 $(function(){
 
