@@ -4,21 +4,44 @@ $(document).ready(function(){
 		$("#login-wrap").height($(window).height());
 	});
 })
-
 //创建活动
 $("#createEvent").submit(function(){
-	if($(".myfile").length == 2){
-	    $(".myfile").each(function(){
-	    　　if($(this).val() == "") {
-	        　　	new $.zui.Messager('请添加文件', {
+    　　if($(".myfileCover").val() == "") {
+        　　	new $.zui.Messager('请添加封面', {
+        	placement:'center',
+		    type: 'important' // 定义颜色主题
+		}).show();
+	　	return false;
+    }else{
+    	if($(".myfilePlane_graph").val() == "") {
+	        　　	new $.zui.Messager('请添加平面图', {
+	        	placement:'center',
 			    type: 'important' // 定义颜色主题
 			}).show();
 	        　	return false;
-	    　　}
-	    }); 
-	   
-	}
+        }
+    }
 })
+
+
+ function checkNumber(value){
+ 	if(value>0){
+	    if(!/^[0-9]{11}$/.test(value)){
+	       new $.zui.Messager('不可输入特殊字符和“-”', {
+	       		placement:'center',
+			    type: 'important' // 定义颜色主题
+			}).show();
+	        return false;
+	    }
+ 	}else{
+ 		new $.zui.Messager('不可为空！', {
+ 			placement:'center',
+		    type: 'important' // 定义颜色主题
+		}).show();
+ 	}
+}
+
+
 
 //上传认筹名单文件
 function submitFile(event,thisID){

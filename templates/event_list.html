@@ -59,10 +59,17 @@
 			<td>{{ obj.is_pub|yesno:"已发布,未发布"}}</td>
 			<td><img width="90" height="90" src="data:image/jpeg;base64,{{ obj.qr }}" /></td>
 			<td class="operation">
-				<a data-iframe="{% url 'event_detail' pk=obj.id %}" data-toggle="modal" data-title="活动详情" title="查看活动详情"><i class="icon icon-file-o"></i></a>
-				<a href="javascript:void(0)" data-id="{{obj.id}}" class="is_pub" data-title="发布提示" title="{% if obj.is_pub == False %}发布{% else %}取消发布{% endif %}"><i class="icon icon-cloud-upload"></i></a>
-				<a data-iframe="{% url 'event_term_update' pk=obj.id %}" data-toggle="modal" data-title="编辑协议" title="编辑协议"><i class="icon icon-edit"></i></a>
-				<a data-toggle="modal" data-target="#deleteModal" data-id="{{obj.id}}" class="deleteOrder" data-title="清除公测订单" title="清除公测订单"><i class="icon icon-trash"></i></a>
+				<p>
+					<a data-iframe="{% url 'event_detail' pk=obj.id %}" data-toggle="modal">查看</a>
+				</p>
+				<p>
+					<a href="javascript:void(0)" data-id="{{obj.id}}" class="is_pub">{% if obj.is_pub == False %}发布{% else %}取消发布{% endif %}</a>
+				</p>
+				<p>
+					<a data-iframe="{% url 'event_term_update' pk=obj.id %}" data-toggle="modal">编辑协议</a>
+				<p>
+					<a data-toggle="modal" data-target="#deleteModal" data-id="{{obj.id}}" class="deleteOrder">清除公测订单</a>
+				</p>
 			</td>
 		</tr>
 		<!--取消发布-->
@@ -74,7 +81,7 @@
 						<h4 class="modal-title">是否发布</h4>
 					</div>
 					<div class="modal-body">
-						<p>发布该活动会把已发布的活动下架，确定发布该活动吗？</p>
+						<p>{{ obj.is_pub|yesno:"确定下架该活动吗？,发布该活动会把已发布的活动下架，确定发布该活动吗？"}}</p>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>

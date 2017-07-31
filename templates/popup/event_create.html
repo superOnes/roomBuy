@@ -29,7 +29,7 @@
 		<div class="form-group">
 			<label class="col-sm-3 col-lg-3 control-label">咨询电话<i>*</i></label>
 			<div class="col-sm-9">
-				<input type="number" class="form-control" onblur="if(value.length<7)alert('电话不得少于7位！')" oninput="if(value.length>13)value=value.slice(0,13)" placeholder="咨询电话" name="phone_num" value="{{form.phone_num.value|default:''}}" required>
+				<input type="number" class="form-control" onblur="if(value.length<7)alert('电话不得少于7位！');checkNumber(value)" oninput="if(value.length>13)value=value.slice(0,13)" placeholder="咨询电话" name="phone_num" value="{{form.phone_num.value|default:''}}" required>
 			</div>
 		</div>
 		<div class="form-group">
@@ -66,19 +66,19 @@
 		<div class="form-group">
 			<label class="col-sm-3 control-label">选房完成期限<i>*</i></label>
 			<div class="col-sm-9">
-				<input type="number" class="form-control" placeholder="小时" min="1" name="limit" value="{{form.limit.value|default:''}}" required>
+				<input type="number" class="form-control" placeholder="小时" min="1" name="limit" onblur="checkNumber(value)" value="{{form.limit.value|default:''}}" required>
 			</div>
 		</div>
 		<div class="form-group">
 			<label class="col-sm-3 control-label">支持设备登录数<i>*</i></label>
 			<div class="col-sm-9">
-				<input type="number" class="form-control" min="1" placeholder="支持设备登录数" name="equ_login_num" value="{{form.equ_login_num.value|default:''}}" required>
+				<input type="number" class="form-control" min="1" placeholder="支持设备登录数" name="equ_login_num" onblur="checkNumber(value)" value="{{form.equ_login_num.value|default:''}}" required>
 			</div>
 		</div>
 		<div class="form-group">
 			<label class="col-sm-3 control-label">同一账号允许收藏数<i>*</i></label>
 			<div class="col-sm-9">
-				<input type="number" class="form-control form_num" min="1" placeholder="同一账号允许收藏数" name="follow_num" value="{{form.follow_num.value|default:''}}" required>
+				<input type="number" class="form-control form_num" min="1" placeholder="同一账号允许收藏数" name="follow_num" onblur="checkNumber(value)" value="{{form.follow_num.value|default:''}}" required>
 			</div>
 		</div>
 		<div class="form-group">
@@ -163,30 +163,12 @@
 		{% endif %}
 		<input type="text" name="company" value="{{form.company.value|default:''}}" style="display:none">
 		<div class="modal-footer">
-			<input type="submit" class="btn btn-primary" value="确定"></input>
+			<input type="submit" class="btn btn-primary btn_create" value="确定"></input>
 		</div>
 	</form>
 </div>
 <script type="text/javascript">
 	$(document).ready(function() {
-		//创建活动
-		$("#createEvent").submit(function(){
-		    　　if($(".myfileCover").val() == "") {
-		        　　	new $.zui.Messager('请添加封面', {
-		        	placement:'bottom',
-				    type: 'important' // 定义颜色主题
-				}).show();
-			　	return false;
-	        }else{
-	        	if($(".myfilePlane_graph").val() == "") {
-			        　　	new $.zui.Messager('请添加平面图', {
-			        	placement:'bottom',
-					    type: 'important' // 定义颜色主题
-					}).show();
-			        　	return false;
-		        }
-	        }
-		})
 		
 		//	封面图
 		var coverImgFile = $(".coverImgFile").html();

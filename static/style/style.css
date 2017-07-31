@@ -46,7 +46,7 @@ input[type="number"]{
 
 
 /*表单的必填项*/
-.form-group>label{padding-top: 0 !important;position: relative;}
+.form-group>label{padding-top: 0 !important;position: relative;margin-top:10px !important;}
 .form-group>label>i{position: absolute;right:0;top:0;font-size: 16px;color:red;}
 
 .page-header{
