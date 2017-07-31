@@ -1,14 +1,12 @@
 import os
 import xlrd
 import uuid
-import time
-from collections import Counter
 
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
-from django.views.generic import View, ListView
+from django.views.generic import View
 from django.contrib.auth import authenticate, login, logout
-from django.http import JsonResponse, QueryDict
+from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.shortcuts import redirect, render
@@ -19,7 +17,7 @@ from django.db import transaction
 from apt.models import Event, EventDetail
 from aptm import settings
 from .models import User, Customer, Order
-from .decorators import superadmin_required, customer_login_required
+from .decorators import customer_login_required
 
 
 class LoginView(View):
@@ -41,102 +39,6 @@ class LoginView(View):
                 return redirect(nxt)
         messages.error(request, '用户名或密码不正确')
         return redirect(reverse('acc_login'))
-
-
-@method_decorator(superadmin_required(), name='dispatch')
-class UserListView(ListView):
-    '''
-    后台用户列表
-    '''
-    model = User
-    template_name = 'userlist.html'
-    fields = ['username', 'password', 'is_delete']
-
-    def get_queryset(self):
-        return self.model.objects.filter(is_admin=True).order_by('-id')
-
-
-@method_decorator(superadmin_required(), name='dispatch')
-class UserConfigView(View):
-    '''
-    注册后台用户
-    '''
-
-    def post(self, request, *args, **kwargs):
-        username = request.POST.get('username')
-        password1 = request.POST.get('password1')
-        password2 = request.POST.get('password2')
-        if password1 == password2:
-            user = User.objects.filter(username=username)
-            if user:
-                return JsonResponse({'success': False, 'msg': '用户名已存在'})
-            else:
-                User.objects.create_user(
-                    username=username,
-                    password=password1,
-                    is_admin=True,
-                )
-                return JsonResponse({'success': True})
-        else:
-            return JsonResponse({'success': False, 'msg': '两次密码输入不一致，请重新输入！'})
-
-    '''
-     更改后台用户信息
-     '''
-
-    def put(self, request, *args, **kwargs):
-        put = QueryDict(request.body, encoding=request.encoding)
-        id = put.get('id')
-        username = put.get('username')
-        if id:
-            user = User.get(id)
-            user.username = username
-            user.save()
-            return JsonResponse({'success': True})
-        return JsonResponse({'success': False})
-
-    '''
-    删除用户
-    '''
-
-    def delete(self, request):
-        params = QueryDict(request.body, encoding=request.encoding)
-        User.remove(params.get('id'))
-        return JsonResponse({'success': True})
-
-
-@method_decorator(superadmin_required(), name='dispatch')
-class PasswordResetView(View):
-    '''
-    密码重置
-    '''
-
-    def put(self, request):
-        put = QueryDict(request.body, encoding=request.encoding)
-        id = put.get('id')
-        if id:
-            user = User.get(id)
-            user.set_password(111111)
-            user.save()
-            return JsonResponse({'success': True})
-        return JsonResponse({'success': False, 'msg': '用户不存在'})
-
-
-@method_decorator(superadmin_required(), name='dispatch')
-class AccountStatusView(View):
-    '''
-    禁用/启用账户
-    '''
-
-    def put(self, request, *args, **kwargs):
-        put = QueryDict(request.body, encoding=request.encoding)
-        id = put.get('id')
-        if id:
-            user = User.get(id)
-            user.is_active = not user.is_active
-            user.save()
-            return JsonResponse({'success': True})
-        return JsonResponse({'success': False, 'msg': '用户不存在'})
 
 
 @method_decorator(login_required, name='dispatch')
