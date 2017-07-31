@@ -195,7 +195,8 @@ function getorderList(thisId,is_test,searchValue){
 		url:"/orderlist/",
 		asunc:true,
 		success:function(results){
-			if(results == "True"){
+			if(results.success){
+				$(".tip").hide();
 				$exportEach.attr("href","/exportorder/"+thisId+"&is_test="+is_test+"&value="+searchValue);
 				var result =results.data;
 				$openList.children("tr").remove();
@@ -205,8 +206,8 @@ function getorderList(thisId,is_test,searchValue){
 					"<td>"+result[i].mobile+"</td><td>"+result[i].identication+"</td><td>"+result[i].remark+"</td><td>"+result[i].status+"</td></tr>")
 				};
 			}else{
-				$exportEach.attr("disabled","disabled");
-				$(".datatable").html("<div style='display:block;padding: 20px 0;'> <p style='font-size: 20px;color: #CCCCCC;text-align: center;'>暂时没有订单数据！</p> </div>")
+				$openList.children("tr").remove();
+				$(".tip").show();
 			}
 		},
 		error:function(){
