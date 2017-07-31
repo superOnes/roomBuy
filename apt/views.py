@@ -929,7 +929,7 @@ class EventTVWallInfoView(View):
 
 @method_decorator(admin_required, name='dispatch')
 class EventTVWallOrder(TemplateView):
-    template_name = 'wallList.html'
+    template_name = 'orderinfo.html'
 
     def get_context_data(self, pk):
         context = super(EventTVWallOrder, self).get_context_data()
@@ -953,7 +953,7 @@ class EventTVWallOrderView(View):
             'user_id': order.user.customer.identication,
             'house': ('%s楼-%s单元-%s') % (ed.building, ed.unit, ed.room_num),
             'event': ed.event.name,
-            'house_type': ed.house_type.name,
+            'house_type': ed.house_type.name if ed.house_type else '',
             'area': ed.area,
             'price': ed.unit_price,
         }
