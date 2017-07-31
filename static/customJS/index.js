@@ -120,18 +120,22 @@ function statisticsData(thisId){
 		async:true,
 		dataType:'JSON',
 		success:function(results){
-			var result =results.data;
-			$listHouse.find("tr").remove();
-			for (var i=0; i<result.length; i++) {
-				result[i].is_sold=  result[i].is_sold==true?"是":"否";
-				result[i].is_testsold= result[i].is_testsold==true?"是":"否";
-				$listHouse.append("<tr><td>"+(i+1)+"</td><td>"+result[i].building+"</td><td>"+result[i].unit+"</td><td>"+result[i].floor+"</td>"+
-				"<td>"+result[i].room_num+"</td><td>"+result[i].is_sold+"</td><td>"+result[i].unit_price+"</td><td>"+result[i].area+"</td><td>"+result[i].num+"</td>"+
-				"<td>"+result[i].is_testsold+"</td></tr>");
+			if(results.success){
+				var result =results.data;
+				$listHouse.find("tr").remove();
+				for (var i=0; i<result.length; i++) {
+					result[i].is_sold=  result[i].is_sold==true?"是":"否";
+					result[i].is_testsold= result[i].is_testsold==true?"是":"否";
+					$listHouse.append("<tr><td>"+(i+1)+"</td><td>"+result[i].building+"</td><td>"+result[i].unit+"</td><td>"+result[i].floor+"</td>"+
+					"<td>"+result[i].room_num+"</td><td>"+result[i].is_sold+"</td><td>"+result[i].unit_price+"</td><td>"+result[i].area+"</td><td>"+result[i].num+"</td>"+
+					"<td>"+result[i].is_testsold+"</td></tr>");
+				}
+			}else{
+				$(".datatable").html("<div style='display:block;padding: 20px 0;'> <p style='font-size: 20px;color: #CCCCCC;text-align: center;'>暂时没有订单数据！</p> </div>")
 			}
 		},
 		error:function(){
-			alert("房源热度统计错误！！！")
+			alert("获取房源热度统计错误！！！")
 		}
 	});
 //	购买者数据获取
@@ -142,12 +146,17 @@ function statisticsData(thisId){
 		async:true,
 		dataType:'JSON',
 		success:function(results){
-			var result =results.data;
-			$listBuyer.find("tr").remove();
-			for (var i=0; i<result.length; i++) {
-				$listBuyer.append("<tr><td>"+(i+1)+"</td><td>"+result[i].name+"</td><td>"+result[i].mobile+"</td><td>"+result[i].identication+"</td>"+
-				"<td>"+result[i].protime+"</td><td>"+result[i].count+"</td><td>"+result[i].heat+"</td><td>"+result[i].testroom+"</td>"+
-				"<td>"+result[i].testtime+"</td><td>"+result[i].openroom+"</td><td>"+result[i].opentime+"</td></tr>")
+			console.log(results)
+			if(results.success){
+				var result =results.data;
+				$listBuyer.find("tr").remove();
+				for (var i=0; i<result.length; i++) {
+					$listBuyer.append("<tr><td>"+(i+1)+"</td><td>"+result[i].name+"</td><td>"+result[i].mobile+"</td><td>"+result[i].identication+"</td>"+
+					"<td>"+result[i].protime+"</td><td>"+result[i].count+"</td><td>"+result[i].testroom+"</td>"+
+					"<td>"+result[i].testtime+"</td><td>"+result[i].openroom+"</td><td>"+result[i].opentime+"</td></tr>")
+				}
+			}else{
+				$(".datatable").html("<div style='display:block;padding: 20px 0;'> <p style='font-size: 20px;color: #CCCCCC;text-align: center;'>暂时没有订单数据！</p> </div>")
 			}
 		},
 		error:function(){
@@ -186,14 +195,19 @@ function getorderList(thisId,is_test,searchValue){
 		url:"/orderlist/",
 		asunc:true,
 		success:function(results){
-			$exportEach.attr("href","/exportorder/"+thisId+"&is_test="+is_test+"&value="+searchValue);
-			var result =results.data;
-			$openList.children("tr").remove();
-			for (var i = 0; i < result.length; i++) {
-				result[i].status= result[i].status==true ?"已售":"未售";
-				$openList.append("<tr><td>"+(i+1)+"</td><td>"+result[i].time+"</td><td>"+result[i].room_num+"</td><td>"+result[i].unit_price+"</td><td>"+result[i].area+"</td><td>"+result[i].realname+"</td>"+
-				"<td>"+result[i].mobile+"</td><td>"+result[i].identication+"</td><td>"+result[i].remark+"</td><td>"+result[i].status+"</td></tr>")
-			};
+			if(results == "True"){
+				$exportEach.attr("href","/exportorder/"+thisId+"&is_test="+is_test+"&value="+searchValue);
+				var result =results.data;
+				$openList.children("tr").remove();
+				for (var i = 0; i < result.length; i++) {
+					result[i].status= result[i].status==true ?"已售":"未售";
+					$openList.append("<tr><td>"+(i+1)+"</td><td>"+result[i].time+"</td><td>"+result[i].room_num+"</td><td>"+result[i].unit_price+"</td><td>"+result[i].area+"</td><td>"+result[i].realname+"</td>"+
+					"<td>"+result[i].mobile+"</td><td>"+result[i].identication+"</td><td>"+result[i].remark+"</td><td>"+result[i].status+"</td></tr>")
+				};
+			}else{
+				$exportEach.attr("disabled","disabled");
+				$(".datatable").html("<div style='display:block;padding: 20px 0;'> <p style='font-size: 20px;color: #CCCCCC;text-align: center;'>暂时没有订单数据！</p> </div>")
+			}
 		},
 		error:function(){
 			alert("获取开盘数据失败！！！")

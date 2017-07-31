@@ -66,7 +66,7 @@
 			<td>{{ obj.mobile }}</td>
 			<td>{{ obj.identication }}</td>
 			<td>{{ obj.remark }}</td>
-			<td>{% if obj.user.get_order_coun > 0 %}已选购{% else %}未购买{% endif %}</td>
+			<td>{% if obj.user.order_set.count > 0 %}已选购{% else %}未购买{% endif %}</td>
 			<td> <p> <a data-toggle="modal" data-target="#deleteModal" data-id="{{obj.id}}" class="delete">删除</a> </p> </td>
 		</tr>
 		<!--删除确认框-->
