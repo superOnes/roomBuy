@@ -756,7 +756,7 @@ class PurcharseHeatView(View):
         for customer in queryset:
             testorder = customer.user.order_set.filter(is_test=True).first()
             openorder = customer.user.order_set.filter(is_test=False).first()
-            follow = Follow.objects.filter(user_id=customer.id)
+            follow = Follow.objects.filter(user_id=customer.user.id)
             customer.count = len(follow)
             ct_list = {'id': customer.id,
                        'name': customer.realname,
