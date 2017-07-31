@@ -24,13 +24,11 @@
                 $("span").each(function(){
                     $(this).click(function(){
                         if($(this).hasClass("cellList")){
-                            window.location.href="orderInfo.html?id="+$(this).find("i").html();
+                            window.location.href="/tvwall/order/"+$(this).find("i").html()+"/";
                         }
 
                     })
                 })
-
-
             },
             error:function(data){
                 console.log(data);
@@ -149,8 +147,6 @@
                 ele.timer?clearInterval(ele.timer):null;
             }
         }
-
-
     }
 </script>
 </body>

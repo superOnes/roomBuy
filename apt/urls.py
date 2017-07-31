@@ -86,6 +86,7 @@ urlpatterns = [
     # 电视墙
     url(r'^(?P<pk>\d+)/tvwall/', EventTVWall.as_view(), name='tv_wall'),
     url(r'^(?P<pk>\d+)/tv/', EventTVWallInfoView.as_view()),
-    url(r'^tvwall/order/(?P<pk>\d+)/', EventTVWallOrder.as_view()),
+    url(r'^tvwall/order/(?P<pk>\d+)/', EventTVWallOrder.as_view(),
+        name='tv_order'),
     url(r'^tv/(?P<pk>\d+)/order/', EventTVWallOrderView.as_view()),
 ]
