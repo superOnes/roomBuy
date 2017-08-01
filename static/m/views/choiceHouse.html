@@ -68,12 +68,11 @@ $(function(){
     if(userid){
         localStorage.setItem("userid",userid);
     }
-    localStorage.setItem("cover",cover);
+    if(cover){
+        localStorage.setItem("cover",cover);
+    }
+
    var userid1=localStorage.getItem("userid");
-
-
-
-
     $.ajax({
         type:"get",
         url:http+"/app/detail/",
@@ -83,7 +82,6 @@ $(function(){
         },
         success:function(data){
             if(data.response_state==200){
-                console.log(data);
                 creatEle(data.objects[0]);
                 $(".userid1").html(userid);
                 $(".ind1").html(id);
