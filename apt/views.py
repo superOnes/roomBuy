@@ -702,8 +702,6 @@ class PurcharseHeatView(View):
             last_event = Event.get_last_event(request.user.company.id)
             queryset = Customer.objects.filter(event_id=last_event)
         for customer in queryset:
-            # if customer.protime == None:
-            #     customer.protime = ''
             testorder = customer.user.order_set.filter(is_test=True).first()
             openorder = customer.user.order_set.filter(is_test=False).first()
             follow = Follow.objects.filter(user_id=customer.user.id)
@@ -712,7 +710,8 @@ class PurcharseHeatView(View):
                        'name': customer.realname,
                        'mobile': customer.mobile,
                        'identication': customer.identication,
-                       'protime': customer.protime if customer.protime else '',
+                       'protime': customer.protime.strftime('%Y-%m-%d %H:%M:%S')
+                       if customer.protime else '',
                        'count': customer.count,
                        'testtime': '',
                        'testroom': '',
