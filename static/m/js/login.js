@@ -155,6 +155,8 @@ function quit(){
 			userid:$(".userid1").html(),
 			id:$(".ind1").html()
 		},
+        cache:false,
+        ifModified :true,
 		success:function(data){
 			window.location.href="login.html?id="+$(".ind1").html();
 		},
@@ -533,7 +535,7 @@ function houseInfo(data){
 								'<div></div>'+
 								'<span class="left pri">单价：</span><span>￥'+data.unit_price+'</span><br>'+
 								'<span class="left floor-unit">户型：</span><span>'+data.house_type+'</span><br>'+
-								'<span class="left floor-area">建筑面积：</span><span>1㎡</span><br>'+
+								'<span class="left floor-area">建筑面积：</span><span>'+data.area+'㎡</span><br>'+
 								'<div></div>'+
 								'<span class="left">客户：</span><span>'+data.realname+'</span><br>'+
 								'<span class="left">手机号码：</span><span>'+data.mobile+'</span><br>'+

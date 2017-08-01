@@ -96,6 +96,7 @@
 			},
 			success:function(data){
 				if(data.response_state==200){
+				    console.log(data);
 					houseInfo(data.objects[0]);
 					$(".houseID").html(houseId);
 					$(".userId").html(userid);
