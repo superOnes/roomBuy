@@ -46,6 +46,9 @@ class Event(models.Model):
     plane_graph2 = models.ImageField('平面图2', upload_to='planeGraph2/%Y/%m/%d/',
                                      storage=ImageStorage(),
                                      null=True, blank=True)
+    plane_graph3 = models.ImageField('平面图3', upload_to='planeGraph3/%Y/%m/%d/',
+                                     storage=ImageStorage(),
+                                     null=True, blank=True)
     termname = models.CharField('协议名称', max_length=100, null=True, blank=True)
     term = models.TextField('协议内容', null=True, blank=True)
     is_pub = models.BooleanField('是否发布', default=False)
