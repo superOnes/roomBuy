@@ -93,11 +93,20 @@
 		}
         var cover=localStorage.getItem("cover");
         $(".loginLogo img").prop("src",http+cover);
-        window.location.hash="no-back";
-        window.location.hash="Again-No-back-button";
-        window.onhashchange=function(){window.location.hash="no-back";}
+        pushHistory();
+        window.addEventListener("popstate", function(e) {
+            window.location.href="login.html?id="+id;
+        }, false);
+        function pushHistory() {
+            var state = {
+                title: "title",
+                url:"login.html?id="+id
+            };
+            window.history.pushState(state, state.title, state.url);
+        }
 
-	});
+
+    });
 
 
 
