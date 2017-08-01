@@ -92,8 +92,10 @@
             $("body").append($("<div class='errorPage'><img src='../images/error.png' /><p>该地址无效！</p></div>"));
 		}
         var cover=localStorage.getItem("cover");
-        console.log(cover);
         $(".loginLogo img").prop("src",http+cover);
+        window.location.hash="no-back";
+        window.location.hash="Again-No-back-button";
+        window.onhashchange=function(){window.location.hash="no-back";}
 
 	});
 

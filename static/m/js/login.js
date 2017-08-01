@@ -148,17 +148,17 @@ function telp (){
 function quit(){
     localStorage.removeItem("userid");
 
-	$.ajax({
+
+    $.ajax({
 		type:"POST",
 		url:http+"/acc/cusout/",
 		data:{
 			userid:$(".userid1").html(),
 			id:$(".ind1").html()
 		},
-        cache:false,
-        ifModified :true,
 		success:function(data){
 			window.location.href="login.html?id="+$(".ind1").html();
+
 		},
 		error:function(data){
 			alert("退出出现未知错误！");
