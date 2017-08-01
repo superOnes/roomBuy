@@ -5,7 +5,7 @@
 ---:|---|
 url:|http://localhost:8000/acc/cuslog/
 method:|POST
-params:|userid(顾客在user表中的username),protime
+params:|userid(顾客在user表中的username),protime,id(活动id)
 return:|JSON
 
 #### 顾客退出
@@ -61,7 +61,7 @@ return:|JSON
 ---:|---|
 url:|http://localhost:8000/app/houseinfo/
 method:|GET
-params:|userid(顾客在user表中的username),house(车位/房间号)
+params:|userid(顾客在user表中的username),house(车位/房间号),id(活动id)
 return:|JSON
 
 #### 添加收藏
@@ -69,7 +69,7 @@ return:|JSON
 ---:|---|
 url:|http://localhost:8000/app/addfollow/
 method:|POST
-params:|userid(顾客在user表中的username),house(车位/房间号)
+params:|userid(顾客在user表中的username),house(车位/房间号),id(活动id)
 return:|JSON
 
 #### 取消收藏
@@ -77,7 +77,7 @@ return:|JSON
 ---:|---|
 url:|http://localhost:8000/app/cancelfollow/
 method:|POST
-params:|userid(顾客在user表中的username),house(车位/房间号)
+params:|userid(顾客在user表中的username),house(车位/房间号),id(活动id)
 return:|JSON
 
 #### 用户收藏列表信息
@@ -85,7 +85,7 @@ return:|JSON
 ---:|---|
 url:|http://localhost:8000/app/followlist/
 method:|GET
-params:|userid(顾客在user表中的username)
+params:|userid(顾客在user表中的username),id(活动id)
 return:|JSON
 
 #### 订单确认
@@ -93,7 +93,7 @@ return:|JSON
 ---:|---|
 url:|http://localhost:8000/app/orderconfirm/
 method:|POST
-params:|userid(顾客在user表中的username),house(车位/房间号)
+params:|userid(顾客在user表中的username),house(车位/房间号),id(活动id)
 return:|JSON
 
 #### 订单中协议
@@ -101,7 +101,7 @@ return:|JSON
 ---:|---|
 url:|http://localhost:8000/app/orderpro/
 method:|GET
-params:|userid(顾客在user表中的username)
+params:|userid(顾客在user表中的username),id(活动id)
 return:|JSON
 
 #### 订单列表
@@ -109,7 +109,7 @@ return:|JSON
 ---:|---|
 url:|http://localhost:8000/app/orderslist/
 method:|GET
-params:|userid(顾客在user表中的username)
+params:|userid(顾客在user表中的username),id(活动id)
 return:|JSON
 
 #### 订单详情
@@ -117,5 +117,5 @@ return:|JSON
 ---:|---|
 url:|http://localhost:8000/app/orderinfo/
 method:|GET
-params:|userid(顾客在user表中的username),orderid
+params:|userid(顾客在user表中的username),orderid,id(活动id)
 return:|JSON

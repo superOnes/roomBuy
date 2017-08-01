@@ -21,22 +21,24 @@ class ProView(View):
         mobile = request.GET.get('tel')
         identication = request.GET.get('personId')
         eventid = request.GET.get('id')
-        try:
-            customer = Customer.objects.get(
-                mobile=mobile, identication=identication, event_id=eventid)
-        except BaseException:
-            return JsonResponse(
-                {'response_state': 400, 'msg': '您没有参加这个活动！'})
-        else:
-            value = [{
-                'termname': customer.event.termname,
-                'term': customer.event.term,
-                'userid': customer.user.username,
-            }]
-            context = {}
-            context['objects'] = value
-            context['response_state'] = 200
-            return JsonResponse(context)
+        if Event.get(eventid).is_pub:
+            try:
+                customer = Customer.objects.get(
+                    mobile=mobile, identication=identication, event_id=eventid)
+            except BaseException:
+                return JsonResponse(
+                    {'response_state': 400, 'msg': '您没有参加这个活动！'})
+            else:
+                value = [{
+                    'termname': customer.event.termname,
+                    'term': customer.event.term,
+                    'userid': customer.user.username,
+                }]
+                context = {}
+                context['objects'] = value
+                context['response_state'] = 200
+                return JsonResponse(context)
+        return JsonResponse({'response_state': 403, 'msg': '活动已经下架！'})
 
 
 @method_decorator(customer_login_required, name='dispatch')
@@ -178,7 +180,7 @@ class AppEventDetailHouseInfoView(View):
                   'realname': user.customer.realname,
                   'mobile': user.customer.mobile,
                   'identication': user.customer.identication,
-                  'building_unit': eventdetobj.building + eventdetobj.unit + '单元' + str(eventdetobj.floor) + '层 ' + str(eventdetobj.room_num) + '室',
+                  'building_unit': eventdetobj.building + eventdetobj.unit + str(eventdetobj.floor) + '层' + str(eventdetobj.room_num),
                   'total': '***' if test and not eventdetobj.event.test_price else ((eventdetobj.area) * (eventdetobj.unit_price)),
                   'house_type': house_type,
                   'pic': pic,
@@ -271,10 +273,8 @@ class FollowView(View):
                     'eventdetail': (
                         obj.eventdetail.building +
                         obj.eventdetail.unit +
-                        '单元' +
-                        str(obj.eventdetail.floor) +
-                        '层' +
-                        str(obj.eventdetail.room_num)) + '室',
+                        str(obj.eventdetail.floor) + '层' +
+                        str(obj.eventdetail.room_num)),
                     'price': (
                         (
                             obj.eventdetail.area) *
@@ -328,17 +328,19 @@ class AppHouseChoiceConfirmView(View):
                                                  ('%Y%m%d%H%M%S'))
                     cursor.execute('UPDATE apt_eventdetail set is_testsold=%s \
                                     where id=%s' % (bol, house))
-                return JsonResponse({'response_state': 200,
-                                     'room_info': ('%s-%s-%s-%s') %
-                                                  (obj[5], obj[6], obj[7],
-                                                   obj[8]),
-                                     'limit': (
-                                         order.time +
-                                         timedelta(
-                                             hours=event.limit)).strftime('%Y年%m月%d日 %H:%M:%S'),
-                                     'ordertime': order.time,
-                                     'orderid': order.id,
-                                     })
+                return JsonResponse(
+                    {
+                        'response_state': 200,
+                        'room_info': ('%s-%s-%s-%s') % (obj[5],
+                                                        obj[6],
+                                                        obj[7],
+                                                        obj[8]),
+                        'limit': (
+                            order.time + timedelta(
+                                hours=event.limit)).strftime('%Y年%m月%d日 %H:%M:%S'),
+                        'ordertime': order.time,
+                        'orderid': order.id,
+                    })
             elif Order.objects.filter(user=user, eventdetail_id=obj[0],
                                       is_test=True).exists():
                 return JsonResponse({'response_state': 400,
@@ -357,17 +359,19 @@ class AppHouseChoiceConfirmView(View):
                                                  is_test=False)
                     cursor.execute('UPDATE apt_eventdetail set is_sold=%s \
                                     where id=%s' % (bol, house))
-                return JsonResponse({'response_state': 200,
-                                     'room_info': ('%s-%s-%s-%s') %
-                                     (obj[5], obj[6], obj[7],
-                                      obj[8]),
-                                     'limit': (
-                                         order.time +
-                                         timedelta(
-                                             hours=event.limit)).strftime('%Y年%m月%d日 %H:%M:%S'),
-                                     'ordertime': order.time,
-                                     'orderid': order.id,
-                                     })
+                return JsonResponse(
+                    {
+                        'response_state': 200,
+                        'room_info': ('%s-%s-%s-%s') % (obj[5],
+                                                        obj[6],
+                                                        obj[7],
+                                                        obj[8]),
+                        'limit': (
+                            order.time + timedelta(
+                                hours=event.limit)).strftime('%Y年%m月%d日 %H:%M:%S'),
+                        'ordertime': order.time,
+                        'orderid': order.id,
+                    })
             elif obj[2]:
                 with transaction.atomic():
                     customer = Customer.get(obj[2])
@@ -428,10 +432,8 @@ class AppOrderListView(View):
                 'room_info': (
                     obj.eventdetail.building +
                     obj.eventdetail.unit +
-                    '单元' +
-                    str(obj.eventdetail.floor) +
-                    '层' +
-                    str(obj.eventdetail.room_num)) + '室',
+                    str(obj.eventdetail.floor) + '层' +
+                    str(obj.eventdetail.room_num)),
                 'time': obj.time.strftime('%Y/%m/%d %H:%M:%S'),
                 'event': obj.eventdetail.event.name,
                 'unit_price': obj.eventdetail.unit_price if obj.eventdetail.event.covered_space_price else '',
@@ -468,18 +470,15 @@ class AppOrderInfoView(View):
                     'limit': (
                         obj.time +
                         timedelta(
-                            hours=obj.eventdetail.event.limit)).strftime('%Y年%m月%d日 %H:%M:%S'),
-                    'ordertime': obj.time.strftime('%Y%m/%d %H:%M:%S'),
+                            hours=obj.eventdetail.event.limit)).strftime('%Y-%m-%d %H:%M:%S'),
+                    'ordertime': obj.time.strftime('%Y/%m/%d %H:%M:%S'),
                     'room_info': (
                         obj.eventdetail.building +
                         obj.eventdetail.unit +
-                        '单元' +
                         str(
-                            obj.eventdetail.floor) +
-                        '层' +
+                            obj.eventdetail.floor) + '层' +
                         str(
-                            obj.eventdetail.room_num)) +
-                    '室',
+                            obj.eventdetail.room_num)),
                     'houst_type': house_type,
                     'area': obj.eventdetail.area,
                     'customer': obj.user.customer.realname,

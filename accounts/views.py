@@ -85,7 +85,7 @@ class CustomerLoginView(View):
     def post(self, request):
         userid = request.POST.get('userid')
         protime = request.POST.get('protime')
-        customer = User.objects.get(username=userid).customer
+        event=Event.get(request.POST.get('id'))
         # try:
         #     request.session[time.strftime("%Y%m%d%H%M%S")] = customer.realname + \
         #         customer.mobile + customer.identication
@@ -97,7 +97,8 @@ class CustomerLoginView(View):
         # except BaseException:
         #     return JsonResponse({'response_state': 400, 'msg': '认筹名单中没有此用户！'})
         # else:
-        if customer.event.is_pub:
+        if event.is_pub:
+            customer = User.objects.get(username=userid).customer
             user = authenticate(
                 username=userid,
                 password=customer.identication)
