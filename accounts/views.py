@@ -2,6 +2,7 @@ import os
 import xlrd
 import uuid
 from datetime import datetime
+from collections import Counter
 
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
@@ -86,31 +87,37 @@ class CustomerLoginView(View):
         userid = request.POST.get('userid')
         protime = request.POST.get('protime')
         event=Event.get(request.POST.get('id'))
-        # try:
-        #     request.session[time.strftime("%Y%m%d%H%M%S")] = customer.realname + \
-        #         customer.mobile + customer.identication
-        #     count = Counter(
-        #         request.session.values()).get(
-        #         customer.realname +
-        #         customer.mobile +
-        #         customer.identication)
-        # except BaseException:
-        #     return JsonResponse({'response_state': 400, 'msg': '认筹名单中没有此用户！'})
-        # else:
         if event.is_pub:
             customer = User.objects.get(username=userid).customer
+            # try:
+            #     request.session[datetime.now().strftime("%Y%m%d%H%M%S")] = customer.realname + \
+            #                                                                customer.mobile + customer.identication
+            #     count = Counter(
+            #         request.session.values()).get(
+            #         customer.realname +
+            #         customer.mobile +
+            #         customer.identication)
+            #     print(count)
+            # except BaseException:
+            #     return JsonResponse({'response_state': 400, 'msg': '认筹名单中没有此用户！'})
+            # else:
             user = authenticate(
                 username=userid,
                 password=customer.identication)
             if user:
                 if not user.is_admin:
-                    # if count > Event.get(eventid).equ_login_num:
+                    # if count > event.equ_login_num:
                     #     return JsonResponse(
                     #         {'response_state': 402, 'msg': '帐号同时在线数量超出限制！'})
-                    # else:
-                    customer.protime=protime
-                    customer.save()
+                    if not customer.protime:
+                        customer.protime=protime
+                        customer.save()
+                        login(request, user)
+                        request.session.set_expiry(0)
+                        return JsonResponse(
+                            {'response_state': 200, 'msg': '登录成功'})
                     login(request, user)
+                    request.session.set_expiry(0)
                     return JsonResponse(
                         {'response_state': 200, 'msg': '登录成功'})
                 return JsonResponse({'response_state': 400})

@@ -342,8 +342,8 @@ class ExportEventDetailView(View):
         for obj in objs:
             s.write(row, 0, obj.building)
             s.write(row, 1, obj.unit)
-            s.write(row, 2, obj.floor)
-            s.write(row, 3, obj.room_num)
+            s.write(row, 2, str(obj.floor))
+            s.write(row, 3, str(obj.room_num))
             s.write(row, 4, obj.unit_price)
             s.write(row, 5, obj.area)
             s.write(row, 6, obj.looking)
@@ -491,8 +491,8 @@ class ExportHouseHotView(View):
         for obj in objs:
             s.write(row, 0, obj.building)
             s.write(row, 1, obj.unit)
-            s.write(row, 2, obj.floor)
-            s.write(row, 3, obj.room_num)
+            s.write(row, 2, str(obj.floor))
+            s.write(row, 3, str(obj.room_num))
             if obj.is_sold:
                 s.write(row, 4, '已售')
             else:
@@ -560,12 +560,10 @@ class ExportBuyHotView(View):
             if obj.eventdetail.is_testsold:
                 s.write(row, 6,
                         obj.eventdetail.building +
-                        '楼' +
                         obj.eventdetail.unit +
-                        '单元' +
                         str(obj.eventdetail.floor) +
                         '层' +
-                        str(obj.eventdetail.room_num) + '号')
+                        str(obj.eventdetail.room_num))
                 s.write(row, 7, (obj.time).strftime("%Y/%m/%d %H:%M:%S"))
                 s.write(row, 8, None)
                 s.write(row, 9, None)
@@ -574,12 +572,10 @@ class ExportBuyHotView(View):
                 s.write(row, 7, None)
                 s.write(row, 8,
                         obj.eventdetail.building +
-                        '楼' +
                         obj.eventdetail.unit +
-                        '单元' +
                         str(obj.eventdetail.floor) +
                         '层' +
-                        str(obj.eventdetail.room_num) + '号')
+                        str(obj.eventdetail.room_num))
                 s.write(row, 9, (obj.time).strftime("%Y/%m/%d %H:%M:%S"))
             row += 1
         sio = BytesIO()
@@ -728,8 +724,7 @@ class PurcharseHeatView(View):
                                 td.eventdetail.unit +
                                 str(td.eventdetail.floor) +
                                 '层' +
-                                str(td.eventdetail.room_num) +
-                                '号')
+                                str(td.eventdetail.room_num))
                     ct_list['testtime'] = time
                     ct_list['testroom'] = room
             if openorder:
@@ -740,8 +735,7 @@ class PurcharseHeatView(View):
                                 od.eventdetail.unit +
                                 str(od.eventdetail.floor) +
                                 '层' +
-                                str(od.eventdetail.room_num) +
-                                '号')
+                                str(od.eventdetail.room_num))
                     ct_list['opentime'] = time
                     ct_list['openroom'] = room
             li.append(ct_list)
