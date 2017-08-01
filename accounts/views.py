@@ -179,7 +179,7 @@ class ImportView(View):
                     li.append(value)
                 data.append(li)
             for ct in data:
-                if Customer.objects.filter(event_id=id, mobile=ct[1]).exists():
+                if Customer.objects.filter(event_id=id, mobile=str(int(ct[1]))).exists():
                     continue
                 else:
                     with transaction.atomic():
