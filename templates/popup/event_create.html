@@ -8,12 +8,12 @@
 	}
 	.form-control[readonly]{background: none !important;}
 </style>
-<div style="padding:20px">
+<div style="padding:20px;">
 	<form class="form-horizontal" method="post" enctype="multipart/form-data" id="createEvent">
 		{% csrf_token %}
 		<div class="form-group">
-			<label class="col-sm-3 col-lg-3 control-label">活动类型<i>*</i></label>
-			<div class="col-sm-9 col-lg-9">
+			<label class="col-sm-3 control-label">活动类型<i>*</i></label>
+			<div class="col-sm-9">
 				<select class="form-control" name="type" id="type">
 					<option value="1" {% if object.type == 1 %}selected{% endif %}>房间开盘</option>
 					<option value="2" {% if object.type == 2 %}selected{% endif %}>车位开盘</option>
@@ -21,13 +21,13 @@
 			</div>
 		</div>
 		<div class="form-group row">
-			<label class="col-sm-3 col-md-3 col-lg-3 control-label">活动名称<i>*</i></label>
-			<div class="col-sm-9 col-md-9 col-lg-9">
+			<label class="col-sm-3 control-label">活动名称<i>*</i></label>
+			<div class="col-sm-9">
 				<input type="text" class="form-control" placeholder="活动名称" name="name" value="{{form.name.value|default:''}}" required>
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="col-sm-3 col-lg-3 control-label">咨询电话<i>*</i></label>
+			<label class="col-sm-3 control-label">咨询电话<i>*</i></label>
 			<div class="col-sm-9">
 				<input type="text" class="form-control" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v();" 
 					 maxlength="13" placeholder="咨询电话" name="phone_num" value="{{form.phone_num.value|default:''}}" required>
@@ -83,8 +83,8 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="col-sm-3 col-lg-3 control-label">是否显示建筑面积</label>
-			<div class="col-sm-9 col-lg-9">
+			<label class="col-sm-3 control-label">是否显示建筑面积</label>
+			<div class="col-sm-9">
 				<label class="radio-inline">
 			    	<input type="radio" class="input-group-sm" name="covered_space" value="1" {% if object.covered_space == True %}checked{% endif %}> 是
 				</label>
@@ -94,8 +94,8 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="col-sm-3 col-lg-3 control-label">是否显示建筑面积单价</label>
-			<div class="col-sm-9 col-lg-9">
+			<label class="col-sm-3 control-label">是否显示建筑面积单价</label>
+			<div class="col-sm-9">
 				<label class="radio-inline">
 			    	<input type="radio" class="input-group-sm" name="covered_space_price" value="1" {% if object.covered_space_price == True %}checked{% endif %}> 是
 				</label>
@@ -105,57 +105,57 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="col-sm-3 col-lg-3 control-label">活动细则<i>*</i></label>
-			<div class="col-sm-9 col-lg-9">
+			<label class="col-sm-3 control-label">活动细则<i>*</i></label>
+			<div class="col-sm-9">
 				<textarea class="form-control" style="height:100px;" rows="3" placeholder="请填写活动细则" name="description" required>{{form.description.value|default:''}}</textarea>
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="col-sm-3 col-lg-3 control-label">认购须知<i>*</i></label>
-			<div class="col-sm-9 col-lg-9">
+			<label class="col-sm-3 control-label">认购须知<i>*</i></label>
+			<div class="col-sm-9 ">
 				<textarea class="form-control" style="height:100px;" rows="3" placeholder="请填写认购须知" name="notice" required>{{form.notice.value|default:''}}</textarea>
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="col-sm-3 col-lg-3 control-label">温馨提示<i>*</i></label>
-			<div class="col-sm-9 col-lg-9">
+			<label class="col-sm-3 control-label">温馨提示<i>*</i></label>
+			<div class="col-sm-9 ">
 				<textarea class="form-control" style="height:100px;" rows="3" placeholder="请填写温馨提示" name="tip" required>{{form.tip.value|default:''}}</textarea>
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="col-sm-3 col-lg-3 control-label">活动封面<i>*</i></label>
-			<div class="col-sm-9 col-lg-9">
+			<label class="col-sm-3 control-label">活动封面<i>*</i></label>
+			<div class="col-sm-9">
 				<input type="file" class="form-control" id="cover" onchange='showCover()' name="cover">
 			</div>
 			<div class="col-sm-9" style="margin:10px 0 0 25%;">
 				<p style="margin: 0;">当前文件为<span class="coverImgFile" style="margin-left:20px;">{{form.cover.value|default:''}}</span></p>
 			</div>
 			<div class="col-sm-9" style="margin:10px 0 0 25%;">
-				<img src='{{MEDIA_URL}}{{object.cover}}' alt='' id='coverImg' />
+				<img src='{{MEDIA_URL}}{{object.cover}}' alt='' id='coverImg' onerror="this.src='{{ STATIC_URL }}images/default.png'" />
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="col-sm-3 col-lg-3 control-label" style="vertical-align: top;">平面图</label>
-			<div class="col-sm-9 col-lg-9 myfilePlane_graph">
+			<label class="col-sm-3 control-label" style="vertical-align: top;">平面图</label>
+			<div class="col-sm-9 myfilePlane_graph">
 				<label for="">
 					<p>选择平面图</p>
 					<input type="file" class="form-control" id="plane_graph1" onchange='showPlane_graph1()' name="plane_graph">
-					<img src='{{MEDIA_URL}}{{object.plane_graph}}' alt='' id='plane_graph_img1' />
+					<img src='{{MEDIA_URL}}{{object.plane_graph}}' alt='' id='plane_graph_img1' onerror="this.src='{{ STATIC_URL }}images/default.png'"/>
 				</label>
 				<label for="">
 					<p>选择平面图</p>
 					<input type="file" class="form-control" id="plane_graph2" onchange='showPlane_graph2()' name="plane_graph1">
-					<img src='{{MEDIA_URL}}{{object.plane_graph1}}' alt='' id='plane_graph_img2' />
+					<img src='{{MEDIA_URL}}{{object.plane_graph1}}' alt='' id='plane_graph_img2'onerror="this.src='{{ STATIC_URL }}images/default.png'"/>
 				</label>
 				<label for="">
 					<p>选择平面图</p>
 					<input type="file" class="form-control" id="plane_graph3" onchange='showPlane_graph3()' name="plane_graph2">
-					<img src='{{MEDIA_URL}}{{object.plane_graph2}}' alt='' id='plane_graph_img3' />
+					<img src='{{MEDIA_URL}}{{object.plane_graph2}}' alt='' id='plane_graph_img3' onerror="this.src='{{ STATIC_URL }}images/default.png'"/>
 				</label>
 				<label for="">
 					<p>选择平面图</p>
 					<input type="file" class="form-control" id="plane_graph4" onchange='showPlane_graph4()' name="plane_graph3">
-					<img src='{{MEDIA_URL}}{{object.plane_graph3}}' alt='' id='plane_graph_img4' />
+					<img src='{{MEDIA_URL}}{{object.plane_graph3}}' alt='' id='plane_graph_img4' onerror="this.src='{{ STATIC_URL }}images/default.png'"/>
 				</label>
 			</div>
 		</div>
@@ -170,7 +170,16 @@
 </div>
 <script type="text/javascript">
 	$(document).ready(function() {
-		
+		//创建活动
+		$("#createEvent").submit(function(){
+		    　　if($("#cover").val() == "") {
+		        　　	new $.zui.Messager('请添加封面', {
+		        	placement:'bottom',
+				    type: 'important' // 定义颜色主题
+				}).show();
+			　	return false;
+		    }
+		})
 		//	封面图
 		var coverImgFile = $(".coverImgFile").html();
 		var coverImgFiles = coverImgFile.slice(17); //截取获取文件的文件名
@@ -180,12 +189,12 @@
 		//	$("#plane_graph_img").append("<img width='45%' style='margin: 5px;' src='{{MEDIA_URL}}{{object.plane_graph}}' alt=''/>");
 	});
 
-	//去除火狐input number的滚轮事件
-	$("input[type='number']").on('DOMMouseScroll', MouseWheel, false);
-	function MouseWheel(event) {
-		event = event || window.event;
-		event.preventDefault();
-	}
+//	//去除火狐input number的滚轮事件
+//	$("input[type='number']").on('DOMMouseScroll', MouseWheel, false);
+//	function MouseWheel(event) {
+//		event = event || window.event;
+//		event.preventDefault();
+//	}
 	//活动封面显示
 	function showCover() {
 		//以下即为完整客户端路径

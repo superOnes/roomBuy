@@ -80,6 +80,10 @@ input[type="number"]{
     line-height: 20px;
 }
 .myfilePlane_graph>label>img{
+	display: block;
+	padding: 5px;
+	border: 1px dashed #808080 ;
+	min-height: 100px;
 	margin-top:10px;
 }
 

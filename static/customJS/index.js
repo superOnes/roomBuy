@@ -3,37 +3,11 @@ $(document).ready(function(){
 	$(window).resize(function(){
 		$("#login-wrap").height($(window).height());
 	});
-})
-//创建活动
-$("#createEvent").submit(function(){
-	alert($("#cover").val())
-    　　if($("#cover").val() == "") {
-        　　	new $.zui.Messager('请添加封面', {
-        	placement:'top',
-		    type: 'important' // 定义颜色主题
-		}).show();
-	　	return false;
-    }
-})
-
-
- function checkNumber(value){
- 	if(value>0){
-	    if(/^[0-9]{11}$/.test(value)){
-	       new $.zui.Messager('不可输入特殊字符和“-”', {
-	       		placement:'top',
-			    type: 'important' // 定义颜色主题
-			}).show();
-	        return false;
-	    }
- 	}
-}
-
+});
 
 
 //上传认筹名单文件
 function submitFile(event,thisID){
-	alert("正在准备上传，请稍等！");
 	var files = $("#files")[0].files;
 	var data = new FormData(); //转化为表单格式的数据
     data.append('filename', files[0]);
@@ -46,8 +20,22 @@ function submitFile(event,thisID){
 		cache: false,
         processData: false,//发送的数据将被转换为对象，false就是不转化，默认为true
         contentType: false,
-		success:function(){
-			window.location.reload();
+		success:function(results){
+			if(results.success){
+				new $.zui.Messager('不可输入特殊字符和“-”', {
+		       		placement:'top',
+				    type: 'important' // 定义颜色主题
+				}).show("",function(){
+					window.location.reload();
+				});
+			}else{
+				new $.zui.Messager('导入失败!', {
+		       		placement:'top',
+				    type: 'important' // 定义颜色主题
+				}).show("",function(){
+					$(event).attr("disabled","disabled");
+				});
+			}
 		},
 		error:function(){
 			$(event).attr("disabled","disabled");
