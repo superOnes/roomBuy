@@ -6,20 +6,13 @@ $(document).ready(function(){
 })
 //创建活动
 $("#createEvent").submit(function(){
-    　　if($(".myfileCover").val() == "") {
+	alert($("#cover").val())
+    　　if($("#cover").val() == "") {
         　　	new $.zui.Messager('请添加封面', {
-        	placement:'center',
+        	placement:'top',
 		    type: 'important' // 定义颜色主题
 		}).show();
 	　	return false;
-    }else{
-    	if($(".myfilePlane_graph").val() == "") {
-	        　　	new $.zui.Messager('请添加平面图', {
-	        	placement:'center',
-			    type: 'important' // 定义颜色主题
-			}).show();
-	        　	return false;
-        }
     }
 })
 

@@ -125,7 +125,26 @@
 		<div class="form-group">
 			<label for="inputNumber3" class="col-sm-3 col-lg-3 control-label">平面图</label>
 			<div class="col-sm-9 col-lg-9">
-				<img src="{{MEDIA_URL}}{{object.plane_graph}}" width="400px" />
+				<label for="">
+					<p>选择平面图</p>
+					<input type="file" class="form-control" id="plane_graph1" onchange='showPlane_graph1()' name="plane_graph">
+					<img src='{{MEDIA_URL}}{{object.plane_graph}}' alt='' id='plane_graph_img1' />
+				</label>
+				<label for="">
+					<p>选择平面图</p>
+					<input type="file" class="form-control" id="plane_graph2" onchange='showPlane_graph2()' name="plane_graph1">
+					<img src='{{MEDIA_URL}}{{object.plane_graph1}}' alt='' id='plane_graph_img2' />
+				</label>
+				<label for="">
+					<p>选择平面图</p>
+					<input type="file" class="form-control" id="plane_graph3" onchange='showPlane_graph3()' name="plane_graph2">
+					<img src='{{MEDIA_URL}}{{object.plane_graph2}}' alt='' id='plane_graph_img3' />
+				</label>
+				<label for="">
+					<p>选择平面图</p>
+					<input type="file" class="form-control" id="plane_graph4" onchange='showPlane_graph4()' name="plane_graph3">
+					<img src='{{MEDIA_URL}}{{object.plane_graph3}}' alt='' id='plane_graph_img4' />
+				</label>
 			</div>
 		</div>
 	</form>

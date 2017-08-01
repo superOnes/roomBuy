@@ -49,6 +49,41 @@ input[type="number"]{
 .form-group>label{padding-top: 0 !important;position: relative;margin-top:10px !important;}
 .form-group>label>i{position: absolute;right:0;top:0;font-size: 16px;color:red;}
 
+
+.myfilePlane_graph>label{
+	position: relative;
+	vertical-align: top;
+	width: 48%;
+}
+.myfilePlane_graph>label:nth-child(odd){
+	margin-right:10px;
+}
+.myfilePlane_graph>label>input{
+	position: absolute;
+	cursor: pointer;
+	z-index: 10;
+	top:0;
+	opacity: 0;
+}
+.myfilePlane_graph>label>p{
+	width: 50%;
+	text-align: center;
+	margin: 0 auto !important;
+    background: #D0EEFF;
+    border: 1px solid #99D3F5;
+    border-radius: 4px;
+    padding: 4px 12px;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 20px;
+}
+.myfilePlane_graph>label>img{
+	margin-top:10px;
+}
+
+
 .page-header{
 	margin:0 !important;
 }
