@@ -1,4 +1,5 @@
 import uuid
+import time
 from datetime import datetime
 
 from django import forms
@@ -65,6 +66,24 @@ class EventDetailSignForm(forms.ModelForm):
             elif customer.user.order_set.count() >= customer.count:
                 raise forms.ValidationError('该用户已购房')
         return customer
+
+    def save(self):
+        with transaction.atomic():
+            instance = super(EventDetailSignForm, self).save()
+            if instance.sign is None:
+                if self.initial['object'].sign:
+                    Order.objects.filter(user=self.initial['object'].sign.user,
+                                         eventdetail=instance,
+                                         is_test=False).delete()
+                    if instance.is_sold is True:
+                        instance.is_sold = False
+                        instance.save()
+            else:
+                Order.objects.create(user=instance.sign.user,
+                                     eventdetail=instance,
+                                     order_num=time.strftime('%Y%m%d%H%M%S'),
+                                     is_test=False)
+            return instance
 
 
 class CustomerForm(forms.ModelForm):

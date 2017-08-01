@@ -372,17 +372,10 @@ class AppHouseChoiceConfirmView(View):
                         'ordertime': order.time,
                         'orderid': order.id,
                     })
-            elif obj[2]:
-                with transaction.atomic():
-                    customer = Customer.get(obj[2])
-                    Order.objects.create(user_id=customer.user.id,
-                                         eventdetail_id=obj[0],
-                                         order_num=time.strftime
-                                         ('%Y%m%d%H%M%S'),
-                                         is_test=False)
-                    cursor.execute(
-                        'UPDATE apt_eventdetail set is_sold=%s where id=%s' %
-                        (bol, house))
+            elif not obj[1] and obj[2]:
+                cursor.execute(
+                    'UPDATE apt_eventdetail set is_sold=%s where id=%s' %
+                    (bol, house))
                 return JsonResponse(
                     {'response_state': 400, 'msg': '购买失败，房屋已卖出'})
             elif Order.objects.filter(user=user, eventdetail_id=obj[0],
