@@ -92,9 +92,6 @@ function creatEle(data){
 	var str1=$('<div class="bannerline">' +
 					'<div class="swiper-container" style="width:100%;">' +
 						'<div class="swiper-wrapper">' +
-							'<div class="swiper-slide"><img src="'+http+data.plane_graph+'"/></div>' +
-							'<div class="swiper-slide"><img src="'+http+data.plane_graph+'"></div>' +
-							'<div class="swiper-slide"><img src="'+http+data.plane_graph+'"/></div>' +
 						'</div>' +
 						'<div class="swiper-pagination"></div>' +
 					'</div>' +
@@ -109,7 +106,7 @@ function creatEle(data){
 						'<div class="remark"><div class="mark"></div><span class="floor1">开盘时间</span></div><div class="flr choicSt">开盘开始 '+data.event_start+'<br/>开盘结束 '+data.event_end+'</div>' +
 					'</div>'+
 					'<div class="floor"><span class="floor2 bder">活动细则</span> <div class="flr hgt">'+data.description+'</div></div>'+
-					'<div class="floor"><span class="floor3 bder">活动须知</span><div class="flr hgt">'+data.notice+'</div></div>'+
+					'<div class="floor"><span class="floor3 bder">认购须知</span><div class="flr hgt">'+data.notice+'</div></div>'+
 					'<div class="floor"><span class="floor2 bder">温馨提示</span> <div class="flr hgt">'+data.tip+'</div></div>' +
 				'</div>'+
 				'<p class="userid1" style="display:none"></p>'+
@@ -117,6 +114,11 @@ function creatEle(data){
 				'<div class="btnline"><a href="javascript:;" class="btnL">立即进入</a></div>'
 	);
 	$(".wapline").append(str1);
+	for(var i=0;i<data.plane_graph.length;i++){
+		$(".swiper-wrapper").append($('<div class="swiper-slide"><img src="'+http+data.plane_graph[i]+'"/></div>'));
+	}
+
+
 	var width = $("body").width();
 	$(".swiper-container").css({"width":width});
 	var swiper = new Swiper('.swiper-container', {
@@ -147,8 +149,6 @@ function telp (){
 }
 function quit(){
     localStorage.removeItem("userid");
-
-
     $.ajax({
 		type:"POST",
 		url:http+"/acc/cusout/",
