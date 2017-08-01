@@ -50,6 +50,15 @@ class AppEventDetailView(View):
     def get(self, request):
         eventid = request.GET.get('id')
         obj = Event.get(eventid)
+        plane_graph = []
+        if obj.plane_graph:
+            plane_graph.append(obj.plane_graph.url)
+        if obj.plane_graph1:
+            plane_graph.append(obj.plane_graph1.url)
+        if obj.plane_graph2:
+            plane_graph.append(obj.plane_graph2.url)
+        if obj.plane_graph3:
+            plane_graph.append(obj.plane_graph3.url)
         value = [
             {
                 'test_start': (
@@ -64,7 +73,7 @@ class AppEventDetailView(View):
                 'description': obj.description,
                 'tip': obj.tip,
                 'name': obj.name,
-                'plane_graph': obj.plane_graph.url,
+                'plane_graph': plane_graph,
                 'phone': obj.phone_num,
             }]
         context = {}
@@ -212,22 +221,22 @@ class AddFollow(View):
         user = User.objects.get(username=userid)
         try:
             eventdetail = EventDetail.get(house)
-            if not Follow.objects.filter(
-                    user=user,
-                    eventdetail=eventdetail):
-                if Follow.objects.filter(
-                        user=user,
-                        eventdetail__event_id=eventid).count() < Event.get(eventid).follow_num:
-                    Follow.objects.create(
-                        user=user, eventdetail=eventdetail)
-                return JsonResponse(
-                    {'response_state': 403, 'msg': '收藏数量超过限制'})
-            return JsonResponse(
-                {'response_state': 400, 'msg': '您已收藏过该商品！'})
         except BaseException:
             return JsonResponse({'response_state': 400})
         else:
-            return JsonResponse({'response_state': 200, 'msg': '收藏成功'})
+            if not Follow.objects.filter(
+                    user=user,
+                    eventdetail=eventdetail):
+                if (Follow.objects.filter(user=user, eventdetail__event_id=eventid).count(
+                )) < Event.get(eventid).follow_num:
+                    print(1)
+                    Follow.objects.create(user=user, eventdetail=eventdetail)
+                    return JsonResponse({'response_state': 200, 'msg': '收藏成功'})
+                else:
+                    return JsonResponse(
+                        {'response_state': 403, 'msg': '收藏数量超过限制'})
+            return JsonResponse({'response_state': 400, 'msg': '您已收藏过该商品！'})
+
 
 
 @method_decorator(customer_login_required, name='dispatch')
@@ -425,7 +434,7 @@ class AppOrderListView(View):
         userid = request.GET.get('userid')
         eventid = request.GET.get('id')
         user = User.objects.get(username=userid)
-        objs = Order.objects.filter(user=user,eventdetail__event_id=eventid)
+        objs = Order.objects.filter(user=user, eventdetail__event_id=eventid)
         valuelist = []
         for obj in objs:
             value = [{
