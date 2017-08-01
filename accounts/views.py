@@ -214,6 +214,6 @@ class GetCustomerInfo(View):
             if customer.user.order_set.count() >= customer.count:
                 return JsonResponse({'response_state': 301,
                                      'result': result,
-                                     'msg': '该用户已备注，不可再次备注'})
+                                     'msg': '该用户已备注或已购买，不可备注'})
             return JsonResponse({'response_state': 200, 'result': result})
         return JsonResponse({'response_state': 300, 'msg': '未找到相关用户'})
