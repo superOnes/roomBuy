@@ -111,7 +111,6 @@ class CustomerLoginView(View):
                     customer.protime=protime
                     customer.save()
                     login(request, user)
-                    request.session.set_expiry(300)
                     return JsonResponse(
                         {'response_state': 200, 'msg': '登录成功'})
                 return JsonResponse({'response_state': 400})

@@ -208,21 +208,22 @@ class AddFollow(View):
     def post(self, request):
         userid = request.POST.get('userid')
         house = request.POST.get('house')
+        eventid = request.POST.get('id')
         user = User.objects.get(username=userid)
         try:
             eventdetail = EventDetail.get(house)
             if not Follow.objects.filter(
                     user=user,
                     eventdetail=eventdetail):
-                if user.follow_set.count() < user.customer.event.follow_num:
+                if Follow.objects.filter(
+                        user=user,
+                        eventdetail__event_id=eventid).count() < Event.get(eventid).follow_num:
                     Follow.objects.create(
                         user=user, eventdetail=eventdetail)
-                else:
-                    return JsonResponse(
-                        {'response_state': 403, 'msg': '收藏数量超过限制'})
-            else:
                 return JsonResponse(
-                    {'response_state': 400, 'msg': '您已收藏过该商品！'})
+                    {'response_state': 403, 'msg': '收藏数量超过限制'})
+            return JsonResponse(
+                {'response_state': 400, 'msg': '您已收藏过该商品！'})
         except BaseException:
             return JsonResponse({'response_state': 400})
         else:
@@ -264,7 +265,8 @@ class FollowView(View):
     def get(self, request):
         userid = request.GET.get('userid')
         user = User.objects.get(username=userid)
-        objs = user.follow_set.all()
+        objs = Follow.objects.filter(
+            user=user, eventdetail__event_id=request.GET.get('id'))
         context = {}
         list = []
         for obj in objs:
@@ -297,6 +299,7 @@ class AppHouseChoiceConfirmView(View):
     def post(self, request):
         userid = request.POST.get('userid')
         house = request.POST.get('house')
+        eventid = request.POST.get('id')
         user = User.objects.get(username=userid)
         from aptm.settings import DATABASES
         cursor = connection.cursor()
@@ -318,7 +321,8 @@ class AppHouseChoiceConfirmView(View):
         if (now >= event.test_start) and (now <= event.test_end):
             if not obj[4]:
                 with transaction.atomic():
-                    purchased = user.order_set.filter(is_test=True).count()
+                    purchased = Order.objects.filter(
+                        user=user, eventdetail__event_id=eventid, is_test=True).count()
                     if purchased >= user.customer.count:
                         return JsonResponse({'response_state': 400,
                                              'msg': '不可再次购买'})
@@ -348,7 +352,8 @@ class AppHouseChoiceConfirmView(View):
         elif (now >= event.event_start) and (now <= event.event_end):
             if not obj[1] and not obj[2]:
                 with transaction.atomic():
-                    purchased = user.order_set.filter(is_test=False).count()
+                    purchased = Order.objects.filter(
+                        user=user, eventdetail__event_id=eventid, is_test=False).count()
                     if purchased >= user.customer.count:
                         return JsonResponse({'response_state': 400,
                                              'msg': '不可再次购买'})
@@ -393,8 +398,10 @@ class OrderProView(View):
 
     def get(self, request):
         userid = request.GET.get('userid')
+        eventid = request.GET.get('id')
         try:
-            customer = User.objects.get(username=userid).customer
+            customer = Customer.objects.get(
+                user__username=userid, event_id=eventid)
         except BaseException:
             return JsonResponse({'response_state': 400, 'msg': '认筹名单中没有该用户！'})
         else:
@@ -416,8 +423,9 @@ class AppOrderListView(View):
 
     def get(self, request):
         userid = request.GET.get('userid')
+        eventid = request.GET.get('id')
         user = User.objects.get(username=userid)
-        objs = user.order_set.all()
+        objs = Order.objects.filter(user=user,eventdetail__event_id=eventid)
         valuelist = []
         for obj in objs:
             value = [{
