@@ -146,6 +146,8 @@ function telp (){
 	}
 }
 function quit(){
+    localStorage.removeItem("userid");
+
 	$.ajax({
 		type:"POST",
 		url:http+"/acc/cusout/",
@@ -297,7 +299,8 @@ function myShare(){
 		type:"get",
 		url:http+"/app/followlist/",
 		data:{
-			userid:$(".userid").html()
+			userid:$(".userid").html(),
+			id:$(".idNum").html()
 		},
 		success:function(data){
 			if(data.response_state==200){
@@ -726,7 +729,7 @@ function checkInfo(data){
 					'</div>'+
 					'<div class="order-a">'+
 						'<div class="order-middle2">'+
-							'<p>请在<span class="order_time">'+data.limit+'</span>前，到项目现场办理正式手续。预期问办理，视为放弃资格。</p>'+
+							'<p>请在<span class="order_time"></span>前，到项目现场办理正式手续。预期问办理，视为放弃资格。</p>'+
 							'<p style="color:red;margin-top:5px">请截图保存订单，活动结束之后将不能登录。</p>'+
 						'</div>'+
 						'<div class="order-bottom2">'+
@@ -779,11 +782,34 @@ function checkInfo(data){
 				'</div>'
 	);
 	$(".orderInfoBox").append(orderInfo);
-
+	var rr=new Date(data.limit).getTime();
+   $(".order_time").html((new Date(rr).Format("yyyy年MM月dd日 hh:mm:ss")));
 	setInterval(function(){
-		var date=new Date();
-		var h=date.getHours(),m=date.getMinutes(),s=date.getSeconds();
-		$(".order-2").html((h<10?"0"+h:h)+":"+(m<10?"0"+m:m)+":"+(s<10?"0"+s:s));
+		 var dateNew= new Date(data.limit).getTime() - new Date().getTime();
+		 if(dateNew>0){
+             var hours = Math.floor(dateNew / (3600 * 1000));
+             //计算相差分钟数
+             var leave2 = dateNew % (3600 * 1000);       //计算小时数后剩余的毫秒数
+             var minutes = Math.floor(leave2 / (60 * 1000));
+             //计算相差秒数
+             var leave3 = leave2 % (60 * 1000);     //计算分钟数后剩余的毫秒数
+             var seconds = Math.round(leave3 / 1000);
+
+
+             $('.order-2').html((hours < 10 ? "0" + hours : hours) + "小时 " + (minutes < 10 ? "0" + minutes : minutes) + " 分钟" + (seconds < 10 ? "0" + seconds : seconds) + " 秒");
+		 }else{
+             $('.order-2').html("订单无效");
+		 }
+
 	},1000);
+
+    if(new Date(data.ordertime).getTime()>new Date($(".test_start").html()).getTime()&&
+       new Date(data.ordertime).getTime()<new Date($(".test_ent").html()).getTime()){
+		$(".order-middle2").empty();
+		$(".order-bottom-1 table").append($('<tr class="ordertype">'+
+												'<td>订单类型：</td>'+
+												'<td>公测订单</td>'+
+											'</tr>'))
+	}
 
 }

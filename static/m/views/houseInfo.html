@@ -57,7 +57,6 @@
 	var houseId = getParamValue("house");
 	var id=getParamValue("id");
 	var userid=getParamValue("userid");
-	console.log(id);
 
 	$(function(){
 
@@ -74,7 +73,10 @@
 
 				}else if(data.response_state==401){
 					window.location.href="login.html";
-				}else{
+				}else if(data.response_state==403){
+                    alert(data.msg);
+                    window.location.href="login.html?id="+id;
+                }else{
 					alert(data.msg);
 				}
 			},
@@ -89,7 +91,8 @@
 			url:http+"/app/houseinfo/",
 			data:{
 				house:houseId,
-				userid:userid
+				userid:userid,
+				id:id
 			},
 			success:function(data){
 				if(data.response_state==200){
@@ -123,7 +126,8 @@
 				url: http + "/app/cancelfollow/",
 				data: {
 					house: houseId,
-					userid: userid
+					userid: userid,
+					id:id
 				},
 				success: function (data) {
 					if (data.response_state == 200) {
@@ -133,7 +137,7 @@
 							color: "#f75c2e"
 						});
 					} else if (data.response_state == 401) {
-						window.location.href = "login.html";
+						window.location.href = "login.html?id="+id;
 					} else {
 						alert(data.msg);
 					}
@@ -149,14 +153,15 @@
 			url:http+"/app/addfollow/",
 			data:{
 				house:houseId,
-				userid:userid
+				userid:userid,
+				id:id
 			},
 			success:function(data){
 				console.log(data);
 				if(data.response_state==200){
 					$(".shareBt").html("已收藏").css({background:"#999",border:"none",color:"#fff"});
 				}else if(data.response_state==401){
-					window.location.href="login.html";
+					window.location.href="login.html?id="+id;
 				}else{
 					alert(data.msg);
 				}

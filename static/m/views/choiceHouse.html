@@ -64,10 +64,14 @@ function getParamValue(name)
 $(function(){
     var id = getParamValue("id");
     var userid = getParamValue("userid");
+    var cover=getParamValue("cover");
     if(userid){
         localStorage.setItem("userid",userid);
     }
+    localStorage.setItem("cover",cover);
    var userid1=localStorage.getItem("userid");
+
+
 
 
     $.ajax({
@@ -79,6 +83,7 @@ $(function(){
         },
         success:function(data){
             if(data.response_state==200){
+                console.log(data);
                 creatEle(data.objects[0]);
                 $(".userid1").html(userid);
                 $(".ind1").html(id);
@@ -92,6 +97,9 @@ $(function(){
                })
 
             }else if(data.response_state==401){
+                window.location.href="login.html?id="+id;
+            }else if(data.response_state==403){
+                alert(data.msg);
                 window.location.href="login.html?id="+id;
             }
             else{

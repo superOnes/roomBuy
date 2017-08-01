@@ -64,7 +64,8 @@
             type:'POST',
             data:{
                 house:id,
-                userid:userid
+                userid:userid,
+                id:idd
             },
             url:http+"/app/orderconfirm/",
             dataType:'JSON',
@@ -74,6 +75,9 @@
                     $(".id1").html(idd);
                     $(".user1").html(userid);
 
+                }else if(data.response_state==403){
+                    alert(data.msg);
+                    window.location.href="login.html?id="+idd;
                 }else{
                     $(".success-container").append('<div class="noOne"><img src="../images/none.png" /><p>'+data.msg+'</p></div>');
                 }

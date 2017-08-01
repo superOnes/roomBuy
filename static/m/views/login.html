@@ -11,7 +11,7 @@
 <div class="wapLogin">
 	<div class="login">
 		<div class="loginLogo">
-			<img src="../images/img2.png">
+			<img />
 		</div>
 		<h1>云源开盘</h1>
 	</div>
@@ -91,6 +91,10 @@
             $("body").empty();
             $("body").append($("<div class='errorPage'><img src='../images/error.png' /><p>该地址无效！</p></div>"));
 		}
+        var cover=localStorage.getItem("cover");
+        console.log(cover);
+        $(".loginLogo img").prop("src",http+cover);
+
 	});
 
 
