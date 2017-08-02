@@ -66,7 +66,9 @@ function submitFile(event,thisID){
 		       		placement:'top',
 				    type: 'important' // 定义颜色主题
 				}).show("",function(){
-					window.location.reload();
+					setTimeout(function(){
+						window.location.reload();
+					},1000)
 				});
 			}else{
 				new $.zui.Messager('导入失败!', {
@@ -85,7 +87,6 @@ function submitFile(event,thisID){
 };
 //导入房价文件
 function roomPriceFile(event,thisID){
-	alert("正在上传，请稍等！");
 	var files = $("#priceFile")[0].files;
 	var data = new FormData(); //转化为表单格式的数据
     data.append('file', files[0]);
@@ -98,8 +99,24 @@ function roomPriceFile(event,thisID){
 		cache: false,
         processData: false,//发送的数据将被转换为对象，false就是不转化，默认为true
         contentType: false,
-		success:function(data){
-			window.location.reload();
+		success:function(results){
+			if(results.success){
+				new $.zui.Messager('导入成功！', {
+		       		placement:'top',
+				    type: 'important' // 定义颜色主题
+				}).show("",function(){
+					setTimeout(function(){
+						window.location.reload();
+					},1000)
+				});
+			}else{
+				new $.zui.Messager('导入失败!', {
+		       		placement:'top',
+				    type: 'important' // 定义颜色主题
+				}).show("",function(){
+					$(event).attr("disabled","disabled");
+				});
+			}
 		},
 		error:function(){
 			$(event).attr("disabled","disabled");
