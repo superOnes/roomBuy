@@ -5,6 +5,10 @@ $(document).ready(function(){
 	});
 });
 
+function checkNumber(value){
+	value = value.replace(/[^0-9-]+/,'');
+	return value;
+}
 
 //上传认筹名单文件
 function submitFile(event,thisID){
