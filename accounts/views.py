@@ -2,7 +2,6 @@ import os
 import xlrd
 import uuid
 from datetime import datetime
-from collections import Counter
 
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
@@ -15,6 +14,7 @@ from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.db import transaction
+from django.contrib.sessions.models import Session
 
 from apt.models import Event, EventDetail
 from aptm import settings
@@ -84,26 +84,19 @@ class CustomerLoginView(View):
     '''
 
     def post(self, request):
+        request.session.set_expiry(0)
         userid = request.POST.get('userid')
         protime = request.POST.get('protime')
-        event=Event.get(request.POST.get('id'))
+        event = Event.get(request.POST.get('id'))
+        # session_key = request.session.get('session_key')
+        # print(session_key)
         if event.is_pub:
             customer = User.objects.get(username=userid).customer
-            # try:
-            #     request.session[datetime.now().strftime("%Y%m%d%H%M%S")] = customer.realname + \
-            #                                                                customer.mobile + customer.identication
-            #     count = Counter(
-            #         request.session.values()).get(
-            #         customer.realname +
-            #         customer.mobile +
-            #         customer.identication)
-            #     print(count)
-            # except BaseException:
-            #     return JsonResponse({'response_state': 400, 'msg': '认筹名单中没有此用户！'})
-            # else:
             user = authenticate(
                 username=userid,
                 password=customer.identication)
+            # s = Session.objects.get(pk=session_key)
+            # s.get_decoded()
             if user:
                 if not user.is_admin:
                     # if count > event.equ_login_num:
@@ -113,11 +106,9 @@ class CustomerLoginView(View):
                         customer.protime=protime
                         customer.save()
                         login(request, user)
-                        request.session.set_expiry(0)
                         return JsonResponse(
                             {'response_state': 200, 'msg': '登录成功'})
                     login(request, user)
-                    request.session.set_expiry(0)
                     return JsonResponse(
                         {'response_state': 200, 'msg': '登录成功'})
                 return JsonResponse({'response_state': 400})

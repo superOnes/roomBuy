@@ -229,7 +229,6 @@ class AddFollow(View):
                     eventdetail=eventdetail):
                 if (Follow.objects.filter(user=user, eventdetail__event_id=eventid).count(
                 )) < Event.get(eventid).follow_num:
-                    print(1)
                     Follow.objects.create(user=user, eventdetail=eventdetail)
                     return JsonResponse({'response_state': 200, 'msg': '收藏成功'})
                 else:
