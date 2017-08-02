@@ -263,48 +263,56 @@ class ImportEventDetailView(View):
         if id:
             event = Event.get(id)
             file = request.FILES.get('file')
-            path = default_storage.save(
-                'price/price.xlsx',
-                ContentFile(
-                    file.read()))
-            tmp_file = os.path.join(settings.MEDIA_ROOT, path)
-            workdata = xlrd.open_workbook(tmp_file)
-            sheet_name = workdata.sheet_names()[0]
-            sheet = workdata.sheet_by_name(sheet_name)
-            row = sheet.nrows
-            col = sheet.ncols
-            data = []
-            for rx in range(1, row):
-                li = []
-                for cx in range(0, col):
-                    value = sheet.cell(rowx=rx, colx=cx).value
-                    li.append(value)
-                data.append(li)
-            for ed in data:
-                etdtnum = len(EventDetail.objects.filter(event_id=id))
-                num = request.user.house_limit - etdtnum
-                if EventDetail.objects.filter(
-                        event_id=id, building=ed[0],
-                        unit=ed[1], floor=ed[2],
-                        room_num=ed[3]).exists():
-                    continue
-                else:
-                    if num > 0:
-                        eventdetail = EventDetail.objects.create(
-                            building=ed[0],
-                            unit=ed[1],
-                            floor=ed[2],
-                            room_num=ed[3],
-                            unit_price=ed[4],
-                            area=ed[5],
-                            looking=ed[6],
-                            term=ed[7],
-                            event=event)
-                        eventdetail.save()
-                        num -= 1
-            return JsonResponse({'success': True})
+            filename = file.name.split('.')[-1]
+            if filename == 'xlsx' or filename == 'xls':
+                path = default_storage.save(
+                    'price/price.xlsx',
+                    ContentFile(
+                        file.read()))
+                tmp_file = os.path.join(settings.MEDIA_ROOT, path)
+                workdata = xlrd.open_workbook(tmp_file)
+                sheet_name = workdata.sheet_names()[0]
+                sheet = workdata.sheet_by_name(sheet_name)
+                row = sheet.nrows
+                col = sheet.ncols
+                data = []
+                for rx in range(1, row):
+                    li = []
+                    for cx in range(0, col):
+                        value = sheet.cell(rowx=rx, colx=cx).value
+                        li.append(value)
+                    data.append(li)
+                for ed in data:
+                    if type(ed[0]) != str:
+                        ed[0] = str(int(ed[0]))
+                    if type(ed[1]) != str:
+                        ed[1] = str(int(ed[1]))
+                    etdtnum = len(EventDetail.objects.filter(event_id=id))
+                    num = request.user.house_limit - etdtnum
+                    if EventDetail.objects.filter(
+                            event_id=id, building=ed[0],
+                            unit=ed[1], floor=ed[2],
+                            room_num=ed[3]).exists():
+                        continue
+                    else:
+                        if num > 0:
+                            eventdetail = EventDetail.objects.create(
+                                building=ed[0],
+                                unit=ed[1],
+                                floor=ed[2],
+                                room_num=ed[3],
+                                unit_price=ed[4],
+                                area=ed[5],
+                                looking=ed[6],
+                                term=ed[7],
+                                event=event)
+                            eventdetail.save()
+                            num -= 1
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'success': False, 'msg': '导入文件格式不正确！'})
         os.remove('media/price/price.xlsx')
-        return JsonResponse({'success': False, 'msg': '传入数据超额！'})
+        return JsonResponse({'success': False})
 
 
 @method_decorator(admin_required, name='dispatch')
