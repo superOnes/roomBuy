@@ -29,12 +29,6 @@ class Customer(models.Model):
         return cls.objects.filter(event_id=eid,
                                   identication=id).first()
 
-    @classmethod
-    def remove(cls, id):
-        obj = cls.get(id)
-        obj.is_delete = True
-        obj.save()
-
 
 class User(AbstractUser):
     is_delete = models.BooleanField(default=False)

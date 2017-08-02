@@ -71,12 +71,6 @@ class Event(models.Model):
     def get_last_event(cls, cid):
         return cls.objects.filter(company_id=cid).last()
 
-    @classmethod
-    def remove(cls, id):
-        obj = cls.get(id)
-        obj.is_delete = True
-        obj.save()
-
 
 class HouseType(models.Model):
     name = models.CharField('户型名称', max_length=100)
@@ -123,9 +117,3 @@ class EventDetail(models.Model):
     @classmethod
     def all(cls):
         return cls.objects.filter(is_delete=0).order_by('-id')
-
-    @classmethod
-    def remove(cls, id):
-        obj = cls.get(id)
-        obj.is_delete = True
-        obj.save()

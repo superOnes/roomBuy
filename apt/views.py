@@ -66,7 +66,7 @@ class EventListView(ListView):
             obj.qr = url2qrcode(
                 'http://%s/static/m/views/choiceHouse.html?id=%s&cover=%s' %
                 (self.request.get_host(), str(
-                    obj.id),str(obj.cover.url)))
+                    obj.id), str(obj.cover.url)))
             obj.save()
         return queryset
 
