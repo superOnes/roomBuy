@@ -29,7 +29,7 @@
 		<div class="form-group">
 			<label class="col-sm-3 control-label">咨询电话<i>*</i></label>
 			<div class="col-sm-9">
-				<input type="text" class="form-control"  onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" 
+				<input type="text" class="form-control"  onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)"
 					onblur="this.v();" maxlength="13" placeholder="咨询电话" name="phone_num" value="{{form.phone_num.value|default:''}}" required>
 			</div>
 		</div>
@@ -170,16 +170,6 @@
 </div>
 <script type="text/javascript">
 	$(document).ready(function() {
-		//创建活动
-		$("#createEvent").submit(function(){
-		    　　if($("#cover").val() == "") {
-		        　　	new $.zui.Messager('请添加封面', {
-		        	placement:'bottom',
-				    type: 'important' // 定义颜色主题
-				}).show();
-			　	return false;
-		    }
-		})
 		//	封面图
 		var coverImgFile = $(".coverImgFile").html();
 		var coverImgFiles = coverImgFile.slice(17); //截取获取文件的文件名

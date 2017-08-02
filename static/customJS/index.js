@@ -3,12 +3,48 @@ $(document).ready(function(){
 	$(window).resize(function(){
 		$("#login-wrap").height($(window).height());
 	});
+
+	//创建活动
+	$("#createEvent").submit(function(){
+		var inputPhone = $("input[name='phone_num']").val();
+		var pattern = /[0-9-()（）]{7,15}/;
+		if(!pattern.test(inputPhone)){
+			new $.zui.Messager('请输入正确的电话号码！', {
+				placement:'bottom',
+				type: 'important' // 定义颜色主题
+			}).show();
+　			return false;
+		}else if($("#cover").val() == "") {
+				new $.zui.Messager('请添加封面', {
+					placement:'bottom',
+					type: 'important' // 定义颜色主题
+				}).show();
+		　	return false;
+			}
+	});
+
+	//创建认筹名单
+	$("#customerOrder").submit(function(){
+		var inputMobile = $("input[name='mobile']").val();
+		var inputIdent = $("input[name='identication']").val();
+		var pattern = /\d{17}[\d|x]|\d{15}/;
+		if(inputMobile.length < 11){
+			new $.zui.Messager('请输入正确的手机号！', {
+				placement:'center',
+				type: 'important' // 定义颜色主题
+			}).show();
+　			return false;
+		}else if(!pattern.test(inputIdent)){
+			new $.zui.Messager('请输入正确的身份证号码！', {
+				placement:'center',
+				type: 'important' // 定义颜色主题
+			}).show();
+　			return false;
+		}
+	})
 });
 
-function checkNumber(value){
-	value = value.replace(/[^0-9-]+/,'');
-	return value;
-}
+
 
 //上传认筹名单文件
 function submitFile(event,thisID){
@@ -26,7 +62,7 @@ function submitFile(event,thisID){
         contentType: false,
 		success:function(results){
 			if(results.success){
-				new $.zui.Messager('不可输入特殊字符和“-”', {
+				new $.zui.Messager('导入成功！', {
 		       		placement:'top',
 				    type: 'important' // 定义颜色主题
 				}).show("",function(){
