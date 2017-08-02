@@ -84,33 +84,31 @@ class CustomerLoginView(View):
     '''
 
     def post(self, request):
-        request.session.set_expiry(0)
         userid = request.POST.get('userid')
         protime = request.POST.get('protime')
         event = Event.get(request.POST.get('id'))
-        # session_key = request.session.get('session_key')
-        # print(session_key)
+        user_b = User.objects.get(username=userid, customer__event_id=event)
         if event.is_pub:
-            customer = User.objects.get(username=userid).customer
+            customer = user_b.customer
             user = authenticate(
                 username=userid,
                 password=customer.identication)
-            # s = Session.objects.get(pk=session_key)
-            # s.get_decoded()
             if user:
                 if not user.is_admin:
-                    # if count > event.equ_login_num:
-                    #     return JsonResponse(
-                    #         {'response_state': 402, 'msg': '帐号同时在线数量超出限制！'})
                     if not customer.protime:
-                        customer.protime=protime
+                        customer.protime = protime
                         customer.save()
                         login(request, user)
+                        key = request.session.session_key
+                        request.session.set_expiry(300)
                         return JsonResponse(
-                            {'response_state': 200, 'msg': '登录成功'})
-                    login(request, user)
-                    return JsonResponse(
-                        {'response_state': 200, 'msg': '登录成功'})
+                            {'response_state': 200, 'msg': '登录成功', 'key': key})
+                    else:
+                        login(request, user)
+                        key = request.session.session_key
+                        request.session.set_expiry(300)
+                        return JsonResponse(
+                            {'response_state': 200, 'msg': '登录成功', 'key': key})
                 return JsonResponse({'response_state': 400})
             return JsonResponse(
                 {'response_state': 400, 'msg': '该电话号与证件号未通过认证。'})
@@ -124,8 +122,6 @@ class CustomerLogoutView(View):
     '''
 
     def post(self, request):
-        if not request.POST.get('userid'):
-            return JsonResponse({'response_state': 401, 'msg': '用户没有登录！'})
         logout(request)
         return JsonResponse({'response_state': 200, 'msg': '退出成功'})
 
@@ -158,51 +154,45 @@ class ImportView(View):
         if id:
             event = Event.get(id)
             file = request.FILES.get('filename')
-            filename = file.name.split('.')[-1]
-            if filename == 'xlsx' or filename == 'xls':
-                path = default_storage.save(
-                    'tmp/customer.xlsx',
-                    ContentFile(
-                        file.read()))
-                tmp_file = os.path.join(settings.MEDIA_ROOT, path)
-                workdata = xlrd.open_workbook(tmp_file)
-                sheet_name = workdata.sheet_names()[0]
-                sheet = workdata.sheet_by_name(sheet_name)
-                row = sheet.nrows
-                col = sheet.ncols
-                data = []
-                num = 0
-                for rx in range(1, row):
-                    li = []
-                    for cx in range(0, col):
-                        value = sheet.cell(rowx=rx, colx=cx).value
-                        li.append(value)
-                    data.append(li)
-                for ct in data:
-                    if type(ct[1]) != int:
-                        return JsonResponse({'success': False, 'msg': '导入中手机号格式不正确！'})
-                    else:
-                        if (Customer.objects.filter(event_id=id, mobile=str(int(ct[1]))) or
-                                Customer.objects.filter(event_id=id, identication=str(int(ct[2])))).exists():
-                            continue
-                        else:
-                            with transaction.atomic():
-                                customer = Customer.objects.create(realname=ct[0],
-                                                                   mobile=str(int(ct[1])),
-                                                                   identication=str(int(ct[2])),
-                                                                   remark=ct[3],
-                                                                   event=event)
-                                customer.save()
-                                User.objects.create_user(
-                                    username=uuid.uuid1(),
-                                    password=customer.identication,
-                                    customer=customer,
-                                    is_admin=False)
-                                num += 1
-                return JsonResponse({'success': True, 'data': num})
-            else:
-                return JsonResponse({'success': False, 'msg': '上传文件格式不正确！'})
-        return JsonResponse({'success': False, 'msg': '导入错误！'})
+            path = default_storage.save(
+                'tmp/customer.xlsx',
+                ContentFile(
+                    file.read()))
+            tmp_file = os.path.join(settings.MEDIA_ROOT, path)
+            workdata = xlrd.open_workbook(tmp_file)
+            sheet_name = workdata.sheet_names()[0]
+            sheet = workdata.sheet_by_name(sheet_name)
+            row = sheet.nrows
+            col = sheet.ncols
+            data = []
+            num = 0
+            for rx in range(1, row):
+                li = []
+                for cx in range(0, col):
+                    value = sheet.cell(rowx=rx, colx=cx).value
+                    li.append(value)
+                data.append(li)
+            for ct in data:
+                if (Customer.objects.filter(event_id=id,
+                                            mobile=str(int(ct[1]))) or Customer.objects.filter(event_id=id,
+                                                                                               identication=str(int(ct[2])))).exists():
+                    continue
+                else:
+                    with transaction.atomic():
+                        customer = Customer.objects.create(realname=ct[0],
+                                                           mobile=str(int(ct[1])),
+                                                           identication=str(int(ct[2])),
+                                                           remark=ct[3],
+                                                           event=event)
+                        customer.save()
+                        User.objects.create_user(
+                            username=uuid.uuid1(),
+                            password=customer.identication,
+                            customer=customer,
+                            is_admin=False)
+                        num += 1
+            return JsonResponse({'success': True, 'data': num})
+        return JsonResponse({'success': False})
 
 
 class GetCustomerInfo(View):

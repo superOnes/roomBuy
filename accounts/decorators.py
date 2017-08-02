@@ -5,7 +5,7 @@ from django.contrib.auth import logout
 from django.http import JsonResponse
 from django.shortcuts import redirect
 
-from .models import User
+from django.contrib.sessions.models import Session
 from apt.models import Event
 
 
@@ -30,13 +30,14 @@ def customer_login_required(func):
     @wraps(func)
     def wrapper(request, *args, **kwargs):
         eventid = request.GET.get('id', request.POST.get('id'))
-        userid = request.GET.get('userid', request.POST.get('userid'))
-        if not userid:
-            return JsonResponse({'response_state': 401, 'msg': '用户没有登录！'})
-        if not User.objects.filter(username=userid):
-            return JsonResponse({'response_state': 401, 'msg': '用户没有登录！'})
+        key = request.GET.get('key', request.POST.get('key'))
         if not Event.get(eventid).is_pub:
             logout(request)
             return JsonResponse({'response_state': 403, 'msg': '活动已经下架！'})
-        return func(request, *args, **kwargs)
+        try:
+            Session.objects.get(pk=key)
+        except:
+            return JsonResponse({'response_state': 403, 'msg': '请登录！'})
+        else:
+            return func(request, *args, **kwargs)
     return wrapper

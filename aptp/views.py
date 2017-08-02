@@ -27,7 +27,7 @@ class ProView(View):
                     mobile=mobile, identication=identication, event_id=eventid)
             except BaseException:
                 return JsonResponse(
-                    {'response_state': 400, 'msg': '您没有参加这个活动！'})
+                    {'response_state': 400, 'msg': '用户名或密码不正确！'})
             else:
                 value = [{
                     'termname': customer.event.termname,

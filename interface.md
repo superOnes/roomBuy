@@ -29,7 +29,7 @@ return:|JSON
 ---:|---|
 url:|http://localhost:8000/app/detail/
 method:|GET
-params:|userid(顾客在user表中的username),id(活动id)
+params:|key,id(活动id)
 return:|JSON
 
 #### 车位/房源 楼号列表
@@ -37,7 +37,7 @@ return:|JSON
 ---:|---|
 url:|http://localhost:8000/app/houses/
 method:|GET
-params:|userid(顾客在user表中的username),id(活动id)
+params:|key,id(活动id)
 return:|JSON
 
 #### 车位/房源 单元列表
@@ -45,7 +45,7 @@ return:|JSON
 ---:|---|
 url:|http://localhost:8000/app/unit/
 method:|GET
-params:|userid(顾客在user表中的username),building,id(活动id)
+params:|key,building,id(活动id)
 return:|JSON
 
 #### 车位/房源 房号列表
@@ -53,7 +53,7 @@ return:|JSON
 ---:|---|
 url:|http://localhost:8000/app/houselist/
 method:|GET
-params:|userid(顾客在user表中的username),building,unit,id(活动id)
+params:|key,building,unit,id(活动id)
 return:|JSON
 
 #### 车位/房源 详情
@@ -117,5 +117,5 @@ return:|JSON
 ---:|---|
 url:|http://localhost:8000/app/orderinfo/
 method:|GET
-params:|userid(顾客在user表中的username),orderid,id(活动id)
+params:|key,orderid,id(活动id)
 return:|JSON

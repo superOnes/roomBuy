@@ -27,7 +27,7 @@ class Event(models.Model):
     event_start = models.DateTimeField('活动开始时间')
     event_end = models.DateTimeField('活动结束时间')
     limit = models.IntegerField('选房完成期限')
-    equ_login_num = models.IntegerField('支持设备登录数')
+    equ_login_num = models.IntegerField('支持设备登录数',default=1)
     follow_num = models.IntegerField('同一账号允许收藏数')
     covered_space = models.BooleanField('是否显示建筑面积', default=False)
     covered_space_price = models.BooleanField('是否显示建筑面积单价', default=False)
