@@ -56,13 +56,15 @@
 		return null ;
 	}
 	var userid = getParamValue("userid");
-	var id=getParamValue("id");
+	var id = getParamValue("id");
+    var key = getParamValue("key");
 	$.ajax({
 		type:"get",
 		url:http+"/app/orderpro/",
 		data:{
 			userid:userid,
-			id:id
+			id:id,
+			key:key
 		},
 		success:function(data){
 			if(data.response_state==200){
@@ -71,7 +73,12 @@
 										'<p>'+data.objects[0].term+'</p>'+
 								  '</div>'
 				));
-			}else{
+			}else if(data.response_state==401){
+                window.location.href="login.html?id="+id;
+            }else if(data.response_state==403){
+                alert(data.msg);
+                window.location.href="login.html?id="+id;
+            }else{
 				alert(data.msg);
 			}
 

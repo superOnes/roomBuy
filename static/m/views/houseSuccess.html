@@ -56,8 +56,9 @@
         return null ;
     }
     var id = getParamValue("house");
-    var idd=getParamValue("id");
+    var idd = getParamValue("id");
     var userid = getParamValue("userid");
+    var key = getParamValue("key");
 
     $(function(){
         $.ajax({
@@ -65,7 +66,8 @@
             data:{
                 house:id,
                 userid:userid,
-                id:idd
+                id:idd,
+                key:key
             },
             url:http+"/app/orderconfirm/",
             dataType:'JSON',
@@ -74,6 +76,7 @@
                     orderSu(data);
                     $(".id1").html(idd);
                     $(".user1").html(userid);
+                    $(".key").html(key);
 
                 }else if(data.response_state==403){
                     alert(data.msg);

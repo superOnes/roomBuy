@@ -56,6 +56,7 @@
 	}
 	var id = getParamValue("id");
 	var userid = getParamValue("userid");
+    var key=getParamValue("key");
 
 
 	$(function(){
@@ -64,7 +65,8 @@
 			url:http+"/app/houses/",
 			data:{
 				userid:userid,
-				id:id
+				id:id,
+				key:key
 			},
 			success:function(data){
 				if(data.response_state==200){
@@ -73,6 +75,7 @@
 					houseList(data.objects[0]);
 					$(".idNum").html(id);
 					$(".userid").html(userid);
+					$(".key").html(key);
 				}else if(data.response_state==401){
 					window.location.href="login.html?id="+id;
 				}else if(data.response_state==403){
@@ -92,7 +95,8 @@
 			url:http+"/app/detail/",
 			data:{
 				userid:userid,
-				id:id
+				id:id,
+				key:key
 			},
 
 			success:function(data){

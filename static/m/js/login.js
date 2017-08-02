@@ -51,7 +51,8 @@ $(function(){
 								dataType:'JSON',
 								success: function (data) {
 									if(data.response_state==200){
-										window.location.href = "choiceHouse.html?id="+$(".loginId").html()+"&userid="+$(".userid").html();
+										console.log(data);
+										window.location.href = "choiceHouse.html?id="+$(".loginId").html()+"&userid="+$(".userid").html()+"&key="+data.key;
 
 									}else{
 										alert(data.msg);
@@ -215,6 +216,7 @@ function createList(data){
 				'<p id="endTimeing"></p>'+
 			'</div>'+
 			'<p class="idNum" style="display:none;"></p>'+
+        	'<p class="key" style="display:none;"></p>'+
 			'<p class="userid" style="display:none;"></p>'
 
 	);
@@ -233,7 +235,7 @@ function data3(result){
 function myOrder() {
 	if((new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime())||
 		(new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() <new Date($(".test_ent").html()).getTime())){
-		window.location.href="order.html?id="+$(".idNum").html()+"&userid="+$(".userid").html();
+		window.location.href="order.html?id="+$(".idNum").html()+"&userid="+$(".userid").html()+"&key="+$(".key").html();
 	}else{
 			alert("活动尚未开始");
 	}
@@ -302,7 +304,8 @@ function myShare(){
 		url:http+"/app/followlist/",
 		data:{
 			userid:$(".userid").html(),
-			id:$(".idNum").html()
+			id:$(".idNum").html(),
+			key:$(".key").html()
 		},
 		success:function(data){
 			if(data.response_state==200){
@@ -326,7 +329,7 @@ function myShare(){
 					$(this).click(function(){
 						if((new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime())||
 							(new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() <new Date($(".test_ent").html()).getTime())){
-							window.location.href="houseInfo.html?house="+$(this).find(".shareId").html()+"&id="+$(".idNum").html()+"&userid="+$(".userid").html();
+							window.location.href="houseInfo.html?house="+$(this).find(".shareId").html()+"&id="+$(".idNum").html()+"&userid="+$(".userid").html()+"&key="+$(".key").html();
 						}else{
 							alert("活动尚未开始");
 						}
@@ -367,7 +370,8 @@ function houseList(data){
 				data:{
 					building:$(this).text(),
 					id:$(".idNum").html(),
-					userid:$(".userid").html()
+					userid:$(".userid").html(),
+                    key:$(".key").html()
 				},
 				dataType:'JSON',
 				success: function (data) {
@@ -404,7 +408,8 @@ function houseList(data){
 									building:build,
 									unit:$(this).html(),
 									id:$(".idNum").html(),
-									userid:$(".userid").html()
+									userid:$(".userid").html(),
+                                    key:$(".key").html()
 								},
 								success:function(data){
 									$(".houseChose").remove();
@@ -442,7 +447,7 @@ function houseList(data){
 										aLis.each(function(){
 											$(this).click(function(){
 												var houseID=data.objects[$(this).index()][0].house;
-												window.location.href="houseInfo.html?house="+houseID+"&id="+$(".idNum").html()+'&userid='+$(".userid").html();
+												window.location.href="houseInfo.html?house="+houseID+"&id="+$(".idNum").html()+'&userid='+$(".userid").html()+"&key="+$(".key").html();
 
 											})
 										})
@@ -522,7 +527,8 @@ function houseInfo(data){
 					'</div>'+
 					'<p class="houseID" style="display:none"></p>'+
 					'<p class="userId" style="display:none"></p>'+
-				    '<p class="idd" style="display:none"></p>'
+				    '<p class="idd" style="display:none"></p>'+
+        			'<p class="key" style="display:none"></p>'
 	);
 	var infoBlack=$('<div class="windowBlack" id="houseInfoBlack">'+
 						'<div class="dialog">'+
@@ -577,7 +583,6 @@ function houseInfo(data){
 	$(".shareBt").bind("click",shareBtn);
 
 	if(data.is_followed[0]){
-		//$(".shareBt").unbind("click",shareBtn);
 		$(".shareBt").html("已收藏").css({background:"#999",border:"none",color:"#fff"})
 
 	}
@@ -588,7 +593,7 @@ function houseInfo(data){
 
 }
 function proldel(){
-	window.location.href="protocol.html?userid="+$(".userId").html()+"&id="+$(".idd").html();
+	window.location.href="protocol.html?userid="+$(".userId").html()+"&id="+$(".idd").html()+"&key="+$(".key").html();
 }
 function data5(result){
 	var datap=$('<p class="event_start" style="display:none">'+result.event_start+'</p>'+
@@ -610,12 +615,13 @@ function confrim(){
 	var id=$(".houseID").html();
 	var userid=$(".userId").html();
 	var idd=$(".idd").html();
+	var key=$(".key").html();
 	if(!$(".dialog-check").prop("checked")){
 		alert("请同意《活动协议》");
 	}else{
 		if((new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime())||
 			(new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".test_ent").html()).getTime())){
-			window.location.href = "houseSuccess.html?house="+id+"&userid="+userid+"&id="+idd;
+			window.location.href = "houseSuccess.html?house="+id+"&userid="+userid+"&id="+idd+"&key="+key;
 		}else{
 			alert("活动尚未开始");
 		}
@@ -655,6 +661,7 @@ function orderSu(data){
 						'<p class="orderid" style="display:none;">'+data.orderid+'</p>'+
 						'<p class="id1" style="display:none"></p>'+
 						'<p class="user1" style="display:none"></p>'+
+        				'<p class="key" style="display:none"></p>'+
 					'</div>'
 	);
 
@@ -662,7 +669,7 @@ function orderSu(data){
 
 }
 function orderInfos(){
-	window.location.href="orderinfo.html?orderId="+$(".orderid").html()+"&id="+$(".id1").html()+"&userid="+$(".user1").html();
+	window.location.href="orderinfo.html?orderId="+$(".orderid").html()+"&id="+$(".id1").html()+"&userid="+$(".user1").html()+"&key="+$("key").html();
 }
 
 /*订单*/

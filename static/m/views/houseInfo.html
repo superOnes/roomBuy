@@ -57,6 +57,7 @@
 	var houseId = getParamValue("house");
 	var id=getParamValue("id");
 	var userid=getParamValue("userid");
+    var key = $(".key").html();
 
 	$(function(){
 
@@ -65,14 +66,15 @@
 			url:http+"/app/detail/",
 			data:{
 				userid:userid,
-				id:id
+				id:id,
+				key:key
 			},
 			success:function(data){
 				if(data.response_state==200){
 					data5(data.objects[0]);
 
 				}else if(data.response_state==401){
-					window.location.href="login.html";
+					window.location.href="login.html?id="+id;
 				}else if(data.response_state==403){
                     alert(data.msg);
                     window.location.href="login.html?id="+id;
@@ -92,20 +94,22 @@
 			data:{
 				house:houseId,
 				userid:userid,
-				id:id
+				id:id,
+				key:key
 			},
 			success:function(data){
 				if(data.response_state==200){
-				    console.log(data);
 					houseInfo(data.objects[0]);
 					$(".houseID").html(houseId);
 					$(".userId").html(userid);
 					$(".idd").html(id);
-
-
+                    $(".key").html(key);
 				}else if(data.response_state==401){
-					window.location.href="login.html";
-				}else{
+					window.location.href="login.html?id="+id;
+				}else if(data.response_state==403){
+                    alert(data.msg);
+                    window.location.href="login.html?id="+id;
+                }else{
 					alert(data.msg);
 				}
 			},
@@ -114,9 +118,6 @@
 			}
 
 		});
-
-
-
 	});
 
 	/*收藏按钮*/
@@ -128,7 +129,8 @@
 				data: {
 					house: houseId,
 					userid: userid,
-					id:id
+					id:id,
+					key:key
 				},
 				success: function (data) {
 					if (data.response_state == 200) {
@@ -139,7 +141,10 @@
 						});
 					} else if (data.response_state == 401) {
 						window.location.href = "login.html?id="+id;
-					} else {
+					} else if(data.response_state==403){
+                        alert(data.msg);
+                        window.location.href="login.html?id="+id;
+                    }else {
 						alert(data.msg);
 					}
 				},
@@ -155,7 +160,8 @@
 			data:{
 				house:houseId,
 				userid:userid,
-				id:id
+				id:id,
+				key:key
 			},
 			success:function(data){
 				console.log(data);
@@ -163,7 +169,10 @@
 					$(".shareBt").html("已收藏").css({background:"#999",border:"none",color:"#fff"});
 				}else if(data.response_state==401){
 					window.location.href="login.html?id="+id;
-				}else{
+				}else if(data.response_state==403){
+                    alert(data.msg);
+                    window.location.href="login.html?id="+id;
+                }else{
 					alert(data.msg);
 				}
 
@@ -177,7 +186,7 @@
 
 	}
 	function backList(){
-		window.location.href="houseList.html?id="+id+"&userid="+userid;
+		window.location.href="houseList.html?id="+id+"&userid="+userid+"&key="+key;
 	}
 </script>
 
