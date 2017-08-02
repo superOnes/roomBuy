@@ -1,4 +1,4 @@
-{% extends 'include/main_base.html' %} 
+{% extends 'include/main_base.html' %}
 {% block title %}房源列表{% endblock %}
 {% block right %}
 <div>
@@ -151,11 +151,17 @@
 						<h4 class="modal-title">一键关联户型</h4>
 					</div>
 					<div class="modal-body">
-						<p>已经关联过的户型将不会被重复关联<br>确认关联吗？</p>
+						<p>{% if event.housetype_set.all %}
+							已经关联过的户型将不会被重复关联<br>确认关联吗？
+							{% else %}
+							没有可以关联的户型，如有需要请先添加户型！
+							{% endif %}
+						</p>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-						<button type="button" class="btn btn-primary house-type-save">保存</button>
+						<button type="button" class="btn btn-primary house-type-save"
+						 {% if not event.housetype_set.all %}disabled{% endif %}>保存</button>
 					</div>
 				</div>
 			</div>
