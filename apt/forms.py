@@ -9,7 +9,6 @@ from accounts.models import Customer, User, Order
 
 
 class EventForm(forms.ModelForm):
-
     class Meta:
         model = Event
         fields = [f.name for f in model._meta.fields]
@@ -29,7 +28,6 @@ class EventForm(forms.ModelForm):
 
 
 class EventDetailForm(forms.ModelForm):
-
     class Meta:
         model = EventDetail
         fields = ['building', 'unit', 'floor', 'room_num', 'looking',
@@ -39,6 +37,14 @@ class EventDetailForm(forms.ModelForm):
         cleaned_data = super(EventDetailForm, self).clean()
         event = self.initial['event']
         current_user = self.initial['current_user']
+        eventdetail = EventDetail.objects.all()
+        print(eventdetail)
+        for ed in eventdetail:
+            if cleaned_data['building'] == ed.building \
+                    and cleaned_data['unit'] == ed.unit \
+                    and cleaned_data['floor'] == ed.floor \
+                    and cleaned_data['room_num'] == ed.room_num:
+                raise forms.ValidationError('该车位/房源已存在！')
         if event.eventdetail_set.count() >= int(current_user.house_limit):
             raise forms.ValidationError('车位/房源数量超出上限，不可添加')
         return cleaned_data
@@ -51,7 +57,6 @@ class EventDetailForm(forms.ModelForm):
 
 
 class EventDetailSignForm(forms.ModelForm):
-
     class Meta:
         model = EventDetail
         fields = ['sign']
@@ -88,7 +93,6 @@ class EventDetailSignForm(forms.ModelForm):
 
 
 class CustomerForm(forms.ModelForm):
-
     class Meta:
         model = Customer
         fields = ['realname', 'mobile', 'identication', 'remark']
@@ -106,7 +110,6 @@ class CustomerForm(forms.ModelForm):
 
 
 class HouseTypeForm(forms.ModelForm):
-
     class Meta:
         model = HouseType
         fields = ['event', 'name', 'pic', 'num']
@@ -121,7 +124,7 @@ class HouseTypeForm(forms.ModelForm):
             ht = HouseType.objects.filter(event=self.cleaned_data['event'])
         else:
             ht = HouseType.objects.filter(event=self.cleaned_data['event']) \
-                                  .exclude(id=self.instance.id)
+                .exclude(id=self.instance.id)
         if ht and self.cleaned_data['num'] in ht.values_list('num', flat=True):
             raise forms.ValidationError('户型编码不能重复')
         return self.cleaned_data['num']

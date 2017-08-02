@@ -179,23 +179,26 @@ class ImportView(View):
                         li.append(value)
                     data.append(li)
                 for ct in data:
-                    if (Customer.objects.filter(event_id=id, mobile=str(int(ct[1]))) or
-                            Customer.objects.filter(event_id=id, identication=str(int(ct[2])))).exists():
-                        continue
+                    if type(ct[1]) != int:
+                        return JsonResponse({'success': False, 'msg': '导入中手机号格式不正确！'})
                     else:
-                        with transaction.atomic():
-                            customer = Customer.objects.create(realname=ct[0],
-                                                               mobile=str(int(ct[1])),
-                                                               identication=str(int(ct[2])),
-                                                               remark=ct[3],
-                                                               event=event)
-                            customer.save()
-                            User.objects.create_user(
-                                username=uuid.uuid1(),
-                                password=customer.identication,
-                                customer=customer,
-                                is_admin=False)
-                            num += 1
+                        if (Customer.objects.filter(event_id=id, mobile=str(int(ct[1]))) or
+                                Customer.objects.filter(event_id=id, identication=str(int(ct[2])))).exists():
+                            continue
+                        else:
+                            with transaction.atomic():
+                                customer = Customer.objects.create(realname=ct[0],
+                                                                   mobile=str(int(ct[1])),
+                                                                   identication=str(int(ct[2])),
+                                                                   remark=ct[3],
+                                                                   event=event)
+                                customer.save()
+                                User.objects.create_user(
+                                    username=uuid.uuid1(),
+                                    password=customer.identication,
+                                    customer=customer,
+                                    is_admin=False)
+                                num += 1
                 return JsonResponse({'success': True, 'data': num})
             else:
                 return JsonResponse({'success': False, 'msg': '上传文件格式不正确！'})
