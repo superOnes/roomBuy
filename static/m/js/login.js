@@ -588,7 +588,7 @@ function houseInfo(data){
 
 }
 function proldel(){
-	window.location.href="protocol.html?userid="+$(".userId").html();
+	window.location.href="protocol.html?userid="+$(".userId").html()+"&id="+$(".idd").html();
 }
 function data5(result){
 	var datap=$('<p class="event_start" style="display:none">'+result.event_start+'</p>'+

@@ -56,15 +56,16 @@
 		return null ;
 	}
 	var userid = getParamValue("userid");
+	var id=getParamValue("id");
 	$.ajax({
 		type:"get",
 		url:http+"/app/orderpro/",
 		data:{
-			userid:userid
+			userid:userid,
+			id:id
 		},
 		success:function(data){
 			if(data.response_state==200){
-				console.log(data);
 				$("body").append($('<div class="prols">'+
 										'<h1>'+data.objects[0].termname+'</h1>'+
 										'<p>'+data.objects[0].term+'</p>'+
