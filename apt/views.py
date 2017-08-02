@@ -284,25 +284,26 @@ class ImportEventDetailView(View):
                 etdtnum = len(EventDetail.objects.filter(event_id=id))
                 num = request.user.house_limit - etdtnum
                 if EventDetail.objects.filter(
-                        event_id=id, building=ed[1],
-                        unit=ed[2], floor=ed[3],
-                        room_num=ed[4]).exists():
+                        event_id=id, building=ed[0],
+                        unit=ed[1], floor=ed[2],
+                        room_num=ed[3]).exists():
                     continue
-                if num > 0:
-                    eventdetail = EventDetail.objects.create(
-                        building=ed[0],
-                        unit=ed[1],
-                        floor=ed[2],
-                        room_num=ed[3],
-                        unit_price=ed[4],
-                        area=ed[5],
-                        looking=ed[6],
-                        term=ed[7],
-                        event=event)
-                    eventdetail.save()
-                    num -= 1
-            os.remove('media/price/price.xlsx')
+                else:
+                    if num > 0:
+                        eventdetail = EventDetail.objects.create(
+                            building=ed[0],
+                            unit=ed[1],
+                            floor=ed[2],
+                            room_num=ed[3],
+                            unit_price=ed[4],
+                            area=ed[5],
+                            looking=ed[6],
+                            term=ed[7],
+                            event=event)
+                        eventdetail.save()
+                        num -= 1
             return JsonResponse({'success': True})
+        os.remove('media/price/price.xlsx')
         return JsonResponse({'success': False, 'msg': '传入数据超额！'})
 
 
