@@ -69,7 +69,7 @@
 			<td>{{ obj.identication }}</td>
 			<td>{{ obj.remark }}</td>
 			<td>{% if obj.user.order_set.count > 0 %}已选购{% else %}未购买{% endif %}</td>
-			<td> <p> <a data-toggle="modal" data-target="#deleteModal" data-id="{{obj.id}}" class="delete">删除</a> </p> </td>
+			<td> <p> <a data-toggle="modal" data-target="#deleteModal" data-id="{{obj.id}}" class="deleteOrder">删除</a> </p> </td>
 		</tr>
 		<!--删除确认框-->
 		<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog">
@@ -88,7 +88,7 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-						<button type="button" class="btn btn-default" id="delete">确定</button>
+						<button type="button" class="btn btn-default" id="deleteOrder">确定</button>
 					</div>
 				</div>
 			</div>
@@ -98,24 +98,28 @@
 </table>
 <script type="text/javascript">
 	//	删除认筹名单
-	$(".delete").on('click', function(e) {
-		var $id = $(e.currentTarget).data("id");
-		$("#delete").click(function() {
-			$.ajax({
-				type: "POST",
-				url: "/customer/delete/",
-				async: true,
-				data: {
-					id: $id
-				},
-				cache: false,
-				success: function() {
-					window.location.reload();
-				},
-				error: function() {
-					alert("未知错误")
-				}
-			});
+	var $id;
+	$(".deleteOrder").on('click', function(e) {
+		$id = $(e.currentTarget).data("id");
+	});
+	$("#deleteOrder").click(function() {
+		$.ajax({
+			type: "POST",
+			url: "/customer/delete/",
+			async: true,
+			data: { id: $id },
+			cache: false,
+			success: function() {
+				window.location.reload();
+			},
+			error: function() {
+				new $.zui.Messager("未知错误", {
+					icon: "bell",
+					placement: "center",
+					type: "danger",
+					time: 2000,
+				}).show();
+			}
 		});
 	});
 </script>

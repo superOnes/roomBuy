@@ -99,7 +99,7 @@
 					<a data-iframe="{% url 'room_sign_update' pk=obj.id %}" data-toggle="modal" data-size="sm" data-fade="false">备注</a>
 				</p>
 				<p>
-					<a data-target="#deleteModal" data-toggle="modal" data-id="{{obj.id}}" class="delete">删除</a>
+					<a data-target="#deleteModal" data-toggle="modal" data-id="{{obj.id}}" class="deleteHouse">删除</a>
 				</p>
 			</td>
 		</tr>
@@ -135,7 +135,7 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-						<button type="button" class="btn btn-primary" id="delete">确认</button>
+						<button type="button" class="btn btn-primary" id="deleteHouse">确认</button>
 					</div>
 				</div>
 			</div>
@@ -201,29 +201,28 @@
 		});
 
 		//删除房源
-		$(".delete").on('click', function(e) {
-			var $id = $(e.currentTarget).data("id");
-			$("#delete").click(function() {
-				$.ajax({
-					type: "POST",
-					url: "/eventdetaildel/",
-					async: true,
-					data: {
-						id: $id
-					},
-					cache: false,
-					success: function() {
-						window.location.reload();
-					},
-					error: function() {
-						new $.zui.Messager("未知错误", {
-							icon: "bell",
-							placement: "center",
-							type: "danger",
-							time: 2000,
-						}).show();
-					}
-				});
+		var $id;
+		$(".deleteHouse").on('click', function(e) {
+			$id = $(e.currentTarget).data("id");
+		});
+		$("#deleteHouse").click(function() {
+			$.ajax({
+				type: "POST",
+				url: "/eventdetaildel/",
+				async: true,
+				data: { id: $id },
+				cache: false,
+				success: function() {
+					window.location.reload();
+				},
+				error: function() {
+					new $.zui.Messager("未知错误", {
+						icon: "bell",
+						placement: "center",
+						type: "danger",
+						time: 2000,
+					}).show();
+				}
 			});
 		});
 		// 关联户型
@@ -234,11 +233,9 @@
 				$.ajax({
 					type: "post",
 					url: "/housetypes/",
-					data: {
-						event_id: event_id
-					},
+					data: { event_id: event_id },
 					success: function(data) {
-						if(data.success == true) {
+						if(data.success) {
 							var msg = new $.zui.Messager(data.msg, {
 								placement: "center",
 								type: "success",

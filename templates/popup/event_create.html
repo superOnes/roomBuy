@@ -67,21 +67,21 @@
 		<div class="form-group">
 			<label class="col-sm-3 control-label">选房完成期限<i>*</i></label>
 			<div class="col-sm-9">
-				<input type="text" class="form-control" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v();" placeholder="小时" min="1" name="limit" value="{{form.limit.value|default:''}}" required>
+				<input type="text" class="form-control" onkeyup="(this.v=function(){this.value=this.value.replace(/[^1-9-]+/,'');}).call(this)" onblur="this.v();" placeholder="小时" min="1" name="limit" value="{{form.limit.value|default:''}}" required>
 			</div>
 		</div>
 		<div class="form-group">
 			<label class="col-sm-3 control-label">支持设备登录数<i>*</i></label>
 			<div class="col-sm-9">
-				<input type="text" class="form-control"  onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v();"
-					min="1" placeholder="支持设备登录数" name="equ_login_num" value="{{form.equ_login_num.value|default:''}}" required>
+				<input type="text" class="form-control"  onkeyup="(this.v=function(){this.value=this.value.replace(/[^1-9-]+/,'');}).call(this)" onblur="this.v();"
+					placeholder="支持设备登录数" name="equ_login_num" value="{{form.equ_login_num.value|default:''}}" required>
 			</div>
 		</div>
 		<div class="form-group">
 			<label class="col-sm-3 control-label">同一账号允许收藏数<i>*</i></label>
 			<div class="col-sm-9">
-				<input type="text" class="form-control" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v();"
-					min="1" placeholder="同一账号允许收藏数" name="follow_num" value="{{form.follow_num.value|default:''}}" required>
+				<input type="text" class="form-control" onkeyup="(this.v=function(){this.value=this.value.replace(/[^1-9-]+/,'');}).call(this)" onblur="this.v();"
+					placeholder="同一账号允许收藏数" name="follow_num" value="{{form.follow_num.value|default:''}}" required>
 			</div>
 		</div>
 		<div class="form-group">
