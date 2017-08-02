@@ -38,7 +38,6 @@ class EventDetailForm(forms.ModelForm):
         event = self.initial['event']
         current_user = self.initial['current_user']
         eventdetail = EventDetail.objects.all()
-        print(eventdetail)
         for ed in eventdetail:
             if cleaned_data['building'] == ed.building \
                     and cleaned_data['unit'] == ed.unit \
@@ -96,6 +95,15 @@ class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
         fields = ['realname', 'mobile', 'identication', 'remark']
+
+    def clean(self):
+        cleaned_data = super(CustomerForm, self).clean()
+        customer = Customer.objects.all()
+        for ct in customer:
+            if cleaned_data['mobile'] == ct.mobile \
+                    and cleaned_data['identication'] == ct.identication:
+                raise forms.ValidationError('该用户已存在')
+        return cleaned_data
 
     def save(self, commit=True):
         if not self.instance.id:
