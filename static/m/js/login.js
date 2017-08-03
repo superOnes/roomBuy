@@ -21,7 +21,7 @@ $(function(){
 			var tel=$(".titleph").val(),personId=$(".titlezj").val();
 
 			$.ajax({
-				type:"get",
+				type:"POST",
 				url:http+"/acc/cuslog/",
 				data:{
 					tel:tel,

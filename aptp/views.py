@@ -12,33 +12,20 @@ from accounts.models import Order, Customer
 from accounts.decorators import customer_login_required
 
 
-class ProView(View):
+@method_decorator(customer_login_required, name='dispatch')
+class ProTimeView(View):
     '''
-    显示协议
+    时间同意协议
     '''
-
-    def get(self, request):
-        mobile = request.GET.get('tel')
-        identication = request.GET.get('personId')
-        eventid = request.GET.get('id')
-        if Event.get(eventid).is_pub:
-            try:
-                customer = Customer.objects.get(
-                    mobile=mobile, identication=identication, event_id=eventid)
-            except BaseException:
-                return JsonResponse(
-                    {'response_state': 400, 'msg': '用户名或密码不正确！'})
-            else:
-                value = [{
-                    'termname': customer.event.termname,
-                    'term': customer.event.term,
-                    'username': customer.user.username,
-                }]
-                context = {}
-                context['objects'] = value
-                context['response_state'] = 200
-                return JsonResponse(context)
-        return JsonResponse({'response_state': 403, 'msg': '不在活动开始期间！'})
+    def post(self, request):
+        protime = request.POST.get('protime')
+        user = request.user
+        if not user.customer.protime:
+            user.customer.protime = protime
+            user.customer.save()
+        context = {}
+        context['response_state'] = 200
+        return JsonResponse(context)
 
 
 @method_decorator(customer_login_required, name='dispatch')
@@ -165,7 +152,7 @@ class AppEventDetailHouseInfoView(View):
     '''
 
     def get(self, request):
-        user=request.user
+        user = request.user
         house = request.GET.get('house')
         eventdetobj = EventDetail.get(house)
         eventdetobj.save()
@@ -213,7 +200,7 @@ class AddFollow(View):
     '''
 
     def post(self, request):
-        user=request.user
+        user = request.user
         house = request.POST.get('house')
         eventid = request.POST.get('id')
         try:
@@ -234,7 +221,6 @@ class AddFollow(View):
             return JsonResponse({'response_state': 400, 'msg': '您已收藏过该商品！'})
 
 
-
 @method_decorator(customer_login_required, name='dispatch')
 class CancelFollow(View):
     '''
@@ -242,7 +228,7 @@ class CancelFollow(View):
     '''
 
     def post(self, request):
-        user=request.user
+        user = request.user
         house = request.POST.get('house')
         try:
             eventdetail = EventDetail.get(house)
@@ -267,7 +253,7 @@ class FollowView(View):
     '''
 
     def get(self, request):
-        user=request.user
+        user = request.user
         objs = Follow.objects.filter(
             user=user, eventdetail__event_id=request.GET.get('id'))
         context = {}
@@ -300,7 +286,7 @@ class AppHouseChoiceConfirmView(View):
     '''
 
     def post(self, request):
-        user=request.user
+        user = request.user
         house = request.POST.get('house')
         eventid = request.POST.get('id')
         from aptm.settings import DATABASES
@@ -399,7 +385,7 @@ class OrderProView(View):
     '''
 
     def get(self, request):
-        user=request.user
+        user = request.user
         eventid = request.GET.get('id')
         try:
             customer = Customer.objects.get(
@@ -424,7 +410,7 @@ class AppOrderListView(View):
     '''
 
     def get(self, request):
-        user=request.user
+        user = request.user
         eventid = request.GET.get('id')
         objs = Order.objects.filter(user=user, eventdetail__event_id=eventid)
         valuelist = []

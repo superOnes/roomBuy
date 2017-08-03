@@ -1,19 +1,16 @@
 # 接口设计
 ### 手机部分
-#### 显示协议
-标题|内容
----:|---|
-url:|http://localhost:8000/app/prodel/
-method:|GET
-params:|tel,personId,id(活动id)
-return:|JSON
-
 #### 顾客登陆
 标题|内容
 ---:|---|
 url:|http://localhost:8000/acc/cuslog/
 method:|POST
-params:|userid(顾客在user表中的username),protime,id(活动id)
+params:|tel,personId,id(活动id)
+return:|JSON
+
+url:|http://localhost:8000/app/protime/
+method:|POST
+params:|protime
 return:|JSON
 
 #### 顾客退出
@@ -23,7 +20,6 @@ url:|http://localhost:8000/acc/cusout/
 method:|POST
 params:|id(活动id)
 return:|JSON
-
 
 #### 显示活动
 标题|内容

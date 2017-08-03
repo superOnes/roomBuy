@@ -84,37 +84,45 @@ class CustomerLoginView(View):
     '''
 
     def post(self, request):
-        username = request.POST.get('username')
-        protime = request.POST.get('protime')
-        event = Event.get(request.POST.get('id'))
+        mobile = request.POST.get('tel')
+        identication = request.POST.get('personId')
+        eventid = request.POST.get('id')
+        event = Event.get(eventid)
         if event.is_pub:
-            customer = User.objects.get(username=username, customer__event_id=event).customer
-            session_key=customer.session_key
-            user = authenticate(
-                username=username,
-                password=customer.identication)
-            if user:
-                if not user.is_admin:
-                    if not customer.protime:
-                        customer.protime = protime
-                        customer.save()
-                    login(request, user)
-                    request.session.set_expiry(300)
-                    if session_key:
-                        Session.objects.filter(pk=session_key).delete()
-                        customer.session_key = request.session.session_key
-                        customer.save()
-                        return JsonResponse(
-                            {'response_state': 200, 'msg': '登录成功'})
-                    else:
-                        customer.session_key = request.session.session_key
-                        customer.save()
-                        return JsonResponse(
-                            {'response_state': 200, 'msg': '登录成功'})
-                return JsonResponse({'response_state': 400})
-            return JsonResponse(
-                {'response_state': 400, 'msg': '该电话号与证件号未通过认证。'})
-        return JsonResponse({'response_state': 400, 'msg': '不在活动期间。'})
+            try:
+                customer = Customer.objects.get(
+                    mobile=mobile, identication=identication, event_id=eventid)
+            except BaseException:
+                return JsonResponse(
+                    {'response_state': 400, 'msg': '用户名或密码不正确！'})
+            else:
+                session_key = customer.session_key
+                user = authenticate(
+                    username=customer.user.username,
+                    password=customer.identication)
+                if user:
+                    if not user.is_admin:
+                        login(request, user)
+                        request.session.set_expiry(300)
+                        value = [{
+                            'termname': customer.event.termname,
+                            'term': customer.event.term,
+                        }]
+                        if session_key:
+                            Session.objects.filter(pk=session_key).delete()
+                            customer.session_key = request.session.session_key
+                            customer.save()
+                            return JsonResponse(
+                                {'response_state': 200, 'msg': '登录成功', 'objects': value})
+                        else:
+                            customer.session_key = request.session.session_key
+                            customer.save()
+                            return JsonResponse(
+                                {'response_state': 200, 'msg': '登录成功', 'objects': value})
+                    return JsonResponse({'response_state': 400})
+                return JsonResponse(
+                    {'response_state': 400, 'msg': '该电话号与证件号不匹配！'})
+        return JsonResponse({'response_state': 403, 'msg': '不在活动期间！'})
 
 
 @method_decorator(customer_login_required, name='dispatch')
@@ -124,8 +132,8 @@ class CustomerLogoutView(View):
     '''
 
     def post(self, request):
-        user=request.user
-        user.customer.session_key=None
+        user = request.user
+        user.customer.session_key = None
         user.customer.save()
         logout(request)
         return JsonResponse({'response_state': 200, 'msg': '退出成功'})

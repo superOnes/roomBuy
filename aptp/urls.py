@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from .views import (
-    ProView,
+    ProTimeView,
     AppEventDetailView,
     AppEventDetailListView,
     AppEventDetailHouseInfoView,
@@ -17,7 +17,7 @@ from .views import (
 urlpatterns = [
     url(r'^detail/', AppEventDetailView.as_view(), name='app_eventdetail'),
     url(r'^houses/', AppEventDetailListView.as_view(), name='app_building_list'),
-    url(r'^prodel/', ProView.as_view(), name='app_protocol_detail'),
+    url(r'^protime/', ProTimeView.as_view(), name='app_protocol_detail'),
     url(r'^unit/', AppEventDetailUnitListView.as_view(), name='app_unit_list'),
     url(r'^houselist/$', AppEventDetailHouseListView.as_view(), name='app_house_list'),
     url(r'^houseinfo/', AppEventDetailHouseInfoView.as_view(), name='app_house_info'),
