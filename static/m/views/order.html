@@ -53,26 +53,21 @@
         return null ;
     }
     var id = getParamValue("id");
-    var userid = getParamValue("userid");
-    var key = getParamValue("key");
     $(function(){
         $.ajax({
             type:"get",
             url:http+"/app/orderslist/",
             data:{
-                userid:userid,
-                id:id,
-                key:key
+                id:id
             },
             success:function(data){
                 if(data.response_state==200){
                     order(data);
                     $(".order-all").each(function(){
                         $(this).click(function(){
-
                             if((new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime())||
                                     (new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".test_ent").html()).getTime())){
-                            window.location.href="orderinfo.html?orderId="+$(this).find(".oferId").html()+"&id="+id+"&userid="+userid+"&key="+key;
+                            window.location.href="orderinfo.html?orderId="+$(this).find(".oferId").html()+"&id="+id;
 	                    }else{
                           alert("活动尚未开始");
                       }
@@ -98,9 +93,7 @@
             type:"get",
             url:http+"/app/detail/",
             data:{
-                userid:userid,
-                id:id,
-                key:key
+                id:id
             },
             success:function(data){
                 if(data.response_state==200){

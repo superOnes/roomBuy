@@ -63,9 +63,7 @@ function getParamValue(name)
 
 $(function(){
     var id = getParamValue("id");
-    var userid = getParamValue("userid");
     var cover=getParamValue("cover");
-    var key=getParamValue("key");
     if(userid){
         localStorage.setItem("userid",userid);
     }
@@ -78,19 +76,16 @@ $(function(){
         type:"get",
         url:http+"/app/detail/",
         data:{
-            userid:userid1,
-            id:id,
-            key:key
+            id:id
         },
         success:function(data){
             if(data.response_state==200){
                 creatEle(data.objects[0]);
-                $(".userid1").html(userid);
                 $(".ind1").html(id);
                 $(".btnL").click(function(){
                     if((new Date(data.objects[0].event_start).getTime()<new Date().getTime()&&new Date().getTime()<new Date(data.objects[0].event_end).getTime())||
                             (new Date(data.objects[0].test_start).getTime()<new Date().getTime()&&new Date().getTime()<new Date(data.objects[0].test_ent).getTime())){
-                        window.location.href="houseList.html?id="+id+"&userid="+userid1+"&key="+key;
+                        window.location.href="houseList.html?id="+id;
                     }else{
                         alert("活动未开始");
                     }

@@ -56,17 +56,12 @@
     }
     var id = getParamValue("orderId");
     var idd=getParamValue("id");
-    var userid=getParamValue("userid");
-    var key=getParamValue("key");
-
     $(function(){
         $.ajax({
             type:'get',
             data:{
                 orderId:id,
-                userid:userid,
-                id:idd,
-                key:key
+                id:idd
             },
             url:http+"/app/orderinfo/",
             dataType:'JSON',
@@ -74,7 +69,7 @@
                 if(data.response_state==200){
                     checkInfo(data.objects[0]);
                     $(".backIndex").click(function(){
-                        window.location.href="houseList.html?id="+idd+"&userid="+userid+"&key="+key;
+                        window.location.href="houseList.html?id="+idd;
                     })
                 }else if(data.response_state==401){
                     window.location.href="login.html?id="+idd;
@@ -94,9 +89,7 @@
             type:"get",
             url:http+"/app/detail/",
             data:{
-                userid:userid,
-                id:idd,
-                key:key
+                id:idd
             },
             success:function(data){
                 if(data.response_state==200){

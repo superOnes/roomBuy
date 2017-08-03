@@ -31,6 +31,7 @@ $(function(){
 				},
 				success:function(data){
 					if(data.response_state==200){
+						console.log(data);
 						prol(data.objects[0]);
 
 						$("#loginBlack").show();
@@ -43,7 +44,7 @@ $(function(){
 								type:"POST",
 								url:http+"/acc/cuslog/",
 								data:{
-									userid:$(".userid").html(),
+									username:$(".username").html(),
 									id:$(".loginId").html(),
                                     protime:new Date().Format("yyyy-MM-dd hh:mm:ss")
 
@@ -52,7 +53,7 @@ $(function(){
 								success: function (data) {
 									if(data.response_state==200){
 										console.log(data);
-										window.location.href = "choiceHouse.html?id="+$(".loginId").html()+"&userid="+$(".userid").html()+"&key="+data.key;
+										window.location.href = "choiceHouse.html?id="+$(".loginId").html();
 
 									}else{
 										alert(data.msg);
@@ -84,7 +85,7 @@ function prol(data){
 	$(".prols").empty();
 	$(".prols").append($('<h1>'+data.termname+'</h1>'+
 						'<p>'+data.term+'</p>'+
-						'<p style="display:none" class="userid">'+data.userid+'</p>'
+						'<p style="display:none" class="username">'+data.username+'</p>'
 	));
 }
 
@@ -110,7 +111,6 @@ function creatEle(data){
 					'<div class="floor"><span class="floor3 bder">认购须知</span><div class="flr hgt">'+data.notice+'</div></div>'+
 					'<div class="floor"><span class="floor2 bder">温馨提示</span> <div class="flr hgt">'+data.tip+'</div></div>' +
 				'</div>'+
-				'<p class="userid1" style="display:none"></p>'+
 			     '<p class="ind1" style="display:none"></p>'+
 				'<div class="btnline"><a href="javascript:;" class="btnL">立即进入</a></div>'
 	);
@@ -152,10 +152,7 @@ function quit(){
     $.ajax({
 		type:"POST",
 		url:http+"/acc/cusout/",
-		data:{
-			userid:$(".userid1").html(),
-			id:$(".ind1").html()
-		},
+		data:{},
 		success:function(data){
 			window.location.href="login.html?id="+$(".ind1").html();
 
@@ -214,10 +211,7 @@ function createList(data){
 				'<i></i>'+
 				'<p id="endTimeing"></p>'+
 			'</div>'+
-			'<p class="idNum" style="display:none;"></p>'+
-        	'<p class="key" style="display:none;"></p>'+
-			'<p class="userid" style="display:none;"></p>'
-
+			'<p class="idNum" style="display:none;"></p>'
 	);
 	$("#houseList").append(str);
 	$("title").html(data.event_name);
@@ -302,9 +296,7 @@ function myShare(){
 		type:"get",
 		url:http+"/app/followlist/",
 		data:{
-			userid:$(".userid").html(),
-			id:$(".idNum").html(),
-			key:$(".key").html()
+			id:$(".idNum").html()
 		},
 		success:function(data){
 			if(data.response_state==200){
@@ -328,7 +320,7 @@ function myShare(){
 					$(this).click(function(){
 						if((new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime())||
 							(new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() <new Date($(".test_ent").html()).getTime())){
-							window.location.href="houseInfo.html?house="+$(this).find(".shareId").html()+"&id="+$(".idNum").html()+"&userid="+$(".userid").html()+"&key="+$(".key").html();
+							window.location.href="houseInfo.html?house="+$(this).find(".shareId").html()+"&id="+$(".idNum").html();
 						}else{
 							alert("活动尚未开始");
 						}
@@ -369,8 +361,6 @@ function houseList(data){
 				data:{
 					building:$(this).text(),
 					id:$(".idNum").html(),
-					userid:$(".userid").html(),
-                    key:$(".key").html()
 				},
 				dataType:'JSON',
 				success: function (data) {
@@ -407,8 +397,6 @@ function houseList(data){
 									building:build,
 									unit:$(this).html(),
 									id:$(".idNum").html(),
-									userid:$(".userid").html(),
-                                    key:$(".key").html()
 								},
 								success:function(data){
 									$(".houseChose").remove();
@@ -446,7 +434,7 @@ function houseList(data){
 										aLis.each(function(){
 											$(this).click(function(){
 												var houseID=data.objects[$(this).index()][0].house;
-												window.location.href="houseInfo.html?house="+houseID+"&id="+$(".idNum").html()+'&userid='+$(".userid").html()+"&key="+$(".key").html();
+												window.location.href="houseInfo.html?house="+houseID+"&id="+$(".idNum").html();
 
 											})
 										})
@@ -525,9 +513,7 @@ function houseInfo(data){
 						'</ul>'+
 					'</div>'+
 					'<p class="houseID" style="display:none"></p>'+
-					'<p class="userId" style="display:none"></p>'+
-				    '<p class="idd" style="display:none"></p>'+
-        			'<p class="key" style="display:none"></p>'
+				    '<p class="idd" style="display:none"></p>'
 	);
 	var infoBlack=$('<div class="windowBlack" id="houseInfoBlack">'+
 						'<div class="dialog">'+
@@ -592,7 +578,7 @@ function houseInfo(data){
 
 }
 function proldel(){
-	window.location.href="protocol.html?userid="+$(".userId").html()+"&id="+$(".idd").html()+"&key="+$(".key").html();
+	window.location.href="protocol.html?id="+$(".idd").html();
 }
 function data5(result){
 	var datap=$('<p class="event_start" style="display:none">'+result.event_start+'</p>'+
@@ -612,15 +598,13 @@ function buyNow(){
 }
 function confrim(){
 	var id=$(".houseID").html();
-	var userid=$(".userId").html();
 	var idd=$(".idd").html();
-	var key=$(".key").html();
 	if(!$(".dialog-check").prop("checked")){
 		alert("请同意《活动协议》");
 	}else{
 		if((new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime())||
 			(new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".test_ent").html()).getTime())){
-			window.location.href = "houseSuccess.html?house="+id+"&userid="+userid+"&id="+idd+"&key="+key;
+			window.location.href = "houseSuccess.html?house="+id+"&id="+idd;
 		}else{
 			alert("活动尚未开始");
 		}
@@ -659,8 +643,6 @@ function orderSu(data){
 						'</div>'+
 						'<p class="orderid" style="display:none;">'+data.orderid+'</p>'+
 						'<p class="id1" style="display:none"></p>'+
-						'<p class="user1" style="display:none"></p>'+
-        				'<p class="key" style="display:none"></p>'+
 					'</div>'
 	);
 
@@ -668,7 +650,7 @@ function orderSu(data){
 
 }
 function orderInfos(){
-	window.location.href="orderinfo.html?orderId="+$(".orderid").html()+"&id="+$(".id1").html()+"&userid="+$(".user1").html()+"&key="+$("key").html();
+	window.location.href="orderinfo.html?orderId="+$(".orderid").html()+"&id="+$(".id1").html();
 }
 
 /*订单*/
@@ -737,7 +719,7 @@ function checkInfo(data){
 					'</div>'+
 					'<div class="order-a">'+
 						'<div class="order-middle2">'+
-							'<p>请在<span class="order_time"></span>前，到项目现场办理正式手续。预期问办理，视为放弃资格。</p>'+
+							'<p>请在<span class="order_time"></span>前，到项目现场办理正式手续。逾期未办理，视为放弃资格。</p>'+
 							'<p style="color:red;margin-top:5px">请截图保存订单，活动结束之后将不能登录。</p>'+
 						'</div>'+
 						'<div class="order-bottom2">'+

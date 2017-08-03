@@ -55,16 +55,12 @@
 		}
 		return null ;
 	}
-	var userid = getParamValue("userid");
 	var id = getParamValue("id");
-    var key = getParamValue("key");
 	$.ajax({
 		type:"get",
 		url:http+"/app/orderpro/",
 		data:{
-			userid:userid,
-			id:id,
-			key:key
+			id:id
 		},
 		success:function(data){
 			if(data.response_state==200){

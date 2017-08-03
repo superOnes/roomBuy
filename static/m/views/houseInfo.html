@@ -56,18 +56,12 @@
 	}
 	var houseId = getParamValue("house");
 	var id=getParamValue("id");
-	var userid=getParamValue("userid");
-    var key = $(".key").html();
-
 	$(function(){
-
 		$.ajax({
 			type:"get",
 			url:http+"/app/detail/",
 			data:{
-				userid:userid,
-				id:id,
-				key:key
+				id:id
 			},
 			success:function(data){
 				if(data.response_state==200){
@@ -93,17 +87,13 @@
 			url:http+"/app/houseinfo/",
 			data:{
 				house:houseId,
-				userid:userid,
-				id:id,
-				key:key
+				id:id
 			},
 			success:function(data){
 				if(data.response_state==200){
 					houseInfo(data.objects[0]);
 					$(".houseID").html(houseId);
-					$(".userId").html(userid);
 					$(".idd").html(id);
-                    $(".key").html(key);
 				}else if(data.response_state==401){
 					window.location.href="login.html?id="+id;
 				}else if(data.response_state==403){
@@ -128,9 +118,7 @@
 				url: http + "/app/cancelfollow/",
 				data: {
 					house: houseId,
-					userid: userid,
-					id:id,
-					key:key
+					id:id
 				},
 				success: function (data) {
 					if (data.response_state == 200) {
@@ -159,9 +147,7 @@
 			url:http+"/app/addfollow/",
 			data:{
 				house:houseId,
-				userid:userid,
-				id:id,
-				key:key
+				id:id
 			},
 			success:function(data){
 				console.log(data);
@@ -186,7 +172,7 @@
 
 	}
 	function backList(){
-		window.location.href="houseList.html?id="+id+"&userid="+userid+"&key="+key;
+		window.location.href="houseList.html?id="+id;
 	}
 </script>
 
