@@ -97,28 +97,36 @@ class CustomerLoginView(View):
                 if not user.is_admin:
                     if not customer.protime:
                         customer.protime = protime
-                    customer.save()
+                        customer.save()
                     login(request, user)
+                    request.session.set_expiry(300)
                     if session_key:
                         Session.objects.get(pk=session_key).delete()
                         customer.session_key = request.session.session_key
                         customer.save()
-                    request.session.set_expiry(300)
-                    return JsonResponse(
-                        {'response_state': 200, 'msg': '登录成功'})
+                        return JsonResponse(
+                            {'response_state': 200, 'msg': '登录成功'})
+                    else:
+                        customer.session_key = request.session.session_key
+                        customer.save()
+                        return JsonResponse(
+                            {'response_state': 200, 'msg': '登录成功'})
                 return JsonResponse({'response_state': 400})
             return JsonResponse(
                 {'response_state': 400, 'msg': '该电话号与证件号未通过认证。'})
         return JsonResponse({'response_state': 400, 'msg': '不在活动期间。'})
 
 
-# @method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_required, name='dispatch')
 class CustomerLogoutView(View):
     '''
     顾客退出登录
     '''
 
     def post(self, request):
+        user=request.user
+        user.customer.session_key=None
+        user.customer.save()
         logout(request)
         return JsonResponse({'response_state': 200, 'msg': '退出成功'})
 
