@@ -1,4 +1,4 @@
-{% extends 'include/main_base.html' %} 
+{% extends 'include/main_base.html' %}
 {% block title %}开盘订单管理{% endblock %}
 {% block right %}
 <div>
@@ -35,7 +35,6 @@
 			<th>手机号</th>
 			<th>证件号码</th>
 			<th>认筹人备注</th>
-			<th>状态</th>
 		</tr>
 	</thead>
 	<tbody id="openList">
@@ -60,15 +59,9 @@
 			var searchValue = $("#searchInput").val();
 			getorderList(thisVal, is_test, searchValue);
 		};
-		$("#eventList").change(function() {
-			filterData()
-		});
-		$("#orderList").change(function() {
-			filterData()
-		});
-		$("#searchBtn").click(function() {
-			filterData()
-		});
+		$("#eventList").change(function() { filterData() });
+		$("#orderList").change(function() { filterData() });
+		$("#searchBtn").click(function() { filterData() });
 		$("#searchInput").keydown(function(event) {
 			var event = event || window.event;
 			if(event.keyCode == 13) {

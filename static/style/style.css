@@ -35,7 +35,7 @@ input[type="number"]{
 
 /*退出按钮*/
 .quit{
-	font-size: 16px !important;	
+	font-size: 16px !important;
 }
 
 /*操作按钮样式*/
@@ -45,9 +45,30 @@ input[type="number"]{
 }
 
 
+
 /*表单的必填项*/
 .form-group>label{padding-top: 0 !important;position: relative;margin-top:10px !important;}
 .form-group>label>i{position: absolute;right:0;top:0;font-size: 16px;color:red;}
+
+
+/*创建活动的文件选择样式*/
+.myfileCover{
+	position: relative;
+}
+.myfileCover>p{
+	padding-left: 10px;
+	border: 1px solid #ccc;
+	line-height:30px;
+	cursor: pointer;
+}
+.myfileCover>input{
+	position: absolute;
+	top:0;
+	opacity: 0;
+}
+.myfileCover>div>img{
+	height:230px;
+}
 
 
 .myfilePlane_graph>label{
@@ -81,9 +102,10 @@ input[type="number"]{
 }
 .myfilePlane_graph>label>img{
 	display: block;
+	width: 100%;
 	padding: 5px;
 	border: 1px dashed #808080 ;
-	min-height: 100px;
+	height: 130px;
 	margin-top:10px;
 }
 

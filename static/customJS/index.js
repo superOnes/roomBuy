@@ -14,7 +14,7 @@ $(document).ready(function(){
 				type: 'primary'
 			}).show();
 　			return false;
-		}else if($("#cover").val() == "") {
+		}else if($(".coverImgFile").html() == "") {
 				new $.zui.Messager('请添加封面', {
 					placement:'bottom',
 					type: 'primary'
@@ -61,19 +61,18 @@ function submitFile(event,thisID){
         processData: false,//发送的数据将被转换为对象，false就是不转化，默认为true
         contentType: false,
 		success:function(results){
-			console.log(results)
 			if(results.success){
 				new $.zui.Messager('导入成功！', {
-		       		placement:'top',
+		       	placement:'top',
 				    type: 'success'
 				}).show("",function(){
 					setTimeout(function(){
-						// window.location.reload();
+						window.location.reload();
 					},1000)
 				});
 			}else{
-				new $.zui.Messager('导入失败!', {
-		       		placement:'top',
+				new $.zui.Messager('导入失败，请检查您的文件。', {
+		       	placement:'top',
 				    type: 'primary' // 定义颜色主题
 				}).show("",function(){
 					$(event).attr("disabled","disabled");
@@ -239,9 +238,8 @@ function getorderList(thisId,is_test,searchValue){
 				var result =results.data;
 				$openList.children("tr").remove();
 				for (var i = 0; i < result.length; i++) {
-					result[i].status= result[i].status==true ?"已售":"未售";
-					$openList.append("<tr><td>"+(i+1)+"</td><td>"+result[i].time+"</td><td>"+result[i].room_num+"</td><td>"+result[i].unit_price+"</td><td>"+result[i].area+"</td><td>"+result[i].realname+"</td>"+
-					"<td>"+result[i].mobile+"</td><td>"+result[i].identication+"</td><td>"+result[i].remark+"</td><td>"+result[i].status+"</td></tr>")
+					$openList.append("<tr><td>"+(i+1)+"</td><td>"+result[i].time+"</td><td>"+result[i].room_num+"</td><td>"+result[i].unit_price+"元/㎡</td><td>"+result[i].area+"㎡</td><td>"+result[i].realname+"</td>"+
+					"<td>"+result[i].mobile+"</td><td>"+result[i].identication+"</td><td>"+result[i].remark+"</td></tr>")
 				};
 			}else{
 				$openList.children("tr").remove();

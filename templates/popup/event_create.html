@@ -119,9 +119,9 @@
 		</div>
 		<div class="form-group">
 			<label class="col-sm-3 control-label" style="vertical-align: top;">活动封面<i>*</i></label>
-			<div class="col-sm-9">
+			<div class="col-sm-9 myfileCover">
 				<input type="file" class="form-control" id="cover" onchange='showCover()' name="cover">
-				<p>当前文件为<span class="coverImgFile" style="margin-left:20px;">{{form.cover.value|default:''}}</span></p>
+				<p>添加的封面图为<span class="coverImgFile" style="margin-left:20px;">{{form.cover.value|default:''}}</span></p>
 				<div style="width: 380px;">
 					<img src='{{MEDIA_URL}}{{object.cover}}' alt='' id='coverImg' onerror="this.src='{{ STATIC_URL }}images/default.png'" />
 				</div>
@@ -168,8 +168,7 @@
 		var coverImgFiles = coverImgFile.slice(17); //截取获取文件的文件名
 		$(".coverImgFile").html(coverImgFiles);
 
-		//	平面图显示
-		//	$("#plane_graph_img").append("<img width='45%' style='margin: 5px;' src='{{MEDIA_URL}}{{object.plane_graph}}' alt=''/>");
+
 	});
 
 //	//去除火狐input number的滚轮事件
@@ -184,47 +183,31 @@
 		var file_img = document.getElementById("coverImg");
 		iptfileupload = document.getElementById('cover');
 		getPath(file_img, iptfileupload, file_img);
+		var fil = iptfileupload.files[0].name;
+		$(".coverImgFile").html(fil);
 	};
 
 	function showPlane_graph1() {
-		//以下即为完整客户端路径
 		var file_img = document.getElementById("plane_graph_img1");
 		iptfileupload = document.getElementById('plane_graph1');
 		getPath(file_img, iptfileupload, file_img);
 	};
 	function showPlane_graph2() {
-		//以下即为完整客户端路径
 		var file_img = document.getElementById("plane_graph_img2");
 		iptfileupload = document.getElementById('plane_graph2');
 		getPath(file_img, iptfileupload, file_img);
 	};
 	function showPlane_graph3() {
-		//以下即为完整客户端路径
 		var file_img = document.getElementById("plane_graph_img3");
 		iptfileupload = document.getElementById('plane_graph3');
 		getPath(file_img, iptfileupload, file_img);
 	};
 	function showPlane_graph4() {
-		//以下即为完整客户端路径
 		var file_img = document.getElementById("plane_graph_img4");
 		iptfileupload = document.getElementById('plane_graph4');
 		getPath(file_img, iptfileupload, file_img);
 	};
 
-	// 	多个图片上传显示
-	// 	$("#plane_graph").change(function () {
-	//		var fil = this.files; //获取文件的详细信息
-	//		for (var i = 0; i < fil.length; i++) {
-	//			reads(fil[i]);
-	//		}
-	//	});
-	//	function reads(fil){
-	//		var reader = new FileReader();
-	//		reader.readAsDataURL(fil);
-	//		reader.onload = function(){
-	//			$(".plane_graph_img").append("<img width='45%' style='margin: 5px;' src="+reader.result+" alt=''/>");
-	//		};
-	// 	}
 	// 选择开始日期
 	$(".form-datetime").datetimepicker({
 		weekStart: 1,
