@@ -18,12 +18,11 @@ $(function(){
 		//	$(".tips").html("证件号格式错误！");
 		//}
 		else{
-
 			var tel=$(".titleph").val(),personId=$(".titlezj").val();
 
 			$.ajax({
 				type:"get",
-				url:http+"/app/prodel/",
+				url:http+"/app/cuslog/",
 				data:{
 					tel:tel,
 					personId:personId,
@@ -41,9 +40,8 @@ $(function(){
                             $(".proSure").unbind("click");
 							$.ajax({
 								type:"POST",
-								url:http+"/acc/cuslog/",
+								url:http+"/acc/protime/",
 								data:{
-									username:$(".username").html(),
 									id:$(".loginId").html(),
                                     protime:new Date().Format("yyyy-MM-dd hh:mm:ss")
 
@@ -82,8 +80,7 @@ $(function(){
 function prol(data){
 	$(".prols").empty();
 	$(".prols").append($('<h1>'+data.termname+'</h1>'+
-						'<p>'+data.term+'</p>'+
-						'<p style="display:none" class="username">'+data.username+'</p>'
+						'<p>'+data.term+'</p>'
 	));
 }
 
