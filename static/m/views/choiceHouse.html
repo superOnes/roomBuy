@@ -79,7 +79,8 @@ $(function(){
             if(data.response_state==200){
                 creatEle(data.objects[0]);
                 $(".ind1").html(id);
-                $(".btnL").click(function(){
+                $(".btnL").bind("click",function(){
+                    $(this).unbind("click");
                     if((new Date(data.objects[0].event_start).getTime()<new Date().getTime()&&new Date().getTime()<new Date(data.objects[0].event_end).getTime())||
                             (new Date(data.objects[0].test_start).getTime()<new Date().getTime()&&new Date().getTime()<new Date(data.objects[0].test_ent).getTime())){
                         window.location.href="houseList.html?id="+id;

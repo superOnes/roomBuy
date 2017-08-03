@@ -3,7 +3,7 @@ var http="";//正式
 //var http="http://10.7.1.34";
 $(function(){
 
-	$(".btnLogin").click(function(){
+	$(".btnLogin").bind("click",function(){
 		if($(".titleph").val().trim().length==0){
 			$(".tips").html("请输入手机号！");
 		}
@@ -18,6 +18,7 @@ $(function(){
 		//}
 		else{
 			var tel=$(".titleph").val(),personId=$(".titlezj").val();
+            $(this).unbind("click");
 			$.ajax({
 				type:"POST",
 				url:http+"/acc/cuslog/",
@@ -27,6 +28,7 @@ $(function(){
 					id:$(".loginId").html()
 				},
 				success:function(data){
+                    $(".btnLogin").bind("click");
 					if(data.response_state==200){
 						prol(data.objects[0]);
 						$("#loginBlack").show();
@@ -34,7 +36,7 @@ $(function(){
 							$("#loginBlack").hide();
 						});
 
-						$(".proSure").click(function(){
+						$(".proSure").bind("click",function(){
                             $(".proSure").unbind("click");
 							$.ajax({
 								type:"POST",
@@ -46,6 +48,7 @@ $(function(){
 								},
 								dataType:'JSON',
 								success: function (data) {
+									$(this).bind("click");
 									if(data.response_state==200){
 										window.location.href = "choiceHouse.html?id="+$(".loginId").html();
 
@@ -54,6 +57,7 @@ $(function(){
 									}
 								},
 								error:function(){
+                                    $(this).bind("click");
 									alert('页面出错，请重试！');
 								}
 							});
@@ -63,6 +67,7 @@ $(function(){
 					}
 				},
 				error:function(){
+                    $(".btnLogin").bind("click");
 					alert("页面出错，请重试");
 				}
 
@@ -147,6 +152,7 @@ function quit(){
 			id:$(".ind1").html()
 		},
 		success:function(data){
+            $(".quit").bind("click");
 			window.location.href="login.html?id="+$(".ind1").html();
 		},
 		error:function(){
