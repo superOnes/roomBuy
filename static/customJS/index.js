@@ -1,4 +1,6 @@
 $(document).ready(function(){
+	$("#files").val(""); //清空input fiel 火狐中的缓存
+
 	$("#login-wrap").height($(window).height());
 	$(window).resize(function(){
 		$("#login-wrap").height($(window).height());
