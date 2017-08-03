@@ -101,7 +101,7 @@ class CustomerForm(forms.ModelForm):
         customer = Customer.objects.all()
         for ct in customer:
             if cleaned_data['mobile'] == ct.mobile \
-                    and cleaned_data['identication'] == ct.identication:
+                    or cleaned_data['identication'] == ct.identication:
                 raise forms.ValidationError('该用户已存在')
         return cleaned_data
 
