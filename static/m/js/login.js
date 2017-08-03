@@ -31,15 +31,14 @@ $(function(){
 				},
 				success:function(data){
 					if(data.response_state==200){
-						console.log(data);
 						prol(data.objects[0]);
-
 						$("#loginBlack").show();
 						$(".proCancle").click(function(){
 							$("#loginBlack").hide();
 						});
 
 						$(".proSure").click(function(){
+                            $(".proSure").unbind("click");
 							$.ajax({
 								type:"POST",
 								url:http+"/acc/cuslog/",
@@ -52,7 +51,7 @@ $(function(){
 								dataType:'JSON',
 								success: function (data) {
 									if(data.response_state==200){
-										console.log(data);
+                                        (".proSure").bind("click");
 										window.location.href = "choiceHouse.html?id="+$(".loginId").html();
 
 									}else{
@@ -148,14 +147,16 @@ function telp (){
 	}
 }
 function quit(){
-    localStorage.removeItem("userid");
+    $(".quit").unbind("click");
     $.ajax({
 		type:"POST",
 		url:http+"/acc/cusout/",
-		data:{},
+		data:{
+			id:$(".ind1").html()
+		},
 		success:function(data){
+            $(".quit").bind("click");
 			window.location.href="login.html?id="+$(".ind1").html();
-
 		},
 		error:function(data){
 			alert("退出出现未知错误！");
