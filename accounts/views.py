@@ -101,7 +101,7 @@ class CustomerLoginView(View):
                     login(request, user)
                     request.session.set_expiry(300)
                     if session_key:
-                        Session.objects.get(pk=session_key).delete()
+                        Session.objects.filter(pk=session_key).delete()
                         customer.session_key = request.session.session_key
                         customer.save()
                         return JsonResponse(
