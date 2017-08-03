@@ -40,6 +40,9 @@
 				<textarea style="height: 150px;" type="text" class="form-control" placeholder="请填写备注" name="remark"></textarea>
 			</div>
 		</div>
+		{% if form.non_field_errors %}
+		<div class="alert alert-info">{{form.non_field_errors}}</div>
+		{% endif %}
 		<div class="modal-footer">
 			<input type="submit" class="btn btn-primary" value="确定"></input>
 		</div>

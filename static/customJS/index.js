@@ -61,13 +61,14 @@ function submitFile(event,thisID){
         processData: false,//发送的数据将被转换为对象，false就是不转化，默认为true
         contentType: false,
 		success:function(results){
+			console.log(results)
 			if(results.success){
 				new $.zui.Messager('导入成功！', {
 		       		placement:'top',
 				    type: 'success'
 				}).show("",function(){
 					setTimeout(function(){
-						window.location.reload();
+						// window.location.reload();
 					},1000)
 				});
 			}else{
