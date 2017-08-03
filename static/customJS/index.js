@@ -225,16 +225,16 @@ function getorderSelect(){
 //订单数据列表显示
 function getorderList(thisId,is_test,searchValue){
 	var $openList = $("#openList");
-	var $exportEach = $("#exportEach");
 	$.ajax({
 		type:"get",
 		data:{id:thisId,is_test:is_test,value:searchValue},
 		url:"/orderlist/",
 		asunc:true,
 		success:function(results){
+			console.log(results)
 			if(results.success){
 				$(".tip").hide();
-				$exportEach.attr("href","/exportorder/"+thisId+"&is_test="+is_test+"&value="+searchValue);
+				$("#exportEach").attr("href","/exportorder/"+thisId+"&is_test="+is_test+"&value="+searchValue);
 				var result =results.data;
 				$openList.children("tr").remove();
 				for (var i = 0; i < result.length; i++) {
@@ -242,6 +242,7 @@ function getorderList(thisId,is_test,searchValue){
 					"<td>"+result[i].mobile+"</td><td>"+result[i].identication+"</td><td>"+result[i].remark+"</td></tr>")
 				};
 			}else{
+				$("#exportEach").removeAttr("href","");
 				$openList.children("tr").remove();
 				$(".tip").show();
 			}
