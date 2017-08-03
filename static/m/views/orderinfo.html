@@ -94,18 +94,9 @@
             success:function(data){
                 if(data.response_state==200){
                     data4(data.objects[0]);
-                }else if(data.response_state==401){
-                    window.location.href="login.html?id="+idd;
-                }else if(data.response_state==403){
-                    alert(data.msg);
-                    window.location.href="login.html?id="+idd;
-                }else{
-                    alert(data.msg);
                 }
             },
-            error:function(){
-                alert("页面出错，请重试!");
-            }
+            error:function(){}
         });
     })
 </script>

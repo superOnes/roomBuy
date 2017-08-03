@@ -38,6 +38,7 @@ $(function(){
 						});
 
 						$(".proSure").click(function(){
+                            $(".proSure").unbind("click");
 							$.ajax({
 								type:"POST",
 								url:http+"/acc/cuslog/",
@@ -145,6 +146,7 @@ function telp (){
 	}
 }
 function quit(){
+    $(".quit").unbind("click");
     $.ajax({
 		type:"POST",
 		url:http+"/acc/cusout/",
@@ -154,7 +156,7 @@ function quit(){
 		success:function(data){
 			window.location.href="login.html?id="+$(".ind1").html();
 		},
-		error:function(data){
+		error:function(){
 			alert("退出出现未知错误！");
 		}
 	})
