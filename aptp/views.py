@@ -378,6 +378,98 @@ class AppHouseChoiceConfirmView(View):
         return JsonResponse({'response_state': 400, 'msg': '购买失败'})
 
 
+class AppHouseChoiceConfirmTestView(View):
+    '''
+    订单确认测试接口
+    '''
+
+    def post(self, request):
+        house = request.POST.get('house')
+        userid = request.POST.get('userid')
+        eventid = request.POST.get('id')
+        from accounts.models import User
+        user = User.get(userid)
+        cursor = connection.cursor()
+        cursor.execute('SELECT id,is_sold,sign_id,event_id,is_testsold,\
+                        building,unit,floor,room_num FROM apt_eventdetail \
+                        where id=%s FOR UPDATE' % house)
+        obj = cursor.fetchone()
+        if obj is None:
+            return JsonResponse({'response_state': 404, 'msg': '目标不存在'})
+        event = Event.get(obj[3])
+        now = datetime.now()
+        if (now >= event.test_start) and (now <= event.test_end):
+            if not obj[4]:
+                with transaction.atomic():
+                    purchased = Order.objects.filter(
+                        user=user, eventdetail__event_id=eventid, is_test=True).count()
+                    if purchased >= user.customer.count:
+                        return JsonResponse({'response_state': 400,
+                                             'msg': '不可再次购买'})
+                    order = Order.objects.create(user=user,
+                                                 eventdetail_id=obj[0],
+                                                 order_num=time.strftime
+                                                 ('%Y%m%d%H%M%S'))
+                    cursor.execute('UPDATE apt_eventdetail set is_testsold=%s \
+                                    where id=%s' % (True, house))
+                return JsonResponse(
+                    {
+                        'response_state': 200,
+                        'room_info': ('%s-%s-%s-%s') % (obj[5],
+                                                        obj[6],
+                                                        obj[7],
+                                                        obj[8]),
+                        'limit': (
+                            order.time + timedelta(
+                                hours=event.limit)).strftime('%Y年%m月%d日 %H:%M:%S'),
+                        'ordertime': order.time,
+                        'orderid': order.id,
+                    })
+            elif Order.objects.filter(user=user, eventdetail_id=obj[0],
+                                      is_test=True).exists():
+                return JsonResponse({'response_state': 400,
+                                     'msg': '已购买,不要重复购买'})
+        elif (now >= event.event_start) and (now <= event.event_end):
+            if not obj[1] and not obj[2]:
+                with transaction.atomic():
+                    purchased = Order.objects.filter(
+                        user=user, eventdetail__event_id=eventid, is_test=False).count()
+                    if purchased >= user.customer.count:
+                        return JsonResponse({'response_state': 400,
+                                             'msg': '不可再次购买'})
+                    order = Order.objects.create(user=user,
+                                                 eventdetail_id=obj[0],
+                                                 order_num=time.strftime
+                                                 ('%Y%m%d%H%M%S'),
+                                                 is_test=False)
+                    cursor.execute('UPDATE apt_eventdetail set is_sold=%s \
+                                    where id=%s' % (True, house))
+                return JsonResponse(
+                    {
+                        'response_state': 200,
+                        'room_info': ('%s-%s-%s-%s') % (obj[5],
+                                                        obj[6],
+                                                        obj[7],
+                                                        obj[8]),
+                        'limit': (
+                            order.time + timedelta(
+                                hours=event.limit)).strftime('%Y年%m月%d日 %H:%M:%S'),
+                        'ordertime': order.time,
+                        'orderid': order.id,
+                    })
+            elif not obj[1] and obj[2]:
+                cursor.execute(
+                    'UPDATE apt_eventdetail set is_sold=%s where id=%s' %
+                    (True, house))
+                return JsonResponse(
+                    {'response_state': 400, 'msg': '购买失败，房屋已卖出'})
+            elif Order.objects.filter(user=user, eventdetail_id=obj[0],
+                                      is_test=False).exists():
+                return JsonResponse({'response_state': 400,
+                                     'msg': '已购买,不要重复购买'})
+        return JsonResponse({'response_state': 400, 'msg': '购买失败'})
+
+
 @method_decorator(customer_login_required, name='dispatch')
 class OrderProView(View):
     '''
