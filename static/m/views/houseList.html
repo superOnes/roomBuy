@@ -56,6 +56,21 @@
 	}
 	var id = getParamValue("id");
 	$(function(){
+        $.ajax({
+            type:"get",
+            url:http+"/app/detail/",
+            data:{
+                id:id
+            },
+
+            success:function(data){
+                if(data.response_state==200){
+                    data3(data.objects[0]);
+                }
+            },
+            error:function(){}
+        });
+
 		$.ajax({
 			type:"get",
 			url:http+"/app/houses/",
@@ -82,20 +97,7 @@
 			}
 		});
 
-		$.ajax({
-			type:"get",
-			url:http+"/app/detail/",
-			data:{
-				id:id
-			},
 
-			success:function(data){
-				if(data.response_state==200){
-					data3(data.objects[0]);
-				}
-			},
-			error:function(){}
-		});
 
 	})
 

@@ -1,4 +1,3 @@
-var userid;
 var http="";//正式
 //var http="http://10.7.10.193:8000"; //测试
 //var http="http://10.7.1.34";
@@ -19,7 +18,6 @@ $(function(){
 		//}
 		else{
 			var tel=$(".titleph").val(),personId=$(".titlezj").val();
-
 			$.ajax({
 				type:"POST",
 				url:http+"/acc/cuslog/",
@@ -63,8 +61,6 @@ $(function(){
 					}else{
 						alert(data.msg);
 					}
-
-
 				},
 				error:function(){
 					alert("页面出错，请重试");
