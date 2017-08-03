@@ -281,27 +281,26 @@ class ImportEventDetailView(View):
                 sheet = workdata.sheet_by_name(sheet_name)
                 row = sheet.nrows
                 col = sheet.ncols
+                num = len(EventDetail.objects.filter(event_id=id))
                 data = []
-                for rx in range(1, row):
-                    li = []
-                    for cx in range(0, col):
-                        value = sheet.cell(rowx=rx, colx=cx).value
-                        li.append(value)
-                    data.append(li)
-                for ed in data:
-                    if not isinstance(ed[0], str):
-                        ed[0] = str(int(ed[0]))
-                    if not isinstance(ed[1], str):
-                        ed[1] = str(int(ed[1]))
-                    etdtnum = len(EventDetail.objects.filter(event_id=id))
-                    num = request.user.house_limit - etdtnum
-                    if EventDetail.objects.filter(
-                            event_id=id, building=ed[0],
-                            unit=ed[1], floor=ed[2],
-                            room_num=ed[3]).exists():
-                        continue
-                    else:
-                        if num > 0:
+                if num + row < request.user.house_limit:
+                    for rx in range(1, row):
+                        li = []
+                        for cx in range(0, col):
+                            value = sheet.cell(rowx=rx, colx=cx).value
+                            li.append(value)
+                        data.append(li)
+                    for ed in data:
+                        if type(ed[0]) != str:
+                            ed[0] = str(int(ed[0]))
+                        if type(ed[1]) != str:
+                            ed[1] = str(int(ed[1]))
+                        if EventDetail.objects.filter(
+                                event_id=id, building=ed[0],
+                                unit=ed[1], floor=ed[2],
+                                room_num=ed[3]).exists():
+                            continue
+                        else:
                             eventdetail = EventDetail.objects.create(
                                 building=ed[0],
                                 unit=ed[1],
@@ -313,8 +312,9 @@ class ImportEventDetailView(View):
                                 term=ed[7],
                                 event=event)
                             eventdetail.save()
-                            num -= 1
-                return JsonResponse({'success': True})
+                            num += 1
+                    return JsonResponse({'success': True, 'data': num})
+                return JsonResponse({'success': False, 'msg': '导入数据超过限制数量！'})
             else:
                 return JsonResponse({'success': False, 'msg': '导入文件格式不正确！'})
         os.remove('media/price/price.xlsx')
@@ -573,8 +573,7 @@ class ExportBuyHotView(View):
                 s.write(row, 0, obj.realname)
                 s.write(row, 1, obj.mobile)
                 s.write(row, 2, obj.identication)
-                s.write(row, 3, obj.protime.strftime(
-                    "%Y/%m/%d %H:%M:%S") if obj.protime else '')
+                s.write(row, 3, obj.protime.strftime("%Y/%m/%d %H:%M:%S") if obj.protime else '')
                 s.write(row, 4, obj.user.follow_set.count())
                 if order:
                     s.write(row, 5, testorder.eventdetail.building +
@@ -582,15 +581,13 @@ class ExportBuyHotView(View):
                             str(testorder.eventdetail.floor) +
                             '层' +
                             str(testorder.eventdetail.room_num) if testorder else '')
-                    s.write(row, 6, (testorder.time).strftime(
-                        "%Y/%m/%d %H:%M:%S") if testorder else '')
+                    s.write(row, 6, (testorder.time).strftime("%Y/%m/%d %H:%M:%S") if testorder else '')
                     s.write(row, 7, openorder.eventdetail.building +
                             openorder.eventdetail.unit +
                             str(openorder.eventdetail.floor) +
                             '层' +
                             str(openorder.eventdetail.room_num) if openorder else '')
-                    s.write(row, 8, (openorder.time).strftime(
-                        "%Y/%m/%d %H:%M:%S") if openorder else '')
+                    s.write(row, 8, (openorder.time).strftime("%Y/%m/%d %H:%M:%S") if openorder else '')
                 else:
                     s.write(row, 5, None)
                     s.write(row, 6, None)
@@ -653,13 +650,7 @@ class ExportOrderView(View):
         row = 1
         for obj in objs:
             s.write(row, 0, obj.time.strftime("%Y/%m/%d %H:%M:%S"))
-            s.write(row, 1, obj.eventdetail.building +
-                    '-' +
-                    obj.eventdetail.unit +
-                    '-' +
-                    str(obj.eventdetail.floor) +
-                    '层' +
-                    str(obj.eventdetail.room_num))
+            s.write(row, 1, obj.eventdetail.room_num)
             s.write(row, 2, obj.eventdetail.unit_price)
             s.write(row, 3, obj.eventdetail.area)
             s.write(row, 4, obj.user.customer.realname)
@@ -959,7 +950,7 @@ class EventTVWallOrderView(View):
     def get(self, request, pk):
         try:
             order = Order.objects.get(eventdetail_id=pk, is_test=False)
-        except BaseException:
+        except:
             return JsonResponse({'response_state': 400, 'msg': '未找到相关订单'})
         ed = order.eventdetail
         result = {
