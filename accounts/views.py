@@ -84,38 +84,35 @@ class CustomerLoginView(View):
     '''
 
     def post(self, request):
-        userid = request.POST.get('userid')
+        username = request.POST.get('username')
         protime = request.POST.get('protime')
         event = Event.get(request.POST.get('id'))
-        user_b = User.objects.get(username=userid, customer__event_id=event)
         if event.is_pub:
-            customer = user_b.customer
+            customer = User.objects.get(username=username, customer__event_id=event).customer
+            session_key=customer.session_key
             user = authenticate(
-                username=userid,
+                username=username,
                 password=customer.identication)
             if user:
                 if not user.is_admin:
                     if not customer.protime:
                         customer.protime = protime
+                    customer.save()
+                    login(request, user)
+                    if session_key:
+                        Session.objects.get(pk=session_key).delete()
+                        customer.session_key = request.session.session_key
                         customer.save()
-                        login(request, user)
-                        key = request.session.session_key
-                        request.session.set_expiry(300)
-                        return JsonResponse(
-                            {'response_state': 200, 'msg': '登录成功', 'key': key})
-                    else:
-                        login(request, user)
-                        key = request.session.session_key
-                        request.session.set_expiry(300)
-                        return JsonResponse(
-                            {'response_state': 200, 'msg': '登录成功', 'key': key})
+                    request.session.set_expiry(300)
+                    return JsonResponse(
+                        {'response_state': 200, 'msg': '登录成功'})
                 return JsonResponse({'response_state': 400})
             return JsonResponse(
                 {'response_state': 400, 'msg': '该电话号与证件号未通过认证。'})
-        return JsonResponse({'response_state': 400, 'msg': '活动还未正式推出。'})
+        return JsonResponse({'response_state': 400, 'msg': '不在活动期间。'})
 
 
-@method_decorator(customer_login_required, name='dispatch')
+# @method_decorator(customer_login_required, name='dispatch')
 class CustomerLogoutView(View):
     '''
     顾客退出登录

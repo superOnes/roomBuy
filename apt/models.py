@@ -100,7 +100,6 @@ class EventDetail(models.Model):
     image = models.ImageField('图片', upload_to='eventdetail/%Y/%m/%d/',
                               null=True, blank=True)
     num = models.IntegerField('收藏人数', default=0)
-    visit_num = models.IntegerField('访问热度', default=0)
     is_delete = models.BooleanField(default=False)
     house_type = models.ForeignKey(HouseType, null=True, blank=True)
     looking = models.CharField('朝向', max_length=100)

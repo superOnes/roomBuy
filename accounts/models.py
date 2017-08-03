@@ -15,6 +15,7 @@ class Customer(models.Model):
     count = models.IntegerField('可选套数', default=1)
     event = models.ForeignKey(Event, verbose_name='关联活动')
     is_delete = models.BooleanField(default=False)
+    session_key=models.CharField('session_key',max_length=100,default=None)
 
     @classmethod
     def get(cls, id):

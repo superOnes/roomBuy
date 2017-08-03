@@ -8,7 +8,7 @@ from django.utils.decorators import method_decorator
 
 from apt.models import Event, EventDetail
 from aptp.models import Follow
-from accounts.models import Order, Customer, User
+from accounts.models import Order, Customer
 from accounts.decorators import customer_login_required
 
 
@@ -32,13 +32,13 @@ class ProView(View):
                 value = [{
                     'termname': customer.event.termname,
                     'term': customer.event.term,
-                    'userid': customer.user.username,
+                    'username': customer.user.username,
                 }]
                 context = {}
                 context['objects'] = value
                 context['response_state'] = 200
                 return JsonResponse(context)
-        return JsonResponse({'response_state': 403, 'msg': '活动已经下架！'})
+        return JsonResponse({'response_state': 403, 'msg': '不在活动开始期间！'})
 
 
 @method_decorator(customer_login_required, name='dispatch')
@@ -165,11 +165,9 @@ class AppEventDetailHouseInfoView(View):
     '''
 
     def get(self, request):
-        userid = request.GET.get('userid')
-        user = User.objects.get(username=userid)
+        user=request.user
         house = request.GET.get('house')
         eventdetobj = EventDetail.get(house)
-        eventdetobj.visit_num = eventdetobj.visit_num + 1
         eventdetobj.save()
         test = True if time.strftime('%Y%m%d %H:%M:%S') <= eventdetobj.event.test_end.strftime(
             '%Y%m%d %H:%M:%S') else False
@@ -215,10 +213,9 @@ class AddFollow(View):
     '''
 
     def post(self, request):
-        userid = request.POST.get('userid')
+        user=request.user
         house = request.POST.get('house')
         eventid = request.POST.get('id')
-        user = User.objects.get(username=userid)
         try:
             eventdetail = EventDetail.get(house)
         except BaseException:
@@ -245,9 +242,8 @@ class CancelFollow(View):
     '''
 
     def post(self, request):
-        userid = request.POST.get('userid')
+        user=request.user
         house = request.POST.get('house')
-        user = User.objects.get(username=userid)
         try:
             eventdetail = EventDetail.get(house)
         except BaseException:
@@ -271,8 +267,7 @@ class FollowView(View):
     '''
 
     def get(self, request):
-        userid = request.GET.get('userid')
-        user = User.objects.get(username=userid)
+        user=request.user
         objs = Follow.objects.filter(
             user=user, eventdetail__event_id=request.GET.get('id'))
         context = {}
@@ -305,10 +300,9 @@ class AppHouseChoiceConfirmView(View):
     '''
 
     def post(self, request):
-        userid = request.POST.get('userid')
+        user=request.user
         house = request.POST.get('house')
         eventid = request.POST.get('id')
-        user = User.objects.get(username=userid)
         from aptm.settings import DATABASES
         cursor = connection.cursor()
         if (DATABASES['default']['NAME'] == 'aptm'):
@@ -405,11 +399,11 @@ class OrderProView(View):
     '''
 
     def get(self, request):
-        userid = request.GET.get('userid')
+        user=request.user
         eventid = request.GET.get('id')
         try:
             customer = Customer.objects.get(
-                user__username=userid, event_id=eventid)
+                use=user, event_id=eventid)
         except BaseException:
             return JsonResponse({'response_state': 400, 'msg': '认筹名单中没有该用户！'})
         else:
@@ -430,9 +424,8 @@ class AppOrderListView(View):
     '''
 
     def get(self, request):
-        userid = request.GET.get('userid')
+        user=request.user
         eventid = request.GET.get('id')
-        user = User.objects.get(username=userid)
         objs = Order.objects.filter(user=user, eventdetail__event_id=eventid)
         valuelist = []
         for obj in objs:

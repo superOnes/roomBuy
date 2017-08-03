@@ -1,5 +1,13 @@
 # 接口设计
 ### 手机部分
+#### 显示协议
+标题|内容
+---:|---|
+url:|http://localhost:8000/app/prodel/
+method:|GET
+params:|tel,personId,id(活动id)
+return:|JSON
+
 #### 顾客登陆
 标题|内容
 ---:|---|
@@ -13,23 +21,16 @@ return:|JSON
 ---:|---|
 url:|http://localhost:8000/acc/cusout/
 method:|POST
-params:|userid(顾客在user表中的username)
+params:|id(活动id)
 return:|JSON
 
-#### 显示协议
-标题|内容
----:|---|
-url:|http://localhost:8000/app/prodel/
-method:|GET
-params:|tel,personId,id(活动id)
-return:|JSON
 
 #### 显示活动
 标题|内容
 ---:|---|
 url:|http://localhost:8000/app/detail/
 method:|GET
-params:|key,id(活动id)
+params:|id(活动id)
 return:|JSON
 
 #### 车位/房源 楼号列表
@@ -37,7 +38,7 @@ return:|JSON
 ---:|---|
 url:|http://localhost:8000/app/houses/
 method:|GET
-params:|key,id(活动id)
+params:|id(活动id)
 return:|JSON
 
 #### 车位/房源 单元列表
@@ -45,7 +46,7 @@ return:|JSON
 ---:|---|
 url:|http://localhost:8000/app/unit/
 method:|GET
-params:|key,building,id(活动id)
+params:|building,id(活动id)
 return:|JSON
 
 #### 车位/房源 房号列表
@@ -53,7 +54,7 @@ return:|JSON
 ---:|---|
 url:|http://localhost:8000/app/houselist/
 method:|GET
-params:|key,building,unit,id(活动id)
+params:|building,unit,id(活动id)
 return:|JSON
 
 #### 车位/房源 详情
@@ -61,7 +62,7 @@ return:|JSON
 ---:|---|
 url:|http://localhost:8000/app/houseinfo/
 method:|GET
-params:|userid(顾客在user表中的username),house(车位/房间号),id(活动id)
+params:|house(车位/房间号),id(活动id)
 return:|JSON
 
 #### 添加收藏
@@ -69,7 +70,7 @@ return:|JSON
 ---:|---|
 url:|http://localhost:8000/app/addfollow/
 method:|POST
-params:|userid(顾客在user表中的username),house(车位/房间号),id(活动id)
+params:|house(车位/房间号),id(活动id)
 return:|JSON
 
 #### 取消收藏
@@ -77,7 +78,7 @@ return:|JSON
 ---:|---|
 url:|http://localhost:8000/app/cancelfollow/
 method:|POST
-params:|userid(顾客在user表中的username),house(车位/房间号),id(活动id)
+params:|house(车位/房间号),id(活动id)
 return:|JSON
 
 #### 用户收藏列表信息
@@ -85,7 +86,7 @@ return:|JSON
 ---:|---|
 url:|http://localhost:8000/app/followlist/
 method:|GET
-params:|userid(顾客在user表中的username),id(活动id)
+params:|id(活动id)
 return:|JSON
 
 #### 订单确认
@@ -93,7 +94,7 @@ return:|JSON
 ---:|---|
 url:|http://localhost:8000/app/orderconfirm/
 method:|POST
-params:|userid(顾客在user表中的username),house(车位/房间号),id(活动id)
+params:|house(车位/房间号),id(活动id)
 return:|JSON
 
 #### 订单中协议
@@ -101,7 +102,7 @@ return:|JSON
 ---:|---|
 url:|http://localhost:8000/app/orderpro/
 method:|GET
-params:|userid(顾客在user表中的username),id(活动id)
+params:|id(活动id)
 return:|JSON
 
 #### 订单列表
@@ -109,7 +110,7 @@ return:|JSON
 ---:|---|
 url:|http://localhost:8000/app/orderslist/
 method:|GET
-params:|userid(顾客在user表中的username),id(活动id)
+params:|id(活动id)
 return:|JSON
 
 #### 订单详情
@@ -117,5 +118,5 @@ return:|JSON
 ---:|---|
 url:|http://localhost:8000/app/orderinfo/
 method:|GET
-params:|key,orderid,id(活动id)
+params:|orderid,id(活动id)
 return:|JSON
