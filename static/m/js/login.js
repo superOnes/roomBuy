@@ -38,7 +38,6 @@ $(function(){
 						});
 
 						$(".proSure").click(function(){
-                            $(".proSure").unbind("click");
 							$.ajax({
 								type:"POST",
 								url:http+"/acc/cuslog/",
@@ -51,7 +50,6 @@ $(function(){
 								dataType:'JSON',
 								success: function (data) {
 									if(data.response_state==200){
-                                        (".proSure").bind("click");
 										window.location.href = "choiceHouse.html?id="+$(".loginId").html();
 
 									}else{
@@ -147,7 +145,6 @@ function telp (){
 	}
 }
 function quit(){
-    $(".quit").unbind("click");
     $.ajax({
 		type:"POST",
 		url:http+"/acc/cusout/",
@@ -155,7 +152,6 @@ function quit(){
 			id:$(".ind1").html()
 		},
 		success:function(data){
-            $(".quit").bind("click");
 			window.location.href="login.html?id="+$(".ind1").html();
 		},
 		error:function(data){
