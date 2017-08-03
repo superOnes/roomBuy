@@ -11,37 +11,37 @@ $(document).ready(function(){
 		if(!pattern.test(inputPhone)){
 			new $.zui.Messager('请输入正确的电话号码！', {
 				placement:'bottom',
-				type: 'important' // 定义颜色主题
+				type: 'primary'
 			}).show();
 　			return false;
 		}else if($("#cover").val() == "") {
 				new $.zui.Messager('请添加封面', {
 					placement:'bottom',
-					type: 'important' // 定义颜色主题
+					type: 'primary'
 				}).show();
 		　	return false;
 			}
 	});
 
 	//创建认筹名单
-	$("#customerOrder").submit(function(){
-		var inputMobile = $("input[name='mobile']").val();
-		var inputIdent = $("input[name='identication']").val();
-		var pattern = /\d{17}[\d|x]|\d{15}/;
-		if(inputMobile.length < 11){
-			new $.zui.Messager('请输入正确的手机号！', {
-				placement:'center',
-				type: 'important' // 定义颜色主题
-			}).show();
-　			return false;
-		}else if(!pattern.test(inputIdent)){
-			new $.zui.Messager('请输入正确的身份证号码！', {
-				placement:'center',
-				type: 'important' // 定义颜色主题
-			}).show();
-　			return false;
-		}
-	});
+// 	$("#customerOrder").submit(function(){
+// 		var inputMobile = $("input[name='mobile']").val();
+// 		var inputIdent = $("input[name='identication']").val();
+// 		var pattern = /\d{17}[\d|x]|\d{15}/;
+// 		if(inputMobile.length < 11){
+// 			new $.zui.Messager('请输入正确的手机号！', {
+// 				placement:'center',
+// 				type: 'primary'
+// 			}).show();
+// 　			return false;
+// 		}else if(!pattern.test(inputIdent)){
+// 			new $.zui.Messager('请输入正确的身份证号码！', {
+// 				placement:'center',
+// 				type: 'primary' // 定义颜色主题
+// 			}).show();
+// 　			return false;
+// 		}
+// 	});
 });
 
 
@@ -64,7 +64,7 @@ function submitFile(event,thisID){
 			if(results.success){
 				new $.zui.Messager('导入成功！', {
 		       		placement:'top',
-				    type: 'important' // 定义颜色主题
+				    type: 'success'
 				}).show("",function(){
 					setTimeout(function(){
 						window.location.reload();
@@ -73,7 +73,7 @@ function submitFile(event,thisID){
 			}else{
 				new $.zui.Messager('导入失败!', {
 		       		placement:'top',
-				    type: 'important' // 定义颜色主题
+				    type: 'primary' // 定义颜色主题
 				}).show("",function(){
 					$(event).attr("disabled","disabled");
 				});
@@ -97,13 +97,13 @@ function roomPriceFile(event,thisID){
 		async:true,
 		data:data,
 		cache: false,
-        processData: false,//发送的数据将被转换为对象，false就是不转化，默认为true
-        contentType: false,
+    processData: false,//发送的数据将被转换为对象，false就是不转化，默认为true
+    contentType: false,
 		success:function(results){
 			if(results.success){
 				new $.zui.Messager('导入成功！', {
 		       		placement:'top',
-				    type: 'important' // 定义颜色主题
+				    type: 'success' // 定义颜色主题
 				}).show("",function(){
 					setTimeout(function(){
 						window.location.reload();
@@ -112,7 +112,7 @@ function roomPriceFile(event,thisID){
 			}else{
 				new $.zui.Messager('导入失败!', {
 		       		placement:'top',
-				    type: 'important' // 定义颜色主题
+				    type: 'primary' // 定义颜色主题
 				}).show("",function(){
 					$(event).attr("disabled","disabled");
 				});
@@ -184,7 +184,6 @@ function statisticsData(thisId){
 		async:true,
 		dataType:'JSON',
 		success:function(results){
-			console.log(results)
 			if(results.success){
 				var result =results.data;
 				$listBuyer.find("tr").remove();

@@ -1,4 +1,4 @@
-{% extends 'include/main_base.html' %} 
+{% extends 'include/main_base.html' %}
 {% block title %}活动列表{% endblock %}
 {% block right %}
 <div>
@@ -138,8 +138,16 @@
 				url: "../pubstatus/",
 				async: true,
 				data: { id: id },
-				success: function() {
-					window.location.reload();
+				success: function(result) {
+					if(result.success){
+						window.location.reload();
+					}else{
+						new $.zui.Messager('请完善协议内容！', {
+							placement:'center',
+							type: 'primary' // 定义颜色主题
+						}).show();
+			　			return false;
+					}
 				},
 				error: function() {
 					alert("未知错误")
