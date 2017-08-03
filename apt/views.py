@@ -533,11 +533,12 @@ class ExportHouseHotView(View):
 @method_decorator(admin_required, name='dispatch')
 class ExportBuyHotView(View):
     '''
-    导出购房热度统计
+    导出购房者热度统计
     '''
 
     def get(self, request, pk):
-        objs = Order.objects.filter(eventdetail__event_id=pk)
+        objs = Customer.objects.filter(event_id=pk)
+        # print(objs)
         sheet = Workbook(encoding='utf-8')
         s = sheet.add_sheet('数据表')
         list = [
@@ -546,7 +547,6 @@ class ExportBuyHotView(View):
             '证件号码',
             '同意协议时间',
             '收藏房间数',
-            '访问热度',
             '公测选择房间',
             '公测订单时间',
             '开盘选择房间',
@@ -565,41 +565,42 @@ class ExportBuyHotView(View):
             response.write(sio.getvalue())
             return response
         row = 1
-        for obj in objs:
-            s.write(row, 0, obj.user.customer.realname)
-            s.write(row, 1, obj.user.customer.mobile)
-            s.write(row, 2, obj.user.customer.identication)
-            s.write(row, 3, obj.user.customer.protime)
-            s.write(row, 4, obj.user.follow_set.count())
-            s.write(row, 5, obj.eventdetail.visit_num)
-            if obj.eventdetail.is_testsold:
-                s.write(row, 6,
-                        obj.eventdetail.building +
-                        obj.eventdetail.unit +
-                        str(obj.eventdetail.floor) +
-                        '层' +
-                        str(obj.eventdetail.room_num))
-                s.write(row, 7, (obj.time).strftime("%Y/%m/%d %H:%M:%S"))
-                s.write(row, 8, None)
-                s.write(row, 9, None)
-            else:
-                s.write(row, 6, None)
-                s.write(row, 7, None)
-                s.write(row, 8,
-                        obj.eventdetail.building +
-                        obj.eventdetail.unit +
-                        str(obj.eventdetail.floor) +
-                        '层' +
-                        str(obj.eventdetail.room_num))
-                s.write(row, 9, (obj.time).strftime("%Y/%m/%d %H:%M:%S"))
-            row += 1
-        sio = BytesIO()
-        sheet.save(sio)
-        sio.seek(0)
-        response = HttpResponse(content_type='application/vnd.ms-excel')
-        response['Content-Disposition'] = 'attachment;filename=goufangredu.xls'
-        response.write(sio.getvalue())
-        return response
+        if objs:
+            for obj in objs:
+                order = obj.user.order_set.all()
+                testorder = obj.user.order_set.filter(is_test=True).first()
+                openorder = obj.user.order_set.filter(is_test=False).first()
+                s.write(row, 0, obj.realname)
+                s.write(row, 1, obj.mobile)
+                s.write(row, 2, obj.identication)
+                s.write(row, 3, obj.protime)
+                s.write(row, 4, obj.user.follow_set.count())
+                if order:
+                    s.write(row, 5, testorder.eventdetail.building +
+                            testorder.eventdetail.unit +
+                            str(testorder.eventdetail.floor) +
+                            '层' +
+                            str(testorder.eventdetail.room_num) if testorder else '')
+                    s.write(row, 6, (testorder.time).strftime("%Y/%m/%d %H:%M:%S") if testorder else '')
+                    s.write(row, 7, openorder.eventdetail.building +
+                            openorder.eventdetail.unit +
+                            str(openorder.eventdetail.floor) +
+                            '层' +
+                            str(openorder.eventdetail.room_num) if openorder else '')
+                    s.write(row, 8, (openorder.time).strftime("%Y/%m/%d %H:%M:%S") if openorder else '')
+                else:
+                    s.write(row, 5, None)
+                    s.write(row, 6, None)
+                    s.write(row, 7, None)
+                    s.write(row, 8, None)
+                row += 1
+            sio = BytesIO()
+            sheet.save(sio)
+            sio.seek(0)
+            response = HttpResponse(content_type='application/vnd.ms-excel')
+            response['Content-Disposition'] = 'attachment;filename=goufangredu.xls'
+            response.write(sio.getvalue())
+            return response
 
 
 @method_decorator(admin_required, name='dispatch')
