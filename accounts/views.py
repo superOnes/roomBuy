@@ -178,29 +178,28 @@ class ImportView(View):
                     li.append(value)
                 data.append(li)
             for ct in data:
-                b = int(ct[1])
-                if b == False:
-                    return JsonResponse({'success': False})
+                if type(ct[1]) != str:
+                    ct[1] = str(int(ct[1]))
+                if type(ct[2]) != str:
+                    ct[2] = str(int(ct[2]))
+                if (Customer.objects.filter(event_id=id,
+                                            mobile=ct[1]) or Customer.objects.filter(event_id=id,
+                                                                                               identication=ct[2])).exists():
+                    continue
                 else:
-                    print('hahah')
-                    if (Customer.objects.filter(event_id=id,
-                                                mobile=str(int(ct[1]))) or Customer.objects.filter(event_id=id,
-                                                                                                   identication=str(int(ct[2])))).exists():
-                        continue
-                    else:
-                        with transaction.atomic():
-                            customer = Customer.objects.create(realname=ct[0],
-                                                               mobile=str(int(ct[1])),
-                                                               identication=str(int(ct[2])),
-                                                               remark=ct[3],
-                                                               event=event)
-                            customer.save()
-                            User.objects.create_user(
-                                username=uuid.uuid1(),
-                                password=customer.identication,
-                                customer=customer,
-                                is_admin=False)
-                            num += 1
+                    with transaction.atomic():
+                        customer = Customer.objects.create(realname=ct[0],
+                                                           mobile=ct[1],
+                                                           identication=ct[2],
+                                                           remark=ct[3],
+                                                           event=event)
+                        customer.save()
+                        User.objects.create_user(
+                            username=uuid.uuid1(),
+                            password=customer.identication,
+                            customer=customer,
+                            is_admin=False)
+                        num += 1
             return JsonResponse({'success': True, 'data': num})
         return JsonResponse({'success': False})
 
