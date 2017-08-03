@@ -178,9 +178,11 @@ class ImportView(View):
                     li.append(value)
                 data.append(li)
             for ct in data:
-                if type(ct[1]) != int:
+                b = int(ct[1])
+                if b == False:
                     return JsonResponse({'success': False})
                 else:
+                    print('hahah')
                     if (Customer.objects.filter(event_id=id,
                                                 mobile=str(int(ct[1]))) or Customer.objects.filter(event_id=id,
                                                                                                    identication=str(int(ct[2])))).exists():
@@ -199,7 +201,7 @@ class ImportView(View):
                                 customer=customer,
                                 is_admin=False)
                             num += 1
-                return JsonResponse({'success': True, 'data': num})
+            return JsonResponse({'success': True, 'data': num})
         return JsonResponse({'success': False})
 
 
