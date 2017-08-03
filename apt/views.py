@@ -573,7 +573,7 @@ class ExportBuyHotView(View):
                 s.write(row, 0, obj.realname)
                 s.write(row, 1, obj.mobile)
                 s.write(row, 2, obj.identication)
-                s.write(row, 3, obj.protime)
+                s.write(row, 3, obj.protime.strftime("%Y/%m/%d %H:%M:%S"))
                 s.write(row, 4, obj.user.follow_set.count())
                 if order:
                     s.write(row, 5, testorder.eventdetail.building +
@@ -895,7 +895,6 @@ class OrderListView(View):
                            'mobile': od.user.customer.mobile,
                            'identication': od.user.customer.identication,
                            'remark': od.user.customer.remark,
-                           'status': od.eventdetail.status,
                            } for od in queryset]
             return JsonResponse({'success': True, 'data': order_list})
         return JsonResponse({'success': False})
