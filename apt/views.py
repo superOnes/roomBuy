@@ -131,13 +131,19 @@ class EventStatus(View):
         id = put.get('id')
         if not id:
             return JsonResponse({'success': False})
-        obj = Event.get(id)
-        obj.is_pub = not obj.is_pub
-        obj.save()
-        Event.objects.filter(
-            company=user.company,
-            is_pub=True).exclude(id=id).update(is_pub=False)
-        return JsonResponse({'success': True})
+        else:
+            obj = Event.get(id)
+            termname = obj.termname
+            term = obj.term
+            if termname and term:
+                obj.is_pub = not obj.is_pub
+                obj.save()
+                Event.objects.filter(
+                    company=user.company,
+                    is_pub=True).exclude(id=id).update(is_pub=False)
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'success': False})
 
 
 @method_decorator(admin_required, name='dispatch')

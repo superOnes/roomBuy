@@ -11,7 +11,7 @@ from accounts.models import Customer, User, Order
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
-        exclude = ['equ_login_num']
+        exclude = ['equ_login_num', 'termname', 'term']
 
     def clean(self):
         cleaned_data = super(EventForm, self).clean()
