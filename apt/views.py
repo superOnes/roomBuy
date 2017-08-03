@@ -289,9 +289,9 @@ class ImportEventDetailView(View):
                         li.append(value)
                     data.append(li)
                 for ed in data:
-                    if type(ed[0]) != str:
+                    if not isinstance(ed[0], str):
                         ed[0] = str(int(ed[0]))
-                    if type(ed[1]) != str:
+                    if not isinstance(ed[1], str):
                         ed[1] = str(int(ed[1]))
                     etdtnum = len(EventDetail.objects.filter(event_id=id))
                     num = request.user.house_limit - etdtnum
@@ -573,7 +573,8 @@ class ExportBuyHotView(View):
                 s.write(row, 0, obj.realname)
                 s.write(row, 1, obj.mobile)
                 s.write(row, 2, obj.identication)
-                s.write(row, 3, obj.protime.strftime("%Y/%m/%d %H:%M:%S") if obj.protime else '')
+                s.write(row, 3, obj.protime.strftime(
+                    "%Y/%m/%d %H:%M:%S") if obj.protime else '')
                 s.write(row, 4, obj.user.follow_set.count())
                 if order:
                     s.write(row, 5, testorder.eventdetail.building +
@@ -581,13 +582,15 @@ class ExportBuyHotView(View):
                             str(testorder.eventdetail.floor) +
                             '层' +
                             str(testorder.eventdetail.room_num) if testorder else '')
-                    s.write(row, 6, (testorder.time).strftime("%Y/%m/%d %H:%M:%S") if testorder else '')
+                    s.write(row, 6, (testorder.time).strftime(
+                        "%Y/%m/%d %H:%M:%S") if testorder else '')
                     s.write(row, 7, openorder.eventdetail.building +
                             openorder.eventdetail.unit +
                             str(openorder.eventdetail.floor) +
                             '层' +
                             str(openorder.eventdetail.room_num) if openorder else '')
-                    s.write(row, 8, (openorder.time).strftime("%Y/%m/%d %H:%M:%S") if openorder else '')
+                    s.write(row, 8, (openorder.time).strftime(
+                        "%Y/%m/%d %H:%M:%S") if openorder else '')
                 else:
                     s.write(row, 5, None)
                     s.write(row, 6, None)
@@ -650,7 +653,13 @@ class ExportOrderView(View):
         row = 1
         for obj in objs:
             s.write(row, 0, obj.time.strftime("%Y/%m/%d %H:%M:%S"))
-            s.write(row, 1, obj.eventdetail.room_num)
+            s.write(row, 1, obj.eventdetail.building +
+                    '-' +
+                    obj.eventdetail.unit +
+                    '-' +
+                    str(obj.eventdetail.floor) +
+                    '层' +
+                    str(obj.eventdetail.room_num))
             s.write(row, 2, obj.eventdetail.unit_price)
             s.write(row, 3, obj.eventdetail.area)
             s.write(row, 4, obj.user.customer.realname)
@@ -950,7 +959,7 @@ class EventTVWallOrderView(View):
     def get(self, request, pk):
         try:
             order = Order.objects.get(eventdetail_id=pk, is_test=False)
-        except:
+        except BaseException:
             return JsonResponse({'response_state': 400, 'msg': '未找到相关订单'})
         ed = order.eventdetail
         result = {

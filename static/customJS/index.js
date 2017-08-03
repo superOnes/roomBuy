@@ -236,7 +236,7 @@ function getorderList(thisId,is_test,searchValue){
 			console.log(results)
 			if(results.success){
 				$(".tip").hide();
-				$("#exportEach").attr("href","/exportorder/"+thisId+"&is_test="+is_test+"&value="+searchValue);
+				$("#exportEach").attr("href","/exportorder/?id="+thisId+"&is_test="+is_test+"&value="+searchValue);
 				var result =results.data;
 				$openList.children("tr").remove();
 				for (var i = 0; i < result.length; i++) {
