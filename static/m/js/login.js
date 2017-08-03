@@ -118,8 +118,7 @@ function creatEle(data){
 	for(var i=0;i<data.plane_graph.length;i++){
 		$(".swiper-wrapper").append($('<div class="swiper-slide"><img src="'+http+data.plane_graph[i]+'"/></div>'));
 	}
-
-
+	
 	var width = $("body").width();
 	$(".swiper-container").css({"width":width});
 	var swiper = new Swiper('.swiper-container', {
