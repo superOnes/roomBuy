@@ -5,6 +5,8 @@ from django.views.generic import View
 from django.http import JsonResponse
 from django.db import connection, transaction
 from django.utils.decorators import method_decorator
+from django.contrib.sessions.models import Session
+from django.contrib.auth import authenticate, login
 
 from apt.models import Event, EventDetail
 from aptp.models import Follow
@@ -20,13 +22,41 @@ class ProTimeView(View):
 
     def post(self, request):
         protime = request.POST.get('protime')
-        user = request.user
-        if not user.customer.protime:
-            user.customer.protime = protime
-            user.customer.save()
-        context = {}
-        context['response_state'] = 200
-        return JsonResponse(context)
+        mobile = request.POST.get('tel')
+        identication = request.POST.get('personId')
+        eventid = request.POST.get('id')
+        try:
+            customer = Customer.objects.get(
+                mobile=mobile, identication=identication, event_id=eventid)
+        except BaseException:
+            return JsonResponse(
+                {'response_state': 400, 'msg': '用户名或密码不正确！'})
+        else:
+            session_key = customer.session_key
+            user = authenticate(
+                username=customer.user.username,
+                password=customer.identication)
+            if user:
+                if not user.is_admin:
+                    login(request, user)
+                    request.session.set_expiry(300)
+                    if session_key:
+                        Session.objects.filter(pk=session_key).delete()
+                        if not user.customer.protime:
+                            user.customer.protime = protime
+                            user.customer.save()
+                        customer.session_key = request.session.session_key
+                        customer.save()
+                        return JsonResponse(
+                            {'response_state': 200, 'msg': '登录成功',})
+                    else:
+                        customer.session_key = request.session.session_key
+                        customer.save()
+                        return JsonResponse(
+                            {'response_state': 200, 'msg': '登录成功'})
+                return JsonResponse({'response_state': 400})
+            return JsonResponse(
+                {'response_state': 400, 'msg': '该电话号与证件号不正确！'})
 
 
 @method_decorator(customer_login_required, name='dispatch')

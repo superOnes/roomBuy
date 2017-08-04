@@ -14,7 +14,7 @@ from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.db import transaction
-from django.contrib.sessions.models import Session
+
 
 from apt.models import Event, EventDetail
 from aptm import settings
@@ -101,32 +101,20 @@ class CustomerLoginView(View):
                 return JsonResponse(
                     {'response_state': 400, 'msg': '用户名或密码不正确！'})
             else:
-                session_key = customer.session_key
                 user = authenticate(
                     username=customer.user.username,
                     password=customer.identication)
                 if user:
                     if not user.is_admin:
-                        login(request, user)
-                        request.session.set_expiry(300)
                         value = [{
                             'termname': customer.event.termname,
                             'term': customer.event.term,
                         }]
-                        if session_key:
-                            Session.objects.filter(pk=session_key).delete()
-                            customer.session_key = request.session.session_key
-                            customer.save()
-                            return JsonResponse(
-                                {'response_state': 200, 'msg': '登录成功', 'objects': value})
-                        else:
-                            customer.session_key = request.session.session_key
-                            customer.save()
-                            return JsonResponse(
-                                {'response_state': 200, 'msg': '登录成功', 'objects': value})
+                        return JsonResponse(
+                            {'response_state': 200, 'objects': value})
                     return JsonResponse({'response_state': 400})
                 return JsonResponse(
-                    {'response_state': 400, 'msg': '该电话号与证件号不匹配！'})
+                    {'response_state': 400, 'msg': '该电话号与证件号不正确！'})
         return JsonResponse({'response_state': 403, 'msg': '活动还未正式推出！'})
 
 
