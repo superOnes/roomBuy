@@ -148,7 +148,7 @@ class AppEventDetailUnitListView(View):
         return JsonResponse(context)
 
 
-@method_decorator(customer_login_required, name='dispatch')
+# @method_decorator(customer_login_required, name='dispatch')
 class AppEventDetailHouseListView(View):
     '''
     车位/房源 房号列表
@@ -170,13 +170,14 @@ class AppEventDetailHouseListView(View):
         room_num_list = []
         for obj in eventdetobj:
             if obj.status:
-                value = [{
+                value = {
                     'house': obj.id,
                     'floor_room_num': str(obj.floor) + '-' + str(obj.room_num),
                     'is_sold': obj.is_sold,
                     'is_testsold': obj.is_testsold,
-                }]
+                }
                 room_num_list.append(value)
+        room_num_list.sort(key=lambda x: (x['floor_room_num']))
         context['objects'] = room_num_list
         context['response_state'] = response_state
         context['response_state'] = 200
@@ -257,7 +258,7 @@ class AddFollow(View):
                     return JsonResponse({'response_state': 200, 'msg': '收藏成功'})
                 else:
                     return JsonResponse(
-                        {'response_state': 403, 'msg': '收藏数量超过限制'})
+                        {'response_state': 400, 'msg': '收藏数量超过限制'})
             return JsonResponse({'response_state': 400, 'msg': '您已收藏过该商品！'})
 
 
@@ -274,14 +275,14 @@ class CancelFollow(View):
         try:
             eventdetail = EventDetail.get(house)
         except BaseException:
-            return JsonResponse({'response_state': 403, 'msg': '没有该商品！'})
+            return JsonResponse({'response_state': 400, 'msg': '没有该商品！'})
         else:
             follow = Follow.objects.filter(
                 user=user,
                 eventdetail=eventdetail)
             if not follow:
                 return JsonResponse(
-                    {'response_state': 403, 'msg': '没有收藏该商品！'})
+                    {'response_state': 400, 'msg': '没有收藏该商品！'})
             follow.delete()
             return JsonResponse(
                 {'response_state': 200, 'msg': '成功取消收藏！'})

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width = device-width ,initial-scale = 1,minimum-scale = 1,maximum-scale = 1,user-scalable =no"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>在线选房</title>
+    <title>云开盘</title>
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/swiper.min.css" />
 </head>
@@ -77,7 +77,7 @@ $(function(){
                     window.location.href="houseList.html?id="+id;
                });
                 $(".quitt").click(function(){
-                $(this).prop("disabled",true);
+                $(this).attr("disabled", "disabled");;
                 $.ajax({
                     type:"POST",
                     url:http+"/acc/cusout/",
@@ -85,11 +85,11 @@ $(function(){
                         id:$(".ind1").html()
                     },
                     success:function(data){
-                        $(this).prop("disabled",false);
+                        $(".quitt").removeAttr("disabled");
                         window.location.href="login.html?id="+$(".ind1").html();
                     },
                     error:function(){
-                        $(this).prop("disabled",false);
+                        $(".quitt").removeAttr("disabled");
                         alert("退出出现未知错误！");
                     }
                     })
