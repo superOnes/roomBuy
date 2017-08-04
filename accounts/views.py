@@ -1,7 +1,7 @@
 import os
 import xlrd
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
@@ -88,7 +88,12 @@ class CustomerLoginView(View):
         identication = request.POST.get('personId')
         eventid = request.POST.get('id')
         event = Event.get(eventid)
+        now = datetime.now()
         if event.is_pub:
+            if (now < event.test_start + timedelta(hours=-0.5) or (now > event.test_end and now < event.event_start +
+                                   timedelta(hours=-0.5)) or now > event.event_end):
+                return JsonResponse(
+                    {'response_state': 400, 'msg': '不在活动登录期间！'})
             try:
                 customer = Customer.objects.get(
                     mobile=mobile, identication=identication, event_id=eventid)
@@ -122,10 +127,11 @@ class CustomerLoginView(View):
                     return JsonResponse({'response_state': 400})
                 return JsonResponse(
                     {'response_state': 400, 'msg': '该电话号与证件号不匹配！'})
-        return JsonResponse({'response_state': 403, 'msg': '不在活动期间！'})
+        return JsonResponse({'response_state': 403, 'msg': '活动还未正式推出！'})
 
 
 @method_decorator(customer_login_required, name='dispatch')
+# @method_decorator(customer_login_time, name='dispatch')
 class CustomerLogoutView(View):
     '''
     顾客退出登录

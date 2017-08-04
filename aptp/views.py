@@ -9,7 +9,7 @@ from django.utils.decorators import method_decorator
 from apt.models import Event, EventDetail
 from aptp.models import Follow
 from accounts.models import Order, Customer
-from accounts.decorators import customer_login_required
+from accounts.decorators import customer_login_required, customer_login_time
 
 
 @method_decorator(customer_login_required, name='dispatch')
@@ -146,6 +146,7 @@ class AppEventDetailHouseListView(View):
 
 
 @method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_time, name='dispatch')
 class AppEventDetailHouseInfoView(View):
     '''
     车位/房源 详情
@@ -280,6 +281,7 @@ class FollowView(View):
 
 
 @method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_time, name='dispatch')
 class AppHouseChoiceConfirmView(View):
     '''
     订单确认
@@ -471,6 +473,7 @@ class AppHouseChoiceConfirmTestView(View):
 
 
 @method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_time, name='dispatch')
 class OrderProView(View):
     '''
     订单中协议
@@ -496,6 +499,7 @@ class OrderProView(View):
 
 
 @method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_time, name='dispatch')
 class AppOrderListView(View):
     '''
     订单列表
@@ -527,6 +531,7 @@ class AppOrderListView(View):
 
 
 @method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_time, name='dispatch')
 class AppOrderInfoView(View):
     '''
     订单详情
