@@ -21,7 +21,6 @@ class ProTimeView(View):
     '''
 
     def post(self, request):
-        protime = request.POST.get('protime')
         mobile = request.POST.get('tel')
         identication = request.POST.get('personId')
         eventid = request.POST.get('id')
@@ -40,11 +39,11 @@ class ProTimeView(View):
                 if not user.is_admin:
                     login(request, user)
                     request.session.set_expiry(300)
+                    if not customer.protime:
+                        customer.protime = datetime.now()
+                        customer.save()
                     if session_key:
                         Session.objects.filter(pk=session_key).delete()
-                        if not user.customer.protime:
-                            user.customer.protime = protime
-                            user.customer.save()
                         customer.session_key = request.session.session_key
                         customer.save()
                         return JsonResponse(
