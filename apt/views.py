@@ -283,7 +283,7 @@ class ImportEventDetailView(View):
                 col = sheet.ncols
                 num = len(EventDetail.objects.filter(event_id=id))
                 data = []
-                if num + row < request.user.house_limit:
+                if num + row - 1 <= request.user.house_limit:
                     for rx in range(1, row):
                         li = []
                         for cx in range(0, col):
