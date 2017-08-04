@@ -206,12 +206,7 @@ function data3(result){
 	$("#houseList").append(datap);
 }
 function myOrder() {
-	if((new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime())||
-		(new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() <new Date($(".test_ent").html()).getTime())){
-		window.location.href="order.html?id="+$(".idNum").html()+"&userid="+$(".userid").html()+"&key="+$(".key").html();
-	}else{
-			alert("活动尚未开始");
-	}
+    window.location.href="order.html?id="+$(".idNum").html()
 }
 function updataTime(data) {
 	setInterval(function() {
@@ -298,12 +293,7 @@ function myShare(){
 
 				$(".shareCar-list").each(function(){
 					$(this).click(function(){
-						if((new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime())||
-							(new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() <new Date($(".test_ent").html()).getTime())){
-							window.location.href="houseInfo.html?house="+$(this).find(".shareId").html()+"&id="+$(".idNum").html();
-						}else{
-							alert("活动尚未开始");
-						}
+                        window.location.href="houseInfo.html?house="+$(this).find(".shareId").html()+"&id="+$(".idNum").html();
 					})
 				})
 			}else{
@@ -407,20 +397,14 @@ function houseList(data){
 
 
 									}
+                                    var aLis=$(".floorChose").find("li");
+                                    aLis.each(function(){
+                                        $(this).click(function(){
+                                            var houseID=data.objects[$(this).index()][0].house;
+                                            window.location.href="houseInfo.html?house="+houseID+"&id="+$(".idNum").html();
 
-									if((new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime())||
-										(new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() <new Date($(".test_ent").html()).getTime())){
-										var aLis=$(".floorChose").find("li");
-										aLis.each(function(){
-											$(this).click(function(){
-												var houseID=data.objects[$(this).index()][0].house;
-												window.location.href="houseInfo.html?house="+houseID+"&id="+$(".idNum").html();
-
-											})
-										})
-									}else{
-										alert("活动尚未开始");
-									}
+                                        })
+                                    })
 								},
 								error:function(data){
 									alert("出错了");
@@ -569,12 +553,7 @@ function data5(result){
 	$("body").append(datap);
 }
 function buyNow(){
-	if((new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime())||
-		(new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".test_ent").html()).getTime())){
-		$("#houseInfoBlack").show();
-	}else{
-		alert("活动尚未开始");
-	}
+    $("#houseInfoBlack").show();
 }
 function confrim(){
 	var id=$(".houseID").html();
@@ -582,12 +561,7 @@ function confrim(){
 	if(!$(".dialog-check").prop("checked")){
 		alert("请同意《活动协议》");
 	}else{
-		if((new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime())||
-			(new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".test_ent").html()).getTime())){
-			window.location.href = "houseSuccess.html?house="+id+"&id="+idd;
-		}else{
-			alert("活动尚未开始");
-		}
+        window.location.href = "houseSuccess.html?house="+id+"&id="+idd;
 	}
 }
 Date.prototype.Format = function(fmt)

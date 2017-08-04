@@ -74,13 +74,7 @@ $(function(){
                 creatEle(data.objects[0]);
                 $(".ind1").html(id);
                 $(".btnL").bind("click",function(){
-                    $(this).unbind("click");
-                    if((new Date(data.objects[0].event_start).getTime()<new Date().getTime()&&new Date().getTime()<new Date(data.objects[0].event_end).getTime())||
-                            (new Date(data.objects[0].test_start).getTime()<new Date().getTime()&&new Date().getTime()<new Date(data.objects[0].test_ent).getTime())){
-                        window.location.href="houseList.html?id="+id;
-                    }else{
-                        alert("活动未开始");
-                    }
+                    window.location.href="houseList.html?id="+id;
                });
                 $(".quitt").click(function(){
                 $(this).prop("disabled",true);
@@ -91,9 +85,11 @@ $(function(){
                         id:$(".ind1").html()
                     },
                     success:function(data){
+                        $(this).prop("disabled",false);
                         window.location.href="login.html?id="+$(".ind1").html();
                     },
                     error:function(){
+                        $(this).prop("disabled",false);
                         alert("退出出现未知错误！");
                     }
                     })
