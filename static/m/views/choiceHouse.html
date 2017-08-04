@@ -77,7 +77,7 @@ $(function(){
                     window.location.href="houseList.html?id="+id;
                });
                 $(".quitt").click(function(){
-                $(this).prop("disabled",true);
+                $(this).attr("disabled", "disabled");;
                 $.ajax({
                     type:"POST",
                     url:http+"/acc/cusout/",
@@ -85,11 +85,11 @@ $(function(){
                         id:$(".ind1").html()
                     },
                     success:function(data){
-                        $(this).prop("disabled",false);
+                        $(".quitt").removeAttr("disabled");
                         window.location.href="login.html?id="+$(".ind1").html();
                     },
                     error:function(){
-                        $(this).prop("disabled",false);
+                        $(".quitt").removeAttr("disabled");
                         alert("退出出现未知错误！");
                     }
                     })

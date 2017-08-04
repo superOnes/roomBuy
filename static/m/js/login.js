@@ -18,7 +18,7 @@ $(function(){
 		//}
 		else{
 			var tel=$(".titleph").val(),personId=$(".titlezj").val();
-            $(this).prop("disabled",true);
+            $(".btnlog").attr("disabled", "disabled");
 			$.ajax({
 				type:"POST",
 				url:http+"/acc/cuslog/",
@@ -28,7 +28,7 @@ $(function(){
 					id:$(".loginId").html()
 				},
 				success:function(data){
-                    $(this).prop("disabled",false);
+                    $(".btnlog").removeAttr("disabled");
 					if(data.response_state==200){
 
 						prol(data.objects[0]);
@@ -70,7 +70,7 @@ $(function(){
 					}
 				},
 				error:function(){
-                    $(this).prop("disabled",false);
+                    $(".btnlog").removeAttr("disabled");
 					alert("页面出错，请重试");
 				}
 
