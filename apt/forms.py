@@ -98,7 +98,8 @@ class CustomerForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super(CustomerForm, self).clean()
-        customer = Customer.objects.all()
+        self.instance.event = self.initial['event']
+        customer = Customer.objects.filter(event=self.instance.event)
         for ct in customer:
             if cleaned_data['mobile'] == ct.mobile \
                     or cleaned_data['identication'] == ct.identication:
