@@ -43,6 +43,8 @@ $(function(){
 								type:"POST",
 								url:http+"/app/protime/",
 								data:{
+                                    tel:tel,
+                                    personId:personId,
 									id:$(".loginId").html(),
                                     protime:new Date().Format("yyyy-MM-dd hh:mm:ss")
 
