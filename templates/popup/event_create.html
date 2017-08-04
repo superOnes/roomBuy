@@ -6,9 +6,9 @@
 		vertical-align: middle;
 		padding: 0 10px !important;
 	}
-	.form-control[readonly]{background: none !important;}
 </style>
 <div style="padding:20px;">
+	<p id="isPub">{{form.is_pub.value|default:''}}</p>
 	<form class="form-horizontal" method="post" enctype="multipart/form-data" id="createEvent">
 		{% csrf_token %}
 		<div class="form-group">
@@ -155,7 +155,7 @@
 		{% if form.non_field_errors %}
 		<div class="alert alert-info">{{form.non_field_errors}}</div>
 		{% endif %}
-		<input type="text" name="company" value="{{form.company.value|default:''}}" style="display:none">
+		<input type="hidden" name="company" value="{{form.company.value|default:''}}">
 		<div class="modal-footer">
 			<input type="submit" class="btn btn-primary btn_create" value="确定"></input>
 		</div>
@@ -167,7 +167,11 @@
 		var coverImgFile = $(".coverImgFile").html();
 		var coverImgFiles = coverImgFile.slice(17); //截取获取文件的文件名
 		$(".coverImgFile").html(coverImgFiles);
-
+		var pub = $("#isPub").html();
+		if(pub == "True"){
+			$("#isPub").html("活动已发布，不可编辑！").show();
+			$(".btn_create").attr("disabled","disabled");
+		}
 
 	});
 
@@ -183,6 +187,8 @@
 		var file_img = document.getElementById("coverImg");
 		iptfileupload = document.getElementById('cover');
 		getPath(file_img, iptfileupload, file_img);
+
+		// 获取文件名
 		var fil = iptfileupload.files[0].name;
 		$(".coverImgFile").html(fil);
 	};

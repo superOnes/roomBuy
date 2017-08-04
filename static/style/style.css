@@ -108,6 +108,12 @@ input[type="number"]{
 	height: 130px;
 	margin-top:10px;
 }
+#isPub{
+	display: none;
+	text-align: center !important;
+	color:red;
+}
+
 
 
 .page-header{

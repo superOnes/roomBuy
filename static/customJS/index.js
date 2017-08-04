@@ -233,7 +233,6 @@ function getorderList(thisId,is_test,searchValue){
 		url:"/orderlist/",
 		asunc:true,
 		success:function(results){
-			console.log(results)
 			if(results.success){
 				$(".tip").hide();
 				$("#exportEach").attr("href","/exportorder/?id="+thisId+"&is_test="+is_test+"&value="+searchValue);
