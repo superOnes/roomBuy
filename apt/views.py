@@ -153,6 +153,7 @@ class EventDetailListView(ListView):
     '''
     template_name = 'eventdetail_list.html'
     model = EventDetail
+    paginate_by = 50
 
     def get_queryset(self):
         self.value = self.request.GET.get('value')

@@ -42,6 +42,7 @@
 			<div class="input-group col-sm-4">
 				<input type="text" class="form-control form-datetime" readonly name="test_end" value="{{form.test_end.value|default:''|date:'Y-m-d H:i'}}" required>
 			</div>
+			<div class="col-sm-8" style="margin:-10px 0 -10px 25%;text-align:center;color:red;"><small>公测开始时间不得早于结束时间。</small></div>
 		</div>
 		<div class="form-group">
 			<label class="col-sm-3 control-label">是否显示公测房价</label>
@@ -63,6 +64,7 @@
 			<div class="input-group col-sm-4">
 				<input type="text" class="form-control form-datetime" readonly name="event_end" value="{{form.event_end.value|default:''|date:'Y-m-d H:i'}}" required>
 			</div>
+			<div class="col-sm-8" style="margin:-10px 0 -10px 25%;text-align:center;color:red;"><small>活动开始时间不得早于结束时间，并且要晚于公测结束时间一天。</small></div>
 		</div>
 		<div class="form-group">
 			<label class="col-sm-3 control-label">选房完成期限<i>*</i></label>
@@ -121,7 +123,7 @@
 			<label class="col-sm-3 control-label" style="vertical-align: top;">活动封面<i>*</i></label>
 			<div class="col-sm-9 myfileCover">
 				<input type="file" class="form-control" id="cover" onchange='showCover()' name="cover">
-				<p>添加的封面图为<span class="coverImgFile" style="margin-left:20px;">{{form.cover.value|default:''}}</span></p>
+				<p><b>添加的封面图为</b><span class="coverImgFile" style="margin-left:20px;">{{form.cover.value|default:''}}</span></p>
 				<div style="width: 380px;">
 					<img src='{{MEDIA_URL}}{{object.cover}}' alt='' id='coverImg' onerror="this.src='{{ STATIC_URL }}images/default.png'" />
 				</div>
@@ -130,7 +132,7 @@
 		<div class="form-group">
 			<label class="col-sm-3 control-label" style="vertical-align: top;">平面图</label>
 			<div class="col-sm-9 myfilePlane_graph">
-				<label class="col-sm-6" for="">
+				<label class="col-sm-6" for="" style="padding-left: 0;">
 					<p>选择平面图</p>
 					<input type="file" class="form-control" id="plane_graph1" onchange='showPlane_graph1()' name="plane_graph">
 					<img src='{{MEDIA_URL}}{{object.plane_graph}}' alt='' id='plane_graph_img1' onerror="this.src='{{ STATIC_URL }}images/default.png'"/>
@@ -140,7 +142,7 @@
 					<input type="file" class="form-control" id="plane_graph2" onchange='showPlane_graph2()' name="plane_graph1">
 					<img src='{{MEDIA_URL}}{{object.plane_graph1}}' alt='' id='plane_graph_img2' onerror="this.src='{{ STATIC_URL }}images/default.png'"/>
 				</label>
-				<label class="col-sm-6" for="">
+				<label class="col-sm-6" for="" style="padding-left: 0;">
 					<p>选择平面图</p>
 					<input type="file" class="form-control" id="plane_graph3" onchange='showPlane_graph3()' name="plane_graph2">
 					<img src='{{MEDIA_URL}}{{object.plane_graph2}}' alt='' id='plane_graph_img3' onerror="this.src='{{ STATIC_URL }}images/default.png'"/>

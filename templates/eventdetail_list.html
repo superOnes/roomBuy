@@ -169,9 +169,20 @@
 		{% endfor %}
 	</tbody>
 </table>
+<div class="zxf_pagediv"></div>
 {% endblock %} {% block js %}
 <script type="text/javascript">
 	$(document).ready(function() {
+		$(".zxf_pagediv").createPage({
+			pageNum: {{ paginator.num_pages}},//总页码
+			current: {{ page_obj.number }},//当前页
+			activepage: "current",
+			activepaf: "",
+			backfun: function(e) {  //回调
+				window.location.href="?page="+e.current;
+			}
+		});
+
 		$('table.datatable').datatable();
 		$('.status').on('click', function(e) {
 			$("#status_status").val($(e.currentTarget).data("id"));

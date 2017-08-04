@@ -56,10 +56,17 @@ input[type="number"]{
 	position: relative;
 }
 .myfileCover>p{
-	padding-left: 10px;
-	border: 1px solid #ccc;
-	line-height:30px;
-	cursor: pointer;
+		line-height:30px;
+}
+.myfileCover>p>b{
+	font-weight: normal;
+	text-align: center;
+	background: #D0EEFF;
+	border: 1px solid #99D3F5;
+	border-radius: 4px;
+	padding: 7px 12px;
+	overflow: hidden;
+	color: #1E88C7;
 }
 .myfileCover>input{
 	position: absolute;

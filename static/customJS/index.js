@@ -12,13 +12,13 @@ $(document).ready(function(){
 		var pattern = /[0-9-()（）]{7,15}/;
 		if(!pattern.test(inputPhone)){
 			new $.zui.Messager('请输入正确的电话号码！', {
-				placement:'bottom',
+				placement:'center',
 				type: 'primary'
 			}).show();
 　			return false;
 		}else if($(".coverImgFile").html() == "") {
 				new $.zui.Messager('请添加封面', {
-					placement:'bottom',
+					placement:'center',
 					type: 'primary'
 				}).show();
 		　	return false;
@@ -65,7 +65,7 @@ function submitFile(event,thisID){
 		success:function(results){
 			if(results.success){
 				new $.zui.Messager('导入成功！', {
-		       	placement:'top',
+		       	placement:'center',
 				    type: 'success'
 				}).show("",function(){
 					setTimeout(function(){
@@ -74,7 +74,7 @@ function submitFile(event,thisID){
 				});
 			}else{
 				new $.zui.Messager('导入失败，请检查您的文件。', {
-		       	placement:'top',
+		       	placement:'center',
 				    type: 'primary' // 定义颜色主题
 				}).show("",function(){
 					$(event).attr("disabled","disabled");
@@ -104,7 +104,7 @@ function roomPriceFile(event,thisID){
 		success:function(results){
 			if(results.success){
 				new $.zui.Messager('导入成功！', {
-		       		placement:'top',
+		       		placement:'center',
 				    type: 'success' // 定义颜色主题
 				}).show("",function(){
 					setTimeout(function(){
@@ -113,7 +113,7 @@ function roomPriceFile(event,thisID){
 				});
 			}else{
 				new $.zui.Messager('导入失败!', {
-		       		placement:'top',
+		       		placement:'center',
 				    type: 'primary' // 定义颜色主题
 				}).show("",function(){
 					$(event).attr("disabled","disabled");
