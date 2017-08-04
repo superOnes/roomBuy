@@ -83,10 +83,12 @@
 					houseInfo(data.objects[0]);
 					$(".houseID").html(houseId);
 					$(".idd").html(id);
-				}else if(data.response_state==403.1||data.response_state==403){
+				}else if(data.response_state==401||data.response_state==403){
                     alert(data.msg);
 					window.location.href="login.html?id="+id;
-				}else{
+				}else if(data.response_state==405){
+                    window.location.href="houseList.html?id="+id;
+                }else{
 					alert(data.msg);
 				}
 			},

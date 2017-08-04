@@ -74,6 +74,8 @@
                 }else if(data.response_state==401||data.response_state==403){
                     alert(data.msg);
                     window.location.href="login.html?id="+idd;
+                }else if(data.response_state==405){
+                    window.location.href="houseInfo.html?house="+id+"&id="+idd;
                 }else{
                     $(".success-container").append('<div class="noOne"><img src="../images/none.png" /><p>'+data.msg+'</p></div>');
                 }
