@@ -313,12 +313,12 @@ class ImportEventDetailView(View):
                                 event=event)
                             eventdetail.save()
                             num += 1
-                    return JsonResponse({'success': True, 'data': num})
-                return JsonResponse({'success': False, 'msg': '导入数据超过限制数量！'})
+                    return JsonResponse({'response_state': 200, 'data': num})
+                return JsonResponse({'response_state': 400, 'msg': '导入数据超过限制数量！'})
             else:
-                return JsonResponse({'success': False, 'msg': '导入文件格式不正确！'})
+                return JsonResponse({'response_state': 400, 'msg': '导入文件格式不正确！'})
         os.remove('media/price/price.xlsx')
-        return JsonResponse({'success': False})
+        return JsonResponse({'response_state': 400, 'msg': '没有该活动！'})
 
 
 @method_decorator(admin_required, name='dispatch')

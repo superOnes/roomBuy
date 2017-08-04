@@ -37,7 +37,7 @@ class EventDetailForm(forms.ModelForm):
         cleaned_data = super(EventDetailForm, self).clean()
         event = self.initial['event']
         current_user = self.initial['current_user']
-        eventdetail = EventDetail.objects.all()
+        eventdetail = EventDetail.objects.filter(event=event)
         for ed in eventdetail:
             if cleaned_data['building'] == ed.building \
                     and cleaned_data['unit'] == ed.unit \
