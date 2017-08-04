@@ -115,7 +115,7 @@ class EventTermUpdateView(DialogMixin, UpdateView):
     编辑协议
     '''
     model = Event
-    fields = ['termname', 'term']
+    fields = ['termname', 'term', 'is_pub']
     template_name = 'popup/event_term.html'
 
 
@@ -382,6 +382,7 @@ class CustomListView(ListView):
     '''
     template_name = 'customer_list.html'
     model = Customer
+    paginate_by = 50
 
     def get_queryset(self):
         self.value = self.request.GET.get('value')

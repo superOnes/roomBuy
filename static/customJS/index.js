@@ -11,16 +11,14 @@ $(document).ready(function(){
 		var inputPhone = $("input[name='phone_num']").val();
 		var pattern = /[0-9-()（）]{7,15}/;
 		if(!pattern.test(inputPhone)){
-			new $.zui.Messager('请输入正确的电话号码！', {
-				placement:'center',
-				type: 'primary'
-			}).show();
+			alert('请输入正确的电话号码！')
 　			return false;
+		}else if($(".form-datetime").html() == "") {
+			console.log($(".form-datetime").value);
+			alert('请检查时间选择');
+	　		return false;
 		}else if($(".coverImgFile").html() == "") {
-				new $.zui.Messager('请添加封面', {
-					placement:'center',
-					type: 'primary'
-				}).show();
+				alert('请添加封面')
 		　	return false;
 			}
 	});
@@ -60,21 +58,21 @@ function submitFile(event,thisID){
 		async:true,
 		data:data,
 		cache: false,
-        processData: false,//发送的数据将被转换为对象，false就是不转化，默认为true
-        contentType: false,
+    processData: false,//发送的数据将被转换为对象，false就是不转化，默认为true
+    contentType: false,
 		success:function(results){
-			if(results.success){
-				new $.zui.Messager('导入成功！', {
-		       	placement:'center',
-				    type: 'success'
+			if(results.response_state == 200){
+				new $.zui.Messager('导入成功，正在导入，请稍等！', {
+		       		placement:'center',
+				    type: 'success' // 定义颜色主题
 				}).show("",function(){
 					setTimeout(function(){
 						window.location.reload();
 					},1000)
 				});
-			}else{
-				new $.zui.Messager('导入失败，请检查您的文件。', {
-		       	placement:'center',
+			}else if(results.response_state == 400){
+				new $.zui.Messager(results.msg, {
+		       		placement:'center',
 				    type: 'primary' // 定义颜色主题
 				}).show("",function(){
 					$(event).attr("disabled","disabled");
@@ -102,17 +100,17 @@ function roomPriceFile(event,thisID){
     processData: false,//发送的数据将被转换为对象，false就是不转化，默认为true
     contentType: false,
 		success:function(results){
-			if(results.success){
-				new $.zui.Messager('导入成功！', {
+			if(results.response_state == 200){
+				new $.zui.Messager('导入成功，正在导入，请稍等！', {
 		       		placement:'center',
 				    type: 'success' // 定义颜色主题
 				}).show("",function(){
 					setTimeout(function(){
 						window.location.reload();
-					},1000)
+					},500)
 				});
-			}else{
-				new $.zui.Messager('导入失败!', {
+			}else if(results.response_state == 400){
+				new $.zui.Messager(results.msg, {
 		       		placement:'center',
 				    type: 'primary' // 定义颜色主题
 				}).show("",function(){
@@ -136,6 +134,7 @@ function deleteOrder(thisId){
 		data:{id:thisId},
 		success:function(){
 			new $.zui.Messager('提示消息：成功', {
+					placement:'center',
 			    type: 'success' // 定义颜色主题
 			}).show("",function(){
 				window.location.reload();

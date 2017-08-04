@@ -1,11 +1,27 @@
 {% extends 'include/base.html' %} {% block main %}
 <style type="text/css">
+
 	.col-sm-4 {
 		width: 30% !important;
 		display: inline-block !important;
 		vertical-align: middle;
 		padding: 0 10px !important;
 	}
+	.col-sm-1{
+		width: 15% !important;
+		display: inline-block !important;
+		vertical-align: middle;
+		padding: 0 10px !important;
+	}
+		.col-sm-2{
+			width: 30% !important;
+			display: inline-block !important;
+			vertical-align: middle;
+			padding: 0 10px !important;
+		}
+		#follow_num{
+			width: 23% !important;
+		}
 </style>
 <div style="padding:20px;">
 	<p id="isPub">{{form.is_pub.value|default:''}}</p>
@@ -42,7 +58,7 @@
 			<div class="input-group col-sm-4">
 				<input type="text" class="form-control form-datetime" readonly name="test_end" value="{{form.test_end.value|default:''|date:'Y-m-d H:i'}}" required>
 			</div>
-			<div class="col-sm-8" style="margin:-10px 0 -10px 25%;text-align:center;color:red;"><small>公测开始时间不得早于结束时间。</small></div>
+			<div class="col-sm-8" style="margin:-10px 0 -10px 25%;text-align:center;color:red;"><small>公测开始时间不得早于当前时间，不得晚于结束时间。</small></div>
 		</div>
 		<div class="form-group">
 			<label class="col-sm-3 control-label">是否显示公测房价</label>
@@ -64,17 +80,16 @@
 			<div class="input-group col-sm-4">
 				<input type="text" class="form-control form-datetime" readonly name="event_end" value="{{form.event_end.value|default:''|date:'Y-m-d H:i'}}" required>
 			</div>
-			<div class="col-sm-8" style="margin:-10px 0 -10px 25%;text-align:center;color:red;"><small>活动开始时间不得早于结束时间，并且要晚于公测结束时间一天。</small></div>
+			<div class="col-sm-8" style="margin:-10px 0 -10px 25%;text-align:center;color:red;"><small>活动开始时间不得早于当前时间，不得晚于结束时间，并且要晚于公测结束时间一天。</small></div>
 		</div>
 		<div class="form-group">
 			<label class="col-sm-3 control-label">选房完成期限<i>*</i></label>
-			<div class="col-sm-9">
-				<input type="text" class="form-control" onkeyup="(this.v=function(){this.value=this.value.replace(/[^1-9-]+/,'');}).call(this)" onblur="this.v();" placeholder="小时" min="1" name="limit" value="{{form.limit.value|default:''}}" required>
+			<div class="col-sm-1">
+				<input type="text" class="form-control" onkeyup="(this.v=function(){this.value=this.value.replace(/[^1-9-]+/,'');}).call(this)" onblur="this.v();"
+				placeholder="小时" min="1" name="limit" value="{{form.limit.value|default:''}}" required>
 			</div>
-		</div>
-		<div class="form-group">
-			<label class="col-sm-3 control-label">同一账号允许收藏数<i>*</i></label>
-			<div class="col-sm-9">
+			<label class="col-sm-3 control-label" id="follow_num">同一账号允许收藏数<i>*</i></label>
+			<div class="col-sm-2">
 				<input type="text" class="form-control" onkeyup="(this.v=function(){this.value=this.value.replace(/[^1-9-]+/,'');}).call(this)" onblur="this.v();"
 					placeholder="同一账号允许收藏数" name="follow_num" value="{{form.follow_num.value|default:''}}" required>
 			</div>

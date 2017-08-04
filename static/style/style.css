@@ -116,6 +116,11 @@ input[type="number"]{
 	text-align: center !important;
 	color:red;
 }
+#isPub1{
+	display: none;
+	text-align: center !important;
+	color:red;
+}
 
 
 

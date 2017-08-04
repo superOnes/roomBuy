@@ -1,4 +1,4 @@
-{% extends 'include/main_base.html' %} 
+{% extends 'include/main_base.html' %}
 {% block title %}认筹名单{% endblock %}
 {% block right %}
 <div>
@@ -96,7 +96,17 @@
 		{% endfor %}
 	</tbody>
 </table>
+<div class="zxf_pagediv"></div>
 <script type="text/javascript">
+$(".zxf_pagediv").createPage({
+	pageNum: {{ paginator.num_pages}},//总页码
+	current: {{ page_obj.number }},//当前页
+	activepage: "current",
+	activepaf: "",
+	backfun: function(e) {  //回调
+		window.location.href="?page="+e.current;
+	}
+});
 	//	删除认筹名单
 	var $id;
 	$(".deleteOrder").on('click', function(e) {

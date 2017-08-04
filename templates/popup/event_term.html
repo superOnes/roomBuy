@@ -8,6 +8,7 @@
 	}
 </style>
 <div style="padding:20px">
+	<p id="isPub1">{{form.is_pub.value|default:''}}</p>
 	<form class="form-horizontal" method="post" action="">
 		{% csrf_token %}
 		<div class="form-group">
@@ -23,8 +24,17 @@
 			</div>
 		</div>
 		<div class="modal-footer">
-			<input type="submit" class="btn btn-primary" value="确定"></input>
+			<input type="submit" class="btn btn-primary btn_edit" value="确定"></input>
 		</div>
 	</form>
 </div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		var pub = $("#isPub1").html();
+		if(pub == "True"){
+			$("#isPub1").html("活动已发布，不可编辑！").show();
+			$(".btn_edit").attr("disabled","disabled");
+		}
+	})
+</script>
 {% endblock %}
