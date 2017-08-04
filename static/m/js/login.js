@@ -132,22 +132,7 @@ function creatEle(data){
 		$(".floor span").eq(sindex).css({"height":(height/(20)+0.85)+"rem","line-height":(height/(20)+0.85)+"rem"})
 	}
 }
-    $(".quitt").click(function(){
-        $(this).prop("disabled",true);
-        $.ajax({
-            type:"POST",
-            url:http+"/acc/cusout/",
-            data:{
-                id:$(".ind1").html()
-            },
-            success:function(data){
-                window.location.href="login.html?id="+$(".ind1").html();
-            },
-            error:function(){
-                alert("退出出现未知错误！");
-            }
-        })
-    });
+
 
 function telp (){
 	var reg=/^1[3|4|5|7|8]\d{9}$/;

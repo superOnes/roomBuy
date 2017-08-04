@@ -33,6 +33,6 @@ def customer_login_required(func):
             logout(request)
             return JsonResponse({'response_state': 403, 'msg': '不在活动期间！'})
         if not request.user.is_authenticated():
-            return JsonResponse({'response_state': 403, 'msg': '请登录！'})
+            return JsonResponse({'response_state': 401, 'msg': '请登录！'})
         return func(request, *args, **kwargs)
     return wrapper
