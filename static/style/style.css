@@ -71,13 +71,10 @@ input[type="number"]{
 }
 
 
-.myfilePlane_graph>label{
+.myfilePlane_graph>.col-sm-6{
+	width: 49% !important;
 	position: relative;
-	vertical-align: top;
-	width: 180px;
-}
-.myfilePlane_graph>label:nth-child(odd){
-	margin-right:10px;
+	margin-bottom: 20px;
 }
 .myfilePlane_graph>label>input{
 	position: absolute;
@@ -87,18 +84,17 @@ input[type="number"]{
 	opacity: 0;
 }
 .myfilePlane_graph>label>p{
-	width: 50%;
 	text-align: center;
 	margin: 0 auto !important;
-    background: #D0EEFF;
-    border: 1px solid #99D3F5;
-    border-radius: 4px;
-    padding: 4px 12px;
-    overflow: hidden;
-    color: #1E88C7;
-    text-decoration: none;
-    text-indent: 0;
-    line-height: 20px;
+  background: #D0EEFF;
+  border: 1px solid #99D3F5;
+  border-radius: 4px;
+  padding: 4px 12px;
+  overflow: hidden;
+  color: #1E88C7;
+  text-decoration: none;
+  text-indent: 0;
+  line-height: 20px;
 }
 .myfilePlane_graph>label>img{
 	display: block;
