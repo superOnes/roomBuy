@@ -1,5 +1,5 @@
-//var http="";//正式
-var http="http://10.7.10.193:8000"; //测试
+var http="";//正式
+//var http="http://10.7.10.193:8000"; //测试
 //var http="http://10.7.1.34";
 $(function(){
 
@@ -415,7 +415,6 @@ function houseList(data){
                                                 alert("活动尚未开始！");
                                             }else{
                                                 var houseID=data.objects[$(this).index()].house;
-                                                console.log(houseID)
                                                 window.location.href="houseInfo.html?house="+houseID+"&id="+$(".idNum").html();
                                             }
 
