@@ -14,10 +14,10 @@ from accounts.models import Order, Customer
 from accounts.decorators import customer_login_required, customer_login_time
 
 
-@method_decorator(customer_login_required, name='dispatch')
+# @method_decorator(customer_login_required, name='dispatch')
 class ProTimeView(View):
     '''
-    时间同意协议
+    同意协议时间
     '''
 
     def post(self, request):

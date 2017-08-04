@@ -37,7 +37,7 @@ def customer_login_required(func):
         if (now < event.test_start + timedelta(hours=-0.5) or (now > event.test_end and now <
                                        event.event_start + timedelta(hours=-0.5)) or now > event.event_end):
             return JsonResponse({'response_state': 401, 'msg': '不在活动登录期间！'})
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated() or request.user.is_admin:
             return JsonResponse({'response_state': 401, 'msg': '请登录！'})
         return func(request, *args, **kwargs)
     return wrapper
