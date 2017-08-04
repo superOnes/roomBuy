@@ -51,16 +51,16 @@
 
         for(var i=0;i<data.length;i++){
 
-            $(".tips").after($('<div class="wapbox clear">'+
-                                    '<div class="title">'+data[i].building+'号楼</div>'+
+            $(".tips").append($('<div class="wapbox clear">'+
+                                    '<div class="title">'+data[i].building+'</div>'+
                                     '<div class="wallList fr"></div>'+
                                 '</div>'
                         )
             );
 
             for(var j=0;j<data[i].units.length;j++){
-                    $(".wallList").append($('<dl class="unit">'+
-                                                '<dt class="unitName">'+data[i].units[j].unit+'单元</dt>'+
+                $(".wapbox").eq(i).find(".wallList").append($('<dl class="unit">'+
+                                                '<dt class="unitName">'+data[i].units[j].unit+'</dt>'+
                                                 '<dd class="unitLists">'+
                                                     '<div class="unitList"></div>'+
                                                 '</dd>'+
@@ -71,7 +71,7 @@
                     );
 
                 for(var n=0;n<data[i].units[j].rooms.length;n++){
-                    $(".unitList").append($('<span>'+data[i].units[j].rooms[n].room_num+
+                    $(".wapbox").eq(i).find(".unit").eq(j).find(".unitList").append($('<span>'+data[i].units[j].rooms[n].room_num+
                                                  '<i style="display:none;">'+data[i].units[j].rooms[n].id+'</i>'+
                                              '</span>'));
 
@@ -113,7 +113,7 @@
         }
 
         var time1=setInterval(function(){
-            $(".wapbox").eq(k).find(".wallList").css("margin-top","-900"*m+"px");
+            $(".wapbox").eq(k).find(".wallList").css("margin-top","-910"*m+"px");
             timerfn($(unitList));
             m++;
             if(m==num+1){

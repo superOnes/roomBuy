@@ -3,7 +3,7 @@ var http="";//正式
 //var http="http://10.7.1.34";
 $(function(){
 
-	$(".btnLogin").bind("click",function(){
+	$(".btnlog").click(function(){
 		if($(".titleph").val().trim().length==0){
 			$(".tips").html("请输入手机号！");
 		}
@@ -18,7 +18,7 @@ $(function(){
 		//}
 		else{
 			var tel=$(".titleph").val(),personId=$(".titlezj").val();
-            $(this).unbind("click");
+            $(this).prop("disabled",true);
 			$.ajax({
 				type:"POST",
 				url:http+"/acc/cuslog/",
@@ -28,8 +28,9 @@ $(function(){
 					id:$(".loginId").html()
 				},
 				success:function(data){
-                    $(".btnLogin").bind("click");
+                    $(this).prop("disabled",false);
 					if(data.response_state==200){
+
 						prol(data.objects[0]);
 						$("#loginBlack").show();
 						$(".proCancle").click(function(){
@@ -48,7 +49,7 @@ $(function(){
 								},
 								dataType:'JSON',
 								success: function (data) {
-									$(this).bind("click");
+                                    $(".proSure").bind("click");
 									if(data.response_state==200){
 										window.location.href = "choiceHouse.html?id="+$(".loginId").html();
 
@@ -57,7 +58,7 @@ $(function(){
 									}
 								},
 								error:function(){
-                                    $(this).bind("click");
+                                    $(".proSure").bind("click");
 									alert('页面出错，请重试！');
 								}
 							});
@@ -67,7 +68,7 @@ $(function(){
 					}
 				},
 				error:function(){
-                    $(".btnLogin").bind("click");
+                    $(this).prop("disabled",false);
 					alert("页面出错，请重试");
 				}
 
@@ -403,13 +404,18 @@ function houseList(data){
 											}
 										}
 
-
 									}
                                     var aLis=$(".floorChose").find("li");
+
                                     aLis.each(function(){
                                         $(this).click(function(){
-                                            var houseID=data.objects[$(this).index()][0].house;
-                                            window.location.href="houseInfo.html?house="+houseID+"&id="+$(".idNum").html();
+                                            if(data.response_state==405){
+                                                alert("活动尚未开始！");
+                                            }else{
+                                                var houseID=data.objects[$(this).index()][0].house;
+                                                window.location.href="houseInfo.html?house="+houseID+"&id="+$(".idNum").html();
+                                            }
+
 
                                         })
                                     })
