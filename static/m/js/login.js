@@ -94,7 +94,7 @@ function creatEle(data){
 						'<div class="swiper-pagination"></div>' +
 					'</div>' +
 				'</div>'+
-				'<div class="houseQui clear"><h1 class="fl">'+data.name+'</h1><p class="quit fr" onclick="quit()">退出</p></div>'+
+				'<div class="houseQui clear"><h1 class="fl">'+data.name+'</h1><p class="quit fr"><input type="button" value="退出" class="quitt"/></p></div>'+
 				'<div class="phone">咨询电话：'+data.phone+'</div>'+
 				'<div class="lineBox">'+
 					'<div class="floor">' +
@@ -131,8 +131,23 @@ function creatEle(data){
 		var height = parseInt($(".floor div.hgt").eq(index).css("height"));
 		$(".floor span").eq(sindex).css({"height":(height/(20)+0.85)+"rem","line-height":(height/(20)+0.85)+"rem"})
 	}
-
 }
+    $(".quitt").click(function(){
+        $(this).prop("disabled",true);
+        $.ajax({
+            type:"POST",
+            url:http+"/acc/cusout/",
+            data:{
+                id:$(".ind1").html()
+            },
+            success:function(data){
+                window.location.href="login.html?id="+$(".ind1").html();
+            },
+            error:function(){
+                alert("退出出现未知错误！");
+            }
+        })
+    });
 
 function telp (){
 	var reg=/^1[3|4|5|7|8]\d{9}$/;
@@ -143,24 +158,6 @@ function telp (){
 		return false;
 	}
 }
-function quit(){
-    $(".quit").unbind("click");
-    $.ajax({
-		type:"POST",
-		url:http+"/acc/cusout/",
-		data:{
-			id:$(".ind1").html()
-		},
-		success:function(data){
-            $(".quit").bind("click");
-			window.location.href="login.html?id="+$(".ind1").html();
-		},
-		error:function(){
-			alert("退出出现未知错误！");
-		}
-	})
-}
-
 function personIds(){
 	var reg=/^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/;
 	var hao=$(".titlezj").val();

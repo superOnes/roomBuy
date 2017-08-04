@@ -217,6 +217,7 @@ a, img {-webkit-touch-callout: none;}
 }
 .houseQui {background:#fff;}
 .quit {
+    width:50px;
     padding:0 3%;
     height:1.2rem;
     line-height:1.2rem;
@@ -504,7 +505,6 @@ a, img {-webkit-touch-callout: none;}
     margin-top: 0.4rem;
 }
 .floorList-style{
-    /*background-color: #eee;*/
     color: #fff;
 }
 .floorList .active{

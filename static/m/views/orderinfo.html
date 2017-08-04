@@ -71,10 +71,7 @@
                     $(".backIndex").click(function(){
                         window.location.href="houseList.html?id="+idd;
                     })
-                }else if(data.response_state==401){
-                    window.location.href="login.html?id="+idd;
-                }else if(data.response_state==403){
-                    alert(data.msg);
+                }else if(data.response_state==403.1||data.response_state==403){
                     window.location.href="login.html?id="+idd;
                 }else{
                     alert(data.msg);

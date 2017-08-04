@@ -89,7 +89,7 @@ $(function(){
                     }
                })
 
-            }else if(data.response_state==401){
+            }else if(data.response_state==403.1){
                 window.location.href="login.html?id="+id;
             }else if(data.response_state==403){
                 alert(data.msg);
@@ -103,7 +103,6 @@ $(function(){
             alert("出错了,请重试！");
         }
     })
-
 });
 </script>
 </html>
