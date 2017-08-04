@@ -16,14 +16,18 @@ class EventForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super(EventForm, self).clean()
         if not self.instance.id:
-            if cleaned_data['test_start'] < datetime.now():
-                raise forms.ValidationError('公测开始时间不得早于当前时间！')
-        if cleaned_data['test_start'] >= cleaned_data['test_end']:
-            raise forms.ValidationError('公测结束时间不能提前于公测开始时间！')
-        if cleaned_data['event_start'] < cleaned_data['test_end'] + timedelta(days=1):
-            raise forms.ValidationError('活动开始时间应比公测结束时间晚1天！')
-        if cleaned_data['event_start'] >= cleaned_data['event_end']:
-            raise forms.ValidationError('活动结束时间不能提前于活动开始时间！')
+            if 'test_start' not in cleaned_data or 'test_end' not in cleaned_data \
+                    or 'event_start' not in cleaned_data or 'event_end' not in cleaned_data:
+                raise forms.ValidationError('公测开始时间、结束时间和活动开始、结束时间都不能为空！')
+            else:
+                if cleaned_data['test_start'] < datetime.now():
+                    raise forms.ValidationError('公测开始时间不得早于当前时间！')
+                if cleaned_data['test_start'] >= cleaned_data['test_end']:
+                    raise forms.ValidationError('公测结束时间不能提前于公测开始时间！')
+                if cleaned_data['event_start'] < cleaned_data['test_end'] + timedelta(days=1):
+                    raise forms.ValidationError('活动开始时间应比公测结束时间晚1天！')
+                if cleaned_data['event_start'] >= cleaned_data['event_end']:
+                    raise forms.ValidationError('活动结束时间不能提前于活动开始时间！')
         return cleaned_data
 
 
