@@ -167,48 +167,53 @@ class ImportView(View):
         if id:
             event = Event.get(id)
             file = request.FILES.get('filename')
-            path = default_storage.save(
-                'tmp/customer.xlsx',
-                ContentFile(
-                    file.read()))
-            tmp_file = os.path.join(settings.MEDIA_ROOT, path)
-            workdata = xlrd.open_workbook(tmp_file)
-            sheet_name = workdata.sheet_names()[0]
-            sheet = workdata.sheet_by_name(sheet_name)
-            row = sheet.nrows
-            col = sheet.ncols
-            data = []
-            num = 0
-            for rx in range(1, row):
-                li = []
-                for cx in range(0, col):
-                    value = sheet.cell(rowx=rx, colx=cx).value
-                    li.append(value)
-                data.append(li)
-            for ct in data:
-                if type(ct[1]) != str:
-                    ct[1] = str(int(ct[1]))
-                if type(ct[2]) != str:
-                    ct[2] = str(int(ct[2]))
-                if (Customer.objects.filter(event_id=id,
-                                            mobile=ct[1]) or Customer.objects.filter(event_id=id,
-                                                                                               identication=ct[2])).exists():
-                    continue
-                else:
-                    with transaction.atomic():
-                        customer = Customer.objects.create(realname=ct[0],
-                                                           mobile=ct[1],
-                                                           identication=ct[2],
-                                                           remark=ct[3],
-                                                           event=event)
-                        customer.save()
-                        User.objects.create_user(
-                            username=uuid.uuid1(),
-                            password=customer.identication,
-                            customer=customer,
-                            is_admin=False)
-                        num += 1
-            return JsonResponse({'success': True, 'data': num})
+            filename = file.name.split('.')[-1]
+            if filename == 'xlsx' or filename == 'xls':
+                path = default_storage.save(
+                    'tmp/customer.xlsx',
+                    ContentFile(
+                        file.read()))
+                tmp_file = os.path.join(settings.MEDIA_ROOT, path)
+                workdata = xlrd.open_workbook(tmp_file)
+                sheet_name = workdata.sheet_names()[0]
+                sheet = workdata.sheet_by_name(sheet_name)
+                row = sheet.nrows
+                col = sheet.ncols
+                data = []
+                num = 0
+                for rx in range(1, row):
+                    li = []
+                    for cx in range(0, col):
+                        value = sheet.cell(rowx=rx, colx=cx).value
+                        li.append(value)
+                    data.append(li)
+                for ct in data:
+                    if type(ct[1]) != str:
+                        ct[1] = str(int(ct[1]))
+                    if type(ct[2]) != str:
+                        ct[2] = str(int(ct[2]))
+                    if (Customer.objects.filter(event_id=id,
+                                                mobile=ct[1]) or Customer.objects.filter(event_id=id,
+                                                                                                   identication=ct[2])).exists():
+                        continue
+                    else:
+                        with transaction.atomic():
+                            customer = Customer.objects.create(realname=ct[0],
+                                                               mobile=ct[1],
+                                                               identication=ct[2],
+                                                               remark=ct[3],
+                                                               event=event)
+                            customer.save()
+                            User.objects.create_user(
+                                username=uuid.uuid1(),
+                                password=customer.identication,
+                                customer=customer,
+                                is_admin=False)
+                            num += 1
+                return JsonResponse({'success': True, 'data': num})
+            else:
+                return JsonResponse({'success': False, 'msg': '导入文件格式不正确！'})
+        os.remove('media/tmp/customer.xlsx')
         return JsonResponse({'success': False})
 
 
