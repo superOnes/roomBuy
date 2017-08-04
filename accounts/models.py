@@ -77,3 +77,6 @@ class Order(models.Model):
         obj = cls.get(id)
         obj.is_delete = True
         obj.save()
+
+    class Meta:
+        unique_together = (('user', 'is_test'))
