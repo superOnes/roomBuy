@@ -414,7 +414,8 @@ function houseList(data){
                                             if(data.response_state==405){
                                                 alert("活动尚未开始！");
                                             }else{
-                                                var houseID=data.objects[$(this).index()][0].house;
+                                                var houseID=data.objects[$(this).index()].house;
+                                                console.log(houseID)
                                                 window.location.href="houseInfo.html?house="+houseID+"&id="+$(".idNum").html();
                                             }
 
