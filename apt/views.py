@@ -119,7 +119,7 @@ class EventTermUpdateView(DialogMixin, UpdateView):
     template_name = 'popup/event_term.html'
 
 
-@method_decorator(admin_required, name='dispatch')
+# @method_decorator(admin_required, name='dispatch')
 class EventStatus(View):
     '''
     活动发布情况 发布/未发布
@@ -127,10 +127,12 @@ class EventStatus(View):
 
     def put(self, request):
         user = request.user
+        if not user.is_authenticated():
+            return JsonResponse({'success': False, 'response_status': 300})
         put = QueryDict(request.body, encoding=request.encoding)
         id = put.get('id')
         if not id:
-            return JsonResponse({'success': False})
+            return JsonResponse({'success': False, 'response_status': 301})
         else:
             obj = Event.get(id)
             termname = obj.termname

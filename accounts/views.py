@@ -19,7 +19,7 @@ from django.db import transaction
 from apt.models import Event, EventDetail
 from aptm import settings
 from .models import User, Customer, Order
-from .decorators import customer_login_time
+from .decorators import customer_login_time, admin_required
 
 
 class LoginView(View):
@@ -133,7 +133,7 @@ class CustomerLogoutView(View):
         return JsonResponse({'response_state': 200, 'msg': '退出成功'})
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class DeleteTestView(View):
     '''
     清除公测订单
