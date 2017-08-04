@@ -714,49 +714,44 @@ class PurcharseHeatView(View):
         else:
             last_event = Event.get_last_event(request.user.company.id)
             queryset = Customer.objects.filter(event_id=last_event)
-        for customer in queryset:
-            testorder = customer.user.order_set.filter(is_test=True).first()
-            openorder = customer.user.order_set.filter(is_test=False).first()
-            follow = Follow.objects.filter(user_id=customer.user.id)
-            customer.count = len(follow)
-            ct_list = {'id': customer.id,
-                       'name': customer.realname,
-                       'mobile': customer.mobile,
-                       'identication': customer.identication,
-                       'protime': customer.protime.strftime('%Y-%m-%d %H:%M:%S')
-                       if customer.protime else '',
-                       'count': customer.count,
-                       'testtime': '',
-                       'testroom': '',
-                       'opentime': '',
-                       'openroom': ''
-                       }
-            time = []
-            room = []
-            if testorder:
-                order = customer.user.order_set.filter(is_test=True)
-                for td in order:
-                    time.append(td.time.strftime("%Y/%m/%d %H:%M:%S"))
-                    room.append(td.eventdetail.building +
-                                td.eventdetail.unit +
-                                str(td.eventdetail.floor) +
-                                '层' +
-                                str(td.eventdetail.room_num))
-                    ct_list['testtime'] = time
-                    ct_list['testroom'] = room
-            if openorder:
-                order = customer.user.order_set.filter(is_test=False)
-                for od in order:
-                    time.append(od.time.strftime("%Y/%m/%d %H:%M:%S"))
-                    room.append(od.eventdetail.building +
-                                od.eventdetail.unit +
-                                str(od.eventdetail.floor) +
-                                '层' +
-                                str(od.eventdetail.room_num))
-                    ct_list['opentime'] = time
-                    ct_list['openroom'] = room
-            li.append(ct_list)
-        return JsonResponse({'success': True, 'data': li})
+        if queryset is not None:
+            for customer in queryset:
+                testorder = customer.user.order_set.filter(is_test=True).first()
+                openorder = customer.user.order_set.filter(is_test=False).first()
+                follow = Follow.objects.filter(user_id=customer.user.id)
+                customer.count = len(follow)
+                ct_list = {'id': customer.id,
+                           'name': customer.realname,
+                           'mobile': customer.mobile,
+                           'identication': customer.identication,
+                           'protime': customer.protime.strftime('%Y-%m-%d %H:%M:%S')
+                           if customer.protime else '',
+                           'count': customer.count,
+                           'testtime': '',
+                           'testroom': '',
+                           'opentime': '',
+                           'openroom': ''
+                           }
+                if testorder:
+                    ct_list['testtime'] = testorder.time.strftime("%Y/%m/%d %H:%M:%S")
+                    ct_list['testroom'] = testorder.eventdetail.building + \
+                                          testorder.eventdetail.unit + \
+                                          '-' + \
+                                          str(testorder.eventdetail.floor) + \
+                                          '-' + \
+                                          str(testorder.eventdetail.room_num)
+                if openorder:
+                    ct_list['opentime'] = openorder.time.strftime("%Y/%m/%d %H:%M:%S")
+                    ct_list['openroom'] = openorder.eventdetail.building + \
+                                          openorder.eventdetail.unit + \
+                                          '-' + \
+                                          str(openorder.eventdetail.floor) + \
+                                          '-' + \
+                                          str(openorder.eventdetail.room_num)
+                li.append(ct_list)
+                print(li)
+            return JsonResponse({'success': True, 'data': li})
+        return JsonResponse({'success': False})
 
 
 @method_decorator(admin_required, name='dispatch')
