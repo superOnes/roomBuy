@@ -13,12 +13,12 @@ $(document).ready(function(){
 		if(!pattern.test(inputPhone)){
 			alert('请输入正确的电话号码！')
 　			return false;
-	// 	}else if($(".form-datetime").html() == "") {
-	// 		console.log($(".form-datetime").value);
+	// 	}else if($(".event_start").value == "") {
 	// 		alert('请检查时间选择');
 	// 　		return false;
 		}else if($(".coverImgFile").html() == "") {
-				alert('请添加封面')
+			console.log($(".event_start").value);
+			alert('请添加封面')
 		　	return false;
 			}
 	});

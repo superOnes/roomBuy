@@ -7,20 +7,11 @@
 		vertical-align: middle;
 		padding: 0 10px !important;
 	}
-	.col-sm-1{
-		width: 15% !important;
-		display: inline-block !important;
-		vertical-align: middle;
-		padding: 0 10px !important;
-	}
 		.col-sm-2{
-			width: 30% !important;
+			width: 20% !important;
 			display: inline-block !important;
 			vertical-align: middle;
 			padding: 0 10px !important;
-		}
-		#follow_num{
-			width: 23% !important;
 		}
 </style>
 <div style="padding:20px;">
@@ -84,14 +75,14 @@
 		</div>
 		<div class="form-group">
 			<label class="col-sm-3 control-label">选房完成期限<i>*</i></label>
-			<div class="col-sm-1">
-				<input type="text" class="form-control" onkeyup="(this.v=function(){this.value=this.value.replace(/[^1-9-]+/,'');}).call(this)" onblur="this.v();"
-				placeholder="小时" min="1" name="limit" value="{{form.limit.value|default:''}}" required>
+			<div class="col-sm-2">
+				<input type="text" class="form-control" onkeyup="(this.v=function(){this.value=this.value.replace(/[^1-9]+/,'');}).call(this)" onblur="this.v();"
+				placeholder="请输入正整数" min="1" name="limit" value="{{form.limit.value|default:''}}" required>
 			</div>
 			<label class="col-sm-3 control-label" id="follow_num">同一账号允许收藏数<i>*</i></label>
 			<div class="col-sm-2">
-				<input type="text" class="form-control" onkeyup="(this.v=function(){this.value=this.value.replace(/[^1-9-]+/,'');}).call(this)" onblur="this.v();"
-					placeholder="同一账号允许收藏数" name="follow_num" value="{{form.follow_num.value|default:''}}" required>
+				<input type="text" class="form-control" onkeyup="(this.v=function(){this.value=this.value.replace(/[^1-9]+/,'');}).call(this)" onblur="this.v();"
+					placeholder="请输入正整数" name="follow_num" value="{{form.follow_num.value|default:''}}" required>
 			</div>
 		</div>
 		<div class="form-group">
