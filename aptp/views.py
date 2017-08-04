@@ -148,7 +148,7 @@ class AppEventDetailUnitListView(View):
         return JsonResponse(context)
 
 
-@method_decorator(customer_login_required, name='dispatch')
+# @method_decorator(customer_login_required, name='dispatch')
 class AppEventDetailHouseListView(View):
     '''
     车位/房源 房号列表
@@ -170,13 +170,14 @@ class AppEventDetailHouseListView(View):
         room_num_list = []
         for obj in eventdetobj:
             if obj.status:
-                value = [{
+                value = {
                     'house': obj.id,
                     'floor_room_num': str(obj.floor) + '-' + str(obj.room_num),
                     'is_sold': obj.is_sold,
                     'is_testsold': obj.is_testsold,
-                }]
+                }
                 room_num_list.append(value)
+        room_num_list.sort(key=lambda x: (x['floor_room_num']))
         context['objects'] = room_num_list
         context['response_state'] = response_state
         context['response_state'] = 200

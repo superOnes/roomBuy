@@ -1,5 +1,5 @@
-var http="";//正式
-//var http="http://10.7.10.193:8000"; //测试
+//var http="";//正式
+var http="http://10.7.10.193:8000"; //测试
 //var http="http://10.7.1.34";
 $(function(){
 
@@ -394,14 +394,14 @@ function houseList(data){
 
 									$(".unite").after(romms);
 									for(var i=0;i<data.objects.length;i++){
-										$(".floorChose").append("<li>"+data.objects[i][0].floor_room_num+"</li>");
+										$(".floorChose").append("<li>"+data.objects[i].floor_room_num+"</li>");
 										if(new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime()){
-											if(data.objects[i][0].is_sold){
+											if(data.objects[i].is_sold){
 												$(".floorChose li").eq(i).addClass("floorLi-red");
 											}
 										}
 										if(new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() <new Date($(".test_ent").html()).getTime()){
-											if(data.objects[i][0].is_testsold){
+											if(data.objects[i].is_testsold){
 												$(".floorChose li").eq(i).addClass("floorLi-red");
 											}
 										}
