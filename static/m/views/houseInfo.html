@@ -116,7 +116,9 @@
 							border: "solid 1px #f75c2e",
 							color: "#f75c2e"
 						});
-					} else if (data.response_state == 401||data.response_state==403) {
+					} else if (data.response_state == 400) {
+                        alert(data.msg);
+                    }else if (data.response_state == 401||data.response_state==403) {
                         alert(data.msg);
 						window.location.href = "login.html?id="+id;
 					}else {
@@ -140,7 +142,9 @@
 				console.log(data);
 				if(data.response_state==200){
 					$(".shareBt").html("已收藏").css({background:"#999",border:"none",color:"#fff"});
-				}else if(data.response_state==401||data.response_state==403){
+				} else if (data.response_state == 400) {
+                    alert(data.msg);
+                }else if(data.response_state==401||data.response_state==403){
                     alert(data.msg);
 					window.location.href="login.html?id="+id;
 				}else{
