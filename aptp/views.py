@@ -257,7 +257,7 @@ class AddFollow(View):
                     return JsonResponse({'response_state': 200, 'msg': '收藏成功'})
                 else:
                     return JsonResponse(
-                        {'response_state': 403, 'msg': '收藏数量超过限制'})
+                        {'response_state': 400, 'msg': '收藏数量超过限制'})
             return JsonResponse({'response_state': 400, 'msg': '您已收藏过该商品！'})
 
 
@@ -274,14 +274,14 @@ class CancelFollow(View):
         try:
             eventdetail = EventDetail.get(house)
         except BaseException:
-            return JsonResponse({'response_state': 403, 'msg': '没有该商品！'})
+            return JsonResponse({'response_state': 400, 'msg': '没有该商品！'})
         else:
             follow = Follow.objects.filter(
                 user=user,
                 eventdetail=eventdetail)
             if not follow:
                 return JsonResponse(
-                    {'response_state': 403, 'msg': '没有收藏该商品！'})
+                    {'response_state': 400, 'msg': '没有收藏该商品！'})
             follow.delete()
             return JsonResponse(
                 {'response_state': 200, 'msg': '成功取消收藏！'})
