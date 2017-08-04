@@ -9,16 +9,13 @@
     <link rel="stylesheet" href="../css/swiper.min.css" />
 </head>
 <body>
-<div class="wapline">
-
-</div>
+<div class="wapline"></div>
 
 </body>
 <script src="../js/jquery-1.12.4.min.js"></script>
 <script src="../js/swiper.jquery.min.js"></script>
 <script type="text/javascript" src="../js/login.js"></script>
 <script>
-// 获取地址栏的参数数组
 function getUrlParams()
 {
     var search = window.location.search ;
@@ -40,7 +37,6 @@ function getUrlParams()
     // 将参数数组进行返回
     return paramsArray ;
 }
-
 // 根据参数名称获取参数值
 function getParamValue(name)
 {
@@ -60,14 +56,12 @@ function getParamValue(name)
     }
     return null ;
 }
-
 $(function(){
     var id = getParamValue("id");
     var cover=getParamValue("cover");
     if(cover){
         localStorage.setItem("cover",cover);
     }
-
    var userid1=localStorage.getItem("userid");
     $.ajax({
         type:"get",
