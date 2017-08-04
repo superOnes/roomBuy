@@ -130,22 +130,22 @@
 		<div class="form-group">
 			<label class="col-sm-3 control-label" style="vertical-align: top;">平面图</label>
 			<div class="col-sm-9 myfilePlane_graph">
-				<label for="">
+				<label class="col-sm-6" for="">
 					<p>选择平面图</p>
 					<input type="file" class="form-control" id="plane_graph1" onchange='showPlane_graph1()' name="plane_graph">
 					<img src='{{MEDIA_URL}}{{object.plane_graph}}' alt='' id='plane_graph_img1' onerror="this.src='{{ STATIC_URL }}images/default.png'"/>
 				</label>
-				<label for="">
+				<label class="col-sm-6" for="">
 					<p>选择平面图</p>
 					<input type="file" class="form-control" id="plane_graph2" onchange='showPlane_graph2()' name="plane_graph1">
-					<img src='{{MEDIA_URL}}{{object.plane_graph1}}' alt='' id='plane_graph_img2'onerror="this.src='{{ STATIC_URL }}images/default.png'"/>
+					<img src='{{MEDIA_URL}}{{object.plane_graph1}}' alt='' id='plane_graph_img2' onerror="this.src='{{ STATIC_URL }}images/default.png'"/>
 				</label>
-				<label for="">
+				<label class="col-sm-6" for="">
 					<p>选择平面图</p>
 					<input type="file" class="form-control" id="plane_graph3" onchange='showPlane_graph3()' name="plane_graph2">
 					<img src='{{MEDIA_URL}}{{object.plane_graph2}}' alt='' id='plane_graph_img3' onerror="this.src='{{ STATIC_URL }}images/default.png'"/>
 				</label>
-				<label for="">
+				<label class="col-sm-6" for="">
 					<p>选择平面图</p>
 					<input type="file" class="form-control" id="plane_graph4" onchange='showPlane_graph4()' name="plane_graph3">
 					<img src='{{MEDIA_URL}}{{object.plane_graph3}}' alt='' id='plane_graph_img4' onerror="this.src='{{ STATIC_URL }}images/default.png'"/>
