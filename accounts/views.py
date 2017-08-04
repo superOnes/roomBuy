@@ -19,7 +19,7 @@ from django.contrib.sessions.models import Session
 from apt.models import Event, EventDetail
 from aptm import settings
 from .models import User, Customer, Order
-from .decorators import customer_login_required
+from .decorators import customer_login_time
 
 
 class LoginView(View):
@@ -130,8 +130,8 @@ class CustomerLoginView(View):
         return JsonResponse({'response_state': 403, 'msg': '活动还未正式推出！'})
 
 
-@method_decorator(customer_login_required, name='dispatch')
-# @method_decorator(customer_login_time, name='dispatch')
+# @method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_time, name='dispatch')
 class CustomerLogoutView(View):
     '''
     顾客退出登录

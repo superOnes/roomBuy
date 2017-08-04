@@ -17,6 +17,7 @@ class ProTimeView(View):
     '''
     时间同意协议
     '''
+
     def post(self, request):
         protime = request.POST.get('protime')
         user = request.user
@@ -125,6 +126,12 @@ class AppEventDetailHouseListView(View):
 
     def get(self, request):
         eventid = request.GET.get('id')
+        event = Event.get(eventid)
+        now = datetime.now()
+        if now < event.test_start or now < event.test_start:
+            response_state = 405
+        else:
+            response_state = None
         building = request.GET.get('building')
         unit = request.GET.get('unit')
         context = {}
@@ -137,10 +144,11 @@ class AppEventDetailHouseListView(View):
                     'house': obj.id,
                     'floor_room_num': str(obj.floor) + '-' + str(obj.room_num),
                     'is_sold': obj.is_sold,
-                    'is_testsold': obj.is_testsold
+                    'is_testsold': obj.is_testsold,
                 }]
                 room_num_list.append(value)
         context['objects'] = room_num_list
+        context['response_state'] = response_state
         context['response_state'] = 200
         return JsonResponse(context)
 
@@ -195,6 +203,7 @@ class AppEventDetailHouseInfoView(View):
 
 
 @method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_time, name='dispatch')
 class AddFollow(View):
     '''
     添加收藏
@@ -223,6 +232,7 @@ class AddFollow(View):
 
 
 @method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_time, name='dispatch')
 class CancelFollow(View):
     '''
     取消收藏
@@ -248,6 +258,7 @@ class CancelFollow(View):
 
 
 @method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_time, name='dispatch')
 class FollowView(View):
     '''
     用户收藏列表信息
