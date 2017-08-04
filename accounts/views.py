@@ -204,11 +204,11 @@ class ImportView(View):
                                 customer=customer,
                                 is_admin=False)
                             num += 1
-                return JsonResponse({'success': True, 'data': num})
+                return JsonResponse({'response_state': 200, 'data': num})
             else:
-                return JsonResponse({'success': False, 'msg': '导入文件格式不正确！'})
+                return JsonResponse({'response_state': 400, 'msg': '导入文件格式不正确！'})
         os.remove('media/tmp/customer.xlsx')
-        return JsonResponse({'success': False})
+        return JsonResponse({'response_state': 400, 'msg': '导入数据失败'})
 
 
 class GetCustomerInfo(View):
