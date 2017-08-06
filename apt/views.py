@@ -963,7 +963,7 @@ class EventTVWallInfoView(View):
 
 @method_decorator(admin_required, name='dispatch')
 class EventTVWallOrder(TemplateView):
-    template_name = 'orderinfo.html'
+    template_name = 'orderInfo.html'
 
     def get_context_data(self, pk):
         context = super(EventTVWallOrder, self).get_context_data()
