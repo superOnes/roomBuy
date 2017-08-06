@@ -449,7 +449,7 @@ function houseInfo(data){
 								'<span class="fl"><a href="javascript:;" onclick="backList()">返回房间列表</a></span>'+
 								'<span class="fl shareBt">收藏</span>'+
 							'</div>'+
-				            '<p><span>'+data.floor+'#'+data.looking+'户</span></p>'+
+				            // '<p><span>'+data.floor+'#'+data.looking+'户</span></p>'+
 							'<p class="infoImg"><img /></p>'+
 							'<h1>'+data.building_unit+'</h1>'+
 
