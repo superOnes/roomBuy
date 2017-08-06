@@ -308,21 +308,12 @@ class ImportEventDetailView(View):
                         if type(value1) == str and type(value2) == str \
                             and type(value5) == float and type(value6) == float and type(value7) == str and \
                                 type(value9) == str and type(value10) == str:
-                            if type(value3) == float:
-                                try:
-                                    value3 = str(int(value3))
-                                except:
-                                    return JsonResponse({'response_state': 400, 'msg': 'excel中楼层格式不正确，请查看数据重新上传！'})
-                            if type(value4) == float:
-                                try:
-                                    value4 = str(int(value4))
-                                except:
-                                    return JsonResponse({'response_state': 400, 'msg': 'excel中楼号格式不正确，请查看数据重新上传！'})
-                            if type(value8) == float:
-                                try:
-                                    value8 = str(int(value8))
-                                except:
-                                    return JsonResponse({'response_state': 400, 'msg': 'excel中使用年限格式不正确，请查看数据重新上传！'})
+                            try:
+                                value3 = int(value3)
+                                value4 = int(value4)
+                                value8 = int(value8)
+                            except:
+                                return JsonResponse({'response_state': 400, 'msg': 'excel数据格式不正确！'})
                             li.append(value1)
                             li.append(value2)
                             li.append(value3)
