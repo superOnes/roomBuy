@@ -636,8 +636,7 @@ class ExportOrderView(View):
             '认购者',
             '手机号',
             '证件号码',
-            '认筹人备注',
-            '状态']
+            '认筹人备注']
         col = 0
         for i in list:
             s.write(0, col, i)
@@ -660,11 +659,6 @@ class ExportOrderView(View):
             s.write(row, 4, obj.user.customer.realname)
             s.write(row, 5, obj.user.customer.mobile)
             s.write(row, 6, obj.user.customer.identication)
-            s.write(row, 7, obj.user.customer.remark)
-            if obj.eventdetail.is_sold:
-                s.write(row, 8, '已售')
-            else:
-                s.write(row, 8, '未售')
             row += 1
         sio = BytesIO()
         sheet.save(sio)
@@ -752,7 +746,6 @@ class PurcharseHeatView(View):
                                           '-' + \
                                           str(openorder.eventdetail.room_num)
                 li.append(ct_list)
-                print(li)
             return JsonResponse({'success': True, 'data': li})
         return JsonResponse({'success': False})
 
