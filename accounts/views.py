@@ -162,7 +162,10 @@ class ImportView(View):
         id = request.POST.get('id')
         if id:
             event = Event.get(id)
+            EventDetail.objects.filter(event=event).delete()
             file = request.FILES.get('filename')
+            if not file:
+                return JsonResponse({'response_state': 400, 'msg': '没有选择文件！'})
             filename = file.name.split('.')[-1]
             if filename == 'xlsx' or filename == 'xls':
                 path = default_storage.save(
