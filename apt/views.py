@@ -291,9 +291,39 @@ class ImportEventDetailView(View):
                 if num + row - 1 <= request.user.house_limit:
                     for rx in range(1, row):
                         li = []
-                        for cx in range(0, col):
-                            value = sheet.cell(rowx=rx, colx=cx).value
-                            li.append(value)
+                        value1 = sheet.cell(rowx=rx, colx=0).value
+                        value2 = sheet.cell(rowx=rx, colx=1).value
+                        value3 = sheet.cell(rowx=rx, colx=2).value
+                        value4 = sheet.cell(rowx=rx, colx=3).value
+                        value5 = sheet.cell(rowx=rx, colx=4).value
+                        value6 = sheet.cell(rowx=rx, colx=5).value
+                        value7 = sheet.cell(rowx=rx, colx=6).value
+                        value8 = sheet.cell(rowx=rx, colx=7).value
+                        value9 = sheet.cell(rowx=rx, colx=8).value
+                        print(type(value1))
+                        print(type(value2))
+                        print(type(value3))
+                        print(type(value4))
+                        print(type(value5))
+                        print(type(value6))
+                        print(type(value7))
+                        print(type(value8))
+                        if type(value1) == str and type(value2) == str and type(value3) == float and type(value4) == float \
+                            and type(value5) == float and type(value6) == float and type(value7) == str and type(value8) == float and \
+                                type(value9) == str:
+                            print('hahah')
+                            li.append(value1)
+                            li.append(value2)
+                            li.append(value3)
+                            li.append(value4)
+                            li.append(value5)
+                            li.append(value6)
+                            li.append(value7)
+                            li.append(value8)
+                            li.append(value9)
+                        else:
+                            print('11111')
+                            return JsonResponse({'response_state': 400, 'msg': 'excel中数据格式不正确，请查询后重试！'})
                         data.append(li)
                     for ed in data:
                         if not isinstance(ed[0], str):
@@ -306,6 +336,7 @@ class ImportEventDetailView(View):
                                 room_num=ed[3]).exists():
                             continue
                         else:
+                            print(HouseType.objects.filter(name=ed[8]).first())
                             eventdetail = EventDetail.objects.create(
                                 building=ed[0],
                                 unit=ed[1],
@@ -315,6 +346,7 @@ class ImportEventDetailView(View):
                                 area=ed[5],
                                 looking=ed[6],
                                 term=ed[7],
+                                house_type=HouseType.objects.filter(name=ed[8]).first(),
                                 event=event)
                             eventdetail.save()
                             num += 1
