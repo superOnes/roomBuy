@@ -390,7 +390,8 @@ class ExportEventDetailView(View):
             '建筑面积',
             '朝向',
             '使用年限',
-            '户型名称']
+            '户型',
+            '户型图片名称']
         col = 0
         for i in list:
             s.write(0, col, i)
@@ -414,11 +415,12 @@ class ExportEventDetailView(View):
             s.write(row, 5, obj.area)
             s.write(row, 6, obj.looking)
             s.write(row, 7, obj.term)
+            s.write(row, 7, obj.type)
             try:
                 name=obj.house_type.name
             except:
                 name=None
-            s.write(row, 8, name)
+            s.write(row, 9, name)
             row += 1
         sio = BytesIO()
         sheet.save(sio)
