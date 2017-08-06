@@ -45,20 +45,21 @@
 {% endblock %} {% block js %}
 <script type="text/javascript">
 	$(document).ready(function() {
+		//清楚火狐select缓存
+		document.getElementById("orderList").selectedIndex = 0;
 		$("#navActive li").eq(2).addClass("active");
-
+		// 获取活动列表
 		getorderSelect();
 		setTimeout(function(){
 			var defaultVal = $("#eventList").children().length;
-			getorderList(defaultVal);
-		},500)
-		var thisVal = $("#eventList").val();
-		console.log(thisVal)
+			getorderList(defaultVal,0,"");
+		},500);
+
+		// 筛选数据列表
 		function filterData() {
 			var thisVal = $("#eventList").val();
 			var is_test = $("#orderList").val();
 			var searchValue = $("#searchInput").val();
-			console.log(thisVal)
 			getorderList(thisVal, is_test, searchValue);
 		};
 		$("#eventList").change(function() { filterData() });

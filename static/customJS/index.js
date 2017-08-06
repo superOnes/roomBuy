@@ -9,22 +9,7 @@ $(document).ready(function(){
 	//创建活动
 	$("#createEvent").submit(function(){
 		var inputPhone = $("input[name='phone_num']").val();
-				pattern = /[0-9-()（）]{7,15}/;
-				housePrice = document.getElementsByClassName("housePrice")[0];
-				coverArea = document.getElementsByClassName("coverArea")[0];
-				coverPrice = document.getElementsByClassName("coverPrice")[0];
-				housePrice.checked ? housePrice.name = 0 : housePrice.name = 1;
-				coverArea.checked ? coverArea.name = 0 : coverArea.name = 1;
-				coverPrice.checked ? coverPrice.name = 0 : coverPrice.name = 1;
-				console.log(housePrice.name);
-				console.log(coverArea.name);
-				console.log(coverPrice.name);
-				// if(housePrice.checked){
-				// 	housePrice.name = 1;
-				// }else{
-				// 	housePrice.name = 0;
-				// }
-
+		var	pattern = /[0-9-()（）]{7,15}/;
 
 		if(!pattern.test(inputPhone)){
 			alert('请输入正确的电话号码！')
@@ -74,9 +59,8 @@ function submitFile(event,thisID){
     processData: false,//发送的数据将被转换为对象，false就是不转化，默认为true
     contentType: false,
 		success:function(results){
-			console.log(results)
 			if(results.response_state == 200){
-				new $.zui.Messager('正在导入，请稍等！', {
+				new $.zui.Messager('成功导入'+results.data+'个名单', {
 		       		placement:'center',
 				    type: 'success' // 定义颜色主题
 				}).show("",function(){
@@ -233,6 +217,7 @@ function getorderSelect(){
 				$("#eventList").append("<option value='"+result[i].id+"'>"+result[i].name+"</option>")
 			};
 			$("#eventList option:first").attr("selected","selected");
+			return true;
 		},
 		error:function(){
 			alert("获取活动列表失败");
