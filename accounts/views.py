@@ -67,7 +67,6 @@ class PersonalSettingsView(View):
         return JsonResponse({'success': False, 'msg': '密码错误！'})
 
 
-@method_decorator(login_required, name='dispatch')
 class LogoutView(View):
     '''
     退出登录
