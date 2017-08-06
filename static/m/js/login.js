@@ -676,7 +676,7 @@ function checkInfo(data){
 					'</div>'+
 					'<div class="order-a">'+
 						'<div class="order-middle2">'+
-							'<p>请在<span class="order_time"></span>前，到项目现场办理正式手续。逾期未办理，视为放弃资格。</p>'+
+							'<p>请在<span class="order_time">'+data.limit+'</span>前，到项目现场办理正式手续。逾期未办理，视为放弃资格。</p>'+
 							'<p style="color:red;margin-top:5px">请截图保存订单，活动结束之后将不能登录。</p>'+
 						'</div>'+
 						'<div class="order-bottom2">'+
@@ -729,8 +729,9 @@ function checkInfo(data){
 				'</div>'
 	);
 	$(".orderInfoBox").append(orderInfo);
-	var rr=new Date(data.limit).getTime();
-   $(".order_time").html((new Date(rr).Format("yyyy年MM月dd日 hh:mm:ss")));
+	// var rr=new Date(data.limit).getTime();
+   //
+   // $(".order_time").html((new Date(rr).Format("yyyy年MM月dd日 hh:mm:ss")));
 	setInterval(function(){
 		 var dateNew= new Date(data.limit).getTime() - new Date().getTime();
 		 if(dateNew>0){
