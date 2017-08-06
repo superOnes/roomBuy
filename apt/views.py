@@ -17,6 +17,7 @@ from django.http import JsonResponse, HttpResponse
 from django.db.models import Q
 from django.http import QueryDict
 from django.utils.decorators import method_decorator
+from django.utils.http import urlquote
 
 from aptm import settings
 from accounts.models import Order, Customer
@@ -65,9 +66,9 @@ class EventListView(ListView):
             queryset = queryset.filter(Q(name__contains=self.value))
         for obj in queryset:
             obj.qr = url2qrcode(
-                'http://%s/static/m/views/choiceHouse.html?id=%s&eventname=%s&cover=%s' %
-                (self.request.get_host(), str(
-                    obj.id), obj.name, obj.cover.url))
+                'http://%s/static/m/views/choiceHouse.html?id=%s&cover=%s&eventname=%s' %
+                (self.request.get_host(),
+                    obj.id, obj.cover.url, obj.name))
             obj.save()
         return queryset
 

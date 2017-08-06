@@ -49,7 +49,7 @@ def customer_login_time(func):
         eventid = request.GET.get('id', request.POST.get('id'))
         event = Event.get(eventid)
         now = datetime.now()
-        if now < event.test_start or now < event.event_start:
+        if now < event.test_start or (now >event.test_end and now < event.event_start):
             return JsonResponse({'response_state': 405, 'msg': '活动还未正式开始！'})
         return func(request, *args, **kwargs)
     return wrapper

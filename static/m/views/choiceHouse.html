@@ -59,7 +59,7 @@ function getParamValue(name)
 $(function(){
     var id = getParamValue("id");
     var cover=getParamValue("cover");
-    var eventname=getParamValue("eventname");
+    var eventname=decodeURI(getParamValue("eventname"));
     if(cover){
         localStorage.setItem("cover",cover);
     }

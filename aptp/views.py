@@ -156,10 +156,12 @@ class AppEventDetailHouseListView(View):
         eventid = request.GET.get('id')
         event = Event.get(eventid)
         now = datetime.now()
-        if now < event.test_start or now < event.event_start:
+        if now < event.test_start or (now > event.test_end and now < event.event_start):
             response_state = 405
         else:
             response_state = None
+        print(response_state)
+        print(now)
         building = request.GET.get('building')
         unit = request.GET.get('unit')
         context = {}
