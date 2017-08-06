@@ -85,10 +85,11 @@ function submitFile(event,thisID){
 };
 //导入房价文件
 function roomPriceFile(event,thisID){
+	$(event).attr("disabled","disabled");
 	var files = $("#priceFile")[0].files;
 	var data = new FormData(); //转化为表单格式的数据
-    data.append('file', files[0]);
-    data.append('id', thisID);
+  data.append('file', files[0]);
+  data.append('id', thisID);
 	$.ajax({
 		type:"POST",
 		url:"/import/rooms/",
