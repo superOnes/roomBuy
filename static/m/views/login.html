@@ -102,6 +102,7 @@
         });
 
         $(".proSure").click(function(){
+            $(this).unbind("click");
             $.ajax({
                 type:"POST",
                 url:http+"/app/protime/",
@@ -113,6 +114,7 @@
                 },
                 dataType:'JSON',
                 success: function (data) {
+                    $(".proSure").bind("click");
                     if(data.response_state==200){
                         window.location.href = "choiceHouse.html?id="+$(".loginId").html();
 
@@ -121,6 +123,7 @@
                     }
                 },
                 error:function(){
+                    $(".proSure").bind("click");
                     alert('页面出错，请重试！');
                 }
             });
