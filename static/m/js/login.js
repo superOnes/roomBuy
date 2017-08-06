@@ -446,7 +446,7 @@ function houseList(data){
 function houseInfo(data){
 	var houseInfo=$('<div class="houseInfotop">'+
 				            '<p><span>'+data.floor+'#'+data.looking+'户</span></p>'+
-							'<p><img src="'+http+data.pic+'" /></p>'+
+							'<p class="infoImg"><img /></p>'+
 							'<h1>'+data.building_unit+'</h1>'+
 							'<div class="houseShare clear">'+
 								'<span class="fl"><a href="javascript:;" onclick="backList()">返回房间列表</a></span>'+
@@ -532,7 +532,11 @@ function houseInfo(data){
 
 	if(data.is_followed[0]){
 		$(".shareBt").html("已收藏").css({background:"#999",border:"none",color:"#fff"})
-
+	}
+	if(data.pic==""){
+		$(".infoImg").empty();
+	}else{
+		$(".infoImg img").prop("src",http+data.pic);
 	}
 
 	$(".dialog-cancle").click(function(){
