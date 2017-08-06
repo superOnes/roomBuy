@@ -17,7 +17,7 @@ from django.http import JsonResponse, HttpResponse
 from django.db.models import Q
 from django.http import QueryDict
 from django.utils.decorators import method_decorator
-from django.utils.http import urlquote
+from django import forms
 
 from aptm import settings
 from accounts.models import Order, Customer
@@ -67,8 +67,7 @@ class EventListView(ListView):
         for obj in queryset:
             obj.qr = url2qrcode(
                 'http://%s/static/m/views/choiceHouse.html?id=%s&cover=%s&eventname=%s' %
-                (self.request.get_host(),
-                    obj.id, obj.cover.url, obj.name))
+                (self.request.get_host(), obj.id, obj.cover.url, obj.name))
             obj.save()
         return queryset
 
@@ -121,7 +120,7 @@ class EventTermUpdateView(DialogMixin, UpdateView):
     template_name = 'popup/event_term.html'
 
 
-# @method_decorator(admin_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
 class EventStatus(View):
     '''
     活动发布情况 发布/未发布
@@ -370,7 +369,8 @@ class ExportEventDetailView(View):
             '面积单价',
             '建筑面积',
             '朝向',
-            '使用年限']
+            '使用年限',
+            '户型名称']
         col = 0
         for i in list:
             s.write(0, col, i)
@@ -394,6 +394,7 @@ class ExportEventDetailView(View):
             s.write(row, 5, obj.area)
             s.write(row, 6, obj.looking)
             s.write(row, 7, obj.term)
+            s.write(row, 8, obj.type)
             row += 1
         sio = BytesIO()
         sheet.save(sio)
@@ -570,7 +571,7 @@ class ExportBuyHotView(View):
     '''
 
     def get(self, request):
-        eventid=request.GET.get('id')
+        eventid = request.GET.get('id')
         objs = Customer.objects.filter(event_id=eventid)
         sheet = Workbook(encoding='utf-8')
         s = sheet.add_sheet('数据表')
@@ -646,18 +647,21 @@ class ExportOrderView(View):
     '''
 
     def get(self, request, **kwargs):
-        id = request.GET.get('id')
-        is_test = request.GET.get('is_test')
-        value = request.GET.get('value')
-        queryset = Order.objects.filter(
-            eventdetail__event_id=id, is_test=is_test)
-        if value:
-            objs = queryset.filter(
-                Q(user__customer__realname__icontains=value) |
-                Q(user__customer__mobile__icontains=value) |
-                Q(user__customer__identication__icontains=value))
-        else:
-            objs = queryset
+        try:
+            id = request.GET.get('id')
+            is_test = request.GET.get('is_test')
+            value = request.GET.get('value')
+            queryset = Order.objects.filter(
+                eventdetail__event_id=id, is_test=is_test)
+            if value:
+                objs = queryset.filter(
+                    Q(user__customer__realname__icontains=value) |
+                    Q(user__customer__mobile__icontains=value) |
+                    Q(user__customer__identication__icontains=value))
+            else:
+                objs = queryset
+        except BaseException:
+            raise forms.ValidationError('导出失败请重试！')
         sheet = Workbook(encoding='utf-8')
         s = sheet.add_sheet('数据表')
         list = [

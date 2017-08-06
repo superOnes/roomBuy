@@ -204,11 +204,10 @@ class AppEventDetailHouseInfoView(View):
         else:
             is_followed = True,
         try:
-            house_type = eventdetobj.type
             pic = eventdetobj.house_type.pic.url
         except BaseException:
-            house_type = ''
             pic = ''
+        house_type = eventdetobj.type
         value = [{'event': eventdetobj.event.name,
                   'realname': user.customer.realname,
                   'mobile': user.customer.mobile,
