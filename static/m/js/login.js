@@ -45,38 +45,6 @@ $(function(){
 			});
 		}
 	});
-    $(".proCancle").click(function(){
-        $(".prols").empty();
-        $("#loginBlack").hide();
-    });
-
-    $(".proSure").bind("click",function(){
-        $(".proSure").unbind("click");
-        $.ajax({
-            type:"POST",
-            url:http+"/app/protime/",
-            data:{
-                tel:tel,
-                personId:personId,
-                id:$(".loginId").html()
-
-            },
-            dataType:'JSON',
-            success: function (data) {
-                $(".proSure").bind("click");
-                if(data.response_state==200){
-                    window.location.href = "choiceHouse.html?id="+$(".loginId").html();
-
-                }else{
-                    alert(data.msg);
-                }
-            },
-            error:function(){
-                $(".proSure").bind("click");
-                alert('页面出错，请重试！');
-            }
-        });
-    });
 });
 
 function prol(data){

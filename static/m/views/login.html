@@ -95,6 +95,36 @@
         var eventname=localStorage.getItem("eventname");
         $(".loginLogo img").prop("src",http+cover);
         $(".login h1").html(eventname);
+
+        $(".proCancle").click(function(){
+            $(".prols").empty();
+            $("#loginBlack").hide();
+        });
+
+        $(".proSure").click(function(){
+            $.ajax({
+                type:"POST",
+                url:http+"/app/protime/",
+                data:{
+                    tel:tel,
+                    personId:personId,
+                    id:$(".loginId").html()
+
+                },
+                dataType:'JSON',
+                success: function (data) {
+                    if(data.response_state==200){
+                        window.location.href = "choiceHouse.html?id="+$(".loginId").html();
+
+                    }else{
+                        alert(data.msg);
+                    }
+                },
+                error:function(){
+                    alert('页面出错，请重试！');
+                }
+            });
+        });
         pushHistory();
         window.addEventListener("popstate", function(e) {
             window.location.href="login.html?id="+id;
