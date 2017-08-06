@@ -398,7 +398,11 @@ class ExportEventDetailView(View):
             s.write(row, 5, obj.area)
             s.write(row, 6, obj.looking)
             s.write(row, 7, obj.term)
-            s.write(row, 8, None if obj.house_type_id else obj.house_type.name)
+            try:
+                name=obj.house_type.name
+            except:
+                name=None
+            s.write(row, 8, name)
             row += 1
         sio = BytesIO()
         sheet.save(sio)
