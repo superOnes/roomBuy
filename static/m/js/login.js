@@ -33,12 +33,9 @@ $(function(){
 
 						prol(data.objects[0]);
 						$("#loginBlack").show();
-						$(".proCancle").click(function(){
-							$("#loginBlack").hide();
-						});
 
 						$(".proSure").bind("click",function(){
-                            // $(".proSure").unbind("click");
+                             $(".proSure").unbind("click");
 							$.ajax({
 								type:"POST",
 								url:http+"/app/protime/",

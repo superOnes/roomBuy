@@ -94,6 +94,12 @@
         var cover=localStorage.getItem("cover");
         $(".loginLogo img").prop("src",http+cover);
         //$(".login h1").html();
+
+        $(".proCancle").click(function(){
+            $(".prols").empty();
+            $("#loginBlack").hide();
+        });
+
         pushHistory();
         window.addEventListener("popstate", function(e) {
             window.location.href="login.html?id="+id;
