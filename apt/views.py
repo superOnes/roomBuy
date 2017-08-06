@@ -304,9 +304,24 @@ class ImportEventDetailView(View):
                         value7 = sheet.cell(rowx=rx, colx=6).value
                         value8 = sheet.cell(rowx=rx, colx=7).value
                         value9 = sheet.cell(rowx=rx, colx=8).value
-                        if type(value1) == str and type(value2) == str and type(value3) == float and type(value4) == float \
-                            and type(value5) == float and type(value6) == float and type(value7) == str and type(value8) == float and \
+                        if type(value1) == str and type(value2) == str \
+                            and type(value5) == float and type(value6) == float and type(value7) == str and \
                                 type(value9) == str:
+                            if type(value3) == float:
+                                try:
+                                    value3 = str(int(value3))
+                                except:
+                                    return JsonResponse({'response_state': 400, 'msg': 'excel中楼层格式不正确，请查看数据重新上传！'})
+                            if type(value4) == float:
+                                try:
+                                    value4 = str(int(value4))
+                                except:
+                                    return JsonResponse({'response_state': 400, 'msg': 'excel中楼号格式不正确，请查看数据重新上传！'})
+                            if type(value8) == float:
+                                try:
+                                    value8 = str(int(value8))
+                                except:
+                                    return JsonResponse({'response_state': 400, 'msg': 'excel中使用年限格式不正确，请查看数据重新上传！'})
                             li.append(value1)
                             li.append(value2)
                             li.append(value3)
@@ -341,7 +356,8 @@ class ImportEventDetailView(View):
                                 area=ed[5],
                                 looking=ed[6],
                                 term=ed[7],
-                                house_type=HouseType.objects.filter(name=ed[8]).first(),
+                                type=ed[8],
+                                # housetype=HouseType.objects.filter(name=ed[8]).first(),
                                 event=event)
                             eventdetail.save()
                             num += 1
