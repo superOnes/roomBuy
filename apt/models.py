@@ -102,6 +102,7 @@ class EventDetail(models.Model):
     num = models.IntegerField('收藏人数', default=0)
     is_delete = models.BooleanField(default=False)
     house_type = models.ForeignKey(HouseType, null=True, blank=True)
+    type = models.CharField('户型名称', max_length=50, default="暂无数据")
     looking = models.CharField('朝向', max_length=100)
     term = models.IntegerField('使用年限')
     area = models.FloatField('建筑面积', max_length=50)

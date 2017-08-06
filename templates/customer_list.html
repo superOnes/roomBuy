@@ -96,7 +96,9 @@
 		{% endfor %}
 	</tbody>
 </table>
+{% if page_obj.has_other_pages %}
 <div class="zxf_pagediv"></div>
+{% endif %}
 <script type="text/javascript">
 $(".zxf_pagediv").createPage({
 	pageNum: {{ paginator.num_pages}},//总页码

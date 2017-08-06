@@ -14,7 +14,6 @@ from accounts.models import Order, Customer
 from accounts.decorators import customer_login_required, customer_login_time
 
 
-# @method_decorator(customer_login_required, name='dispatch')
 class ProTimeView(View):
     '''
     同意协议时间
@@ -47,7 +46,7 @@ class ProTimeView(View):
                         customer.session_key = request.session.session_key
                         customer.save()
                         return JsonResponse(
-                            {'response_state': 200, 'msg': '登录成功',})
+                            {'response_state': 200, 'msg': '登录成功', })
                     else:
                         customer.session_key = request.session.session_key
                         customer.save()
@@ -147,7 +146,7 @@ class AppEventDetailUnitListView(View):
         return JsonResponse(context)
 
 
-# @method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_required, name='dispatch')
 class AppEventDetailHouseListView(View):
     '''
     车位/房源 房号列表
@@ -194,9 +193,10 @@ class AppEventDetailHouseInfoView(View):
         user = request.user
         house = request.GET.get('house')
         eventdetobj = EventDetail.get(house)
-        eventdetobj.save()
-        test = True if time.strftime('%Y%m%d %H:%M:%S') <= eventdetobj.event.test_end.strftime(
-            '%Y%m%d %H:%M:%S') else False
+        test = True if datetime.now() <= eventdetobj.event.test_end else False
+        if not test and eventdetobj.sign_id and not eventdetobj.is_sold:
+            eventdetobj.is_sold = True
+            eventdetobj.save()
         try:
             Follow.objects.get(user=user, eventdetail=eventdetobj)
         except BaseException:
@@ -525,7 +525,7 @@ class OrderProView(View):
         eventid = request.GET.get('id')
         try:
             customer = Customer.objects.get(
-                use=user, event_id=eventid)
+                user=user, event_id=eventid)
         except BaseException:
             return JsonResponse({'response_state': 400, 'msg': '认筹名单中没有该用户！'})
         else:

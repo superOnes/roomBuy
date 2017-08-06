@@ -33,38 +33,6 @@ $(function(){
 
 						prol(data.objects[0]);
 						$("#loginBlack").show();
-						$(".proCancle").click(function(){
-							$("#loginBlack").hide();
-						});
-
-						$(".proSure").bind("click",function(){
-                            $(".proSure").unbind("click");
-							$.ajax({
-								type:"POST",
-								url:http+"/app/protime/",
-								data:{
-                                    tel:tel,
-                                    personId:personId,
-									id:$(".loginId").html(),
-                                    protime:new Date().Format("yyyy-MM-dd hh:mm:ss")
-
-								},
-								dataType:'JSON',
-								success: function (data) {
-                                    $(".proSure").bind("click");
-									if(data.response_state==200){
-										window.location.href = "choiceHouse.html?id="+$(".loginId").html();
-
-									}else{
-										alert(data.msg);
-									}
-								},
-								error:function(){
-                                    $(".proSure").bind("click");
-									alert('页面出错，请重试！');
-								}
-							});
-						})
 					}else{
 						alert(data.msg);
 					}
@@ -75,10 +43,40 @@ $(function(){
 				}
 
 			});
-
-
 		}
 	});
+    $(".proCancle").click(function(){
+        $(".prols").empty();
+        $("#loginBlack").hide();
+    });
+
+    $(".proSure").bind("click",function(){
+        $(".proSure").unbind("click");
+        $.ajax({
+            type:"POST",
+            url:http+"/app/protime/",
+            data:{
+                tel:tel,
+                personId:personId,
+                id:$(".loginId").html()
+
+            },
+            dataType:'JSON',
+            success: function (data) {
+                $(".proSure").bind("click");
+                if(data.response_state==200){
+                    window.location.href = "choiceHouse.html?id="+$(".loginId").html();
+
+                }else{
+                    alert(data.msg);
+                }
+            },
+            error:function(){
+                $(".proSure").bind("click");
+                alert('页面出错，请重试！');
+            }
+        });
+    });
 });
 
 function prol(data){
@@ -94,7 +92,7 @@ window.alert = function(name){
     document.documentElement.appendChild(iframe);
     window.frames[0].window.alert(name);
     iframe.parentNode.removeChild(iframe);
-}
+};
 
 /*首页创建元素*/
 function creatEle(data){

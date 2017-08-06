@@ -1,3 +1,4 @@
+
 import os
 import base64
 import qrcode
@@ -64,9 +65,9 @@ class EventListView(ListView):
             queryset = queryset.filter(Q(name__contains=self.value))
         for obj in queryset:
             obj.qr = url2qrcode(
-                'http://%s/static/m/views/choiceHouse.html?id=%s&cover=%s' %
+                'http://%s/static/m/views/choiceHouse.html?id=%s&eventname=%s&cover=%s' %
                 (self.request.get_host(), str(
-                    obj.id), str(obj.cover.url)))
+                    obj.id), obj.name, obj.cover.url))
             obj.save()
         return queryset
 
@@ -294,9 +295,9 @@ class ImportEventDetailView(View):
                             li.append(value)
                         data.append(li)
                     for ed in data:
-                        if type(ed[0]) != str:
+                        if not isinstance(ed[0], str):
                             ed[0] = str(int(ed[0]))
-                        if type(ed[1]) != str:
+                        if not isinstance(ed[1], str):
                             ed[1] = str(int(ed[1]))
                         if EventDetail.objects.filter(
                                 event_id=id, building=ed[0],
@@ -317,9 +318,11 @@ class ImportEventDetailView(View):
                             eventdetail.save()
                             num += 1
                     return JsonResponse({'response_state': 200, 'data': num})
-                return JsonResponse({'response_state': 400, 'msg': '导入数据超过限制数量！'})
+                return JsonResponse(
+                    {'response_state': 400, 'msg': '导入数据超过限制数量！'})
             else:
-                return JsonResponse({'response_state': 400, 'msg': '导入文件格式不正确！'})
+                return JsonResponse(
+                    {'response_state': 400, 'msg': '导入文件格式不正确！'})
         os.remove('media/price/price.xlsx')
         return JsonResponse({'response_state': 400, 'msg': '没有该活动！'})
 
@@ -542,7 +545,6 @@ class ExportBuyHotView(View):
 
     def get(self, request, pk):
         objs = Customer.objects.filter(event_id=pk)
-        # print(objs)
         sheet = Workbook(encoding='utf-8')
         s = sheet.add_sheet('数据表')
         list = [
@@ -577,7 +579,8 @@ class ExportBuyHotView(View):
                 s.write(row, 0, obj.realname)
                 s.write(row, 1, obj.mobile)
                 s.write(row, 2, obj.identication)
-                s.write(row, 3, obj.protime.strftime("%Y/%m/%d %H:%M:%S") if obj.protime else '')
+                s.write(row, 3, obj.protime.strftime(
+                    "%Y/%m/%d %H:%M:%S") if obj.protime else '')
                 s.write(row, 4, obj.user.follow_set.count())
                 if order:
                     s.write(row, 5, testorder.eventdetail.building +
@@ -585,13 +588,15 @@ class ExportBuyHotView(View):
                             str(testorder.eventdetail.floor) +
                             '层' +
                             str(testorder.eventdetail.room_num) if testorder else '')
-                    s.write(row, 6, (testorder.time).strftime("%Y/%m/%d %H:%M:%S") if testorder else '')
+                    s.write(row, 6, (testorder.time).strftime(
+                        "%Y/%m/%d %H:%M:%S") if testorder else '')
                     s.write(row, 7, openorder.eventdetail.building +
                             openorder.eventdetail.unit +
                             str(openorder.eventdetail.floor) +
                             '层' +
                             str(openorder.eventdetail.room_num) if openorder else '')
-                    s.write(row, 8, (openorder.time).strftime("%Y/%m/%d %H:%M:%S") if openorder else '')
+                    s.write(row, 8, (openorder.time).strftime(
+                        "%Y/%m/%d %H:%M:%S") if openorder else '')
                 else:
                     s.write(row, 5, None)
                     s.write(row, 6, None)
@@ -713,8 +718,10 @@ class PurcharseHeatView(View):
             queryset = Customer.objects.filter(event_id=last_event)
         if queryset is not None:
             for customer in queryset:
-                testorder = customer.user.order_set.filter(is_test=True).first()
-                openorder = customer.user.order_set.filter(is_test=False).first()
+                testorder = customer.user.order_set.filter(
+                    is_test=True).first()
+                openorder = customer.user.order_set.filter(
+                    is_test=False).first()
                 follow = Follow.objects.filter(user_id=customer.user.id)
                 customer.count = len(follow)
                 ct_list = {'id': customer.id,
@@ -730,21 +737,23 @@ class PurcharseHeatView(View):
                            'openroom': ''
                            }
                 if testorder:
-                    ct_list['testtime'] = testorder.time.strftime("%Y/%m/%d %H:%M:%S")
+                    ct_list['testtime'] = testorder.time.strftime(
+                        "%Y/%m/%d %H:%M:%S")
                     ct_list['testroom'] = testorder.eventdetail.building + \
-                                          testorder.eventdetail.unit + \
-                                          '-' + \
-                                          str(testorder.eventdetail.floor) + \
-                                          '-' + \
-                                          str(testorder.eventdetail.room_num)
+                        testorder.eventdetail.unit + \
+                        '-' + \
+                        str(testorder.eventdetail.floor) + \
+                        '-' + \
+                        str(testorder.eventdetail.room_num)
                 if openorder:
-                    ct_list['opentime'] = openorder.time.strftime("%Y/%m/%d %H:%M:%S")
+                    ct_list['opentime'] = openorder.time.strftime(
+                        "%Y/%m/%d %H:%M:%S")
                     ct_list['openroom'] = openorder.eventdetail.building + \
-                                          openorder.eventdetail.unit + \
-                                          '-' + \
-                                          str(openorder.eventdetail.floor) + \
-                                          '-' + \
-                                          str(openorder.eventdetail.room_num)
+                        openorder.eventdetail.unit + \
+                        '-' + \
+                        str(openorder.eventdetail.floor) + \
+                        '-' + \
+                        str(openorder.eventdetail.room_num)
                 li.append(ct_list)
             return JsonResponse({'success': True, 'data': li})
         return JsonResponse({'success': False})
@@ -942,7 +951,7 @@ class EventTVWallOrderView(View):
     def get(self, request, pk):
         try:
             order = Order.objects.get(eventdetail_id=pk, is_test=False)
-        except:
+        except BaseException:
             return JsonResponse({'response_state': 400, 'msg': '未找到相关订单'})
         ed = order.eventdetail
         result = {
