@@ -58,17 +58,17 @@
 	<thead>
 		<tr>
 			<th data-width="5%">序号</th>
-			<th data-width="12%">车位/房间号</th>
+			<th>车位/房间号</th>
 			<th>单价</th>
-			<th data-width="7%">建筑面积</th>
+			<th>建筑面积</th>
 			<th>户型</th>
-			<th data-width="7%">朝向</th>
-			<th data-width="7%">使用年限</th>
-			<th data-width="7%">上架状态</th>
+			<th>朝向</th>
+			<th>使用年限</th>
+			<th>上架状态</th>
 			<th>关联户型</th>
-			<th data-width="7%">选购状态</th>
-			<th data-width="7%">备注状态</th>
-			<th data-width="7%">操作</th>
+			<th>选购状态</th>
+			<th>备注状态</th>
+			<th>操作</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -88,7 +88,7 @@
 				<a data-iframe="{% url 'room_ht_update' pk=obj.id %}" data-toggle="modal" data-title="关联户型">
 					{{ obj.house_type.name }} <i class="icon icon-edit"></i></a>
 			</td>
-			<td>{{obj.is_sold|yesno:"已选购,未选购"}}</td>
+			<td>{{obj.has_order|yesno:"已选购,未选购"}}</td>
 			<td>{% if obj.sign %}<i class="icon icon-check"></i>{% endif %}</td>
 			<td>
 				<p>

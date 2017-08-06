@@ -116,3 +116,6 @@ class EventDetail(models.Model):
     @classmethod
     def all(cls):
         return cls.objects.filter(is_delete=0).order_by('-id')
+
+    def has_order(self):
+        return self.order_set.filter(is_test=False).exists()
