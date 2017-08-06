@@ -398,7 +398,7 @@ class ExportEventDetailView(View):
             s.write(row, 5, obj.area)
             s.write(row, 6, obj.looking)
             s.write(row, 7, obj.term)
-            s.write(row, 8, obj.type)
+            s.write(row, 8, None if obj.house_type_id else obj.house_type.name)
             row += 1
         sio = BytesIO()
         sheet.save(sio)
@@ -546,17 +546,11 @@ class ExportHouseHotView(View):
             s.write(row, 1, obj.unit)
             s.write(row, 2, str(obj.floor))
             s.write(row, 3, str(obj.room_num))
-            if obj.is_sold:
-                s.write(row, 4, '已售')
-            else:
-                s.write(row, 4, '未售')
+            s.write(row, 4, '已售' if obj.is_sold else '未售' )
             s.write(row, 5, obj.unit_price)
             s.write(row, 6, obj.area)
             s.write(row, 7, obj.follow_set.count())
-            if obj.is_testsold:
-                s.write(row, 8, '公测已售')
-            else:
-                s.write(row, 8, '公测未售')
+            s.write(row, 8, '公测已售' if obj.is_testsold else '公测未售')
             row += 1
         sio = BytesIO()
         sheet.save(sio)

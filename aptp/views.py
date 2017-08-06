@@ -599,7 +599,7 @@ class AppOrderInfoView(View):
                     'limit': (
                         obj.time +
                         timedelta(
-                            hours=obj.eventdetail.event.limit)).strftime('%Y-%m-%d %H:%M:%S'),
+                            hours=obj.eventdetail.event.limit)).strftime('%Y/%m/%d %H:%M:%S'),
                     'ordertime': obj.time.strftime('%Y/%m/%d %H:%M:%S'),
                     'room_info': (
                         obj.eventdetail.building +
