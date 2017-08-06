@@ -445,13 +445,14 @@ function houseList(data){
 /*详情信息*/
 function houseInfo(data){
 	var houseInfo=$('<div class="houseInfotop">'+
-				            '<p><span>'+data.floor+'#'+data.looking+'户</span></p>'+
-							'<p class="infoImg"><img /></p>'+
-							'<h1>'+data.building_unit+'</h1>'+
 							'<div class="houseShare clear">'+
 								'<span class="fl"><a href="javascript:;" onclick="backList()">返回房间列表</a></span>'+
 								'<span class="fl shareBt">收藏</span>'+
 							'</div>'+
+				            '<p><span>'+data.floor+'#'+data.looking+'户</span></p>'+
+							'<p class="infoImg"><img /></p>'+
+							'<h1>'+data.building_unit+'</h1>'+
+
 					'</div>'+
 					'<ul class="houseInfoCont">'+
 						'<li>单价<br/><span class="shpri">￥'+data.unit_price+'/m²</span></li>'+

@@ -786,6 +786,9 @@ div.shoued i{
 .houseShare span a{ color:#f75c2e;}
 .houseShare span:nth-of-type(1){
     margin-right:1.0rem;
+    background:rgb(57,191,102);
+    color:#fff;
+    border:none;
 }
 .houseInfoCont{
     height:4.2rem;
