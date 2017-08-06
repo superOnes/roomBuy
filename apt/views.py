@@ -313,6 +313,8 @@ class ImportEventDetailView(View):
                             li.append(value7)
                             li.append(value8)
                             li.append(value9)
+                            if li in data:
+                                return JsonResponse({'response_state': 400, 'msg': 'excel中有重复数据，请查询后重试！'})
                         else:
                             return JsonResponse({'response_state': 400, 'msg': 'excel中数据格式不正确，请查询后重试！'})
                         data.append(li)
@@ -326,7 +328,6 @@ class ImportEventDetailView(View):
                                 unit=ed[1], floor=ed[2],
                                 room_num=ed[3]).exists():
                             return JsonResponse({'response_state': 400, 'msg': '导入数据重复！'})
-                            continue
                         else:
                             eventdetail = EventDetail.objects.create(
                                 building=ed[0],

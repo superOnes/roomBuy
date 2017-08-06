@@ -190,6 +190,8 @@ class ImportView(View):
                         li.append(value2)
                         li.append(value3)
                         li.append(value4)
+                        if li in data:
+                            return JsonResponse({'response_state': 400, 'msg': 'excel中有重复数据，请查询后重试！'})
                     else:
                         return JsonResponse({'response_state': 400, 'msg': '导入excel表格数据格式不正确，请查询后重试！'})
                     data.append(li)
