@@ -43,6 +43,18 @@ input[type="number"]{
 	margin:0 5px;
 	line-height: 30px;
 }
+/*温馨提示*/
+.tip{
+	font-size: 16px;
+	text-align: center;
+	line-height: 30px;
+	color:red;
+}
+
+#priceFile{
+	margin: 0 0 0 100px !important;
+}
+
 
 
 
@@ -313,7 +325,7 @@ input[type="number"]{
 }
 
 #files{
-	margin-left:20px !important;
+	margin-left:100px !important;
 }
 
 .status{
