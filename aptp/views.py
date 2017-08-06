@@ -356,7 +356,7 @@ class AppHouseChoiceConfirmView(View):
                         user=user, eventdetail__event_id=eventid, is_test=True).count()
                     if purchased >= user.customer.count:
                         return JsonResponse({'response_state': 400,
-                                             'msg': '不可再次购买'})
+                                             'msg': '您的购买数量超出限额'})
                     order = Order.objects.create(user=user,
                                                  eventdetail_id=obj[0],
                                                  order_num=time.strftime
@@ -379,7 +379,7 @@ class AppHouseChoiceConfirmView(View):
             elif Order.objects.filter(user=user, eventdetail_id=obj[0],
                                       is_test=True).exists():
                 return JsonResponse({'response_state': 400,
-                                     'msg': '已购买,不要重复购买'})
+                                     'msg': '您已购买过该商品'})
         elif (now >= event.event_start) and (now <= event.event_end):
             if not obj[1] and not obj[2]:
                 with transaction.atomic():
@@ -387,7 +387,7 @@ class AppHouseChoiceConfirmView(View):
                         user=user, eventdetail__event_id=eventid, is_test=False).count()
                     if purchased >= user.customer.count:
                         return JsonResponse({'response_state': 400,
-                                             'msg': '不可再次购买'})
+                                             'msg': '您的购买数量超出限额'})
                     order = Order.objects.create(user=user,
                                                  eventdetail_id=obj[0],
                                                  order_num=time.strftime
@@ -413,12 +413,13 @@ class AppHouseChoiceConfirmView(View):
                     'UPDATE apt_eventdetail set is_sold=%s where id=%s' %
                     (bol, house))
                 return JsonResponse(
-                    {'response_state': 400, 'msg': '购买失败，房屋已卖出'})
+                    {'response_state': 400, 'msg': '商品已被购买，请选择其他商品'})
             elif Order.objects.filter(user=user, eventdetail_id=obj[0],
                                       is_test=False).exists():
                 return JsonResponse({'response_state': 400,
-                                     'msg': '已购买,不要重复购买'})
-        return JsonResponse({'response_state': 400, 'msg': '购买失败'})
+                                     'msg': '您已购买过该商品'})
+        return JsonResponse({'response_state': 400,
+                             'msg': '商品已被购买，请选择其他商品'})
 
 
 class AppHouseChoiceConfirmTestView(View):
