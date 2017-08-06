@@ -304,9 +304,10 @@ class ImportEventDetailView(View):
                         value7 = sheet.cell(rowx=rx, colx=6).value
                         value8 = sheet.cell(rowx=rx, colx=7).value
                         value9 = sheet.cell(rowx=rx, colx=8).value
+                        value10 = sheet.cell(rowx=rx, colx=9).value
                         if type(value1) == str and type(value2) == str \
                             and type(value5) == float and type(value6) == float and type(value7) == str and \
-                                type(value9) == str:
+                                type(value9) == str and type(value10) == str:
                             if type(value3) == float:
                                 try:
                                     value3 = str(int(value3))
@@ -331,6 +332,7 @@ class ImportEventDetailView(View):
                             li.append(value7)
                             li.append(value8)
                             li.append(value9)
+                            li.append(value10)
                             if li in data:
                                 return JsonResponse({'response_state': 400, 'msg': 'excel中有重复数据，请查询后重试！'})
                         else:
@@ -357,7 +359,7 @@ class ImportEventDetailView(View):
                                 looking=ed[6],
                                 term=ed[7],
                                 type=ed[8],
-                                # housetype=HouseType.objects.filter(name=ed[8]).first(),
+                                house_type=HouseType.objects.filter(name=ed[9]).first(),
                                 event=event)
                             eventdetail.save()
                             num += 1
