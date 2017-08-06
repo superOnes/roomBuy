@@ -132,13 +132,16 @@ function deleteOrder(thisId){
 		url:'/acc/ctdelete/',
 		async:true,
 		data:{id:thisId},
-		success:function(){
-			new $.zui.Messager('提示消息：成功', {
+		success:function(data){
+			if(data.success) {
+				new $.zui.Messager('提示消息：成功', {
 					placement:'center',
 			    type: 'success' // 定义颜色主题
-			}).show("",function(){
-				window.location.reload();
-			});
+				}).show("",function(){
+					window.location.reload();
+				});
+			}
+			window.location.reload();
 		},
 		error:function(){
 			alert("未知错误")
