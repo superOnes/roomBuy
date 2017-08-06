@@ -125,19 +125,20 @@ class CustomerForm(forms.ModelForm):
 class HouseTypeForm(forms.ModelForm):
     class Meta:
         model = HouseType
-        fields = ['event', 'name', 'pic', 'num']
+        fields = ['event', 'name', 'pic']
 
     def clean_event(self):
         if not self.instance.id:
             return self.initial['event']
         return self.cleaned_data['event']
 
-    def clean_num(self):
+    def clean_name(self):
         if not self.instance.id:
-            ht = HouseType.objects.filter(event=self.cleaned_data['event'])
+            ht = HouseType.objects.filter(event=self.cleaned_data['event']) \
+                .values_list('name', flat=True)
         else:
             ht = HouseType.objects.filter(event=self.cleaned_data['event']) \
-                .exclude(id=self.instance.id)
-        if ht and self.cleaned_data['num'] in ht.values_list('num', flat=True):
-            raise forms.ValidationError('户型编码不能重复')
-        return self.cleaned_data['num']
+                .exclude(id=self.instance.id).values_list('name', flat=True)
+        if ht and self.cleaned_data['name'] in ht:
+            raise forms.ValidationError('户型名称不能重复')
+        return self.cleaned_data['name']
