@@ -417,7 +417,7 @@ class ExportEventDetailView(View):
             s.write(row, 5, obj.area)
             s.write(row, 6, obj.looking)
             s.write(row, 7, obj.term)
-            s.write(row, 7, obj.type)
+            s.write(row, 8, obj.type)
             try:
                 name=obj.house_type.name
             except:
