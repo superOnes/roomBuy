@@ -1,5 +1,5 @@
-var http="";//正式
-//var http="http://10.7.10.193:8000"; //测试
+//var http="";//正式
+var http="http://10.7.10.193:8000"; //测试
 //var http="http://10.7.1.34";
 $(function(){
 
@@ -38,15 +38,14 @@ $(function(){
 						});
 
 						$(".proSure").bind("click",function(){
-                            $(".proSure").unbind("click");
+                            // $(".proSure").unbind("click");
 							$.ajax({
 								type:"POST",
 								url:http+"/app/protime/",
 								data:{
                                     tel:tel,
                                     personId:personId,
-									id:$(".loginId").html(),
-                                    protime:new Date().Format("yyyy-MM-dd hh:mm:ss")
+									id:$(".loginId").html()
 
 								},
 								dataType:'JSON',
@@ -94,7 +93,7 @@ window.alert = function(name){
     document.documentElement.appendChild(iframe);
     window.frames[0].window.alert(name);
     iframe.parentNode.removeChild(iframe);
-}
+};
 
 /*首页创建元素*/
 function creatEle(data){

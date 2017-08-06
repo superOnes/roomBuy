@@ -93,6 +93,7 @@
 		}
         var cover=localStorage.getItem("cover");
         $(".loginLogo img").prop("src",http+cover);
+        //$(".login h1").html();
         pushHistory();
         window.addEventListener("popstate", function(e) {
             window.location.href="login.html?id="+id;
