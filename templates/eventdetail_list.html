@@ -171,7 +171,9 @@
 		{% endfor %}
 	</tbody>
 </table>
+{% if page_obj.has_other_pages %}
 <div class="zxf_pagediv"></div>
+{% endif %}
 {% endblock %} {% block js %}
 <script type="text/javascript">
 	$(document).ready(function() {
