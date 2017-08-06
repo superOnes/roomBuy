@@ -144,8 +144,10 @@ class DeleteTestView(View):
         eventdetail = EventDetail.objects.filter(event_id=id)
         if eventdetail:
             for ed in eventdetail:
-                Order.objects.filter(eventdetail=ed,
-                                     is_test=True).delete()
+                order = Order.objects.filter(eventdetail=ed, is_test=True)
+                for od in order:
+                    od.delete()
+                    ed.is_testsold = False
             return JsonResponse({'success': True})
         return JsonResponse({'success': False})
 
