@@ -148,6 +148,7 @@ class DeleteTestView(View):
                 for od in order:
                     od.delete()
                     ed.is_testsold = False
+                    ed.save()
             return JsonResponse({'success': True})
         return JsonResponse({'success': False})
 
