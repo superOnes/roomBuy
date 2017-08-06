@@ -194,6 +194,9 @@ class AppEventDetailHouseInfoView(View):
         house = request.GET.get('house')
         eventdetobj = EventDetail.get(house)
         test = True if datetime.now() <= eventdetobj.event.test_end else False
+        if not test and eventdetobj.sign_id and not eventdetobj.is_sold:
+            eventdetobj.is_sold = True
+            eventdetobj.save()
         try:
             Follow.objects.get(user=user, eventdetail=eventdetobj)
         except BaseException:
