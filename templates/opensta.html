@@ -1,4 +1,4 @@
-{% extends 'include/main_base.html' %} 
+{% extends 'include/main_base.html' %}
 {% block title %}开盘统计管理{% endblock %}
 {% block right %}
 <div class="page-header" style="border-bottom: 0;">
@@ -88,9 +88,9 @@
 		$(".selectInp").change(function() {
 			var val = $(this).val();
 			if($("ul.nav-tabs li:first").hasClass("active")){
-				$exportEach.attr("href", "/export/buyhot/" + val);
+				$exportEach.attr("href", "/export/buyhot/?id=" + val);
 			}else{
-				$exportEach.attr("href", "/export/househot/" + val);
+				$exportEach.attr("href", "/export/househot/?id=" + val);
 			}
 			//	获取数据
 			statisticsData(val);
@@ -99,9 +99,9 @@
 		$("ul.nav-tabs li").click(function() {
 			var id = $(".selectInp").val();
 			if($(this).index() == 0) {
-				$exportEach.attr("href", "/export/buyhot/" + id)
+				$exportEach.attr("href", "/export/buyhot/?id=" + id);
 			} else {
-				$exportEach.attr("href", "/export/househot/" + id)
+				$exportEach.attr("href", "/export/househot/?id=" + id);
 			};
 		});
 	});

@@ -52,11 +52,13 @@
 			var defaultVal = $("#eventList").children().length;
 			getorderList(defaultVal);
 		},500)
-
+		var thisVal = $("#eventList").val();
+		console.log(thisVal)
 		function filterData() {
 			var thisVal = $("#eventList").val();
 			var is_test = $("#orderList").val();
 			var searchValue = $("#searchInput").val();
+			console.log(thisVal)
 			getorderList(thisVal, is_test, searchValue);
 		};
 		$("#eventList").change(function() { filterData() });

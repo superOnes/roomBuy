@@ -55,7 +55,7 @@
 			<label class="col-sm-3 control-label">是否显示公测房价</label>
 			<div class="col-sm-9">
 				<label class="radio-inline">
-			    	<input type="radio" class="input-group-sm" name="test_price" value="1" {% if object.test_price == True %}checked{% endif %}> 是
+			    	<input type="radio" class="input-group-sm housePrice" name="test_price" value="1" {% if object.test_price == True %}checked{% endif %}> 是
 				</label>
 				<label class="radio-inline">
 				  	<input type="radio" class="input-group-sm" name="test_price" value="0" {% if object.test_price == False %}checked{% endif %}> 否
@@ -89,7 +89,7 @@
 			<label class="col-sm-3 control-label">是否显示建筑面积</label>
 			<div class="col-sm-9">
 				<label class="radio-inline">
-			    	<input type="radio" class="input-group-sm" name="covered_space" value="1" {% if object.covered_space == True %}checked{% endif %}> 是
+			    	<input type="radio" class="input-group-sm coverArea" name="covered_space" value="1" {% if object.covered_space == True %}checked{% endif %}> 是
 				</label>
 				<label class="radio-inline">
 			    	<input type="radio" class="input-group-sm" name="covered_space" value="0" {% if object.covered_space == False %}checked{% endif %}> 否
@@ -100,10 +100,10 @@
 			<label class="col-sm-3 control-label">是否显示建筑面积单价</label>
 			<div class="col-sm-9">
 				<label class="radio-inline">
-			    	<input type="radio" class="input-group-sm" name="covered_space_price" value="1" {% if object.covered_space_price == True %}checked{% endif %}> 是
+			    	<input type="radio" class="input-group-sm coverPrice" name="covered_space_price" value="1" {% if object.covered_space_price == True %}checked{% endif %}> 是
 				</label>
 				<label class="radio-inline">
-			    	<input type="radio" class="input-group-sm" name="covered_space_price" value="0" {% if object.covered_space_price == False %}checked{% endif %}> 否
+			    	<input type="radio" class="input-group-sm coverPrice" name="covered_space_price" value="0" {% if object.covered_space_price == False %}checked{% endif %}> 否
 				</label>
 			</div>
 		</div>
