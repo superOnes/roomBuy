@@ -190,11 +190,10 @@ class ImportView(View):
                     value4 = sheet.cell(rowx=rx, colx=3).value
 
                     if type(value1) == str and type(value3) == str and type(value4) == str:
-                        if type(value2) == float:
-                            try:
-                                value2 = str(int(value2))
-                            except:
-                                return JsonResponse({'response_state': 400, 'msg': '导入手机号格式有误！'})
+                        try:
+                            value2 = str(int(value2))
+                        except:
+                            return JsonResponse({'response_state': 400, 'msg': '导入手机号格式有误！'})
                         li.append(value1)
                         li.append(value2)
                         li.append(value3)
