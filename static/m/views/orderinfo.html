@@ -95,6 +95,21 @@
             },
             error:function(){}
         });
+
+        pushHistory();
+        window.addEventListener("popstate", function(e) {
+            window.location.href="houseList.html?id="+idd;
+        }, false);
+        function pushHistory() {
+            var state = {
+                title: "title",
+                url:"houseList.html?id="+idd
+            };
+            window.history.pushState(state, state.title, state.url);
+        }
+
+
+
     })
 </script>
 </body>
