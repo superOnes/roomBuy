@@ -728,7 +728,7 @@ class HouseHeatView(View):
                     'unit': et.unit,
                     'floor': et.floor,
                     'room_num': et.room_num,
-                    'is_sold': et.is_sold,
+                    'is_sold': et.has_order(),
                     'unit_price': et.unit_price,
                     'area': et.area,
                     'num': et.follow_set.count(),
