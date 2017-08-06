@@ -286,6 +286,8 @@ class ImportEventDetailView(View):
                 sheet = workdata.sheet_by_name(sheet_name)
                 row = sheet.nrows
                 col = sheet.ncols
+                if row == 0:
+                    return JsonResponse({'response_state': 400, 'msg': '导入的excel为空表！'})
                 num = len(EventDetail.objects.filter(event_id=id))
                 data = []
                 if num + row - 1 <= request.user.house_limit:

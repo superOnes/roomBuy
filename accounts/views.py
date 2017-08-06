@@ -176,13 +176,23 @@ class ImportView(View):
                 sheet = workdata.sheet_by_name(sheet_name)
                 row = sheet.nrows
                 col = sheet.ncols
+                if row == 0:
+                    return JsonResponse({'response_state': 400, 'msg': '导入的excel为空表！'})
                 data = []
                 num = 0
                 for rx in range(1, row):
                     li = []
-                    for cx in range(0, col):
-                        value = sheet.cell(rowx=rx, colx=cx).value
-                        li.append(value)
+                    value1 = sheet.cell(rowx=rx, colx=0).value
+                    value2 = sheet.cell(rowx=rx, colx=1).value
+                    value3 = sheet.cell(rowx=rx, colx=2).value
+                    value4 = sheet.cell(rowx=rx, colx=3).value
+                    if type(value1) == str and type(value2) == float and type(value3) == str and type(value4) == str:
+                        li.append(value1)
+                        li.append(value2)
+                        li.append(value3)
+                        li.append(value4)
+                    else:
+                        return JsonResponse({'response_state': 400, 'msg': '导入excel表格数据格式不正确，请查询后重试！'})
                     data.append(li)
                 for ct in data:
                     if type(ct[1]) != str:
@@ -192,6 +202,7 @@ class ImportView(View):
                     if (Customer.objects.filter(event_id=id,
                                                 mobile=ct[1]) or Customer.objects.filter(event_id=id,
                                                                                                    identication=ct[2])).exists():
+                        return JsonResponse({'response_state': 400, 'msg': '导入数据重复！'})
                         continue
                     else:
                         with transaction.atomic():
