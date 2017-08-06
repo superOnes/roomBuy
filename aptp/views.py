@@ -523,10 +523,9 @@ class OrderProView(View):
     def get(self, request):
         user = request.user
         eventid = request.GET.get('id')
-        print(user,eventid)
         try:
             customer = Customer.objects.get(
-                use=user, event_id=eventid)
+                user=user, event_id=eventid)
         except BaseException:
             return JsonResponse({'response_state': 400, 'msg': '认筹名单中没有该用户！'})
         else:
