@@ -12,9 +12,13 @@ class Customer(models.Model):
     remark = models.TextField('备注', null=True, blank=True)
     protime = models.DateTimeField('同意协议时间', null=True, blank=True)
     heat = models.IntegerField('访问热度', default=0)
-    count = models.IntegerField('可选套数', default=0)
+    count = models.IntegerField('可选套数', default=1)
     event = models.ForeignKey(Event, verbose_name='关联活动')
     is_delete = models.BooleanField(default=False)
+    session_key = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True)
 
     @classmethod
     def get(cls, id):
@@ -29,17 +33,13 @@ class Customer(models.Model):
         return cls.objects.filter(event_id=eid,
                                   identication=id).first()
 
-    @classmethod
-    def remove(cls, id):
-        obj = cls.get(id)
-        obj.is_delete = True
-        obj.save()
-
 
 class User(AbstractUser):
     is_delete = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     company = models.ForeignKey(Company, null=True, blank=True)
+    house_limit = models.IntegerField('房源数量限制', default=0)
+    expire_date = models.DateTimeField('账号过期日期', null=True, blank=True)
     customer = models.OneToOneField(Customer, null=True, blank=True)
 
     @classmethod
@@ -53,7 +53,6 @@ class User(AbstractUser):
         return get_object_or_404(cls.objects, id=id)
 
     def get_order_count(self):
-        print(self)
         return self.order_set.filter(is_test=False).count()
 
 
@@ -78,3 +77,6 @@ class Order(models.Model):
         obj = cls.get(id)
         obj.is_delete = True
         obj.save()
+
+    class Meta:
+        unique_together = (('user', 'is_test'))

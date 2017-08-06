@@ -1,48 +1,51 @@
 {% extends 'include/main_base.html' %}
+{% block title %}认筹名单{% endblock %}
 {% block right %}
 <div>
 	<ol class="breadcrumb">
-	  <i class="icon icon-home"></i>
-	  <li><a href="{% url 'event_list' %}"><h3>{{event.name}}</h3></a></li>
-	  <li class="active">认筹名单</li>
+		<i class="icon icon-home"></i>
+		<li>
+			<a href="{% url 'event_list' %}">
+				<h3>{{event.name}}</h3></a>
+		</li>
+		<li class="active">认筹名单</li>
 	</ol>
 </div>
 <div class="row" style="padding:10px;margin-top:-20px;">
-    <a class="btn btn-primary" data-iframe="{% url 'custom_create' pk=event.id %}" data-toggle=modal>添加认筹名单</a>
-    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#exampleModal" data-moveable="true"  data-moveable="true">导入认筹名单</button>
-    <a href="{% url 'customer_export' pk=event.id %}" class="btn btn-default">导出认筹名单</a>
-  	<div class="col-lg-3" style="float: right;">
-	    <form class="form-horizontal searchWrap" method="get" action="">
-		    <div class="input-group">
-			  <input type="text" class="form-control" placeholder="姓名/手机号/证件号" id="searchInput" name="value"
-				       value="{{value|default:''}}">
-			  <span class="input-group-btn">
+	<a class="btn btn-primary" data-iframe="{% url 'custom_create' pk=event.id %}" data-toggle=modal>添加认筹名单</a>
+	<button type="button" class="btn btn-default" data-toggle="modal" data-target="#exampleModal" data-moveable="true" data-moveable="true">导入认筹名单</button>
+	<a href="{% url 'customer_export' pk=event.id %}" class="btn btn-default">导出认筹名单</a>
+	<div class="col-lg-3" style="float: right;">
+		<form class="form-horizontal searchWrap" method="get" action="">
+			<div class="input-group">
+				<input type="text" class="form-control" placeholder="姓名/手机号/证件号" id="searchInput" name="value" value="{{value|default:''}}">
+				<span class="input-group-btn">
 			    <button class="btn btn-default" type="submit">搜索</button>
 			  </span>
 			</div>
 		</form>
-    </div>
+	</div>
 	<!--导入文件模态框-->
 	<div class="modal" id="exampleModal" tabindex="-1" role="dialog">
-	  <div class="modal-dialog" role="document">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	        <h4 class="modal-title">上传文件</h4>
-	      </div>
-	      <div class="modal-body">
-	        <form class="form-horizontal">
-		        <div class="form-group">
-		          <input type="file" name="file" id="files"/>
-		        </div>
-	        </form>
-	      </div>
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-	        <button type="button" class="btn btn-default" onclick="submitFile(this,{{ event.id }})">确定</button>
-	      </div>
-	    </div>
-	  </div>
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">上传文件</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<input type="file" name="file" id="files" onclick="$('.btn_up').removeAttr('disabled','disabled');" />
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-default btn_up" onclick="submitFile(this,{{ event.id }})">确定</button>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 <table class="table datatable">
@@ -53,7 +56,6 @@
 			<th>手机号</th>
 			<th>证件号</th>
 			<th>备注</th>
-			<th>可选套数</th>
 			<th>状态</th>
 			<th>操作</th>
 		</tr>
@@ -66,56 +68,68 @@
 			<td>{{ obj.mobile }}</td>
 			<td>{{ obj.identication }}</td>
 			<td>{{ obj.remark }}</td>
-			<td><a data-iframe="{% url 'customer_count_update' pk=obj.id %}" data-toggle="modal" data-title="修改可选套数">
-				     {{ obj.count }} <i class="icon icon-edit"></i></a></td>
-      <td>已选购 {{obj.user.get_order_count}} / {{ obj.count }}</td>
-			<td>
-				<p><a data-toggle="modal" data-target="#deleteModal" data-id="{{obj.id}}" class="delete">删除</a></p>
-			</td>
+			<td>{% if obj.user.order_set.count > 0 %}已选购{% else %}未购买{% endif %}</td>
+			<td> <p> <a data-toggle="modal" data-target="#deleteModal" data-id="{{obj.id}}" class="deleteOrder">删除</a> </p> </td>
 		</tr>
 		<!--删除确认框-->
 		<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog">
-		  <div class="modal-dialog" role="document">
-		    <div class="modal-content">
-		      <div class="modal-header">
-		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		        <h4 class="modal-title">提示框</h4>
-		      </div>
-		      <div class="modal-body">
-		        <form class="form-horizontal">
-		        <div class="form-group">
-		          <h2 style="text-align: center;">确认删除该认筹名单？</h2>
-		        </div>
-		      </form>
-		      </div>
-		      <div class="modal-footer">
-		        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-		        <button type="button" class="btn btn-default" id="delete">确定</button>
-		      </div>
-		    </div>
-		  </div>
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title">提示框</h4>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal">
+							<div class="form-group">
+								<h2 style="text-align: center;">确认删除该认筹名单？</h2>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+						<button type="button" class="btn btn-default" id="deleteOrder">确定</button>
+					</div>
+				</div>
+			</div>
 		</div>
 		{% endfor %}
 	</tbody>
 </table>
+<div class="zxf_pagediv"></div>
 <script type="text/javascript">
-//	删除认筹名单
-	$(".delete").on('click',function(e){
-		var $id = $(e.currentTarget).data("id");
-		$("#delete").click(function(){
-			$.ajax({
-				type:"POST",
-				url:"/customer/delete/",
-				async:true,
-				data:{id:$id},
-				cache: false,
-				success:function(){
-					window.location.reload();
-				},
-				error:function(){
-					alert("未知错误")
-				}
-			});
+$(".zxf_pagediv").createPage({
+	pageNum: {{ paginator.num_pages}},//总页码
+	current: {{ page_obj.number }},//当前页
+	activepage: "current",
+	activepaf: "",
+	backfun: function(e) {  //回调
+		window.location.href="?page="+e.current;
+	}
+});
+	//	删除认筹名单
+	var $id;
+	$(".deleteOrder").on('click', function(e) {
+		$id = $(e.currentTarget).data("id");
+	});
+	$("#deleteOrder").click(function() {
+		$.ajax({
+			type: "POST",
+			url: "/customer/delete/",
+			async: true,
+			data: { id: $id },
+			cache: false,
+			success: function() {
+				window.location.reload();
+			},
+			error: function() {
+				new $.zui.Messager("未知错误", {
+					icon: "bell",
+					placement: "center",
+					type: "danger",
+					time: 2000,
+				}).show();
+			}
 		});
 	});
 </script>

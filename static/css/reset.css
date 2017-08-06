@@ -1,933 +1,161 @@
 @charset "utf-8";
 /* CSS Document */
-body, h1, h2, h3, h4, h5, h6, p, ul, ol, dl, dd, tr, td, a {
-    margin: 0;
-    padding: 0;
-}
-*,
-::before,
-::after {
-    margin: 0;
-    padding: 0;
-    /*清除移动端默认的点击高亮效果*/
-    -webkit-tap-highlight-color: transparent;
-    /*设置所有的都是以边框开始计算宽度*/
-    box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-}
-
-input[type="button"], input[type="submit"], input[type="reset"], textarea,button {
-    -webkit-appearance: none;
-}
-li {
-    list-style: none;
-}
-body {
-    font-family: "Microsoft Ya Hei", "微软雅黑";
-    color: #222;
-    -webkit-overflow-scrolling: touch;
-    overflow-scrolling: touch;
-    background: #fff;
-}
-
-html, body {
-    font-size: 20px;
-    width: 100%;
-    height: 100%;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
-}
-
-a {
-    text-decoration: none;
-    outline: none;
-    -webkit-tap-highlight-color: rgba(0,0,0,0);
-}
-a:hover { text-decoration: none; }
-input, textarea {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    outline: none;
-    background: none;
-    font-family: "Microsoft YaHei","微软雅黑";
-}
-img {
-    border: 0;
-    outline: none;
-    display: block;
-}
-input:focus,button:focus {outline: none;}
-.fl {float: left;}
-.fr {float: right;}
-.clear{overflow:hidden;}
-i {display: block;font-style:normal;}
-em {font-style: normal;}
-/*禁止长按链接与图片弹出菜单*/
-a, img {-webkit-touch-callout: none;}
-.container {
-    width: 100%;
-    height: 100%;
-}
-/*登录页*/
-.container{ width:100%;}
-.container .login-top,.container .login-top img{width:100%;}
-
-.tips{
-    width:90%;
-    margin:5%;
-    font-size:.6rem;
-    color:#f75c2e;
-}
-.wapLogin{
+body,h1,h2,h3,h4,h5,h6,p,ul,ol,dl,dd,tr,td{margin:0;padding:0;}
+li{list-style:none;}
+body{font-size:18px;font-family:"Microsoft Ya Hei","微软雅黑";color:#545454;}
+a{text-decoration:none;color:#6c6c6c;outline:none;}
+.clear:after{content:"";display:block;clear:both;}
+.clear{zoom:1;}
+.fl{float:left;}
+.fr{float:right;}
+.wap{
     width:100%;
-    height:100%;
-    color:#fff;
+    height:900px;
     overflow:hidden;
+    background:url("/static/images/bg1.png") no-repeat;
+    position:relative;
 }
-.wapLogin>img{
-    width:120%;
-    height:120%;
-    background-position: center;
-    background-size: cover;
-    -ms-filter: blur(14px);
-    filter: blur(14px);
-    position:fixed;
-    left:-10%;
-    top:-10%;
-    z-index:-1;
-    opacity:0.85;
+.tips{
+    position:absolute;
+    top:30%;
+    right:10px;
 }
-.login{ text-align:center;margin-top:15%;position:relative; }
-.loginLogo {
-    width:108px;
-    height:108px;
-    border-radius:50%;
-    overflow:hidden;
+.tips p{
+    width:24px;
+    height:60px;
+    line-height:24px;
+    text-align:center;
     background:#fff;
+    color:#222;
+    margin-bottom:20px;
+    font-size:20px;
+}
+.wapbox {position:relative;height:900px;}
+.wallList{
     position:absolute;
     top:0;
-    left:50%;
-    margin-left:-54px;
+    left:6%;
 }
-.loginLogo img{width:100%;height:100%;}
-.login h1{
-    font-weight:normal;
-    font-size:1.6rem;
-    padding-top:6.5rem;
-    text-shadow: 3px 3px 8px rgba(247,92,46,0.4) ;
-}
-.loginBox{margin-top:2.6rem;}
-.tipbox{
-    width:80%;
-    margin:0 10% 2.0rem;
-    border-bottom:solid 1px #e5e5e5;
-}
-.tipbox span{
-    text-indent:.5rem;
-    font-size:.9rem;
-    line-height:1.8rem;
-}
-.tipbox input{
-    margin-right:.5rem;
-    line-height:1.4rem;
-    text-indent:1rem;
-    color:#fff;
-    font-size:.8rem;
-}
-.tipbox input::-webkit-input-placeholder { color: #bfbfbf;}
-.tipbox input:-moz-placeholder { color: #bfbfbf; }
-.tipbox input:-ms-input-placeholder {  color: #bfbfbf;}​,
-.btnLogin{
-    width:80%;
-    margin:10%;
-    height:2rem;
-    line-height:2rem;
+.wapbox .title{
+    width:2%;
+    height:100%;
+    margin-top:13%;
+    /*word-wrap: break-word;*/
     text-align:center;
-    font-size:.9rem;
-    background:#f75c2e;
-    border-radius:100px;
-}
-
-/*在线选房*/
-.wapline{
-    width:100%;
-    background: #eeeeee;
-    font-size: 0.6rem;
-    color:#222222;
-}
-.wapline div,.wapline h1 ,{
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-}
-.wapline .bannerline{
-    width: 100%;
-    height:10.2rem;
-    /*position:absolute;*/
-}
-.wapline .bannerline img{
-    height:10.2rem;
-    width:100%;
-}
-.wapline h1{
-    font-size:1rem;
-    font-style: normal;
-    line-height: 2.1rem;
-    height: 2.1rem;
-    padding-left: 1rem;
-    background: #fff;
-}
-.houseQui {background:#fff;}
-.quit {
-    padding:0 3%;
-    height:1.2rem;
-    line-height:1.2rem;
-    text-align:center;
-    margin-right:5%;
-    margin-top:.5rem;
-    border:solid 1px #eee;
-    border-radius:6px;
-}
-.wapline .phone{
-    font-size:0.65rem;
-    line-height: 1.8rem;
-    height: 1.8rem;
-    color: #1f9af0;
-    padding-left: 2.8rem;
-    background:#fff url("../images/tel.png") 1.45rem center no-repeat;
-    background-size:6%;
-}
-.wapline .lineBox{
-    width: 95%;
-    margin: 0.4rem auto 1.8rem;
-    background: #fff;
-    padding: 0.4rem 0;
-    position: relative;
-    border-bottom:solid 10px #eee;
-}
-.wapline .lineBox .floor {
-    overflow: hidden;
-
-}
-.wapline .lineBox .floor span,.wapline .lineBox .floor4{
-    float: left;
-    width: 5.65rem;
-    text-align: center;
-
-}
-.floor2,.floor3,.floor4{
-    padding: 0 0.8rem;
-}
-.wapline .lineBox  .remark{
-    width: 4.05rem;
-    height:4.05rem;
-    margin:0.8rem 0.8rem 0;
-    line-height: 4.05rem;
-    text-align: center;
-    background: url("../images/img2.png") no-repeat left top;
-    background-size: cover;
-    background-origin: content-box;
-    position: relative;
-    left:-.3rem;
-    font-size: 0.7rem;
-    color: #fff;
-    float: left;
-
-}
-.wapline .lineBox .floor .mark{
-    width: 4.05rem;
-    height:4.05rem;
-    position: absolute;
-    background: rgba(0,0,0,.5);
-    z-index: 11;
-}
-.floor{
-    position: relative;
-}
-.wapline .lineBox .floor .floor1{
-    width: 4.05rem;
-    text-align: center;
-    position: relative;
-    z-index: 111;
-}
-.wapline .lineBox .floor .flr{
-    background: #eee;
-    padding:0.3rem 0.5rem;
-    line-height: 1.05rem;
-    margin-top: 0.85rem;
-    margin-left: 0.35rem;
-    position: relative;
-    float: left;
-    width: 60%;
-}
-.wapline .lineBox .floor .choicSt {margin-top:1.0rem;}
-.wapline .lineBox .floor .hgt {margin-top:0.2rem;}
-.wapline .lineBox .floor .flr:before{
-    content: '';
-    display: block;
-    width:0;
-    height: 0;
-    border-style: solid;
-    border-width: 0.2rem;
-    border-color: transparent #eee transparent transparent;
-    position: absolute;
-    top: 50%;
-    left: -0.4rem;
-}
-.wapline .btnline{
-    height:1.8rem;
-    width:100%;
-    background: #f75c2e;
-    margin-top: 0.7rem;
-    position:fixed;
-    bottom:0;
-    left:0;
-}
-.wapline .btnline a{
-    font-size: 0.8rem;
-    line-height: 1.8rem;
-    text-align: center;
-    float: left;
-    width: 100%;
-    color: #fff;
-}
-.wapline .lineBox .floor:before{
-    content: "";
-    display: block;
-    width: 1px;
-    background: #ccc;
-    position: absolute;
-    top: 0;
-    height: 100%;
-    left: 5.2rem;
-}
-.wapline .lineBox .floor:after{
-    content: "";
-    display: block;
-    width: 1.425rem;
-    background: #ccc;
-    position: absolute;
-    top: 0;
-    height: 100%;
-    left: 4.75rem;
-    background: url("../images/yuan.png") left center no-repeat;
-}
-
-/*选房列表*/
-.houseTitle{
-    height:3.0rem;
-    padding-left:5%;
-    border-bottom:solid 1px #eee;
-}
-.houseTitle li{
+    padding-left:2%;
+    line-height:50px;
+    color:#f6c030;
     float:left;
-    height:3.0rem;
-    border-right:solid 1px #eee;
-    width:15%;
+    font-size:40px;
 }
-.houseTitle li:nth-of-type(1){width:70%;}
-.houseTitle li:last-child{
-    border-right:none;
-}
-.houseTitle li>h3{
-    font-weight:normal;
-    font-size:.9rem;
-    line-height:1.6rem;
-}
-.houseTitle li>p{
-    font-size:.7rem;
-}
-.order i,.fresh i{
-    background:url("../images/icons.png") no-repeat;
-    background-size:100%;
-    width:16px;
-    height:19px;
-    display:block;
-    margin-top:.6rem;
-    margin-left:1.0rem;
-}
-.fresh i{
-    background:url("../images/icons.png") no-repeat 0 -1rem;
-    background-size:100%;
-    width:18px;
-    margin-left:.8rem;
-}
-.order p,.fresh p{
+.wallList{ float:right;width:94%;}
+.wallList .unit{
+    width:31%;
+    float:left;
+    margin-left:1%;
+    padding-top:14px;
+    font-size:22px;
     color:#222;
-    font-size:.8rem;
+}
+.wallList .unit a{
+    font-size:22px;
+    color:#222;
+}
+.unitName{
+    height:35px;
+    line-height:35px;
+    font-size:30px;
+    color:yellow;
     text-align:center;
-    line-height:1.4rem;
+    background:url("/static/images/bg2.png") no-repeat center;
+    margin-bottom:18px;
 }
-.listTile{
-    border-bottom:solid 1px #eee;
-    padding:.9rem 5% .2rem 5%;
-}
-.listTileDiv{width:90%;height:2rem;overflow:hidden;}
-.listTile p,.houseUnit p{
-    float:left;
-    height:1.5rem;
-    line-height:1.5rem;
-    padding:0 .3rem;
-    background:#eee;
-    font-size:.7rem;
-    margin-right:.5rem;
-    margin-bottom: 0.6rem;
-    -moz-border-radius:.2rem;
-    -webkit-border-radius:.2rem;
-    border-radius:.2rem;
-}
-.houseUnit p{background:#fff;margin-bottom:0;}
-.unite{
-    background:#eee;
-    padding:5%;
-}
-.floorListbox { margin-bottom:1rem;}
-.houseUnit{ margin-bottom:2.6rem;}
-/*添加选房列表code*/
-.listTile p i{
-    background:url("../images/share.png") no-repeat;
-    background-size:100%;
-    width:16px;
-    height:19px;
-    display:inline;
-    float: left;
-    margin-top:0.4rem;
-    margin-right:.2rem;
-}.listTile p.listTile-style i {
-     background:url("../images/share1.png") no-repeat;
-     background-size:100%;
- }
-.listTile p a{
-    color: #222;
-    margin-left:.3rem;
-}
-.listTile p.listTile-style,.houseUnit p.listTile-style{
-    background-color: #f75c2e;
-    color:#fff;
-}
-.click-down{
-    display:block;
-    margin-top:.5rem;
-}
-.click-down i{
-    background:url("../images/arrow-bott.png") no-repeat;
-    background-size:100%;
-    width:18px;
-    height:18px;
-    float: right;
-    margin-top:-.2rem;
-}
-.click-down-top i{
-    background:url("../images/arrow-top.png") no-repeat;
-    background-size:100%;
-}
-.houseList{
-    display: block;
-}
-.choseList{
-    display: block;
-    height:3.0rem;
-    border-bottom:solid 1px #eee;
-    padding:.9rem 5%;
-}
-.choseList p{
-    float: left;
-    height:1.5rem;
-    line-height: 1.5rem;
-    padding:0 .5rem;
-    font-size: .8rem;
-    margin-right:.5rem;
-    -moz-border-radius:.2rem;
-    -webkit-border-radius:.2rem;
-}
-.choseList p:nth-child(1){
-    border-right:solid 1px #eee;
-}
-.choseList-style{
-    background-color: #f75c2e;
-}
-.houseChose{ position: relative; }
-
-.floorList{
-    height: 1.4rem;
-    width:33%;
-    /*float: left;*/
-    margin: 1.4rem auto 0;
-    background: url("../images/floorbg.png") no-repeat left top;
-    background-size: 100% 100%;
-}
-.floorList li{
-    font-size:.7rem;
-    text-align: center;
-    padding: .2rem;
-    -moz-border-radius:.2rem;
-    -webkit-border-radius:.2rem;
-    border-radius:.2rem;
-}
-.floorList li:nth-child(1){
-    margin-top: 0.4rem;
-}
-.floorList-style{
-    /*background-color: #eee;*/
-    color: #fff;
-}
-.floorList .active{
-    background-color: chartreuse;
-}
-
-.floorChose{
-    width:90%;
-    margin-left:5%;
-    margin-top: 0.45rem;
-    border:solid 1px #fdd6d6;
-    padding: 0.8rem 0.95rem .5rem 0.3rem;
-    -moz-border-radius:.3rem;
-    -webkit-border-radius:.3rem;
-    border-radius:.3rem;
-    overflow: hidden;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-}
-.tab div{
-    height:2.35rem;
-    width:1.25rem;
-    -moz-border-radius:.3rem;
-    -webkit-border-radius:.3rem;
-    border-radius:.3rem;
-    position: absolute;
-    z-index:-10;
-    font-size: 0.7rem;
-    text-align: center;
-    border:solid 1px #f75c2e;
-    color: #f75c2e;
-    left: 1.0rem;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    padding-top: 0.2rem;
-}
-div.shouing{
-    color: #000;
-    border-color: #ccc;
-    top:3.2rem;
-    margin-bottom:.5rem;
-}
-div.shoued{
-    top:5.8rem;
-}
-.floorChose li{
-    height:1.4rem;
-    font-size:.7rem;
-    width:30%;
-    float: left;
-    margin:0 0 0.32rem 3%;
-    border:solid 1px #ccc;
-    text-align: center;
-    line-height:1.4rem;
-    -moz-border-radius:.2rem;
-    -webkit-border-radius:.2rem;
-    border-radius:.2rem;
-}
-.floorChose li a{color:#222;}
-.radius-radio{
-    width:0.7rem;
-    height:0.7rem;
-    border: solid 1px #888;
-    float: left;
-    margin-top:0.45rem;
-    margin-right:.2rem;
-    -moz-border-radius:.2rem;
-    -webkit-border-radius:.2rem;
-}
-.radius-radio-red{
-    width:0.7rem;
-    height:0.7rem;
-    border: solid 1px #f75c2e;
-    float: left;
-    margin-top:0.45rem;
-    margin-right:.2rem;
-    background-color: #f75c2e;
-    -moz-border-radius:.2rem;
-    -webkit-border-radius:.2rem;
-}
-.endTime{
-    height:2rem;
-    line-height:2rem;
-    width:100%;
-    background-color: #eeeeee;
-    position: fixed;
-    bottom: 0;
-}
-.endTime p{
-    text-align: center;
-    font-size: .8rem;
-    color: #f75c2e;
-}
-.houseUnit .floorChose {width:90%;margin-left:5%;}
-.houseUnit .floorChose li {width:30%;margin:0 0 0.32rem 3%;}
-.floorChose li.floorLi-red{background:#f75c2e;border:none;}
-.floorChose li.floorLi-red a{color:#fff;}
-.legend{
-    padding:0 5% 0 60%;
-    font-size:.6rem;
-    position:relative;
-}
-.legend i{
-    width:12px;
-    height:12px;
-    border:solid 1px #ccc;
-    border-radius:3px;
-    margin-right:.3rem;
-    margin-top:.2rem;
+.unitLists{position:relative;height:840px;overflow:hidden;}
+.unitList{position:absolute;top:0;}
+.unitList span{
+    width:90px;
+    height:40px;
+    line-height:40px;
+    text-align:center;
     display:inline-block;
-    position:absolute;
-    top:-.1rem;
-}
-.legend i:nth-of-type(2){border:none;background:#f75c2e;}
-.legend span{
-    padding-left:14px;
-}
-    /*收藏页*/
-.shareCarList{
-    float: left;
-    width:100%;
-}
-.shareCar-list{
-    margin:.8rem;
-    width:100%;
-    border-bottom: solid 1px #eeeeee;
-}
-.shareCar-list a{color:#222;}
-.shareCar-list p{
-    line-height: 2rem;
-}
-.shareCar-list span{
-    line-height: 1.6rem;
-    margin-bottom: 1rem;
-    font-size: .8rem;
-}
-
-/*遮罩层*/
-.content-loading {
-    width:90%;
-    height:70%;
-    margin:15% auto;
     background:#fff;
-    font-size:.8rem;
-    border-radius:6px;
+    margin-bottom:9px;
+    margin-right:2px;
 }
-.close-icons i{
-    background:url("../images/close-icons.png") no-repeat;
-    background-size:100%;
-    width:20px;
-    height:20px;
-    display:block;
-    margin-top:.6rem;
-    margin-left:.7rem;
-}
-.close-icons{
-    float: right;
-    margin-right:.2rem;
-    border-radius:50%;
-}
-.choseOneRight{
-    float: right;
-}
-#log_window p{
-    width:100%;
-    height:2.4rem;
-    line-height:2.4rem;
-    border-bottom: solid 1px #eee;
-    padding-left: 12%;
-    position:relative;
-}
-#log_window p i{
-    background:url("../images/share.png") no-repeat;
-    background-size:100%;
-    width:20px;
-    height:20px;
-    display:inline-block;
-    position:absolute;
-    top:.8rem;
-    left:5%;
-}
-.choseHouseList{
-    margin-left: 5%;
-}
-.choseHouse-list{
-    height:2.4rem;
-    line-height:2.4rem;
-    border-bottom: solid 1px #eee;
-    padding: .4rem;
-}
-.choseHouse-list input[type = "radio"]{
-    display: none;
-}
-.choseHouse-list .choseImg{
-    background: url('../images/choice1.png') no-repeat;
-    background-size:100%;
-    width:1.4rem;
-    height:1.4rem;
-    float: right;
-}
-.choseHouse-list input[type = "radio"]:checked~.choseImg{
-    background: url('../images/choice2.png') no-repeat;
-    background-size:100%;
-    width:1.4rem;
-    height:1.4rem;
+.unitList .cellList,.tips p.bought{
+    background:#f9a0a1;
+    color:#4c4c4c;
 }
 
-/*下拉菜单*/
-#slip-down{
-    position: relative;
-    z-index:10;
-}
-.listTile-high{
-    padding:.9rem 5%;
-    width:100%;
-    display: block;
-}
-.listTile-high p{
-    float:left;
-    height:1.5rem;
-    line-height:1.5rem;
-    padding:0 .5rem;
-    background:#eee;
-    font-size:.8rem;
-    margin-right:.5rem;
-    margin-top: .5rem;
-    -moz-border-radius:.2rem;
-    -webkit-border-radius:.2rem;
-    border-radius:.2rem;
-}
-.listTile-high p.listTile-style{
-    background-color: #f75c2e;
-}
 
-/*户型详情*/
-.houseInfotop{
-    width:100%;
-    padding:5%;
-    border-bottom:solid 10px #eee;
-}
-.houseInfotop>p:nth-of-type(1) span{
-    border:solid 1px #999;
-    border-radius:4px;
-    font-size:.7rem;
-    padding:0 .5rem;
-    height:.5rem;
-    line-height:.5rem;
 
-}
-.houseInfotop>p:nth-of-type(2){
-    width:7rem;
-    margin:.5rem auto;
-}
-.houseInfotop>p:nth-of-type(2) img{width:100%;}
-.houseInfotop h1{
-    font-weight:normal;
-    font-size:.8rem;
-    line-height:1.4rem;
-    margin-bottom:.5rem;
-}
-.houseShare span{
-    padding:0 3%;
-    height:1.2rem;
-    line-height:1.2rem;
-    font-size:.7rem;
-    color:#f75c2e;
-    border-radius:6px;
-    border:solid 1px #f75c2e;
-}
-.houseShare span a{ color:#f75c2e;}
-.houseShare span:nth-of-type(1){
-    margin-right:1.0rem;
-}
-.houseInfoCont{
-    height:4.2rem;
-    border-bottom:solid 10px #eee;
-    padding:.5rem 0;
-}
-.houseInfoCont li{
-    width:33.3%;
-    float:left;
-    border-right:solid 1px #eee;
-    text-align:center;
-    font-size:.7rem;
-    line-height:1.2rem;
-}
-.houseInfoCont li:nth-last-of-type(1){border-right:none;}
-.houseInfoCont li span{
-    color:#f75c2e;
-    font-size:.8rem;
-    line-height:1.6rem;
-}
-.houseInfoOther{
-    padding:0 5%;
-    font-size:.9rem;
-    border-bottom:solid 10px #eee;
-}
-.houseInfoOther1{margin-bottom:2.6rem;border-bottom:none;}
-.houseInfoOther p{line-height:2rem;}
-.houseInfoOther ul li{
-    line-height:2rem;
-    font-size:.8rem;
-}
-.houseInfoOther ul li span{color:#545454;}
-.houseInfoOther ul li span label{width:3.4rem;display:inline-block;}
-.houseInfoOther ul li span i,.houseInfoOther ul li span a{
-    color:#222;
-    margin-left:.6rem;
-    display:inline-block;
-}
-.houseInfoOther ul li span i{width:5.3rem;}
-.houseInfoOther p.housePos{ font-size:.8rem;line-height:1.4rem;}
-.houseBtnN,.houseBtnY {
-    width:100%;
-    height:2.3rem;
-    line-height:2.3rem;
-    color:#fff;
-    text-align:center;
-    background:#999;
-    position:fixed;
-    bottom:0;
-    left:0;
-}
-.houseBtnY{
-    background:#f75c2e;
-}
-/*订单*/
-.order-all{
-    width:95%;
-    position: relative;
-    top:2.5%;
-    left:2.5%;
-    height:12rem;
-    margin-bottom:1.0rem;
-    box-shadow: #a8a8a8 0 0 10px;
-}
-.order-top {
-    height:4rem;
-    border-bottom:1px solid #f4f4f4;
-}
-.order-top a span {
-    font-size:1rem;
-    position: relative;
-    left:1rem;
-    top:1rem;
-    color:#222;
-}
-.order-top p{
-    font-size:.5rem;
-    color: #a8a8a8;
-    position: relative;
-    left:1rem;
-    top:1.2rem;
-}
-.order-right img{
-    width:1rem;
-    position: relative;
-    left:90%;
-    top:-2.2rem;
-}
-.order-middle{
-    position: relative;
-    top:-.5rem;
-    font-size:2.2rem;
-    height:14rem;
-}
-.order-middle table{
-    position: relative;
-    left:1rem;
-    font-size:.8rem;
-}
-.order-middle table tr{
-    line-height: 1.4rem;
-}
-.order-middle table tr:first-child td:last-child {
-    color:red;
-}
-.order-table td:last-child {
-    color:red;
-}
-.order-bottom {
-    position: relative;
-    top:-9rem;
-    font-size:.8rem;
-    color: #a8a8a8;
-    left:80%;
-}
-/*订单详情*/
+
+.orderbox{ width:400px;margin:100px auto;}
 .order-top2{
-    width:95%;
-    position: relative;
-    left:2.5%;
-    top:.5rem;
     color:white;
     background-color: rgb(57,191,102);
-    height:8rem;
+    height:150px;
+    overflow:hidden;
 }
 .order-top2 p{
-    font-size:.9rem;
     position: relative;
-    left:.5rem;
-    top:1.2rem;
+    left:10px;
+    top:24px;
+    font-size:20px;
 }
 .order-top2 div{
     position: relative;
-    left:.5rem;
-    top:2.5rem;
-    font-size: 1.7rem;
+    left:10px;
+    top:50px;
+    font-size: 24px;
 }
 .order-1,.order-2{
     color:white;
-    font-size:.8rem;
+    /*font-size:.8rem;*/
     position: relative;
-    left:.5rem;
-    top:.8rem;
+    left:10px;
+    top:16px;
 }
 .order-2{
-    font-size:.7rem;
-    left:42%;
+    /*font-size:.7rem;*/
+    float:right;
+    margin-right:20px;
 }
 .order-middle2{
     width:95%;
     position: relative;
     /*left:.5rem;*/
-    padding:1rem;
+    padding:20px;
 }
 .order-middle2 p{
     position: relative;
-    font-size:.7rem;
-    line-height: 1rem;
+    line-height: 24px;
 }
 .order-bottom2{
     width:95%;
     position: relative;
-    padding:1rem;
+    padding:20px;
     font-size: 1rem;
+    padding-top:48px;
 }
 .order-bottom2 ul li{
     list-style:none;
 }
 .order-bottom-1{
     position: relative;
-    top:-1rem;
+    top:-20px;
 }
 .order-bottom-2{
     position: relative;
 }
 .order-bottom-3{
     position: relative;
-    top:.9rem;
+    top:18px;
 }
-.order-bottom-1 table tr,.order-bottom-2 table tr,.order-bottom-3 table tr { line-height:1.4rem;}
+.order-bottom-1 table tr,.order-bottom-2 table tr,.order-bottom-3 table tr { line-height:30px;}
 .order-bottom2 div table {
     text-align: left;
-    font-size:.9rem;
+    font-size:18px;
 }
 .order-bottom2 div table tr td:first-child{
     color: #929292;
@@ -937,175 +165,14 @@ div.shoued{
 }
 .order-last2{
     position: relative;
-    top:-.2rem;
+    top:-4px;
     left:80%;
     color: #929292;
-    font-size:.8rem;
+    font-size:16px;
 }
 .order-a{
-    width:95.6%;
-    position: relative;
-    left:2.2%;
     padding-bottom:1rem;
     border:1px solid #eee;
     border-top:none;
-}
-/*订单确认*/
-.windowBlack{
-    background:rgba(0,0,0,0.5);
-    width: 100%;
-    height:100%;
-    position: fixed;
-    top:0;
-    left:0;
-    display:none;
-}
-.dialog{
-    background-color: #fff;
-    border-radius: 0.5rem;
-    width:80%;
-    margin: 10% auto;
-}
-.dialog-content-1{
-    font-size: 1.0rem;
-    font-weight: 400;
-    line-height: 1.4rem;
-    text-align: center;
-    padding: 0.4rem 0;
-    border-bottom: 1px #f8f8f8 solid;
-}
-.dialog-content-2{
-    font-size: 0.8rem;
-    line-height: 200%;
-    padding: 0.7rem;
-    border-bottom: 1px #f8f8f8 solid;
-}
-.dialog-content-2 div{
-    margin-top: 0.4rem;
-    margin-bottom: 0.4rem;
-    border-bottom: 1px #f8f8f8 solid;
-}
-.dialog-content-2 .left{
-    display: block;
-    float: left;
-    width: 4.5rem;
-}
-.dialog-content-2 .location{
-    font-size: 0.8rem;
-    color: #9a9a9a;
-}
-.dialog-content-3{
-    line-height: 1.4rem;
-    font-size: 0.8rem;
-    text-align: center;
-    padding: 0.4rem;
-    border-bottom: 1px #f8f8f8 solid;
-}
-.dialog-content-3 i{
-    background:url("../images/choice1.png") no-repeat;
-    background-size:100%;
-    width:22px;
-    height:22px;
-    display:inline-block;
-    position:absolute;
-    top:-0.1rem;
-    left:0;
-}
-.dialog-agree{position:relative;padding-left:1.2rem;}
-.dialog-agree input{
-    position:absolute;
-    top:.2rem;
-    left:0;
-    z-index:99;
-    opacity:0;
-}
-.dialog-content-3 input:checked~i{
-    background:url("../images/choice2.png") no-repeat;
-    background-size:100%;
-}
-.dialog-content-4{
-    font-size: 1rem;
-    line-height: 3rem;
-    padding: 0 0.7rem;
-    height: 3rem;
-}
-.dialog-content-4 div{
-    text-align: center;
-    width: 50%;
-    float: left;
-    height: 3rem;
-}
-.dialog-content-4 .dialog-cancle{
-    border-right: 1px #f8f8f8 solid;
-}
-.dialog-content-4 .dialog-confirm{
-    color:#f26343;
-}
-
-/*成功提示*/
-.prompt{
-    width: 90%;
-    margin: 40% auto;
-    background-color: #fff;
-    padding-bottom: 0.7rem;
-}
-.prompt img{
-    width: 20%;
-    margin: 0 auto;
-    padding-bottom: 0.5rem;
-    padding-top: 1.3rem;
-}
-.prompt .prompt-text{
-    text-align: center;
-    font-size: 0.9rem;
-    line-height: 160%;
-}
-.prompt .prompt-text span:last-child{
-    color: red;
-}
-.prompt .prompt-warning{
-    text-align: center;
-    font-size: 0.75rem;
-    line-height: 160%;
-    color: green;
-    padding: 0.8rem 0.5rem;
-}
-.prompt .prompt-btn{
-    text-align: center;
-    font-size: 0.9rem;
-    line-height: 160%;
-    border: 1px #f95d2d solid;
-    border-radius: 0.3rem;
-    width: 40%;
-    margin:0.5rem auto;
-}
-.prompt .prompt-btn a{ color: #f95d2d;}
-.protocol {
-    width:100%;
-    padding:5% 10%;
-}
-.protocol h1{
-    font-weight:normal;
-    font-size:.9rem;
-    text-align:center;
-    margin-bottom:1rem;
-}
-.protocol p{
-    font-size:.8rem;
-    line-height:1.4rem;
-}
-.banner{
-    position:absolute;
-    left:50%;
-    top:50%;
-}
-.banner img{width:100%;}
-
-@media (min-width:320px){
-    .houseInfotop h1{font-size:.7rem;}
-    .houseInfoOther ul li{font-size:.7rem;}
-    .houseInfoOther ul li span label {width:2.8rem;}
-    .order-top a span {font-size:.8rem;}
-    .order-2{left:38%;}
-    .order-bottom2 div table{font-size:.8rem;}
+    overflow:hidden;
 }

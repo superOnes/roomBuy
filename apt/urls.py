@@ -1,20 +1,20 @@
 from django.conf.urls import url
 from django.views.generic import TemplateView
+from accounts.decorators import admin_required
 from .views import (EventListView, EventCreateView, ImportEventDetailView,
                     ExportEventDetailView, ExportCustomerView, EventUpdateView,
                     EventDetailView, EventDetailListView,
                     EventDetailPriceUpdateView, EventTermUpdateView,
-                    EventDetailCreateView,
-                    EventDetailRemarkUpdateView, CustomListView,
-                    CustomCreateView, EventStatus, EventDetailStatus,
-                    EventDetailDel,
-                    CustomerDeleteView, ExportHouseHotView, HouseHeatView,
-                    HouseTypeListView, HouseTypeCreateView,
-                    HouseTypeUpdateView, CustomerCountUpdateView,
-                    ExportBuyHotView, HouseTypeRelatedView,
-                    EventDetailHTUpdateView, PurcharseHeatView, GetEventView,
-                    OrderListView, EventDetailSignUpdateView,
-                    DeleteHouseTypeView, ExportOrderView)
+                    EventDetailCreateView, EventDetailRemarkUpdateView,
+                    CustomListView, CustomCreateView, EventStatus,
+                    EventDetailStatus, EventDetailDel, CustomerDeleteView,
+                    ExportHouseHotView, HouseHeatView, HouseTypeListView,
+                    HouseTypeCreateView, HouseTypeUpdateView, ExportBuyHotView,
+                    HouseTypeRelatedView, EventDetailHTUpdateView,
+                    PurcharseHeatView, GetEventView, OrderListView,
+                    EventDetailSignUpdateView, DeleteHouseTypeView,
+                    ExportOrderView, EventTVWall, EventTVWallInfoView,
+                    EventTVWallOrder, EventTVWallOrderView)
 
 
 urlpatterns = [
@@ -52,8 +52,6 @@ urlpatterns = [
         name='event_customs'),
     url(r'^(?P<pk>\d+)/customs/create/', CustomCreateView.as_view(),
         name='custom_create'),
-    url(r'^customs/(?P<pk>\d+)/count', CustomerCountUpdateView.as_view(),
-        name='customer_count_update'),
     url(r'^customer/delete/', CustomerDeleteView.as_view()),
     url(r'^(?P<pk>\d+)/export/customer/', ExportCustomerView.as_view(),
         name='customer_export'),
@@ -71,17 +69,24 @@ urlpatterns = [
         name='delete_house_type'),
 
     # 开盘统计管理
-    url(r'^opensta/', TemplateView.as_view(template_name='opensta.html'),
-        name='event_opensta'),
+    url(r'^opensta/', admin_required(TemplateView.as_view(
+        template_name='opensta.html')), name='event_opensta'),
     url(r'^househeat/', HouseHeatView.as_view()),
     url(r'^purcharseheat/', PurcharseHeatView.as_view()),
     url(r'^getevent/', GetEventView.as_view()),
-    url(r'^export/househot/', ExportHouseHotView.as_view()),
-    url(r'^export/buyhot/', ExportBuyHotView.as_view()),
+    url(r'^export/househot/(?P<pk>\d+)/', ExportHouseHotView.as_view()),
+    url(r'^export/buyhot/(?P<pk>\d+)/', ExportBuyHotView.as_view()),
 
     # 开盘订单管理
-    url(r'^order/', TemplateView.as_view(template_name='order.html'),
-        name='event_order'),
+    url(r'^order/', admin_required(TemplateView.as_view(
+        template_name='order.html')), name='event_order'),
     url(r'^orderlist/', OrderListView.as_view(), name='orderlist'),
     url(r'^exportorder/', ExportOrderView.as_view()),
+
+    # 电视墙
+    url(r'^(?P<pk>\d+)/tvwall/', EventTVWall.as_view(), name='tv_wall'),
+    url(r'^(?P<pk>\d+)/tv/', EventTVWallInfoView.as_view()),
+    url(r'^tvwall/order/(?P<pk>\d+)/', EventTVWallOrder.as_view(),
+        name='tv_order'),
+    url(r'^tv/(?P<pk>\d+)/order/', EventTVWallOrderView.as_view()),
 ]

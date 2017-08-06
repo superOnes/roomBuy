@@ -4,9 +4,9 @@
   <h1>
     <div>
       <!--<img src=""/>-->
-      <a href="{% url 'event_list' %}">云盘服务</a>
+      <a href="{% url 'event_list' %}">云开盘</a>
     </div>
-    <small><a href="#">{{ request.user.username }}</a>欢迎来到云盘服务<a data-toggle="modal" data-target="#quit" class="quit">退出</a></small>
+    <small><a href="#">{{ request.user.username }}</a>欢迎来到云开盘<a data-toggle="modal" data-target="#quit" class="quit">退出</a></small>
   </h1>
 </header>
     <!--退出-->
@@ -38,7 +38,6 @@
           <li><a href="{% url 'event_list' %}">活动介绍</a></li>
           <li><a href="{% url 'event_opensta' %}">开盘统计管理</a></li>
           <li><a href="{% url 'event_order' %}">开盘订单管理</a></li>
-          <li><a href="###">自定义电视墙</a></li>
       </ul>
       </div>
     </div>

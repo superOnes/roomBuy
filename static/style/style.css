@@ -28,14 +28,101 @@ input[type="number"]{
     -moz-appearance: textfield;
 }
 
-/*退出按钮*/
-.quit{
-	font-size: 16px !important;	
+/*登录 重置按钮样式*/
+.btn-sm{
+	margin: 0 10px !important;
 }
 
+/*退出按钮*/
+.quit{
+	font-size: 16px !important;
+}
+
+/*操作按钮样式*/
+.operation>a{
+	margin:0 5px;
+	line-height: 30px;
+}
+
+
+
 /*表单的必填项*/
-.form-group>label{padding-top: 0 !important;position: relative;}
+.form-group>label{padding-top: 0 !important;position: relative;margin-top:10px !important;}
 .form-group>label>i{position: absolute;right:0;top:0;font-size: 16px;color:red;}
+
+
+/*创建活动的文件选择样式*/
+.myfileCover{
+	position: relative;
+}
+.myfileCover>p{
+		line-height:30px;
+}
+.myfileCover>p>b{
+	font-weight: normal;
+	text-align: center;
+	background: #D0EEFF;
+	border: 1px solid #99D3F5;
+	border-radius: 4px;
+	padding: 7px 12px;
+	overflow: hidden;
+	color: #1E88C7;
+}
+.myfileCover>input{
+	position: absolute;
+	top:0;
+	opacity: 0;
+}
+.myfileCover>div>img{
+	height:230px;
+}
+
+
+.myfilePlane_graph>.col-sm-6{
+	width: 49% !important;
+	position: relative;
+	margin-bottom: 20px;
+}
+.myfilePlane_graph>label>input{
+	position: absolute;
+	cursor: pointer;
+	z-index: 10;
+	top:0;
+	opacity: 0;
+}
+.myfilePlane_graph>label>p{
+	text-align: center;
+	margin: 0 auto !important;
+  background: #D0EEFF;
+  border: 1px solid #99D3F5;
+  border-radius: 4px;
+  padding: 4px 12px;
+  overflow: hidden;
+  color: #1E88C7;
+  text-decoration: none;
+  text-indent: 0;
+  line-height: 20px;
+}
+.myfilePlane_graph>label>img{
+	display: block;
+	width: 100%;
+	padding: 5px;
+	border: 1px dashed #808080 ;
+	height: 130px;
+	margin-top:10px;
+}
+#isPub{
+	display: none;
+	text-align: center !important;
+	color:red;
+}
+#isPub1{
+	display: none;
+	text-align: center !important;
+	color:red;
+}
+
+
 
 .page-header{
 	margin:0 !important;
@@ -276,6 +363,19 @@ input[type="number"]{
 p[class='introduceHouse'] a{
 	color:#d3d3d3;
 }
+
+/*关联户型提示*/
+.house_hint{
+	padding: 20px 0 !important;
+}
+.house_hint>p{
+	text-indent: 2em !important;
+	text-align: center !important;
+	font-size: 16px !important;
+	line-height: 20px !important;
+}
+
+
 
 
 

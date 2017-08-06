@@ -3,48 +3,79 @@ from datetime import datetime, timedelta
 
 from django.views.generic import View
 from django.http import JsonResponse
-from django.utils.decorators import method_decorator
 from django.db import connection, transaction
+from django.utils.decorators import method_decorator
+from django.contrib.sessions.models import Session
+from django.contrib.auth import authenticate, login
 
 from apt.models import Event, EventDetail
 from aptp.models import Follow
-from accounts.models import Order, Customer, User
+from accounts.models import Order, Customer
 from accounts.decorators import customer_login_required, customer_login_time
 
 
-class ProView(View):
+# @method_decorator(customer_login_required, name='dispatch')
+class ProTimeView(View):
     '''
-    显示协议
+    同意协议时间
     '''
 
-    def get(self, request):
-        mobile = request.GET.get('tel')
-        identication = request.GET.get('personId')
+    def post(self, request):
+        mobile = request.POST.get('tel')
+        identication = request.POST.get('personId')
+        eventid = request.POST.get('id')
         try:
             customer = Customer.objects.get(
-                mobile=mobile, identication=identication)
+                mobile=mobile, identication=identication, event_id=eventid)
         except BaseException:
-            return JsonResponse({'response_state': 400, 'msg': '认筹名单中没有该用户！'})
+            return JsonResponse(
+                {'response_state': 400, 'msg': '用户名或密码不正确！'})
         else:
-            value = [{
-                'termname': customer.event.termname,
-                'term': customer.event.term,
-                'userid': customer.user.id,
-            }]
-            context = {}
-            context['objects'] = value
-            context['response_state'] = 200
-            return JsonResponse(context)
+            session_key = customer.session_key
+            user = authenticate(
+                username=customer.user.username,
+                password=customer.identication)
+            if user:
+                if not user.is_admin:
+                    login(request, user)
+                    request.session.set_expiry(300)
+                    if not customer.protime:
+                        customer.protime = datetime.now()
+                        customer.save()
+                    if session_key:
+                        Session.objects.filter(pk=session_key).delete()
+                        customer.session_key = request.session.session_key
+                        customer.save()
+                        return JsonResponse(
+                            {'response_state': 200, 'msg': '登录成功',})
+                    else:
+                        customer.session_key = request.session.session_key
+                        customer.save()
+                        return JsonResponse(
+                            {'response_state': 200, 'msg': '登录成功'})
+                return JsonResponse({'response_state': 400})
+            return JsonResponse(
+                {'response_state': 400, 'msg': '该电话号与证件号不正确！'})
 
 
-# @method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_required, name='dispatch')
 class AppEventDetailView(View):
     '''
     显示活动
     '''
 
-    def get(self, request, pk):
-        obj = Event.get(pk)
+    def get(self, request):
+        eventid = request.GET.get('id')
+        obj = Event.get(eventid)
+        plane_graph = []
+        if obj.plane_graph:
+            plane_graph.append(obj.plane_graph.url)
+        if obj.plane_graph1:
+            plane_graph.append(obj.plane_graph1.url)
+        if obj.plane_graph2:
+            plane_graph.append(obj.plane_graph2.url)
+        if obj.plane_graph3:
+            plane_graph.append(obj.plane_graph3.url)
         value = [
             {
                 'test_start': (
@@ -59,7 +90,7 @@ class AppEventDetailView(View):
                 'description': obj.description,
                 'tip': obj.tip,
                 'name': obj.name,
-                'plane_graph': obj.plane_graph.url,
+                'plane_graph': plane_graph,
                 'phone': obj.phone_num,
             }]
         context = {}
@@ -67,18 +98,18 @@ class AppEventDetailView(View):
         context['response_state'] = 200
         return JsonResponse(context)
 
-# @method_decorator(customer_login_required, name='dispatch')
 
-
+@method_decorator(customer_login_required, name='dispatch')
 class AppEventDetailListView(View):
     '''
     车位/房源 楼号列表
     '''
 
-    def get(self, request, pk):
-        eventobj = Event.get(pk)
+    def get(self, request):
+        eventid = request.GET.get('id')
+        eventobj = Event.get(eventid)
         context = {}
-        eventdetobj = EventDetail.objects.filter(event_id=pk)
+        eventdetobj = EventDetail.objects.filter(event_id=eventid)
         buildinglist = []
         for obj in eventdetobj:
             buildinglist.append((obj.building))
@@ -93,7 +124,7 @@ class AppEventDetailListView(View):
         return JsonResponse(context)
 
 
-# @method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_required, name='dispatch')
 class AppEventDetailUnitListView(View):
     '''
     车位/房源 单元列表
@@ -124,6 +155,12 @@ class AppEventDetailHouseListView(View):
 
     def get(self, request):
         eventid = request.GET.get('id')
+        event = Event.get(eventid)
+        now = datetime.now()
+        if now < event.test_start or now < event.test_start:
+            response_state = 405
+        else:
+            response_state = None
         building = request.GET.get('building')
         unit = request.GET.get('unit')
         context = {}
@@ -132,36 +169,36 @@ class AppEventDetailHouseListView(View):
         room_num_list = []
         for obj in eventdetobj:
             if obj.status:
-                value = [{
+                value = {
                     'house': obj.id,
                     'floor_room_num': str(obj.floor) + '-' + str(obj.room_num),
                     'is_sold': obj.is_sold,
-                    'is_testsold': obj.is_testsold
-                }]
+                    'is_testsold': obj.is_testsold,
+                }
                 room_num_list.append(value)
+        room_num_list.sort(key=lambda x: (x['floor_room_num']))
         context['objects'] = room_num_list
+        context['response_state'] = response_state
         context['response_state'] = 200
         return JsonResponse(context)
 
 
-# @method_decorator(customer_login_time, name='dispatch')
-# @method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_time, name='dispatch')
 class AppEventDetailHouseInfoView(View):
     '''
     车位/房源 详情
     '''
 
     def get(self, request):
-        userid = request.GET.get('userid')
-        user = User.get(userid)
+        user = request.user
         house = request.GET.get('house')
         eventdetobj = EventDetail.get(house)
-        eventdetobj.visit_num = eventdetobj.visit_num + 1
         eventdetobj.save()
         test = True if time.strftime('%Y%m%d %H:%M:%S') <= eventdetobj.event.test_end.strftime(
             '%Y%m%d %H:%M:%S') else False
         try:
-            Follow.objects.get(user=request.user, eventdetail=eventdetobj)
+            Follow.objects.get(user=user, eventdetail=eventdetobj)
         except BaseException:
             is_followed = False,
         else:
@@ -172,11 +209,11 @@ class AppEventDetailHouseInfoView(View):
         except BaseException:
             house_type = ''
             pic = ''
-        value = [{'event': user.customer.event.name,
+        value = [{'event': eventdetobj.event.name,
                   'realname': user.customer.realname,
                   'mobile': user.customer.mobile,
                   'identication': user.customer.identication,
-                  'building_unit': eventdetobj.building + eventdetobj.unit + str(eventdetobj.floor) + '层 ' + str(eventdetobj.room_num) + '室',
+                  'building_unit': eventdetobj.building + eventdetobj.unit + str(eventdetobj.floor) + '层' + str(eventdetobj.room_num),
                   'total': '***' if test and not eventdetobj.event.test_price else ((eventdetobj.area) * (eventdetobj.unit_price)),
                   'house_type': house_type,
                   'pic': pic,
@@ -187,56 +224,80 @@ class AppEventDetailHouseInfoView(View):
                   'term': eventdetobj.term,
                   'is_sold': eventdetobj.is_sold,
                   'is_followed': is_followed,
-                  'is_testsold':eventdetobj.is_testsold,
+                  'is_testsold': eventdetobj.is_testsold,
                   }]
-
         context = {}
         context['objects'] = value
         context['response_state'] = 200
         return JsonResponse(context)
 
-# @method_decorator(customer_login_required, name='dispatch')
 
-
+@method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_time, name='dispatch')
 class AddFollow(View):
     '''
     添加收藏
     '''
 
     def post(self, request):
+        user = request.user
         house = request.POST.get('house')
-        userid = request.POST.get('userid')
-        user = User.get(userid)
+        eventid = request.POST.get('id')
         try:
             eventdetail = EventDetail.get(house)
-            if not Follow.objects.filter(
-                    user=user,
-                    eventdetail=eventdetail):
-                if user.follow_set.count() < user.customer.event.follow_num:
-                    Follow.objects.create(
-                        user=user, eventdetail=eventdetail)
-                else:
-                    return JsonResponse(
-                        {'response_state': 403, 'msg': '收藏数量超过限制'})
-            else:
-                return JsonResponse(
-                    {'response_state': 400, 'msg': '您已收藏过该商品！'})
         except BaseException:
             return JsonResponse({'response_state': 400})
         else:
-            return JsonResponse({'response_state': 200, 'msg': '收藏成功'})
+            if not Follow.objects.filter(
+                    user=user,
+                    eventdetail=eventdetail):
+                if (Follow.objects.filter(user=user, eventdetail__event_id=eventid).count(
+                )) < Event.get(eventid).follow_num:
+                    Follow.objects.create(user=user, eventdetail=eventdetail)
+                    return JsonResponse({'response_state': 200, 'msg': '收藏成功'})
+                else:
+                    return JsonResponse(
+                        {'response_state': 400, 'msg': '收藏数量超过限制'})
+            return JsonResponse({'response_state': 400, 'msg': '您已收藏过该商品！'})
 
 
-# @method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_time, name='dispatch')
+class CancelFollow(View):
+    '''
+    取消收藏
+    '''
+
+    def post(self, request):
+        user = request.user
+        house = request.POST.get('house')
+        try:
+            eventdetail = EventDetail.get(house)
+        except BaseException:
+            return JsonResponse({'response_state': 400, 'msg': '没有该商品！'})
+        else:
+            follow = Follow.objects.filter(
+                user=user,
+                eventdetail=eventdetail)
+            if not follow:
+                return JsonResponse(
+                    {'response_state': 400, 'msg': '没有收藏该商品！'})
+            follow.delete()
+            return JsonResponse(
+                {'response_state': 200, 'msg': '成功取消收藏！'})
+
+
+@method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_time, name='dispatch')
 class FollowView(View):
     '''
     用户收藏列表信息
     '''
 
     def get(self, request):
-        userid = request.GET.get('userid')
-        user = User.get(userid)
-        objs = user.follow_set.all()
+        user = request.user
+        objs = Follow.objects.filter(
+            user=user, eventdetail__event_id=request.GET.get('id'))
         context = {}
         list = []
         for obj in objs:
@@ -245,9 +306,8 @@ class FollowView(View):
                     'eventdetail': (
                         obj.eventdetail.building +
                         obj.eventdetail.unit +
-                        str(obj.eventdetail.floor) +
-                        '层' +
-                        str(obj.eventdetail.room_num)) + '室',
+                        str(obj.eventdetail.floor) + '层' +
+                        str(obj.eventdetail.room_num)),
                     'price': (
                         (
                             obj.eventdetail.area) *
@@ -261,24 +321,29 @@ class FollowView(View):
         return JsonResponse(context)
 
 
-# @method_decorator(customer_login_time, name='dispatch')
-# @method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_time, name='dispatch')
 class AppHouseChoiceConfirmView(View):
     '''
     订单确认
     '''
 
     def post(self, request):
+        user = request.user
         house = request.POST.get('house')
-        userid = request.POST.get('userid')
-        user = User.get(userid)
+        eventid = request.POST.get('id')
+        from aptm.settings import DATABASES
         cursor = connection.cursor()
-        # cursor.execute('SELECT id,is_sold,sign_id,event_id,is_testsold,\
-        #                 building,unit,floor,room_num FROM apt_eventdetail \
-        #                 where id=%s FOR UPDATE' % house)
-        cursor.execute('SELECT id,is_sold,sign_id,event_id,is_testsold,\
-                        building,unit,floor,room_num FROM apt_eventdetail \
-                        where id=%s' % house)
+        if (DATABASES['default']['NAME'] == 'aptm'):
+            cursor.execute('SELECT id,is_sold,sign_id,event_id,is_testsold,\
+                            building,unit,floor,room_num FROM apt_eventdetail \
+                            where id=%s FOR UPDATE' % house)
+            bol = True
+        else:
+            cursor.execute('SELECT id,is_sold,sign_id,event_id,is_testsold,\
+                            building,unit,floor,room_num FROM apt_eventdetail \
+                            where id=%s' % house)
+            bol = 1
         obj = cursor.fetchone()
         if obj is None:
             return JsonResponse({'response_state': 404, 'msg': '目标不存在'})
@@ -287,7 +352,8 @@ class AppHouseChoiceConfirmView(View):
         if (now >= event.test_start) and (now <= event.test_end):
             if not obj[4]:
                 with transaction.atomic():
-                    purchased = user.order_set.filter(is_test=True).count()
+                    purchased = Order.objects.filter(
+                        user=user, eventdetail__event_id=eventid, is_test=True).count()
                     if purchased >= user.customer.count:
                         return JsonResponse({'response_state': 400,
                                              'msg': '不可再次购买'})
@@ -295,16 +361,21 @@ class AppHouseChoiceConfirmView(View):
                                                  eventdetail_id=obj[0],
                                                  order_num=time.strftime
                                                  ('%Y%m%d%H%M%S'))
-                    cursor.execute('UPDATE apt_eventdetail set is_testsold=1 \
-                                    where id=%s' % house)
-                return JsonResponse({'response_state': 200,
-                                     'room_info': ('%s-%s-%s-%s') %
-                                                  (obj[5], obj[6], obj[7],
-                                                   obj[8]),
-                                     'limit': event.limit,
-                                     'ordertime': order.time,
-                                     'orderid': order.id,
-                                     })
+                    cursor.execute('UPDATE apt_eventdetail set is_testsold=%s \
+                                    where id=%s' % (bol, house))
+                return JsonResponse(
+                    {
+                        'response_state': 200,
+                        'room_info': ('%s-%s-%s-%s') % (obj[5],
+                                                        obj[6],
+                                                        obj[7],
+                                                        obj[8]),
+                        'limit': (
+                            order.time + timedelta(
+                                hours=event.limit)).strftime('%Y年%m月%d日 %H:%M:%S'),
+                        'ordertime': order.time,
+                        'orderid': order.id,
+                    })
             elif Order.objects.filter(user=user, eventdetail_id=obj[0],
                                       is_test=True).exists():
                 return JsonResponse({'response_state': 400,
@@ -312,7 +383,8 @@ class AppHouseChoiceConfirmView(View):
         elif (now >= event.event_start) and (now <= event.event_end):
             if not obj[1] and not obj[2]:
                 with transaction.atomic():
-                    purchased = user.order_set.filter(is_test=False).count()
+                    purchased = Order.objects.filter(
+                        user=user, eventdetail__event_id=eventid, is_test=False).count()
                     if purchased >= user.customer.count:
                         return JsonResponse({'response_state': 400,
                                              'msg': '不可再次购买'})
@@ -321,27 +393,25 @@ class AppHouseChoiceConfirmView(View):
                                                  order_num=time.strftime
                                                  ('%Y%m%d%H%M%S'),
                                                  is_test=False)
-                    cursor.execute('UPDATE apt_eventdetail set is_sold=1 \
-                                    where id=%s' % house)
-                return JsonResponse({'response_state': 200,
-                                     'room_info': ('%s-%s-%s-%s') %
-                                     (obj[5], obj[6], obj[7],
-                                      obj[8]),
-                                     'limit': event.limit,
-                                     'ordertime': order.time,
-                                     'orderid': order.id,
-                                     })
-            elif obj[2]:
-                with transaction.atomic():
-                    customer = Customer.get(obj[2])
-                    Order.objects.create(user_id=customer.user.id,
-                                         eventdetail_id=obj[0],
-                                         order_num=time.strftime
-                                         ('%Y%m%d%H%M%S'),
-                                         is_test=False)
-                    cursor.execute(
-                        'UPDATE apt_eventdetail set is_sold=1 where id=%s' %
-                        house)
+                    cursor.execute('UPDATE apt_eventdetail set is_sold=%s \
+                                    where id=%s' % (bol, house))
+                return JsonResponse(
+                    {
+                        'response_state': 200,
+                        'room_info': ('%s-%s-%s-%s') % (obj[5],
+                                                        obj[6],
+                                                        obj[7],
+                                                        obj[8]),
+                        'limit': (
+                            order.time + timedelta(
+                                hours=event.limit)).strftime('%Y年%m月%d日 %H:%M:%S'),
+                        'ordertime': order.time,
+                        'orderid': order.id,
+                    })
+            elif not obj[1] and obj[2]:
+                cursor.execute(
+                    'UPDATE apt_eventdetail set is_sold=%s where id=%s' %
+                    (bol, house))
                 return JsonResponse(
                     {'response_state': 400, 'msg': '购买失败，房屋已卖出'})
             elif Order.objects.filter(user=user, eventdetail_id=obj[0],
@@ -351,15 +421,111 @@ class AppHouseChoiceConfirmView(View):
         return JsonResponse({'response_state': 400, 'msg': '购买失败'})
 
 
+class AppHouseChoiceConfirmTestView(View):
+    '''
+    订单确认测试接口
+    '''
+
+    def post(self, request):
+        house = request.POST.get('house')
+        userid = request.POST.get('userid')
+        eventid = request.POST.get('id')
+        from accounts.models import User
+        user = User.get(userid)
+        cursor = connection.cursor()
+        cursor.execute('SELECT id,is_sold,sign_id,event_id,is_testsold,\
+                        building,unit,floor,room_num FROM apt_eventdetail \
+                        where id=%s FOR UPDATE' % house)
+        obj = cursor.fetchone()
+        if obj is None:
+            return JsonResponse({'response_state': 404, 'msg': '目标不存在'})
+        event = Event.get(obj[3])
+        now = datetime.now()
+        if (now >= event.test_start) and (now <= event.test_end):
+            if not obj[4]:
+                with transaction.atomic():
+                    purchased = Order.objects.filter(
+                        user=user, eventdetail__event_id=eventid, is_test=True).count()
+                    if purchased >= user.customer.count:
+                        return JsonResponse({'response_state': 400,
+                                             'msg': '不可再次购买'})
+                    order = Order.objects.create(user=user,
+                                                 eventdetail_id=obj[0],
+                                                 order_num=time.strftime
+                                                 ('%Y%m%d%H%M%S'))
+                    cursor.execute('UPDATE apt_eventdetail set is_testsold=%s \
+                                    where id=%s' % (True, house))
+                return JsonResponse(
+                    {
+                        'response_state': 200,
+                        'room_info': ('%s-%s-%s-%s') % (obj[5],
+                                                        obj[6],
+                                                        obj[7],
+                                                        obj[8]),
+                        'limit': (
+                            order.time + timedelta(
+                                hours=event.limit)).strftime('%Y年%m月%d日 %H:%M:%S'),
+                        'ordertime': order.time,
+                        'orderid': order.id,
+                    })
+            elif Order.objects.filter(user=user, eventdetail_id=obj[0],
+                                      is_test=True).exists():
+                return JsonResponse({'response_state': 400,
+                                     'msg': '已购买,不要重复购买'})
+        elif (now >= event.event_start) and (now <= event.event_end):
+            if not obj[1] and not obj[2]:
+                with transaction.atomic():
+                    purchased = Order.objects.filter(
+                        user=user, eventdetail__event_id=eventid, is_test=False).count()
+                    if purchased >= user.customer.count:
+                        return JsonResponse({'response_state': 400,
+                                             'msg': '不可再次购买'})
+                    order = Order.objects.create(user=user,
+                                                 eventdetail_id=obj[0],
+                                                 order_num=time.strftime
+                                                 ('%Y%m%d%H%M%S'),
+                                                 is_test=False)
+                    cursor.execute('UPDATE apt_eventdetail set is_sold=%s \
+                                    where id=%s' % (True, house))
+                return JsonResponse(
+                    {
+                        'response_state': 200,
+                        'room_info': ('%s-%s-%s-%s') % (obj[5],
+                                                        obj[6],
+                                                        obj[7],
+                                                        obj[8]),
+                        'limit': (
+                            order.time + timedelta(
+                                hours=event.limit)).strftime('%Y年%m月%d日 %H:%M:%S'),
+                        'ordertime': order.time,
+                        'orderid': order.id,
+                    })
+            elif not obj[1] and obj[2]:
+                cursor.execute(
+                    'UPDATE apt_eventdetail set is_sold=%s where id=%s' %
+                    (True, house))
+                return JsonResponse(
+                    {'response_state': 400, 'msg': '购买失败，房屋已卖出'})
+            elif Order.objects.filter(user=user, eventdetail_id=obj[0],
+                                      is_test=False).exists():
+                return JsonResponse({'response_state': 400,
+                                     'msg': '已购买,不要重复购买'})
+        return JsonResponse({'response_state': 400, 'msg': '购买失败'})
+
+
+@method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_time, name='dispatch')
 class OrderProView(View):
     '''
     订单中协议
     '''
 
     def get(self, request):
-        userid = request.GET.get('userid')
+        user = request.user
+        eventid = request.GET.get('id')
         try:
-            customer = User.get(userid).customer
+            customer = Customer.objects.get(
+                use=user, event_id=eventid)
         except BaseException:
             return JsonResponse({'response_state': 400, 'msg': '认筹名单中没有该用户！'})
         else:
@@ -372,30 +538,26 @@ class OrderProView(View):
             context['response_state'] = 200
             return JsonResponse(context)
 
-# @method_decorator(customer_login_time, name='dispatch')
-# @method_decorator(customer_login_required, name='dispatch')
 
-
+@method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_time, name='dispatch')
 class AppOrderListView(View):
     '''
     订单列表
     '''
 
     def get(self, request):
-        userid = request.GET.get('userid')
-        user = User.get(userid)
-        objs = user.order_set.all()
+        user = request.user
+        eventid = request.GET.get('id')
+        objs = Order.objects.filter(user=user, eventdetail__event_id=eventid)
         valuelist = []
         for obj in objs:
             value = [{
                 'order_num': obj.order_num,
                 'room_info': (
                     obj.eventdetail.building +
-                    '-' +
                     obj.eventdetail.unit +
-                    '-' +
-                    str(obj.eventdetail.floor) +
-                    '-' +
+                    str(obj.eventdetail.floor) + '层' +
                     str(obj.eventdetail.room_num)),
                 'time': obj.time.strftime('%Y/%m/%d %H:%M:%S'),
                 'event': obj.eventdetail.event.name,
@@ -409,8 +571,8 @@ class AppOrderListView(View):
         return JsonResponse(context)
 
 
-# @method_decorator(customer_login_time, name='dispatch')
-# @method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_time, name='dispatch')
 class AppOrderInfoView(View):
     '''
     订单详情
@@ -427,29 +589,32 @@ class AppOrderInfoView(View):
                 house_type = obj.eventdetail.house_type.name
             except BaseException:
                 house_type = ''
-            value = [{
-                'eventname': obj.eventdetail.event.name,
-                'unit_price': obj.eventdetail.unit_price,
-                'limit': (obj.time + timedelta(hours=obj.eventdetail.event.limit)).strftime('%Y年%m月%d日 %H:%M:%S'),
-                'ordertime': obj.time.strftime('%Y%m/%d %H:%M:%S'),
-                'room_info': (
-                    obj.eventdetail.event.name +
-                    '-' +
-                    obj.eventdetail.building +
-                    '-' +
-                    obj.eventdetail.unit +
-                    '-' +
-                    str(obj.eventdetail.floor) +
-                    '-' +
-                    str(obj.eventdetail.room_num)),
-                'houst_type': house_type,
-                'area': obj.eventdetail.area,
-                'customer': obj.user.customer.realname,
-                'mobile': obj.user.customer.mobile,
-                'iidentication': obj.user.customer.identication,
-                'order_num': obj.order_num,
-                'total': ((obj.eventdetail.area) * (obj.eventdetail.unit_price))
-            }]
+            value = [
+                {
+                    'eventname': obj.eventdetail.event.name,
+                    'unit_price': obj.eventdetail.unit_price,
+                    'limit': (
+                        obj.time +
+                        timedelta(
+                            hours=obj.eventdetail.event.limit)).strftime('%Y-%m-%d %H:%M:%S'),
+                    'ordertime': obj.time.strftime('%Y/%m/%d %H:%M:%S'),
+                    'room_info': (
+                        obj.eventdetail.building +
+                        obj.eventdetail.unit +
+                        str(
+                            obj.eventdetail.floor) + '层' +
+                        str(
+                            obj.eventdetail.room_num)),
+                    'houst_type': house_type,
+                    'area': obj.eventdetail.area,
+                    'customer': obj.user.customer.realname,
+                    'mobile': obj.user.customer.mobile,
+                    'identication': obj.user.customer.identication,
+                    'order_num': obj.order_num,
+                    'total': (
+                                (obj.eventdetail.area) *
+                                (
+                                    obj.eventdetail.unit_price))}]
         context = {}
         context['objects'] = value
         context['response_state'] = 200

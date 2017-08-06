@@ -4,21 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width = device-width ,initial-scale = 1,minimum-scale = 1,maximum-scale = 1,user-scalable =no"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>在线选房</title>
+    <title>云开盘</title>
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/swiper.min.css" />
 </head>
 <body>
-<div class="wapline">
-
-</div>
+<div class="wapline"></div>
 
 </body>
 <script src="../js/jquery-1.12.4.min.js"></script>
 <script src="../js/swiper.jquery.min.js"></script>
 <script type="text/javascript" src="../js/login.js"></script>
 <script>
-// 获取地址栏的参数数组
 function getUrlParams()
 {
     var search = window.location.search ;
@@ -40,7 +37,6 @@ function getUrlParams()
     // 将参数数组进行返回
     return paramsArray ;
 }
-
 // 根据参数名称获取参数值
 function getParamValue(name)
 {
@@ -60,31 +56,52 @@ function getParamValue(name)
     }
     return null ;
 }
-var id = getParamValue("id");
-var userid = getParamValue("userid");
-
-
 $(function(){
+    var id = getParamValue("id");
+    var cover=getParamValue("cover");
+    if(cover){
+        localStorage.setItem("cover",cover);
+    }
+   var userid1=localStorage.getItem("userid");
     $.ajax({
         type:"get",
-        url:http+"/app/"+id+"/detail/",
+        url:http+"/app/detail/",
         data:{
-            userid:userid
+            id:id
         },
         success:function(data){
             if(data.response_state==200){
                 creatEle(data.objects[0]);
-                $(".userid1").html(userid);
-
-                if((new Date(data.objects[0].event_start).getTime()<new Date().getTime()&&new Date().getTime()<new Date(data.objects[0].event_end).getTime())||
-                        (new Date(data.objects[0].test_start).getTime()<new Date().getTime()&&new Date().getTime()<new Date(data.objects[0].test_ent).getTime())){
-                    $(".btnL").click(function(){
-                        window.location.href="houseList.html?id="+id+"&userid="+userid;
+                $(".ind1").html(id);
+                $(".btnL").bind("click",function(){
+                    window.location.href="houseList.html?id="+id;
+               });
+                $(".quitt").click(function(){
+                $(this).attr("disabled", "disabled");;
+                $.ajax({
+                    type:"POST",
+                    url:http+"/acc/cusout/",
+                    data:{
+                        id:$(".ind1").html()
+                    },
+                    success:function(data){
+                        $(".quitt").removeAttr("disabled");
+                        window.location.href="login.html?id="+$(".ind1").html();
+                    },
+                    error:function(){
+                        $(".quitt").removeAttr("disabled");
+                        alert("退出出现未知错误！");
+                    }
                     })
-                }else{
-                    alert("活动未开始");
-                }
-            }else{
+    });
+
+            }else if(data.response_state==401){
+                window.location.href="login.html?id="+id;
+            }else if(data.response_state==403){
+                alert(data.msg);
+                window.location.href="login.html?id="+id;
+            }
+            else{
                 alert(data.msg);
             }
         },
@@ -92,11 +109,6 @@ $(function(){
             alert("出错了,请重试！");
         }
     })
-
 });
-
-
-
-
 </script>
 </html>

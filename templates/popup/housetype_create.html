@@ -1,54 +1,64 @@
-{% extends 'include/base.html' %}
-{% block main %}
+{% extends 'include/base.html' %} {% block main %}
 <style type="text/css">
-	.form-group>.col-sm-9{
+	.form-group>.col-sm-9 {
 		width: 80% !important;
 	}
-	.form-group>.col-sm-3{
+	.form-group>.col-sm-3 {
 		width: 15% !important;
 	}
 </style>
 <div style="padding:20px">
-	<form class="form-horizontal" method="post" enctype="multipart/form-data">
+	<form class="form-horizontal" method="post" enctype="multipart/form-data" id="houseTypeCreate">
 		{% csrf_token %}
 		<div class="form-group">
-		    <label class="col-sm-3 control-label">户型名称<i>*</i></label>
-		    <div class="col-sm-9">
-		    	<input type="text" class="form-control"
-					       placeholder="户型名称" name="name" value="{{form.name.value|default:''}}" required>
-		    </div>
+			<label class="col-sm-3 control-label">户型名称<i>*</i></label>
+			<div class="col-sm-9">
+				<input type="text" class="form-control" placeholder="户型名称" name="name" value="{{form.name.value|default:''}}" required>
+			</div>
 		</div>
 		<div class="form-group">
-		    <label class="col-sm-3 control-label">编号<i>*</i></label>
-		    <div class="col-sm-9">
-		    	<input type="number" class="form-control" placeholder="编号" name="num" value="{{form.num.value|default:''}}" required>
-					{% if form.num.errors %}
-					<div class="alert alert-info">{{form.num.errors}}</div>
-					{% endif %}
-		    </div>
+			<label class="col-sm-3 control-label">编号<i>*</i></label>
+			<div class="col-sm-9">
+				<input type="number" class="form-control" placeholder="编号" name="num" value="{{form.num.value|default:''}}" required>
+			</div>
 		</div>
 		<div class="form-group">
-		    <label class="col-sm-3 control-label">户型照片<i>*</i></label>
-		    <div class="col-sm-9">
-		    	<input type="file" class="form-control" id="pic" onchange='showPlane()' name="pic">
-		    </div>
+			<label class="col-sm-3 control-label">户型照片<i>*</i></label>
+			<div class="col-sm-9">
+				<input type="file" class="form-control" id="pic" onchange='showPlane()' name="pic">
+			</div>
 			<div class="col-sm-9" style="margin:10px 0 0 15%;">
-			 	<img src='{{MEDIA_URL}}{{object.pic}}' alt='' id='picImg' />
-		    </div>
+				<img src='{{MEDIA_URL}}{{object.pic}}' alt='' id='picImg' />
+			</div>
 		</div>
+		{% if form.num.errors %}
+		<div class="alert alert-danger" style="font-size:14px;font-weight:bold">{{form.num.errors}}</div>
+		{% endif %}
 		<input type="text" name="event" value="{{form.event.value|default:''}}" style="display:none">
 		<div class="modal-footer">
-	    	<input type="submit" class="btn btn-primary" value="确定"></input>
-	    </div>
+			<input type="submit" class="btn btn-primary" value="确定"></input>
+		</div>
 	</form>
 </div>
 <script type="text/javascript">
+	$(document).ready(function(){
+		$("#houseTypeCreate").submit(function(){
+			var inputPic = $("#pic").val();
+			if(inputPic == ""){
+				new $.zui.Messager('请添加户型照片!！', {
+					placement:'center',
+					type: 'important' // 定义颜色主题
+				}).show();
+	　			return false;
+			}
+		});
+	})
 	//平面图显示
-	function showPlane(){
-	  //以下即为完整客户端路径
-	  var file_img=document.getElementById("picImg"),
-	  iptfileupload = document.getElementById('pic') ;
-	  getPath(file_img,iptfileupload,file_img) ;
+	function showPlane() {
+		//以下即为完整客户端路径
+		var file_img = document.getElementById("picImg"),
+			iptfileupload = document.getElementById('pic');
+		getPath(file_img, iptfileupload, file_img);
 	};
 </script>
 {% endblock %}

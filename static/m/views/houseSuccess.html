@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>成功提示</title>
+    <title>云开盘</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
     <meta name="format-detection" content="telephone=no, email=no" />
@@ -56,15 +56,13 @@
         return null ;
     }
     var id = getParamValue("house");
-    var idd=getParamValue("id");
-    var userid = getParamValue("userid");
-
+    var idd = getParamValue("id");
     $(function(){
         $.ajax({
             type:'POST',
             data:{
                 house:id,
-                userid:userid
+                id:idd
             },
             url:http+"/app/orderconfirm/",
             dataType:'JSON',
@@ -72,8 +70,12 @@
                 if(data.response_state==200){
                     orderSu(data);
                     $(".id1").html(idd);
-                    $(".user1").html(userid);
 
+                }else if(data.response_state==401||data.response_state==403){
+                    alert(data.msg);
+                    window.location.href="login.html?id="+idd;
+                }else if(data.response_state==405){
+                    window.location.href="houseInfo.html?house="+id+"&id="+idd;
                 }else{
                     $(".success-container").append('<div class="noOne"><img src="../images/none.png" /><p>'+data.msg+'</p></div>');
                 }

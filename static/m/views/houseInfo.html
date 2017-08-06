@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
 	<meta name="format-detection" content="telephone=no, email=no" />
-	<title>详情信息</title>
+	<title>云开盘</title>
 	<link type="text/css" rel="stylesheet" href="../css/reset.css"/>
 </head>
 <body>
@@ -56,15 +56,19 @@
 	}
 	var houseId = getParamValue("house");
 	var id=getParamValue("id");
-	var userid=getParamValue("userid");
-	console.log(id);
-
 	$(function(){
-		$.get(http+"/app/"+id+"/detail/",function(result){
-			console.log(result);
-			data5(result.objects[0]);
-			console.log($(".test_start").html());
-
+		$.ajax({
+			type:"get",
+			url:http+"/app/detail/",
+			data:{
+				id:id
+			},
+			success:function(data){
+				if(data.response_state==200){
+					data5(data.objects[0]);
+				}
+			},
+			error:function(){}
 		});
 
 		$.ajax({
@@ -72,18 +76,19 @@
 			url:http+"/app/houseinfo/",
 			data:{
 				house:houseId,
-				userid:userid
+				id:id
 			},
 			success:function(data){
-				console.log(data);
 				if(data.response_state==200){
 					houseInfo(data.objects[0]);
 					$(".houseID").html(houseId);
-					$(".userId").html(userid);
 					$(".idd").html(id);
-
-
-				}else{
+				}else if(data.response_state==401||data.response_state==403){
+                    alert(data.msg);
+					window.location.href="login.html?id="+id;
+				}else if(data.response_state==405){
+                    window.location.href="houseList.html?id="+id;
+                }else{
 					alert(data.msg);
 				}
 			},
@@ -92,24 +97,56 @@
 			}
 
 		});
-
-
-
 	});
 
 	/*收藏按钮*/
 	function shareBtn(){
-		$.ajax({
+		if($(".shareBt").html()=='已收藏') {
+			$.ajax({
+				type: "POST",
+				url: http + "/app/cancelfollow/",
+				data: {
+					house: houseId,
+					id:id
+				},
+				success: function (data) {
+					if (data.response_state == 200) {
+						$(".shareBt").html("收藏").css({
+							background: "#fff",
+							border: "solid 1px #f75c2e",
+							color: "#f75c2e"
+						});
+					} else if (data.response_state == 400) {
+                        alert(data.msg);
+                    }else if (data.response_state == 401||data.response_state==403) {
+                        alert(data.msg);
+						window.location.href = "login.html?id="+id;
+					}else {
+						alert(data.msg);
+					}
+				},
+				error: function () {
+					alert('出错了，请重试！');
+				}
+			})
+		}else {
+			console.log($(".shareBt").html());
+			$.ajax({
 			type:"POST",
 			url:http+"/app/addfollow/",
 			data:{
 				house:houseId,
-				userid:userid
+				id:id
 			},
 			success:function(data){
+				console.log(data);
 				if(data.response_state==200){
 					$(".shareBt").html("已收藏").css({background:"#999",border:"none",color:"#fff"});
-					$(".shareBt").unbind("click");
+				} else if (data.response_state == 400) {
+                    alert(data.msg);
+                }else if(data.response_state==401||data.response_state==403){
+                    alert(data.msg);
+					window.location.href="login.html?id="+id;
 				}else{
 					alert(data.msg);
 				}
@@ -120,9 +157,11 @@
 				alert('出错了，请重试！');
 			}
 		})
+		}
+
 	}
 	function backList(){
-		window.location.href="houseList.html?id="+id+"&userid="+userid;
+		window.location.href="houseList.html?id="+id;
 	}
 </script>
 

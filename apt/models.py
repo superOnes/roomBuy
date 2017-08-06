@@ -1,3 +1,4 @@
+from system.storage import ImageStorage
 from django.db import models
 from django.shortcuts import get_object_or_404
 from aptm.settings import CUSTOMER_MODEL
@@ -5,6 +6,9 @@ from aptm.settings import CUSTOMER_MODEL
 
 class Company(models.Model):
     name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
 
 
 class Event(models.Model):
@@ -23,7 +27,7 @@ class Event(models.Model):
     event_start = models.DateTimeField('活动开始时间')
     event_end = models.DateTimeField('活动结束时间')
     limit = models.IntegerField('选房完成期限')
-    equ_login_num = models.IntegerField('支持设备登录数')
+    equ_login_num = models.IntegerField('支持设备登录数',default=1)
     follow_num = models.IntegerField('同一账号允许收藏数')
     covered_space = models.BooleanField('是否显示建筑面积', default=False)
     covered_space_price = models.BooleanField('是否显示建筑面积单价', default=False)
@@ -31,13 +35,23 @@ class Event(models.Model):
     notice = models.TextField('认购须知')
     tip = models.TextField('温馨提示')
     cover = models.ImageField('活动封面', upload_to='cover/%Y/%m/%d/',
+                              storage=ImageStorage(),
                               null=True, blank=True)
     plane_graph = models.ImageField('平面图', upload_to='planeGraph/%Y/%m/%d/',
+                                    storage=ImageStorage(),
                                     null=True, blank=True)
+    plane_graph1 = models.ImageField('平面图1', upload_to='planeGraph1/%Y/%m/%d/',
+                                     storage=ImageStorage(),
+                                     null=True, blank=True)
+    plane_graph2 = models.ImageField('平面图2', upload_to='planeGraph2/%Y/%m/%d/',
+                                     storage=ImageStorage(),
+                                     null=True, blank=True)
+    plane_graph3 = models.ImageField('平面图3', upload_to='planeGraph3/%Y/%m/%d/',
+                                     storage=ImageStorage(),
+                                     null=True, blank=True)
     termname = models.CharField('协议名称', max_length=100, null=True, blank=True)
     term = models.TextField('协议内容', null=True, blank=True)
     is_pub = models.BooleanField('是否发布', default=False)
-    house_limit = models.CharField('房源数量限制', max_length=100)
     is_delete = models.BooleanField(default=False)
     company = models.ForeignKey(Company)
 
@@ -56,12 +70,6 @@ class Event(models.Model):
     @classmethod
     def get_last_event(cls, cid):
         return cls.objects.filter(company_id=cid).last()
-
-    @classmethod
-    def remove(cls, id):
-        obj = cls.get(id)
-        obj.is_delete = True
-        obj.save()
 
 
 class HouseType(models.Model):
@@ -92,11 +100,10 @@ class EventDetail(models.Model):
     image = models.ImageField('图片', upload_to='eventdetail/%Y/%m/%d/',
                               null=True, blank=True)
     num = models.IntegerField('收藏人数', default=0)
-    visit_num = models.IntegerField('访问热度', default=0)
     is_delete = models.BooleanField(default=False)
     house_type = models.ForeignKey(HouseType, null=True, blank=True)
     looking = models.CharField('朝向', max_length=100)
-    term = models.CharField('使用年限', max_length=50)
+    term = models.IntegerField('使用年限')
     area = models.FloatField('建筑面积', max_length=50)
     unit_price = models.FloatField('面积单价', max_length=100)
     sign = models.ForeignKey(CUSTOMER_MODEL, related_name='sign',
@@ -109,9 +116,3 @@ class EventDetail(models.Model):
     @classmethod
     def all(cls):
         return cls.objects.filter(is_delete=0).order_by('-id')
-
-    @classmethod
-    def remove(cls, id):
-        obj = cls.get(id)
-        obj.is_delete = True
-        obj.save()

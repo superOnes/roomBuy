@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
 <meta name="format-detection" content="telephone=no, email=no" />
-<title>资格审核</title>
+<title>云开盘</title>
 <link type="text/css" rel="stylesheet" href="../css/reset.css"/>
 </head>
 <body>
 <div class="wapLogin">
 	<div class="login">
 		<div class="loginLogo">
-			<img src="../images/img2.png">
+			<img />
 		</div>
 		<h1>云源开盘</h1>
 	</div>
@@ -23,8 +23,10 @@
 		</div>
 		<div class="tipbox">
 			<span>证件号</span>
-			<input type="text" class="titlezj"  placeholder="请输入证件号码"></div>
-		<div class="btnLogin">登  录</div>
+			<input type="text" class="titlezj"  placeholder="请输入证件号码">
+		</div>
+		<p class="loginId" style="display:none"></p>
+		<div class="btnLogin"><input type="button" value="登  录" class="btnlog"></div>
 	</div>
 </div>
 <div class="windowBlack" id="loginBlack">
@@ -40,5 +42,74 @@
 
 <script type="text/javascript" src="../js/jquery-1.12.4.min.js"></script>
 <script type="text/javascript" src="../js/login.js"></script>
+<script>
+    // 获取地址栏的参数数组
+    function getUrlParams()
+    {
+        var search = window.location.search ;
+        // 写入数据字典
+        var tmparray = search.substr(1,search.length).split("&");
+        var paramsArray = new Array;
+        if( tmparray != null)
+        {
+            for(var i = 0;i<tmparray.length;i++)
+            {
+                var reg = /[=|^==]/;    // 用=进行拆分，但不包括==
+                var set1 = tmparray[i].replace(reg,'&');
+                var tmpStr2 = set1.split('&');
+                var array = new Array ;
+                array[tmpStr2[0]] = tmpStr2[1] ;
+                paramsArray.push(array);
+            }
+        }
+        // 将参数数组进行返回
+        return paramsArray ;
+    }
+    // 根据参数名称获取参数值
+    function getParamValue(name)
+    {
+        var paramsArray = getUrlParams();
+        if(paramsArray != null)
+        {
+            for(var i = 0 ; i < paramsArray.length ; i ++ )
+            {
+                for(var  j in paramsArray[i] )
+                {
+                    if( j == name )
+                    {
+                        return paramsArray[i][j] ;
+                    }
+                }
+            }
+        }
+        return null ;
+    }
+    $(function(){
+        var id = getParamValue("id");
+        $(".loginId").html(id);
+        if(!id){
+            $("body").empty();
+            $("body").append($("<div class='errorPage'><img src='../images/error.png' /><p>该地址无效！</p></div>"));
+		}
+        var cover=localStorage.getItem("cover");
+        $(".loginLogo img").prop("src",http+cover);
+        pushHistory();
+        window.addEventListener("popstate", function(e) {
+            window.location.href="login.html?id="+id;
+        }, false);
+        function pushHistory() {
+            var state = {
+                title: "title",
+                url:"login.html?id="+id
+            };
+            window.history.pushState(state, state.title, state.url);
+        }
+        javascript:window.history.forward(1);
+
+    });
+
+
+
+</script>
 </body>
 </html>

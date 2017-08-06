@@ -10,7 +10,7 @@ from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.shortcuts import resolve_url
 from django.views import View
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, TemplateView
 from django.views.generic.edit import CreateView, UpdateView
 from django.http import JsonResponse, HttpResponse
 from django.db.models import Q
@@ -19,6 +19,7 @@ from django.utils.decorators import method_decorator
 
 from aptm import settings
 from accounts.models import Order, Customer
+from aptp.models import Follow
 from .models import Event, EventDetail, HouseType
 from accounts.decorators import admin_required
 from .forms import (EventForm, EventDetailForm, CustomerForm, HouseTypeForm,
@@ -62,10 +63,10 @@ class EventListView(ListView):
         if self.value:
             queryset = queryset.filter(Q(name__contains=self.value))
         for obj in queryset:
-            # obj.qr = url2qrcode('http://%s/static/m/views/choiceHouse.html?id=%s' %
-            #                     (self.request.get_host(), str(obj.id)))
-            obj.qr = url2qrcode('http://%s/static/m/views/login.html' %
-                                (self.request.get_host()))
+            obj.qr = url2qrcode(
+                'http://%s/static/m/views/choiceHouse.html?id=%s&cover=%s' %
+                (self.request.get_host(), str(
+                    obj.id), str(obj.cover.url)))
             obj.save()
         return queryset
 
@@ -104,7 +105,7 @@ class EventUpdateView(DialogMixin, UpdateView):
     编辑活动信息
     '''
     model = Event
-    fields = [f.name for f in model._meta.fields]
+    form_class = EventForm
     template_name = 'popup/event_create.html'
 
 
@@ -114,25 +115,37 @@ class EventTermUpdateView(DialogMixin, UpdateView):
     编辑协议
     '''
     model = Event
-    fields = ['termname', 'term']
+    fields = ['termname', 'term', 'is_pub']
     template_name = 'popup/event_term.html'
 
 
-@method_decorator(admin_required, name='dispatch')
+# @method_decorator(admin_required, name='dispatch')
 class EventStatus(View):
     '''
     活动发布情况 发布/未发布
     '''
 
     def put(self, request):
+        user = request.user
+        if not user.is_authenticated():
+            return JsonResponse({'success': False, 'response_status': 300})
         put = QueryDict(request.body, encoding=request.encoding)
         id = put.get('id')
-        if id:
+        if not id:
+            return JsonResponse({'success': False, 'response_status': 301})
+        else:
             obj = Event.get(id)
-            obj.is_pub = not obj.is_pub
-            obj.save()
-            return JsonResponse({'success': True})
-        return JsonResponse({'success': False})
+            termname = obj.termname
+            term = obj.term
+            if termname and term:
+                obj.is_pub = not obj.is_pub
+                obj.save()
+                Event.objects.filter(
+                    company=user.company,
+                    is_pub=True).exclude(id=id).update(is_pub=False)
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'success': False})
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -142,6 +155,7 @@ class EventDetailListView(ListView):
     '''
     template_name = 'eventdetail_list.html'
     model = EventDetail
+    paginate_by = 50
 
     def get_queryset(self):
         self.value = self.request.GET.get('value')
@@ -170,6 +184,7 @@ class EventDetailCreateView(DialogMixin, CreateView):
     def get_initial(self):
         initial = super(EventDetailCreateView, self).get_initial()
         initial['event'] = Event.get(self.kwargs['pk'])
+        initial['current_user'] = self.request.user
         return initial
 
 
@@ -257,42 +272,56 @@ class ImportEventDetailView(View):
         if id:
             event = Event.get(id)
             file = request.FILES.get('file')
-            path = default_storage.save(
-                'price/price.xlsx',
-                ContentFile(
-                    file.read()))
-            tmp_file = os.path.join(settings.MEDIA_ROOT, path)
-            workdata = xlrd.open_workbook(tmp_file)
-            sheet_name = workdata.sheet_names()[0]
-            sheet = workdata.sheet_by_name(sheet_name)
-            row = sheet.nrows
-            col = sheet.ncols
-            data = []
-            for rx in range(1, row):
-                li = []
-                for cx in range(0, col):
-                    value = sheet.cell(rowx=rx, colx=cx).value
-                    li.append(value)
-                data.append(li)
-            if row < int(event.house_limit):
-                for ed in data:
-                    if EventDetail.objects.filter(
-                            event_id=id, room_num=ed[4]).exists():
-                        continue
-                    else:
-                        eventdetail = EventDetail.objects.create(
-                            building=ed[1],
-                            unit=ed[2],
-                            floor=ed[3],
-                            room_num=ed[4],
-                            unit_price=ed[5],
-                            area=ed[6],
-                            looking=ed[7],
-                            term=ed[8],
-                            event=event)
-                        eventdetail.save()
-                return JsonResponse({'success': True})
-        return JsonResponse({'success': False, 'msg': '传入数据超额！'})
+            filename = file.name.split('.')[-1]
+            if filename == 'xlsx' or filename == 'xls':
+                path = default_storage.save(
+                    'price/price.xlsx',
+                    ContentFile(
+                        file.read()))
+                tmp_file = os.path.join(settings.MEDIA_ROOT, path)
+                workdata = xlrd.open_workbook(tmp_file)
+                sheet_name = workdata.sheet_names()[0]
+                sheet = workdata.sheet_by_name(sheet_name)
+                row = sheet.nrows
+                col = sheet.ncols
+                num = len(EventDetail.objects.filter(event_id=id))
+                data = []
+                if num + row - 1 <= request.user.house_limit:
+                    for rx in range(1, row):
+                        li = []
+                        for cx in range(0, col):
+                            value = sheet.cell(rowx=rx, colx=cx).value
+                            li.append(value)
+                        data.append(li)
+                    for ed in data:
+                        if type(ed[0]) != str:
+                            ed[0] = str(int(ed[0]))
+                        if type(ed[1]) != str:
+                            ed[1] = str(int(ed[1]))
+                        if EventDetail.objects.filter(
+                                event_id=id, building=ed[0],
+                                unit=ed[1], floor=ed[2],
+                                room_num=ed[3]).exists():
+                            continue
+                        else:
+                            eventdetail = EventDetail.objects.create(
+                                building=ed[0],
+                                unit=ed[1],
+                                floor=ed[2],
+                                room_num=ed[3],
+                                unit_price=ed[4],
+                                area=ed[5],
+                                looking=ed[6],
+                                term=ed[7],
+                                event=event)
+                            eventdetail.save()
+                            num += 1
+                    return JsonResponse({'response_state': 200, 'data': num})
+                return JsonResponse({'response_state': 400, 'msg': '导入数据超过限制数量！'})
+            else:
+                return JsonResponse({'response_state': 400, 'msg': '导入文件格式不正确！'})
+        os.remove('media/price/price.xlsx')
+        return JsonResponse({'response_state': 400, 'msg': '没有该活动！'})
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -303,35 +332,22 @@ class ExportEventDetailView(View):
 
     def get(self, request, pk):
         objs = EventDetail.objects.filter(event_id=pk)
-        if objs:
-            sheet = Workbook(encoding='utf-8')
-            s = sheet.add_sheet('数据表')
-            list = [
-                '选房房源id',
-                '楼栋',
-                '单元',
-                '楼层',
-                '房号',
-                '面积单价',
-                '建筑面积',
-                '朝向',
-                '使用年限']
-            col = 0
-            for i in list:
-                s.write(0, col, i)
-                col += 1
-            row = 1
-            for obj in objs:
-                s.write(row, 0, obj.id)
-                s.write(row, 1, obj.building)
-                s.write(row, 2, obj.unit)
-                s.write(row, 3, obj.floor)
-                s.write(row, 4, obj.room_num)
-                s.write(row, 5, obj.unit_price)
-                s.write(row, 6, obj.area)
-                s.write(row, 7, obj.looking)
-                s.write(row, 8, obj.term)
-                row += 1
+        sheet = Workbook(encoding='utf-8')
+        s = sheet.add_sheet('数据表')
+        list = [
+            '楼栋',
+            '单元',
+            '楼层',
+            '房号',
+            '面积单价',
+            '建筑面积',
+            '朝向',
+            '使用年限']
+        col = 0
+        for i in list:
+            s.write(0, col, i)
+            col += 1
+        if not objs:
             sio = BytesIO()
             sheet.save(sio)
             sio.seek(0)
@@ -340,7 +356,25 @@ class ExportEventDetailView(View):
                                                fangyuanxinxi.xls'
             response.write(sio.getvalue())
             return response
-        return JsonResponse({'msg': '内容为空！'})
+        row = 1
+        for obj in objs:
+            s.write(row, 0, obj.building)
+            s.write(row, 1, obj.unit)
+            s.write(row, 2, str(obj.floor))
+            s.write(row, 3, str(obj.room_num))
+            s.write(row, 4, obj.unit_price)
+            s.write(row, 5, obj.area)
+            s.write(row, 6, obj.looking)
+            s.write(row, 7, obj.term)
+            row += 1
+        sio = BytesIO()
+        sheet.save(sio)
+        sio.seek(0)
+        response = HttpResponse(content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = 'attachment;filename=\
+                                           fangyuanxinxi.xls'
+        response.write(sio.getvalue())
+        return response
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -350,6 +384,7 @@ class CustomListView(ListView):
     '''
     template_name = 'customer_list.html'
     model = Customer
+    paginate_by = 50
 
     def get_queryset(self):
         self.value = self.request.GET.get('value')
@@ -384,16 +419,6 @@ class CustomCreateView(DialogMixin, CreateView):
 
 
 @method_decorator(admin_required, name='dispatch')
-class CustomerCountUpdateView(DialogMixin, UpdateView):
-    '''
-    修改可选套数
-    '''
-    template_name = 'popup/customer_count.html'
-    model = Customer
-    fields = ['count']
-
-
-@method_decorator(admin_required, name='dispatch')
 class CustomerDeleteView(View):
     '''
     删除认筹名单
@@ -415,29 +440,37 @@ class ExportCustomerView(View):
 
     def get(self, request, pk):
         objs = Customer.objects.filter(event_id=pk)
-        if objs:
-            sheet = Workbook(encoding='utf-8')
-            s = sheet.add_sheet('数据表')
-            list = ['姓名', '手机号', '身份证号', '备注']
-            col = 0
-            for i in list:
-                s.write(0, col, i)
-                col += 1
-            row = 1
-            for obj in objs:
-                s.write(row, 0, obj.realname)
-                s.write(row, 1, obj.mobile)
-                s.write(row, 2, obj.identication)
-                s.write(row, 3, obj.remark)
-                row += 1
+        sheet = Workbook(encoding='utf-8')
+        s = sheet.add_sheet('数据表')
+        list = ['姓名', '手机号', '身份证号', '备注']
+        col = 0
+        for i in list:
+            s.write(0, col, i)
+            col += 1
+        if not objs:
             sio = BytesIO()
             sheet.save(sio)
             sio.seek(0)
             response = HttpResponse(content_type='application/vnd.ms-excel')
-            response['Content-Disposition'] = 'attachment;filename=renchoumingdan.xls'
+            response['Content-Disposition'] = 'attachment;filename= \
+                                               renchoumingdan.xls'
             response.write(sio.getvalue())
             return response
-        return JsonResponse({'msg': '内容为空！'})
+        row = 1
+        for obj in objs:
+            s.write(row, 0, obj.realname)
+            s.write(row, 1, obj.mobile)
+            s.write(row, 2, obj.identication)
+            s.write(row, 3, obj.remark)
+            row += 1
+        sio = BytesIO()
+        sheet.save(sio)
+        sio.seek(0)
+        response = HttpResponse(content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = 'attachment;filename= \
+                                           renchoumingdan.xls'
+        response.write(sio.getvalue())
+        return response
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -446,111 +479,124 @@ class ExportHouseHotView(View):
     导出房源热度统计
     '''
 
-    def get(self, request):
-        objs = EventDetail.objects.all()
-        if objs:
-            sheet = Workbook(encoding='utf-8')
-            s = sheet.add_sheet('数据表')
-            list = [
-                '楼栋',
-                '单元',
-                '楼层',
-                '房号',
-                '是否已售',
-                '面积单价',
-                '建筑面积',
-                '收藏人数',
-                '公测是否已售']
-            col = 0
-            for i in list:
-                s.write(0, col, i)
-                col += 1
-            row = 1
-            for obj in objs:
-                s.write(row, 0, obj.building)
-                s.write(row, 1, obj.unit)
-                s.write(row, 2, obj.floor)
-                s.write(row, 3, obj.room_num)
-                if obj.is_sold:
-                    s.write(row, 4, '已售')
-                else:
-                    s.write(row, 4, '未售')
-                s.write(row, 5, obj.unit_price)
-                s.write(row, 6, obj.area)
-                s.write(row, 7, obj.follow_set.count())
-                if obj.is_testsold:
-                    s.write(row, 8, '公测已售')
-                else:
-                    s.write(row, 8, '公测未售')
-                row += 1
+    def get(self, request, pk):
+        objs = EventDetail.objects.filter(event_id=pk)
+        sheet = Workbook(encoding='utf-8')
+        s = sheet.add_sheet('数据表')
+        list = [
+            '楼栋',
+            '单元',
+            '楼层',
+            '房号',
+            '是否已售',
+            '面积单价',
+            '建筑面积',
+            '收藏人数',
+            '公测是否已售']
+        col = 0
+        for i in list:
+            s.write(0, col, i)
+            col += 1
+        if not objs:
             sio = BytesIO()
             sheet.save(sio)
             sio.seek(0)
             response = HttpResponse(content_type='application/vnd.ms-excel')
-            response['Content-Disposition'] = 'attachment;filename=fangyuanredu.xls'
+            response['Content-Disposition'] = 'attachment;filename= \
+                                               fangyuanredu.xls'
             response.write(sio.getvalue())
             return response
-        return JsonResponse({'msg': '内容为空！'})
+        row = 1
+        for obj in objs:
+            s.write(row, 0, obj.building)
+            s.write(row, 1, obj.unit)
+            s.write(row, 2, str(obj.floor))
+            s.write(row, 3, str(obj.room_num))
+            if obj.is_sold:
+                s.write(row, 4, '已售')
+            else:
+                s.write(row, 4, '未售')
+            s.write(row, 5, obj.unit_price)
+            s.write(row, 6, obj.area)
+            s.write(row, 7, obj.follow_set.count())
+            if obj.is_testsold:
+                s.write(row, 8, '公测已售')
+            else:
+                s.write(row, 8, '公测未售')
+            row += 1
+        sio = BytesIO()
+        sheet.save(sio)
+        sio.seek(0)
+        response = HttpResponse(content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = 'attachment;filename= \
+                                           fangyuanredu.xls'
+        response.write(sio.getvalue())
+        return response
 
 
 @method_decorator(admin_required, name='dispatch')
 class ExportBuyHotView(View):
     '''
-    导出购房热度统计
+    导出购房者热度统计
     '''
 
-    def get(self, request):
-        objs = Order.all()
+    def get(self, request, pk):
+        objs = Customer.objects.filter(event_id=pk)
+        # print(objs)
+        sheet = Workbook(encoding='utf-8')
+        s = sheet.add_sheet('数据表')
+        list = [
+            '姓名',
+            '手机号',
+            '证件号码',
+            '同意协议时间',
+            '收藏房间数',
+            '公测选择房间',
+            '公测订单时间',
+            '开盘选择房间',
+            '开盘订单时间']
+        col = 0
+        for i in list:
+            s.write(0, col, i)
+            col += 1
+        if not objs:
+            sio = BytesIO()
+            sheet.save(sio)
+            sio.seek(0)
+            response = HttpResponse(content_type='application/vnd.ms-excel')
+            response['Content-Disposition'] = 'attachment;filename= \
+                                               goufangredu.xls'
+            response.write(sio.getvalue())
+            return response
+        row = 1
         if objs:
-            sheet = Workbook(encoding='utf-8')
-            s = sheet.add_sheet('数据表')
-            list = [
-                '姓名',
-                '手机号',
-                '证件号码',
-                '同意协议时间',
-                '收藏房间数',
-                '访问热度',
-                '公测选择房间',
-                '公测订单时间',
-                '开盘选择房间',
-                '开盘订单时间']
-            col = 0
-            for i in list:
-                s.write(0, col, i)
-                col += 1
-            row = 1
             for obj in objs:
-                s.write(row, 0, obj.user.customer.realname)
-                s.write(row, 1, obj.user.customer.mobile)
-                s.write(row, 2, obj.user.customer.identication)
-                s.write(row, 3, obj.user.customer.protime)
+                order = obj.user.order_set.all()
+                testorder = obj.user.order_set.filter(is_test=True).first()
+                openorder = obj.user.order_set.filter(is_test=False).first()
+                s.write(row, 0, obj.realname)
+                s.write(row, 1, obj.mobile)
+                s.write(row, 2, obj.identication)
+                s.write(row, 3, obj.protime.strftime("%Y/%m/%d %H:%M:%S") if obj.protime else '')
                 s.write(row, 4, obj.user.follow_set.count())
-                s.write(row, 5, obj.eventdetail.visit_num)
-                if obj.eventdetail.is_testsold:
-                    s.write(row, 6,
-                            obj.eventdetail.building +
-                            '楼' +
-                            obj.eventdetail.unit +
-                            '单元' +
-                            str(obj.eventdetail.floor) +
+                if order:
+                    s.write(row, 5, testorder.eventdetail.building +
+                            testorder.eventdetail.unit +
+                            str(testorder.eventdetail.floor) +
                             '层' +
-                            str(obj.eventdetail.room_num) + '号')
-                    s.write(row, 7, (obj.time).strftime("%Y/%m/%d %H:%M:%S"))
-                    s.write(row, 8, None)
-                    s.write(row, 9, None)
+                            str(testorder.eventdetail.room_num) if testorder else '')
+                    s.write(row, 6, (testorder.time).strftime("%Y/%m/%d %H:%M:%S") if testorder else '')
+                    s.write(row, 7, openorder.eventdetail.building +
+                            openorder.eventdetail.unit +
+                            str(openorder.eventdetail.floor) +
+                            '层' +
+                            str(openorder.eventdetail.room_num) if openorder else '')
+                    s.write(row, 8, (openorder.time).strftime("%Y/%m/%d %H:%M:%S") if openorder else '')
                 else:
+                    s.write(row, 5, None)
                     s.write(row, 6, None)
                     s.write(row, 7, None)
-                    s.write(row, 8,
-                            obj.eventdetail.building +
-                            '楼' +
-                            obj.eventdetail.unit +
-                            '单元' +
-                            str(obj.eventdetail.floor) +
-                            '层' +
-                            str(obj.eventdetail.room_num) + '号')
-                    s.write(row, 9, (obj.time).strftime("%Y/%m/%d %H:%M:%S"))
+                    s.write(row, 8, None)
                 row += 1
             sio = BytesIO()
             sheet.save(sio)
@@ -559,7 +605,6 @@ class ExportBuyHotView(View):
             response['Content-Disposition'] = 'attachment;filename=goufangredu.xls'
             response.write(sio.getvalue())
             return response
-        return JsonResponse({'msg': '内容为空！'})
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -575,111 +620,54 @@ class ExportOrderView(View):
         queryset = Order.objects.filter(
             eventdetail__event_id=id, is_test=is_test)
         if value:
-            objs = queryset.filter(Q(user__customer__realname__icontains=value) |
-                                   Q(user__customer__mobile__icontains=value) |
-                                   Q(user__customer__identication__icontains=value))
+            objs = queryset.filter(
+                Q(user__customer__realname__icontains=value) |
+                Q(user__customer__mobile__icontains=value) |
+                Q(user__customer__identication__icontains=value))
         else:
             objs = queryset
-        print(objs)
-        if objs:
-            sheet = Workbook(encoding='utf-8')
-            s = sheet.add_sheet('数据表')
-            list = [
-                '选房时间',
-                '车位/房间号',
-                '单价',
-                '建筑面积',
-                '认购者',
-                '手机号',
-                '证件号码',
-                '认筹人备注',
-                '状态']
-            col = 0
-            for i in list:
-                s.write(0, col, i)
-                col += 1
-            row = 1
-            for obj in objs:
-                s.write(row, 0, obj.time.strftime("%Y/%m/%d %H:%M:%S"))
-                s.write(row, 1, obj.eventdetail.room_num)
-                s.write(row, 2, obj.eventdetail.unit_price)
-                s.write(row, 3, obj.eventdetail.area)
-                s.write(row, 4, obj.user.customer.realname)
-                s.write(row, 5, obj.user.customer.mobile)
-                s.write(row, 6, obj.user.customer.identication)
-                s.write(row, 7, obj.user.customer.remark)
-                s.write(row, 8, obj.eventdetail.is_sold)
-                row += 1
+        sheet = Workbook(encoding='utf-8')
+        s = sheet.add_sheet('数据表')
+        list = [
+            '选房时间',
+            '车位/房间号',
+            '单价',
+            '建筑面积',
+            '认购者',
+            '手机号',
+            '证件号码',
+            '认筹人备注']
+        col = 0
+        for i in list:
+            s.write(0, col, i)
+            col += 1
+        if not objs:
             sio = BytesIO()
             sheet.save(sio)
             sio.seek(0)
             response = HttpResponse(content_type='application/vnd.ms-excel')
-            response['Content-Disposition'] = 'attachment;filename=daochudingdan.xls'
+            response['Content-Disposition'] = 'attachment;filename= \
+                                               daochudingdan.xls'
             response.write(sio.getvalue())
             return response
-        return JsonResponse({'msg': '内容为空！'})
-
-
-class CustomListView(ListView):
-    '''
-    认筹名单列表
-    '''
-    template_name = 'customer_list.html'
-    model = Customer
-
-    def get_queryset(self):
-        self.value = self.request.GET.get('value')
-        self.event = Event.get(self.kwargs['pk'])
-        queryset = self.model.objects.filter(event=self.event).order_by('-id')
-        if self.value:
-            queryset = queryset.filter(Q(realname__icontains=self.value) |
-                                       Q(mobile__icontains=self.value) |
-                                       Q(identication__icontains=self.value)).order_by('-id')
-        return queryset
-
-    def get_context_data(self):
-        context = super(CustomListView, self).get_context_data()
-        context['event'] = self.event
-        context['value'] = self.value
-        return context
-
-
-@method_decorator(admin_required, name='dispatch')
-class CustomCreateView(DialogMixin, CreateView):
-    '''
-    添加认筹名单
-    '''
-    form_class = CustomerForm
-    template_name = 'popup/customer_create.html'
-
-    def get_initial(self):
-        initial = super(CustomCreateView, self).get_initial()
-        initial['event'] = Event.get(self.kwargs['pk'])
-        return initial
-
-
-@method_decorator(admin_required, name='dispatch')
-class CustomerCountUpdateView(DialogMixin, UpdateView):
-    '''
-    修改可选套数
-    '''
-    template_name = 'popup/customer_count.html'
-    model = Customer
-    fields = ['count']
-
-
-@method_decorator(admin_required, name='dispatch')
-class DeleteCustomerView(View):
-    '''
-    删除认筹名单
-    '''
-
-    def post(self, request):
-        id = request.POST.get('id')
-        if id:
-            Customer.get(id).delete()
-            return JsonResponse({'success': True})
-        return JsonResponse({'success': False})
+        row = 1
+        for obj in objs:
+            s.write(row, 0, obj.time.strftime("%Y/%m/%d %H:%M:%S"))
+            s.write(row, 1, obj.eventdetail.room_num)
+            s.write(row, 2, obj.eventdetail.unit_price)
+            s.write(row, 3, obj.eventdetail.area)
+            s.write(row, 4, obj.user.customer.realname)
+            s.write(row, 5, obj.user.customer.mobile)
+            s.write(row, 6, obj.user.customer.identication)
+            row += 1
+        sio = BytesIO()
+        sheet.save(sio)
+        sio.seek(0)
+        response = HttpResponse(content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = 'attachment;filename= \
+                                           daochudingdan.xls'
+        response.write(sio.getvalue())
+        return response
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -723,31 +711,43 @@ class PurcharseHeatView(View):
         else:
             last_event = Event.get_last_event(request.user.company.id)
             queryset = Customer.objects.filter(event_id=last_event)
-        for customer in queryset:
-            testorder = customer.user.order_set.filter(is_test=True).first()
-            openorder = customer.user.order_set.filter(is_test=False).first()
-            ct_list = {'id': customer.id,
-                       'name': customer.realname,
-                       'mobile': customer.mobile,
-                       'identication': customer.identication,
-                       'protime': customer.protime,
-                       'count': customer.count,
-                       'heat': customer.heat,
-                       'testtime': '',
-                       'testroom': '',
-                       'opentime': '',
-                       'openroom': ''
-                       }
-            if testorder:
-                ct_list['testtime'] = testorder.time.strftime(
-                    "%Y/%m/%d %H:%M:%S")
-                ct_list['testroom'] = testorder.eventdetail.room_num
-            if openorder:
-                ct_list['opentime'] = openorder.time.strftime(
-                    "%Y/%m/%d %H:%M:%S")
-                ct_list['openroom'] = openorder.eventdetail.room_num
-            li.append(ct_list)
-        return JsonResponse({'success': True, 'data': li})
+        if queryset is not None:
+            for customer in queryset:
+                testorder = customer.user.order_set.filter(is_test=True).first()
+                openorder = customer.user.order_set.filter(is_test=False).first()
+                follow = Follow.objects.filter(user_id=customer.user.id)
+                customer.count = len(follow)
+                ct_list = {'id': customer.id,
+                           'name': customer.realname,
+                           'mobile': customer.mobile,
+                           'identication': customer.identication,
+                           'protime': customer.protime.strftime('%Y-%m-%d %H:%M:%S')
+                           if customer.protime else '',
+                           'count': customer.count,
+                           'testtime': '',
+                           'testroom': '',
+                           'opentime': '',
+                           'openroom': ''
+                           }
+                if testorder:
+                    ct_list['testtime'] = testorder.time.strftime("%Y/%m/%d %H:%M:%S")
+                    ct_list['testroom'] = testorder.eventdetail.building + \
+                                          testorder.eventdetail.unit + \
+                                          '-' + \
+                                          str(testorder.eventdetail.floor) + \
+                                          '-' + \
+                                          str(testorder.eventdetail.room_num)
+                if openorder:
+                    ct_list['opentime'] = openorder.time.strftime("%Y/%m/%d %H:%M:%S")
+                    ct_list['openroom'] = openorder.eventdetail.building + \
+                                          openorder.eventdetail.unit + \
+                                          '-' + \
+                                          str(openorder.eventdetail.floor) + \
+                                          '-' + \
+                                          str(openorder.eventdetail.room_num)
+                li.append(ct_list)
+            return JsonResponse({'success': True, 'data': li})
+        return JsonResponse({'success': False})
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -821,6 +821,8 @@ class DeleteHouseTypeView(View):
     def post(self, request):
         id = request.POST.get('id')
         if id:
+            EventDetail.objects.filter(
+                house_type_id=id).update(house_type_id='')
             HouseType.get(id).delete()
             return JsonResponse({'success': True})
         return JsonResponse({'success': False})
@@ -857,7 +859,6 @@ class OrderListView(View):
         event_id = request.GET.get('id')
         is_test = request.GET.get('is_test')
         value = request.GET.get('value')
-
         if event_id and is_test:
             queryset = Order.objects.filter(
                 eventdetail__event_id=event_id, is_test=is_test)
@@ -866,9 +867,10 @@ class OrderListView(View):
             queryset = Order.objects.filter(
                 eventdetail__event=last_event, is_test=0)
         if value:
-            queryset = queryset.filter(Q(user__customer__realname__icontains=value) |
-                                       Q(user__customer__mobile__icontains=value) |
-                                       Q(user__customer__identication__icontains=value))
+            queryset = queryset.filter(
+                Q(user__customer__realname__icontains=value) |
+                Q(user__customer__mobile__icontains=value) |
+                Q(user__customer__identication__icontains=value))
         if queryset:
             order_list = [{'id': od.id,
                            'time': od.time.strftime("%Y-%m-%d %H:%M:%S"),
@@ -885,7 +887,74 @@ class OrderListView(View):
                            'mobile': od.user.customer.mobile,
                            'identication': od.user.customer.identication,
                            'remark': od.user.customer.remark,
-                           'status': od.eventdetail.status,
                            } for od in queryset]
             return JsonResponse({'success': True, 'data': order_list})
         return JsonResponse({'success': False})
+
+
+@method_decorator(admin_required, name='dispatch')
+class EventTVWall(TemplateView):
+    template_name = 'wallList.html'
+
+    def get_context_data(self, pk):
+        context = super(EventTVWall, self).get_context_data()
+        context['event_id'] = pk
+        return context
+
+
+@method_decorator(admin_required, name='dispatch')
+class EventTVWallInfoView(View):
+
+    def get(self, request, pk):
+        result = []
+        eventdetails = Event.get(pk).eventdetail_set.all()
+        buildings = list(set(eventdetails.values_list('building', flat=True)))
+        for b in buildings:
+            units = eventdetails.filter(building=b).order_by('unit') \
+                                .values_list('unit', flat=True)
+            units = list(set(units))
+            unit = []
+            for u in units:
+                rooms = eventdetails.filter(building=b, unit=u) \
+                                    .order_by('room_num')
+                room_dict = [{'id': r.id,
+                              'room_num': r.room_num,
+                              'is_sold': r.is_sold} for r in rooms]
+                unit_dict = {'unit': u, 'rooms': room_dict}
+                unit.append(unit_dict)
+            building_dict = {'building': b, 'units': unit}
+            result.append(building_dict)
+        return JsonResponse({'response_state': 200, 'result': result})
+
+
+@method_decorator(admin_required, name='dispatch')
+class EventTVWallOrder(TemplateView):
+    template_name = 'orderinfo.html'
+
+    def get_context_data(self, pk):
+        context = super(EventTVWallOrder, self).get_context_data()
+        context['edid'] = pk
+        return context
+
+
+class EventTVWallOrderView(View):
+
+    def get(self, request, pk):
+        try:
+            order = Order.objects.get(eventdetail_id=pk, is_test=False)
+        except:
+            return JsonResponse({'response_state': 400, 'msg': '未找到相关订单'})
+        ed = order.eventdetail
+        result = {
+            'order_num': order.order_num,
+            'order_date': order.time.strftime('%Y/%m/%d %H:%M:%S'),
+            'user': order.user.customer.realname,
+            'user_mobile': order.user.customer.mobile,
+            'user_id': order.user.customer.identication,
+            'house': ('%s楼-%s单元-%s') % (ed.building, ed.unit, ed.room_num),
+            'event': ed.event.name,
+            'house_type': ed.house_type.name if ed.house_type else '',
+            'area': ed.area,
+            'price': ed.unit_price,
+        }
+        return JsonResponse({'response_state': 200, 'result': result})

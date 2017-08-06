@@ -1,16 +1,53 @@
 $(document).ready(function(){
+	$("#files").val(""); //清空input fiel 火狐中的缓存
+
 	$("#login-wrap").height($(window).height());
 	$(window).resize(function(){
 		$("#login-wrap").height($(window).height());
 	});
-})
+
+	//创建活动
+	$("#createEvent").submit(function(){
+		var inputPhone = $("input[name='phone_num']").val();
+		var pattern = /[0-9-()（）]{7,15}/;
+		if(!pattern.test(inputPhone)){
+			alert('请输入正确的电话号码！')
+　			return false;
+	// 	}else if($(".event_start").value == "") {
+	// 		alert('请检查时间选择');
+	// 　		return false;
+		}else if($(".coverImgFile").html() == "") {
+			console.log($(".event_start").value);
+			alert('请添加封面')
+		　	return false;
+			}
+	});
+
+	//创建认筹名单
+// 	$("#customerOrder").submit(function(){
+// 		var inputMobile = $("input[name='mobile']").val();
+// 		var inputIdent = $("input[name='identication']").val();
+// 		var pattern = /\d{17}[\d|x]|\d{15}/;
+// 		if(inputMobile.length < 11){
+// 			new $.zui.Messager('请输入正确的手机号！', {
+// 				placement:'center',
+// 				type: 'primary'
+// 			}).show();
+// 　			return false;
+// 		}else if(!pattern.test(inputIdent)){
+// 			new $.zui.Messager('请输入正确的身份证号码！', {
+// 				placement:'center',
+// 				type: 'primary' // 定义颜色主题
+// 			}).show();
+// 　			return false;
+// 		}
+// 	});
+});
 
 
 
 //上传认筹名单文件
 function submitFile(event,thisID){
-	alert("正在准备上传，请稍等！");
-	$(event).attr("disabled","disabled");
 	var files = $("#files")[0].files;
 	var data = new FormData(); //转化为表单格式的数据
     data.append('filename', files[0]);
@@ -21,20 +58,35 @@ function submitFile(event,thisID){
 		async:true,
 		data:data,
 		cache: false,
-        processData: false,//发送的数据将被转换为对象，false就是不转化，默认为true
-        contentType: false,
-		success:function(){
-			window.location.reload();
+    processData: false,//发送的数据将被转换为对象，false就是不转化，默认为true
+    contentType: false,
+		success:function(results){
+			if(results.response_state == 200){
+				new $.zui.Messager('导入成功，正在导入，请稍等！', {
+		       		placement:'center',
+				    type: 'success' // 定义颜色主题
+				}).show("",function(){
+					setTimeout(function(){
+						window.location.reload();
+					},1000)
+				});
+			}else if(results.response_state == 400){
+				new $.zui.Messager(results.msg, {
+		       		placement:'center',
+				    type: 'primary' // 定义颜色主题
+				}).show("",function(){
+					$(event).attr("disabled","disabled");
+				});
+			}
 		},
 		error:function(){
+			$(event).attr("disabled","disabled");
 			alert("未知错误")
 		}
 	});
 };
 //导入房价文件
 function roomPriceFile(event,thisID){
-	alert("正在上传，请稍等！");
-	$(event).attr("disabled","disabled");
 	var files = $("#priceFile")[0].files;
 	var data = new FormData(); //转化为表单格式的数据
     data.append('file', files[0]);
@@ -45,16 +97,29 @@ function roomPriceFile(event,thisID){
 		async:true,
 		data:data,
 		cache: false,
-        processData: false,//发送的数据将被转换为对象，false就是不转化，默认为true
-        contentType: false,
-		success:function(data){
-			if(data.success){
-				window.location.reload();
-			}else{
-				alert("房源数量超出限制！")
+    processData: false,//发送的数据将被转换为对象，false就是不转化，默认为true
+    contentType: false,
+		success:function(results){
+			if(results.response_state == 200){
+				new $.zui.Messager('导入成功，正在导入，请稍等！', {
+		       		placement:'center',
+				    type: 'success' // 定义颜色主题
+				}).show("",function(){
+					setTimeout(function(){
+						window.location.reload();
+					},500)
+				});
+			}else if(results.response_state == 400){
+				new $.zui.Messager(results.msg, {
+		       		placement:'center',
+				    type: 'primary' // 定义颜色主题
+				}).show("",function(){
+					$(event).attr("disabled","disabled");
+				});
 			}
 		},
 		error:function(){
+			$(event).attr("disabled","disabled");
 			alert("未知错误");
 		}
 	});
@@ -68,10 +133,12 @@ function deleteOrder(thisId){
 		async:true,
 		data:{id:thisId},
 		success:function(){
-			alert("清除公测名单成功！！！");
-			setTimeout(function(){
+			new $.zui.Messager('提示消息：成功', {
+					placement:'center',
+			    type: 'success' // 定义颜色主题
+			}).show("",function(){
 				window.location.reload();
-			},1500)
+			});
 		},
 		error:function(){
 			alert("未知错误")
@@ -92,18 +159,22 @@ function statisticsData(thisId){
 		async:true,
 		dataType:'JSON',
 		success:function(results){
-			var result =results.data;
-			$listHouse.find("tr").remove();
-			for (var i=0; i<result.length; i++) {
-				result[i].is_sold=  result[i].is_sold==true?"是":"否";
-				result[i].is_testsold= result[i].is_testsold==true?"是":"否";
-				$listHouse.append("<tr><td>"+(i+1)+"</td><td>"+result[i].building+"</td><td>"+result[i].unit+"</td><td>"+result[i].floor+"</td>"+
-				"<td>"+result[i].room_num+"</td><td>"+result[i].is_sold+"</td><td>"+result[i].unit_price+"</td><td>"+result[i].area+"</td><td>"+result[i].num+"</td>"+
-				"<td>"+result[i].is_testsold+"</td></tr>");
+			if(results.success){
+				var result =results.data;
+				$listHouse.find("tr").remove();
+				for (var i=0; i<result.length; i++) {
+					result[i].is_sold=  result[i].is_sold==true?"是":"否";
+					result[i].is_testsold= result[i].is_testsold==true?"是":"否";
+					$listHouse.append("<tr><td>"+(i+1)+"</td><td>"+result[i].building+"</td><td>"+result[i].unit+"</td><td>"+result[i].floor+"</td>"+
+					"<td>"+result[i].room_num+"</td><td>"+result[i].is_sold+"</td><td>"+result[i].unit_price+"</td><td>"+result[i].area+"</td><td>"+result[i].num+"</td>"+
+					"<td>"+result[i].is_testsold+"</td></tr>");
+				}
+			}else{
+				$(".datatable").html("<div style='display:block;padding: 20px 0;'> <p style='font-size: 20px;color: #CCCCCC;text-align: center;'>暂时没有订单数据！</p> </div>")
 			}
 		},
 		error:function(){
-			alert("房源热度统计错误！！！")
+			alert("获取房源热度统计错误！！！")
 		}
 	});
 //	购买者数据获取
@@ -114,12 +185,16 @@ function statisticsData(thisId){
 		async:true,
 		dataType:'JSON',
 		success:function(results){
-			var result =results.data;
-			$listBuyer.find("tr").remove();
-			for (var i=0; i<result.length; i++) {
-				$listBuyer.append("<tr><td>"+(i+1)+"</td><td>"+result[i].name+"</td><td>"+result[i].mobile+"</td><td>"+result[i].identication+"</td>"+
-				"<td>"+result[i].protime+"</td><td>"+result[i].count+"</td><td>"+result[i].heat+"</td><td>"+result[i].testroom+"</td>"+
-				"<td>"+result[i].testtime+"</td><td>"+result[i].openroom+"</td><td>"+result[i].opentime+"</td></tr>")
+			if(results.success){
+				var result =results.data;
+				$listBuyer.find("tr").remove();
+				for (var i=0; i<result.length; i++) {
+					$listBuyer.append("<tr><td>"+(i+1)+"</td><td>"+result[i].name+"</td><td>"+result[i].mobile+"</td><td>"+result[i].identication+"</td>"+
+					"<td>"+result[i].protime+"</td><td>"+result[i].count+"</td><td>"+result[i].testroom+"</td>"+
+					"<td>"+result[i].testtime+"</td><td>"+result[i].openroom+"</td><td>"+result[i].opentime+"</td></tr>")
+				}
+			}else{
+				$(".datatable").html("<div style='display:block;padding: 20px 0;'> <p style='font-size: 20px;color: #CCCCCC;text-align: center;'>暂时没有订单数据！</p> </div>")
 			}
 		},
 		error:function(){
@@ -151,21 +226,26 @@ function getorderSelect(){
 //订单数据列表显示
 function getorderList(thisId,is_test,searchValue){
 	var $openList = $("#openList");
-	var $exportEach = $("#exportEach");
 	$.ajax({
 		type:"get",
 		data:{id:thisId,is_test:is_test,value:searchValue},
 		url:"/orderlist/",
 		asunc:true,
 		success:function(results){
-			$exportEach.attr("href","/event/exportorder/?id="+thisId+"&is_test="+is_test+"&value="+searchValue);
-			var result =results.data;
-			$openList.children("tr").remove();
-			for (var i = 0; i < result.length; i++) {
-				result[i].status= result[i].status==true ?"已售":"未售";
-				$openList.append("<tr><td>"+(i+1)+"</td><td>"+result[i].time+"</td><td>"+result[i].room_num+"</td><td>"+result[i].unit_price+"</td><td>"+result[i].area+"</td><td>"+result[i].realname+"</td>"+
-				"<td>"+result[i].mobile+"</td><td>"+result[i].identication+"</td><td>"+result[i].remark+"</td><td>"+result[i].status+"</td></tr>")
-			};
+			if(results.success){
+				$(".tip").hide();
+				$("#exportEach").attr("href","/exportorder/?id="+thisId+"&is_test="+is_test+"&value="+searchValue);
+				var result =results.data;
+				$openList.children("tr").remove();
+				for (var i = 0; i < result.length; i++) {
+					$openList.append("<tr><td>"+(i+1)+"</td><td>"+result[i].time+"</td><td>"+result[i].room_num+"</td><td>"+result[i].unit_price+"元/㎡</td><td>"+result[i].area+"㎡</td><td>"+result[i].realname+"</td>"+
+					"<td>"+result[i].mobile+"</td><td>"+result[i].identication+"</td><td>"+result[i].remark+"</td></tr>")
+				};
+			}else{
+				$("#exportEach").removeAttr("href","");
+				$openList.children("tr").remove();
+				$(".tip").show();
+			}
 		},
 		error:function(){
 			alert("获取开盘数据失败！！！")

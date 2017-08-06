@@ -1,11 +1,9 @@
-var id;
-var userid;
 var http="";//正式
 //var http="http://10.7.10.193:8000"; //测试
 //var http="http://10.7.1.34";
 $(function(){
 
-	$(".btnLogin").click(function(){
+	$(".btnlog").click(function(){
 		if($(".titleph").val().trim().length==0){
 			$(".tips").html("请输入手机号！");
 		}
@@ -19,47 +17,50 @@ $(function(){
 		//	$(".tips").html("证件号格式错误！");
 		//}
 		else{
-
 			var tel=$(".titleph").val(),personId=$(".titlezj").val();
-
+            $(".btnlog").attr("disabled", "disabled");
 			$.ajax({
-				type:"get",
-				url:http+"/app/prodel/",
+				type:"POST",
+				url:http+"/acc/cuslog/",
 				data:{
 					tel:tel,
-					personId:personId
+					personId:personId,
+					id:$(".loginId").html()
 				},
 				success:function(data){
-					console.log(data);
+                    $(".btnlog").removeAttr("disabled");
 					if(data.response_state==200){
-						prol(data.objects[0]);
 
+						prol(data.objects[0]);
 						$("#loginBlack").show();
 						$(".proCancle").click(function(){
 							$("#loginBlack").hide();
 						});
 
-						$(".proSure").click(function(){
+						$(".proSure").bind("click",function(){
+                            $(".proSure").unbind("click");
 							$.ajax({
 								type:"POST",
-								url:http+"/acc/cuslog/",
+								url:http+"/app/protime/",
 								data:{
-									userid:$(".userid").html()
+                                    tel:tel,
+                                    personId:personId,
+									id:$(".loginId").html(),
+                                    protime:new Date().Format("yyyy-MM-dd hh:mm:ss")
+
 								},
 								dataType:'JSON',
 								success: function (data) {
-									console.log(data);
+                                    $(".proSure").bind("click");
 									if(data.response_state==200){
-										console.log(data);
+										window.location.href = "choiceHouse.html?id="+$(".loginId").html();
 
-										window.location.href = "choiceHouse.html?id="+data.id+"&userid="+$(".userid").html();
-										//id=data.id;
-										//userid=data.userid;
 									}else{
 										alert(data.msg);
 									}
 								},
 								error:function(){
+                                    $(".proSure").bind("click");
 									alert('页面出错，请重试！');
 								}
 							});
@@ -67,10 +68,9 @@ $(function(){
 					}else{
 						alert(data.msg);
 					}
-
-
 				},
 				error:function(){
+                    $(".btnlog").removeAttr("disabled");
 					alert("页面出错，请重试");
 				}
 
@@ -84,9 +84,16 @@ $(function(){
 function prol(data){
 	$(".prols").empty();
 	$(".prols").append($('<h1>'+data.termname+'</h1>'+
-						'<p>'+data.term+'</p>'+
-						'<p style="display:none" class="userid">'+data.userid+'</p>'
+						'<p>'+data.term+'</p>'
 	));
+}
+window.alert = function(name){
+    var iframe = document.createElement("IFRAME");
+    iframe.style.display="none";
+    iframe.setAttribute("src", 'data:text/plain,');
+    document.documentElement.appendChild(iframe);
+    window.frames[0].window.alert(name);
+    iframe.parentNode.removeChild(iframe);
 }
 
 /*首页创建元素*/
@@ -94,14 +101,11 @@ function creatEle(data){
 	var str1=$('<div class="bannerline">' +
 					'<div class="swiper-container" style="width:100%;">' +
 						'<div class="swiper-wrapper">' +
-							'<div class="swiper-slide"><img src="'+http+data.plane_graph+'"/></div>' +
-							'<div class="swiper-slide"><img src="'+http+data.plane_graph+'"></div>' +
-							'<div class="swiper-slide"><img src="'+http+data.plane_graph+'"/></div>' +
 						'</div>' +
 						'<div class="swiper-pagination"></div>' +
 					'</div>' +
 				'</div>'+
-				'<div class="houseQui clear"><h1 class="fl">'+data.name+'</h1><p class="quit fr" onclick="quit()">退出</p></div>'+
+				'<div class="houseQui clear"><h1 class="fl">'+data.name+'</h1><p class="quit fr"><input type="button" value="退出" class="quitt"/></p></div>'+
 				'<div class="phone">咨询电话：'+data.phone+'</div>'+
 				'<div class="lineBox">'+
 					'<div class="floor">' +
@@ -111,13 +115,17 @@ function creatEle(data){
 						'<div class="remark"><div class="mark"></div><span class="floor1">开盘时间</span></div><div class="flr choicSt">开盘开始 '+data.event_start+'<br/>开盘结束 '+data.event_end+'</div>' +
 					'</div>'+
 					'<div class="floor"><span class="floor2 bder">活动细则</span> <div class="flr hgt">'+data.description+'</div></div>'+
-					'<div class="floor"><span class="floor3 bder">活动须知</span><div class="flr hgt">'+data.notice+'</div></div>'+
+					'<div class="floor"><span class="floor3 bder">认购须知</span><div class="flr hgt">'+data.notice+'</div></div>'+
 					'<div class="floor"><span class="floor2 bder">温馨提示</span> <div class="flr hgt">'+data.tip+'</div></div>' +
 				'</div>'+
-				'<p class="userid1" style="display:none"></p>'+
+			     '<p class="ind1" style="display:none"></p>'+
 				'<div class="btnline"><a href="javascript:;" class="btnL">立即进入</a></div>'
 	);
 	$(".wapline").append(str1);
+	for(var i=0;i<data.plane_graph.length;i++){
+		$(".swiper-wrapper").append($('<div class="swiper-slide"><img src="'+http+data.plane_graph[i]+'"/></div>'));
+	}
+	
 	var width = $("body").width();
 	$(".swiper-container").css({"width":width});
 	var swiper = new Swiper('.swiper-container', {
@@ -134,8 +142,8 @@ function creatEle(data){
 		var height = parseInt($(".floor div.hgt").eq(index).css("height"));
 		$(".floor span").eq(sindex).css({"height":(height/(20)+0.85)+"rem","line-height":(height/(20)+0.85)+"rem"})
 	}
-
 }
+
 
 function telp (){
 	var reg=/^1[3|4|5|7|8]\d{9}$/;
@@ -146,22 +154,6 @@ function telp (){
 		return false;
 	}
 }
-function quit(){
-	$.ajax({
-		type:"POST",
-		url:http + "/acc/cusout/",
-		data:{
-			userid:$(".userid1").html()
-		},
-		success:function(data){
-			window.location.href="login.html";
-		},
-		error:function(data){
-			alert("退出出现未知错误！");
-		}
-	})
-}
-
 function personIds(){
 	var reg=/^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/;
 	var hao=$(".titlezj").val();
@@ -210,9 +202,7 @@ function createList(data){
 				'<i></i>'+
 				'<p id="endTimeing"></p>'+
 			'</div>'+
-			'<p class="idNum" style="display:none;"></p>'+
-			'<p class="userid" style="display:none;"></p>'
-
+			'<p class="idNum" style="display:none;"></p>'
 	);
 	$("#houseList").append(str);
 	$("title").html(data.event_name);
@@ -227,14 +217,7 @@ function data3(result){
 	$("#houseList").append(datap);
 }
 function myOrder() {
-	if((new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime())||
-		(new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() <new Date($(".test_ent").html()).getTime())){
-		window.location.href="order.html?id="+$(".idNum").html()+"&userid="+$(".userid").html();
-	}else{
-			alert("活动尚未开始");
-	}
-
-
+    window.location.href="order.html?id="+$(".idNum").html()
 }
 function updataTime(data) {
 	setInterval(function() {
@@ -254,7 +237,7 @@ function updataTime(data) {
 			if (date6 > 0) {
 				var dayss = Math.floor(date6 / (24 * 3600 * 1000));
 				//计算出小时数
-				var leave11 = date5 % (24 * 3600 * 1000);   //计算天数后剩余的毫秒数
+				var leave11 = date6 % (24 * 3600 * 1000);   //计算天数后剩余的毫秒数
 				var hourss = Math.floor(leave11 / (3600 * 1000));
 				//计算相差分钟数
 				var leave22 = leave11 % (3600 * 1000);       //计算小时数后剩余的毫秒数
@@ -263,7 +246,7 @@ function updataTime(data) {
 				var leave33 = leave22 % (60 * 1000);     //计算分钟数后剩余的毫秒数
 				var secondss = Math.round(leave33 / 1000);
 
-				$('#endTimeing').html("距公测动结束还有 " + (dayss < 10 ? "0" + dayss : dayss) + "天 " + (hourss < 10 ? "0" + hourss : hourss) + "小时 " + (minutess < 10 ? "0" + minutess : minutess) + " 分钟" + (secondss < 10 ? "0" + secondss : secondss) + " 秒");
+				$('#endTimeing').html("距公测结束还有 " + (dayss < 10 ? "0" + dayss : dayss) + "天 " + (hourss < 10 ? "0" + hourss : hourss) + "小时 " + (minutess < 10 ? "0" + minutess : minutess) + " 分钟" + (secondss < 10 ? "0" + secondss : secondss) + " 秒");
 			}
 		}else if(date>date4&&date<date1){
 			$('#endTimeing').html("开盘活动未开始");
@@ -280,7 +263,7 @@ function updataTime(data) {
 				var leave3 = leave2 % (60 * 1000);     //计算分钟数后剩余的毫秒数
 				var seconds = Math.round(leave3 / 1000);
 
-				$('#endTimeing').html("距开盘活动结束还有 " + (days < 10 ? "0" + days : days) + "天 " + (hours < 10 ? "0" + hours : hours) + "小时 " + (minutes < 10 ? "0" + minutes : minutes) + " 分钟" + (seconds < 10 ? "0" + seconds : seconds) + " 秒");
+				$('#endTimeing').html("距开盘结束还有 " + (days < 10 ? "0" + days : days) + "天 " + (hours < 10 ? "0" + hours : hours) + "小时 " + (minutes < 10 ? "0" + minutes : minutes) + " 分钟" + (seconds < 10 ? "0" + seconds : seconds) + " 秒");
 			}
 
 		}else {
@@ -299,30 +282,29 @@ function myShare(){
 		type:"get",
 		url:http+"/app/followlist/",
 		data:{
-			userid:$(".userid").html()
+			id:$(".idNum").html()
 		},
 		success:function(data){
 			if(data.response_state==200){
-				console.log(data);
 				$(".shareCarList").empty();
-				for(var i=0;i<data.objects.length;i++){
-					$(".shareCarList").append($('<li class="shareCar-list">'+
-						'<a class="share-a">'+
+				if(data.objects.length==0){
+					$(".shareCarList").append('<div class="noOne"><img src="../images/none.png" /><p>目前您没有任何收藏！</p></div>');
+				}else{
+					for(var i=0;i<data.objects.length;i++){
+						$(".shareCarList").append($('<li class="shareCar-list">'+
+							'<a class="share-a">'+
 							'<p>'+data.objects[i][0].eventdetail+'</p>'+
 							'<span>￥'+data.objects[i][0].price+'</span>'+
 							'<p style="display:none" class="shareId">'+data.objects[i][0].house+'</p>'+
-						'</a>'+
-						'</li>'
-					))
+							'</a>'+
+							'</li>'
+						))
+					}
 				}
+
 				$(".shareCar-list").each(function(){
 					$(this).click(function(){
-						if((new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime())||
-							(new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() <new Date($(".test_ent").html()).getTime())){
-							window.location.href="houseInfo.html?house="+$(this).find(".shareId").html()+"&id="+$(".idNum").html()+"&userid="+$(".userid").html();
-						}else{
-							alert("活动尚未开始");
-						}
+                        window.location.href="houseInfo.html?house="+$(this).find(".shareId").html()+"&id="+$(".idNum").html();
 					})
 				})
 			}else{
@@ -335,17 +317,19 @@ function myShare(){
 		}
 	})
 }
-
-
-
-
 function houseList(data){
 
 	for(var i=0;i<data.building.length;i++){
 		$(".listTileDiv").append("<p class='shares'>"+data.building[i]+"</p>");
 	}
-
 	var aPp=$('.listTileDiv .shares');
+	if($(".listTileDiv").height()=="42"){
+		$(".click-down").hide();
+	}else{
+		$(".click-down").show();
+        $(".listTileDiv").css("height","42");
+	}
+
 	aPp.each(function(){
 		$(this).on("click",function(){
 			$(".sharees").removeClass("listTile-style");
@@ -358,11 +342,9 @@ function houseList(data){
 				data:{
 					building:$(this).text(),
 					id:$(".idNum").html(),
-					userid:$(".userid").html()
 				},
 				dataType:'JSON',
 				success: function (data) {
-					console.log(data);
 					$(".houseUnit").remove();
 					if(data.objects[0].unit.length>0){
 						var unit = $('<div class="houseTap houseUnit">'+
@@ -383,15 +365,12 @@ function houseList(data){
 					for(var i=0;i<$(".shares").length;i++){
 						if($(".shares").eq(i).hasClass("listTile-style")){
 							build=$(".shares").eq(i).html();
-							console.log(build);
 						}
 					}
 					aPps.each(function(){
 						$(this).click(function(){
 							aPps.removeClass("listTile-style");
 							$(this).addClass("listTile-style");
-							console.log($(this).html());
-
 							$.ajax({
 								type:"get",
 								url:http+"/app/houselist/",
@@ -399,10 +378,8 @@ function houseList(data){
 									building:build,
 									unit:$(this).html(),
 									id:$(".idNum").html(),
-									userid:$(".userid").html()
 								},
 								success:function(data){
-									console.log(data);
 									$(".houseChose").remove();
 									var romms=$('<div class="houseChose">'+
 														'<div class="floorListbox">'+
@@ -417,34 +394,33 @@ function houseList(data){
 
 									$(".unite").after(romms);
 									for(var i=0;i<data.objects.length;i++){
-										$(".floorChose").append("<li>"+data.objects[i][0].floor_room_num+"</li>");
+										$(".floorChose").append("<li>"+data.objects[i].floor_room_num+"</li>");
 										if(new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime()){
-											if(data.objects[i][0].is_sold){
+											if(data.objects[i].is_sold){
 												$(".floorChose li").eq(i).addClass("floorLi-red");
 											}
 										}
 										if(new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() <new Date($(".test_ent").html()).getTime()){
-											if(data.objects[i][0].is_testsold){
+											if(data.objects[i].is_testsold){
 												$(".floorChose li").eq(i).addClass("floorLi-red");
 											}
 										}
 
-
 									}
+                                    var aLis=$(".floorChose").find("li");
 
-									if((new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime())||
-										(new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() <new Date($(".test_ent").html()).getTime())){
-										var aLis=$(".floorChose").find("li");
-										aLis.each(function(){
-											$(this).click(function(){
-												var houseID=data.objects[$(this).index()][0].house;
-												window.location.href="houseInfo.html?house="+houseID+"&id="+$(".idNum").html()+'&userid='+$(".userid").html();
+                                    aLis.each(function(){
+                                        $(this).click(function(){
+                                            if(data.response_state==405){
+                                                alert("活动尚未开始！");
+                                            }else{
+                                                var houseID=data.objects[$(this).index()].house;
+                                                window.location.href="houseInfo.html?house="+houseID+"&id="+$(".idNum").html();
+                                            }
 
-											})
-										})
-									}else{
-										alert("活动尚未开始");
-									}
+
+                                        })
+                                    })
 								},
 								error:function(data){
 									alert("出错了");
@@ -474,7 +450,7 @@ function houseList(data){
 		} else{
 			$(this).attr('name','true');
 			$(this).addClass('click-down').removeClass('click-down-top');
-			$('.listTileDiv').css("height","2rem");
+			$('.listTileDiv').css("height","42");
 		}
 
 	});
@@ -517,7 +493,6 @@ function houseInfo(data){
 						'</ul>'+
 					'</div>'+
 					'<p class="houseID" style="display:none"></p>'+
-					'<p class="userId" style="display:none"></p>'+
 				    '<p class="idd" style="display:none"></p>'
 	);
 	var infoBlack=$('<div class="windowBlack" id="houseInfoBlack">'+
@@ -531,7 +506,7 @@ function houseInfo(data){
 								'<div></div>'+
 								'<span class="left pri">单价：</span><span>￥'+data.unit_price+'</span><br>'+
 								'<span class="left floor-unit">户型：</span><span>'+data.house_type+'</span><br>'+
-								'<span class="left floor-area">建筑面积：</span><span>1㎡</span><br>'+
+								'<span class="left floor-area">建筑面积：</span><span>'+data.area+'㎡</span><br>'+
 								'<div></div>'+
 								'<span class="left">客户：</span><span>'+data.realname+'</span><br>'+
 								'<span class="left">手机号码：</span><span>'+data.mobile+'</span><br>'+
@@ -566,19 +541,14 @@ function houseInfo(data){
 		}else{
 			$(".houseInfoOther").after($('<div class="houseBtnY" onclick="buyNow()">立即选择</div>'));
 		}
-		console.log(data.is_testsold);
-
 	}else{
 		$(".houseInfoOther").after($('<div class="houseBtnN">活动未开始</div>'));
 	}
 
-
+	$(".shareBt").bind("click",shareBtn);
 
 	if(data.is_followed[0]){
-		$(".shareBt").unbind("click",shareBtn);
 		$(".shareBt").html("已收藏").css({background:"#999",border:"none",color:"#fff"})
-	}else{
-		$(".shareBt").bind("click",shareBtn);
 
 	}
 
@@ -588,7 +558,7 @@ function houseInfo(data){
 
 }
 function proldel(){
-	window.location.href="protocol.html?userid="+$(".userId").html();
+	window.location.href="protocol.html?id="+$(".idd").html();
 }
 function data5(result){
 	var datap=$('<p class="event_start" style="display:none">'+result.event_start+'</p>'+
@@ -599,26 +569,15 @@ function data5(result){
 	$("body").append(datap);
 }
 function buyNow(){
-	if((new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime())||
-		(new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".test_ent").html()).getTime())){
-		$("#houseInfoBlack").show();
-	}else{
-		alert("活动尚未开始");
-	}
+    $("#houseInfoBlack").show();
 }
 function confrim(){
 	var id=$(".houseID").html();
-	var userid=$(".userId").html();
 	var idd=$(".idd").html();
 	if(!$(".dialog-check").prop("checked")){
 		alert("请同意《活动协议》");
 	}else{
-		if((new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime())||
-			(new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".test_ent").html()).getTime())){
-			window.location.href = "houseSuccess.html?house="+id+"&userid="+userid+"&id="+idd;
-		}else{
-			alert("活动尚未开始");
-		}
+        window.location.href = "houseSuccess.html?house="+id+"&id="+idd;
 	}
 }
 Date.prototype.Format = function(fmt)
@@ -647,61 +606,69 @@ function orderSu(data){
 							'<span>'+data.room_info+'</span>'+
 						'</div>'+
 						'<div class="prompt-warning">'+
-							'<p>请在<span></span>前，到项目现场办理正式手续。逾期未办理，视为放弃资格。</p>'+
+							'<p>请在<span>'+data.limit+'</span>前，到项目现场办理正式手续。逾期未办理，视为放弃资格。</p>'+
 						'</div>'+
 						'<div class="prompt-btn">'+
 							'<a href="javascript:;" onclick="orderInfos()">订单详情</a>'+
 						'</div>'+
 						'<p class="orderid" style="display:none;">'+data.orderid+'</p>'+
 						'<p class="id1" style="display:none"></p>'+
-						'<p class="user1" style="display:none"></p>'+
 					'</div>'
 	);
 
 	$(".success-container").append(sucess);
-	var time1=data.limit*3600*1000+new Date(data.ordertime).getTime();
-	$(".prompt-warning span").html(new Date(time1).Format("yyyy-MM-dd hh:mm:ss"));
 
 }
 function orderInfos(){
-	window.location.href="orderinfo.html?orderId="+$(".orderid").html()+"&id="+$(".id1").html()+"&userid="+$(".user1").html();
+	window.location.href="orderinfo.html?orderId="+$(".orderid").html()+"&id="+$(".id1").html();
 }
 
 /*订单*/
 function order(data){
-	for(var i=0;i<data.objects.length;i++){
-		$("body").append($('<div class="order-all">' +
-								'<div>'+
-									'<div class="order-top">'+
-										'<a class="order1">'+
-											'<span >订单号:</span>&nbsp;<span>'+data.objects[i][0].order_num+'</span>'+
-											'<p>'+data.objects[i][0].time+'</p>'+
-										'</a>'+
-									'</div>'+
-									'<div class="order-right"></div>'+
-								'</div>'+
-								'<div class="order-middle">'+
-									'<table>'+
-										'<tr>'+
-											'<td>楼盘：</td>'+
-											'<td>'+data.objects[i][0].event+'</td>'+
-										'</tr>'+
-										'<tr class="order-table">'+
-											'<td>房间：</td>'+
-											'<td>'+data.objects[i][0].room_info+'</td>'+
-										'</tr>'+
-										'<tr>'+
-											'<td>单价：</td>'+
-											'<td>￥'+data.objects[i][0].unit_price+'/m²</td>'+
-										'</tr>'+
-									'</table>'+
-									'<p class="checkoderBtn">查看订单详情</p>'+
-								'</div>'+
+	if(data.objects.length==0){
+		$("body").append('<div class="noOne"><img src="../images/none.png" /><p>目前您没有任何订单！</p></div>');
+	}else{
+		for(var i=0;i<data.objects.length;i++){
+			$("body").append($('<div class="order-all">' +
+				'<div>'+
+				'<div class="order-top">'+
+				'<a class="order1">'+
+				'<span >订单号:</span>&nbsp;<span>'+data.objects[i][0].order_num+'</span>'+
+				'<p>'+data.objects[i][0].time+'</p>'+
+				'</a>'+
+				'</div>'+
+				'<div class="order-right"></div>'+
+				'</div>'+
+				'<div class="order-middle">'+
+				'<table>'+
+				'<tr>'+
+				'<td>楼盘：</td>'+
+				'<td>'+data.objects[i][0].event+'</td>'+
+				'</tr>'+
+				'<tr class="order-table">'+
+				'<td>房间：</td>'+
+				'<td>'+data.objects[i][0].room_info+'</td>'+
+				'</tr>'+
+				'<tr>'+
+				'<td>单价：</td>'+
+				'<td>￥'+data.objects[i][0].unit_price+'/m²</td>'+
+				'</tr>'+
+				'</table>'+
+				'<p class="checkoderBtn">查看订单详情</p>'+
+				'</div>'+
 
-								'<p class="oferId" style="display:none">'+data.objects[i][0].orderid+'</p>'+
-							'</div>'
-		));
+				'<p class="oferId" style="display:none">'+data.objects[i][0].orderid+'</p>'+
+				'</div>'
+			));
+
+			if(new Date(data.objects[i][0].time).getTime()>new Date($(".test_start").html()).getTime()&&
+                new Date(data.objects[i][0].time).getTime()<new Date($(".test_ent").html()).getTime()){
+				$(".order-all").eq(i).find(".order-right").append($('<img src="../images/test.png" />'));
+			}
+
+		}
 	}
+
 
 }
 function data4(result){
@@ -722,7 +689,7 @@ function checkInfo(data){
 					'</div>'+
 					'<div class="order-a">'+
 						'<div class="order-middle2">'+
-							'<p>请在<span class="order_time">'+data.limit+'</span>前，到项目现场办理正式手续。预期问办理，视为放弃资格。</p>'+
+							'<p>请在<span class="order_time"></span>前，到项目现场办理正式手续。逾期未办理，视为放弃资格。</p>'+
 							'<p style="color:red;margin-top:5px">请截图保存订单，活动结束之后将不能登录。</p>'+
 						'</div>'+
 						'<div class="order-bottom2">'+
@@ -749,7 +716,7 @@ function checkInfo(data){
 										'<td>'+data.area+' m²</td>'+
 									'</tr>'+
 									'<tr>' +
-										'<td>价格</td>'+
+										'<td>价格:</td>'+
 										'<td>￥'+data.unit_price+'/m²</td>'+
 									'</tr>'+
 								'</table>'+
@@ -766,7 +733,7 @@ function checkInfo(data){
 									'</tr>'+
 									'<tr>'+
 										'<td>证件号码：</td>'+
-										'<td>'+data.iidentication+'</td>'+
+										'<td>'+data.identication+'</td>'+
 									'</tr>'+
 								'</table>'+
 							'</div>'+
@@ -775,11 +742,34 @@ function checkInfo(data){
 				'</div>'
 	);
 	$(".orderInfoBox").append(orderInfo);
-
+	var rr=new Date(data.limit).getTime();
+   $(".order_time").html((new Date(rr).Format("yyyy年MM月dd日 hh:mm:ss")));
 	setInterval(function(){
-		var date=new Date();
-		var h=date.getHours(),m=date.getMinutes(),s=date.getSeconds();
-		$(".order-2").html((h<10?"0"+h:h)+":"+(m<10?"0"+m:m)+":"+(s<10?"0"+s:s));
+		 var dateNew= new Date(data.limit).getTime() - new Date().getTime();
+		 if(dateNew>0){
+             var hours = Math.floor(dateNew / (3600 * 1000));
+             //计算相差分钟数
+             var leave2 = dateNew % (3600 * 1000);       //计算小时数后剩余的毫秒数
+             var minutes = Math.floor(leave2 / (60 * 1000));
+             //计算相差秒数
+             var leave3 = leave2 % (60 * 1000);     //计算分钟数后剩余的毫秒数
+             var seconds = Math.round(leave3 / 1000);
+
+
+             $('.order-2').html((hours < 10 ? "0" + hours : hours) + "小时 " + (minutes < 10 ? "0" + minutes : minutes) + " 分钟" + (seconds < 10 ? "0" + seconds : seconds) + " 秒");
+		 }else{
+             $('.order-2').html("订单无效");
+		 }
+
 	},1000);
+
+    if(new Date(data.ordertime).getTime()>new Date($(".test_start").html()).getTime()&&
+       new Date(data.ordertime).getTime()<new Date($(".test_ent").html()).getTime()){
+		$(".order-middle2").empty();
+		$(".order-bottom-1 table").append($('<tr class="ordertype">'+
+												'<td>订单类型：</td>'+
+												'<td>公测订单</td>'+
+											'</tr>'))
+	}
 
 }

@@ -1,5 +1,6 @@
 import uuid
-from datetime import datetime
+import time
+from datetime import datetime, timedelta
 
 from django import forms
 from django.db import transaction
@@ -8,26 +9,29 @@ from accounts.models import Customer, User, Order
 
 
 class EventForm(forms.ModelForm):
-
     class Meta:
         model = Event
-        fields = [f.name for f in model._meta.fields]
+        exclude = ['equ_login_num', 'termname', 'term']
 
     def clean(self):
         cleaned_data = super(EventForm, self).clean()
-        if cleaned_data['test_start'] <= datetime.now():
-            raise forms.ValidationError('公测开始时间不得早于当前时间！')
-        if cleaned_data['test_start'] > cleaned_data['test_end']:
-            raise forms.ValidationError('公测结束时间不能提前于公测开始时间！')
-        if cleaned_data['event_start'] <= cleaned_data['test_end']:
-            raise forms.ValidationError('活动开始时间不得早于公测结束时间！')
-        if cleaned_data['event_start'] > cleaned_data['event_end']:
-            raise forms.ValidationError('活动结束时间不能提前于活动开始时间！')
+        if not self.instance.id:
+            if 'test_start' not in cleaned_data or 'test_end' not in cleaned_data \
+                    or 'event_start' not in cleaned_data or 'event_end' not in cleaned_data:
+                raise forms.ValidationError('公测开始时间、结束时间和活动开始、结束时间都不能为空！')
+            else:
+                if cleaned_data['test_start'] < datetime.now():
+                    raise forms.ValidationError('公测开始时间不得早于当前时间！')
+                if cleaned_data['test_start'] >= cleaned_data['test_end']:
+                    raise forms.ValidationError('公测结束时间不能提前于公测开始时间！')
+                if cleaned_data['event_start'] < cleaned_data['test_end'] + timedelta(days=1):
+                    raise forms.ValidationError('活动开始时间应比公测结束时间晚1天！')
+                if cleaned_data['event_start'] >= cleaned_data['event_end']:
+                    raise forms.ValidationError('活动结束时间不能提前于活动开始时间！')
         return cleaned_data
 
 
 class EventDetailForm(forms.ModelForm):
-
     class Meta:
         model = EventDetail
         fields = ['building', 'unit', 'floor', 'room_num', 'looking',
@@ -36,8 +40,16 @@ class EventDetailForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super(EventDetailForm, self).clean()
         event = self.initial['event']
-        if event.eventdetail_set.count() >= int(event.house_limit):
-            raise forms.ValidationError('房源数量超出上限，不可添加')
+        current_user = self.initial['current_user']
+        eventdetail = EventDetail.objects.filter(event=event)
+        for ed in eventdetail:
+            if cleaned_data['building'] == ed.building \
+                    and cleaned_data['unit'] == ed.unit \
+                    and cleaned_data['floor'] == ed.floor \
+                    and cleaned_data['room_num'] == ed.room_num:
+                raise forms.ValidationError('该车位/房源已存在！')
+        if event.eventdetail_set.count() >= int(current_user.house_limit):
+            raise forms.ValidationError('车位/房源数量超出上限，不可添加')
         return cleaned_data
 
     def save(self, commit=True):
@@ -48,7 +60,6 @@ class EventDetailForm(forms.ModelForm):
 
 
 class EventDetailSignForm(forms.ModelForm):
-
     class Meta:
         model = EventDetail
         fields = ['sign']
@@ -65,12 +76,39 @@ class EventDetailSignForm(forms.ModelForm):
                 raise forms.ValidationError('该用户已购房')
         return customer
 
+    def save(self):
+        with transaction.atomic():
+            instance = super(EventDetailSignForm, self).save()
+            if instance.sign is None:
+                if self.initial['object'].sign:
+                    Order.objects.filter(user=self.initial['object'].sign.user,
+                                         eventdetail=instance,
+                                         is_test=False).delete()
+                    if instance.is_sold is True:
+                        instance.is_sold = False
+                        instance.save()
+            else:
+                Order.objects.create(user=instance.sign.user,
+                                     eventdetail=instance,
+                                     order_num=time.strftime('%Y%m%d%H%M%S'),
+                                     is_test=False)
+            return instance
+
 
 class CustomerForm(forms.ModelForm):
-
     class Meta:
         model = Customer
-        fields = ['realname', 'mobile', 'identication', 'count', 'remark']
+        fields = ['realname', 'mobile', 'identication', 'remark']
+
+    def clean(self):
+        cleaned_data = super(CustomerForm, self).clean()
+        self.instance.event = self.initial['event']
+        customer = Customer.objects.filter(event=self.instance.event)
+        for ct in customer:
+            if cleaned_data['mobile'] == ct.mobile \
+                    or cleaned_data['identication'] == ct.identication:
+                raise forms.ValidationError('该用户已存在')
+        return cleaned_data
 
     def save(self, commit=True):
         if not self.instance.id:
@@ -85,7 +123,6 @@ class CustomerForm(forms.ModelForm):
 
 
 class HouseTypeForm(forms.ModelForm):
-
     class Meta:
         model = HouseType
         fields = ['event', 'name', 'pic', 'num']
@@ -100,7 +137,7 @@ class HouseTypeForm(forms.ModelForm):
             ht = HouseType.objects.filter(event=self.cleaned_data['event'])
         else:
             ht = HouseType.objects.filter(event=self.cleaned_data['event']) \
-                                  .exclude(id=self.instance.id)
+                .exclude(id=self.instance.id)
         if ht and self.cleaned_data['num'] in ht.values_list('num', flat=True):
             raise forms.ValidationError('户型编码不能重复')
         return self.cleaned_data['num']
