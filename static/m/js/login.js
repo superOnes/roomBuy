@@ -273,7 +273,10 @@ function myShare(){
                         window.location.href="houseInfo.html?house="+$(this).find(".shareId").html()+"&id="+$(".idNum").html();
 					})
 				})
-			}else{
+			}else if(data.response_state==401||data.response_state==403){
+                alert(data.msg);
+                window.location.href="login.html?id="+$(".idNum").html();
+            }else{
 				alert("页面错误");
 			}
 
@@ -307,10 +310,11 @@ function houseList(data){
 				url:http+"/app/unit/",
 				data:{
 					building:$(this).text(),
-					id:$(".idNum").html(),
+					id:$(".idNum").html()
 				},
 				dataType:'JSON',
 				success: function (data) {
+					if(data.response_state==200){
 					$(".houseUnit").remove();
 					if(data.objects[0].unit.length>0){
 						var unit = $('<div class="houseTap houseUnit">'+
@@ -346,54 +350,67 @@ function houseList(data){
 									id:$(".idNum").html(),
 								},
 								success:function(data){
-									$(".houseChose").remove();
-									var romms=$('<div class="houseChose">'+
-														'<div class="floorListbox">'+
-															'<ul class="floorChose">'+
-															'</ul>'+
-															'<div class="tab">'+
-																'<div class="shouing"><i></i>在售</div>'+
-																'<div class="shoued"><i></i>已售</div>'+
+                                    if(data.response_state==200){
+										$(".houseChose").remove();
+										var romms=$('<div class="houseChose">'+
+															'<div class="floorListbox">'+
+																'<ul class="floorChose">'+
+																'</ul>'+
+																'<div class="tab">'+
+																	'<div class="shouing"><i></i>在售</div>'+
+																	'<div class="shoued"><i></i>已售</div>'+
+																'</div>'+
 															'</div>'+
-														'</div>'+
-												'</div>');
+													'</div>');
 
-									$(".unite").after(romms);
-									for(var i=0;i<data.objects.length;i++){
-										$(".floorChose").append("<li>"+data.objects[i].floor_room_num+"</li>");
-										if(new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime()){
-											if(data.objects[i].is_sold){
-												$(".floorChose li").eq(i).addClass("floorLi-red");
+										$(".unite").after(romms);
+										for(var i=0;i<data.objects.length;i++){
+											$(".floorChose").append("<li>"+data.objects[i].floor_room_num+"</li>");
+											if(new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime()){
+												if(data.objects[i].is_sold){
+													$(".floorChose li").eq(i).addClass("floorLi-red");
+												}
 											}
-										}
-										if(new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() <new Date($(".test_ent").html()).getTime()){
-											if(data.objects[i].is_testsold){
-												$(".floorChose li").eq(i).addClass("floorLi-red");
+											if(new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() <new Date($(".test_ent").html()).getTime()){
+												if(data.objects[i].is_testsold){
+													$(".floorChose li").eq(i).addClass("floorLi-red");
+												}
 											}
-										}
 
+										}
+										var aLis=$(".floorChose").find("li");
+
+										aLis.each(function(){
+											$(this).click(function(){
+												if(data.response_state==405){
+													alert("活动尚未开始！");
+												}else{
+													var houseID=data.objects[$(this).index()].house;
+													window.location.href="houseInfo.html?house="+houseID+"&id="+$(".idNum").html();
+												}
+
+
+											})
+										})
+                                    }else if(data.response_state==401||data.response_state==403){
+                                        alert(data.msg);
+                                        window.location.href="login.html?id="+$(".idNum").html();
+                                    }else{
+                                        alert(data.msg);
 									}
-                                    var aLis=$(".floorChose").find("li");
-
-                                    aLis.each(function(){
-                                        $(this).click(function(){
-                                            if(data.response_state==405){
-                                                alert("活动尚未开始！");
-                                            }else{
-                                                var houseID=data.objects[$(this).index()].house;
-                                                window.location.href="houseInfo.html?house="+houseID+"&id="+$(".idNum").html();
-                                            }
-
-
-                                        })
-                                    })
 								},
-								error:function(data){
+								error:function(){
 									alert("出错了");
 								}
 							})
 						})
 					});
+                 }else if(data.response_state==401||data.response_state==403){
+                        alert(data.msg);
+                        window.location.href="login.html?id="+$(".idNum").html();
+                    }else{
+                        alert(data.msg);
+                    }
 
 				},
 				error:function(data){

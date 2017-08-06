@@ -94,7 +94,7 @@
         var cover=localStorage.getItem("cover");
         var eventname=localStorage.getItem("eventname");
         $(".loginLogo img").prop("src",http+cover);
-        $(".login h1").html(eventname);
+        $(".login h1").html(decodeURI(eventname));
 
         $(".proCancle").click(function(){
             $(".prols").empty();
