@@ -101,7 +101,7 @@ function roomPriceFile(event,thisID){
     contentType: false,
 		success:function(results){
 			if(results.response_state == 200){
-				new $.zui.Messager('导入成功，正在导入，请稍等！', {
+				new $.zui.Messager('正在导入，请稍等！', {
 		       		placement:'center',
 				    type: 'success' // 定义颜色主题
 				}).show("",function(){
@@ -234,6 +234,7 @@ function getorderList(thisId,is_test,searchValue){
 		success:function(results){
 			if(results.success){
 				$(".tip").hide();
+				// 导出链接添加
 				$("#exportEach").attr("href","/exportorder/?id="+thisId+"&is_test="+is_test+"&value="+searchValue);
 				var result =results.data;
 				$openList.children("tr").remove();

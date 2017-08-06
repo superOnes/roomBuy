@@ -23,12 +23,13 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="col-sm-3 control-label">户型照片<i>*</i></label>
-			<div class="col-sm-9">
+			<label class="col-sm-3 control-label" style="vertical-align: top;">户型图片<i>*</i></label>
+			<div class="col-sm-9 myfileCover">
 				<input type="file" class="form-control" id="pic" onchange='showPlane()' name="pic">
-			</div>
-			<div class="col-sm-9" style="margin:10px 0 0 15%;">
-				<img src='{{MEDIA_URL}}{{object.pic}}' alt='' id='picImg' />
+				<p><b>添加的户型图片为</b><span class="picImgFile" style="margin-left:20px;">{{form.pic.value|default:''}}</span></p>
+				<div style="width: 380px;">
+					<img src='{{MEDIA_URL}}{{object.pic}}' alt='' id='picImg' onerror="this.src='{{ STATIC_URL }}images/default.png'"  />
+				</div>
 			</div>
 		</div>
 		{% if form.num.errors %}
@@ -43,7 +44,7 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		$("#houseTypeCreate").submit(function(){
-			var inputPic = $("#pic").val();
+			var inputPic = $(".picImgFile").html();
 			if(inputPic == ""){
 				new $.zui.Messager('请添加户型照片!！', {
 					placement:'center',
@@ -59,6 +60,10 @@
 		var file_img = document.getElementById("picImg"),
 			iptfileupload = document.getElementById('pic');
 		getPath(file_img, iptfileupload, file_img);
+
+		// 获取文件名
+		var fil = iptfileupload.files[0].name;
+		$(".picImgFile").html(fil);
 	};
 </script>
 {% endblock %}

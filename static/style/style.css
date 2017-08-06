@@ -77,9 +77,11 @@ input[type="number"]{
 	height:230px;
 }
 
-
+.myfilePlane_graph>p{
+	line-height: 30px;
+}
 .myfilePlane_graph>.col-sm-6{
-	width: 49% !important;
+	width: 48% !important;
 	position: relative;
 	margin-bottom: 20px;
 }
@@ -373,24 +375,4 @@ p[class='introduceHouse'] a{
 	text-align: center !important;
 	font-size: 16px !important;
 	line-height: 20px !important;
-}
-
-
-
-
-
-/*底部样式*/
-.loginFotter{
-	width:100%;
-	background: #2c669c;
-}
-.loginFotter h4{
-	width:100%;
-	height:50px;
-	margin: 0;
-	padding-right: 10%;
-	text-align: right;
-	line-height: 50px;
-	font-size: 16px;
-	color:#FFFFFF;
 }
