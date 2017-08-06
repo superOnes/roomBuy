@@ -160,8 +160,6 @@ class AppEventDetailHouseListView(View):
             response_state = 405
         else:
             response_state = None
-        print(response_state)
-        print(now)
         building = request.GET.get('building')
         unit = request.GET.get('unit')
         context = {}
@@ -206,7 +204,7 @@ class AppEventDetailHouseInfoView(View):
         else:
             is_followed = True,
         try:
-            house_type = eventdetobj.house_type.name
+            house_type = eventdetobj.type
             pic = eventdetobj.house_type.pic.url
         except BaseException:
             house_type = ''
@@ -588,7 +586,7 @@ class AppOrderInfoView(View):
             return JsonResponse({'response_state': 400, 'msg': '没有找到该订单！'})
         else:
             try:
-                house_type = obj.eventdetail.house_type.name
+                house_type = obj.eventdetail.type
             except BaseException:
                 house_type = ''
             value = [

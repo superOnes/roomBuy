@@ -74,8 +74,8 @@ urlpatterns = [
     url(r'^househeat/', HouseHeatView.as_view()),
     url(r'^purcharseheat/', PurcharseHeatView.as_view()),
     url(r'^getevent/', GetEventView.as_view()),
-    url(r'^export/househot/(?P<pk>\d+)/', ExportHouseHotView.as_view()),
-    url(r'^export/buyhot/(?P<pk>\d+)/', ExportBuyHotView.as_view()),
+    url(r'^export/househot/', ExportHouseHotView.as_view()),
+    url(r'^export/buyhot/', ExportBuyHotView.as_view()),
 
     # 开盘订单管理
     url(r'^order/', admin_required(TemplateView.as_view(

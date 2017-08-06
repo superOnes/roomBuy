@@ -483,8 +483,9 @@ class ExportHouseHotView(View):
     导出房源热度统计
     '''
 
-    def get(self, request, pk):
-        objs = EventDetail.objects.filter(event_id=pk)
+    def get(self, request):
+        eventid = request.GET.get('id')
+        objs = EventDetail.objects.filter(event_id=eventid)
         sheet = Workbook(encoding='utf-8')
         s = sheet.add_sheet('数据表')
         list = [
@@ -544,8 +545,9 @@ class ExportBuyHotView(View):
     导出购房者热度统计
     '''
 
-    def get(self, request, pk):
-        objs = Customer.objects.filter(event_id=pk)
+    def get(self, request):
+        eventid=request.GET.get('id')
+        objs = Customer.objects.filter(event_id=eventid)
         sheet = Workbook(encoding='utf-8')
         s = sheet.add_sheet('数据表')
         list = [
@@ -963,7 +965,7 @@ class EventTVWallOrderView(View):
             'user_id': order.user.customer.identication,
             'house': ('%s楼-%s单元-%s') % (ed.building, ed.unit, ed.room_num),
             'event': ed.event.name,
-            'house_type': ed.house_type.name if ed.house_type else '',
+            'house_type': ed.type if ed.type else '',
             'area': ed.area,
             'price': ed.unit_price,
         }
