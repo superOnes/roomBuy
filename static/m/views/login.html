@@ -13,7 +13,7 @@
 		<div class="loginLogo">
 			<img />
 		</div>
-		<h1>云源开盘</h1>
+		<h1></h1>
 	</div>
 	<div class="loginBox">
 		<p class="tips"></p>
@@ -92,14 +92,9 @@
             $("body").append($("<div class='errorPage'><img src='../images/error.png' /><p>该地址无效！</p></div>"));
 		}
         var cover=localStorage.getItem("cover");
+        var eventname=localStorage.getItem("eventname");
         $(".loginLogo img").prop("src",http+cover);
-        //$(".login h1").html();
-
-        $(".proCancle").click(function(){
-            $(".prols").empty();
-            $("#loginBlack").hide();
-        });
-
+        $(".login h1").html(eventname);
         pushHistory();
         window.addEventListener("popstate", function(e) {
             window.location.href="login.html?id="+id;

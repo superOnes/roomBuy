@@ -59,10 +59,13 @@ function getParamValue(name)
 $(function(){
     var id = getParamValue("id");
     var cover=getParamValue("cover");
+    var title=getParamValue("title");
     if(cover){
         localStorage.setItem("cover",cover);
     }
-   var userid1=localStorage.getItem("userid");
+    if(eventname){
+        localStorage.setItem("eventname",eventname);
+    }
     $.ajax({
         type:"get",
         url:http+"/app/detail/",
@@ -77,7 +80,7 @@ $(function(){
                     window.location.href="houseList.html?id="+id;
                });
                 $(".quitt").click(function(){
-                $(this).attr("disabled", "disabled");;
+                $(this).attr("disabled", "disabled");
                 $.ajax({
                     type:"POST",
                     url:http+"/acc/cusout/",
