@@ -347,7 +347,7 @@ function houseList(data){
 								data:{
 									building:build,
 									unit:$(this).html(),
-									id:$(".idNum").html(),
+									id:$(".idNum").html()
 								},
 								success:function(data){
                                     if(data.response_state==200){

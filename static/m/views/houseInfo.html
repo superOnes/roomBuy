@@ -97,6 +97,18 @@
 			}
 
 		});
+
+        pushHistory();
+        window.addEventListener("popstate", function(e) {
+            window.location.href="houseList.html?id="+id;
+        }, false);
+        function pushHistory() {
+            var state = {
+                title: "title",
+                url:"houseList.html?id="+id
+            };
+            window.history.pushState(state, state.title, state.url);
+        }
 	});
 
 	/*收藏按钮*/
