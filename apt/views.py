@@ -300,18 +300,9 @@ class ImportEventDetailView(View):
                         value7 = sheet.cell(rowx=rx, colx=6).value
                         value8 = sheet.cell(rowx=rx, colx=7).value
                         value9 = sheet.cell(rowx=rx, colx=8).value
-                        print(type(value1))
-                        print(type(value2))
-                        print(type(value3))
-                        print(type(value4))
-                        print(type(value5))
-                        print(type(value6))
-                        print(type(value7))
-                        print(type(value8))
                         if type(value1) == str and type(value2) == str and type(value3) == float and type(value4) == float \
                             and type(value5) == float and type(value6) == float and type(value7) == str and type(value8) == float and \
                                 type(value9) == str:
-                            print('hahah')
                             li.append(value1)
                             li.append(value2)
                             li.append(value3)
@@ -322,7 +313,6 @@ class ImportEventDetailView(View):
                             li.append(value8)
                             li.append(value9)
                         else:
-                            print('11111')
                             return JsonResponse({'response_state': 400, 'msg': 'excel中数据格式不正确，请查询后重试！'})
                         data.append(li)
                     for ed in data:
@@ -334,9 +324,9 @@ class ImportEventDetailView(View):
                                 event_id=id, building=ed[0],
                                 unit=ed[1], floor=ed[2],
                                 room_num=ed[3]).exists():
+                            return JsonResponse({'response_state': 400, 'msg': '导入数据重复！'})
                             continue
                         else:
-                            print(HouseType.objects.filter(name=ed[8]).first())
                             eventdetail = EventDetail.objects.create(
                                 building=ed[0],
                                 unit=ed[1],
