@@ -303,8 +303,8 @@ function houseList(data){
 
 	aPp.each(function(){
 		$(this).on("click",function(){
+            $(".shareCarList").empty();
 			$(".sharees").removeClass("listTile-style");
-			$(".shareCarList").empty();
 			aPp.removeClass('listTile-style');
 			$(this).addClass('listTile-style');
 			$.ajax({
