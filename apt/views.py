@@ -3,6 +3,7 @@ import os
 import base64
 import qrcode
 import xlrd
+from django.db import transaction
 from xlwt import Workbook
 from io import BytesIO
 from copy import copy
@@ -23,7 +24,7 @@ from aptm import settings
 from accounts.models import Order, Customer
 from aptp.models import Follow
 from .models import Event, EventDetail, HouseType
-from accounts.decorators import admin_required
+from accounts.decorators import admin_required, event_permission
 from .forms import (EventForm, EventDetailForm, CustomerForm, HouseTypeForm,
                     EventDetailSignForm)
 
@@ -150,6 +151,7 @@ class EventStatus(View):
 
 
 @method_decorator(admin_required, name='dispatch')
+@method_decorator(event_permission, name='dispatch')
 class EventDetailListView(ListView):
     '''
     房源/车位列表
@@ -273,7 +275,6 @@ class ImportEventDetailView(View):
         if id:
             event = Event.get(id)
             file = request.FILES.get('file')
-            EventDetail.objects.filter(event=event).delete()
             if not file:
                 return JsonResponse({'response_state': 400, 'msg': '没有选择文件！'})
             filename = file.name.split('.')[-1]
@@ -287,12 +288,25 @@ class ImportEventDetailView(View):
                 sheet_name = workdata.sheet_names()[0]
                 sheet = workdata.sheet_by_name(sheet_name)
                 row = sheet.nrows
-                col = sheet.ncols
                 if row == 0:
+                    os.remove('media/price/price.xlsx')
                     return JsonResponse({'response_state': 400, 'msg': '导入的excel为空表！'})
-                num = len(EventDetail.objects.filter(event_id=id))
                 data = []
-                if num + row - 1 <= request.user.house_limit:
+                value1 = sheet.cell(rowx=0, colx=0).value
+                value2 = sheet.cell(rowx=0, colx=1).value
+                value3 = sheet.cell(rowx=0, colx=2).value
+                value4 = sheet.cell(rowx=0, colx=3).value
+                value5 = sheet.cell(rowx=0, colx=4).value
+                value6 = sheet.cell(rowx=0, colx=5).value
+                value7 = sheet.cell(rowx=0, colx=6).value
+                value8 = sheet.cell(rowx=0, colx=7).value
+                value9 = sheet.cell(rowx=0, colx=8).value
+                value10 = sheet.cell(rowx=0, colx=9).value
+                head = [value1, value2, value3, value4, value5, value6, value7, value8, value9, value10]
+                print(head)
+                if head != ['楼栋', '单元',	'楼层',	'房号',	'单价',	'建筑面积',	'朝向',	'使用年限',	'户型',	'户型图片名称']:
+                    return JsonResponse({'response_state': 400, 'msg': '导入文件不正确！'})
+                if row - 1 <= request.user.house_limit:
                     for rx in range(1, row):
                         li = []
                         value1 = sheet.cell(rowx=rx, colx=0).value
@@ -313,54 +327,43 @@ class ImportEventDetailView(View):
                                 value4 = int(value4)
                                 value8 = int(value8)
                             except:
-                                return JsonResponse({'response_state': 400, 'msg': 'excel数据格式不正确！'})
-                            li.append(value1)
-                            li.append(value2)
-                            li.append(value3)
-                            li.append(value4)
-                            li.append(value5)
-                            li.append(value6)
-                            li.append(value7)
-                            li.append(value8)
-                            li.append(value9)
-                            li.append(value10)
-                            if li in data:
-                                return JsonResponse({'response_state': 400, 'msg': 'excel中有重复数据，请查询后重试！'})
-                        else:
-                            return JsonResponse({'response_state': 400, 'msg': 'excel中数据格式不正确，请查询后重试！'})
+                                os.remove('media/price/price.xlsx')
+                                return JsonResponse({'response_state': 400, 'msg': 'excel中数据格式不正确！'})
+                            li = [value1, value2, value3, value4, value5, value6, value7, value8, value9, value10]
                         data.append(li)
-                    for ed in data:
-                        if not isinstance(ed[0], str):
-                            ed[0] = str(int(ed[0]))
-                        if not isinstance(ed[1], str):
-                            ed[1] = str(int(ed[1]))
-                        if EventDetail.objects.filter(
-                                event_id=id, building=ed[0],
-                                unit=ed[1], floor=ed[2],
-                                room_num=ed[3]).exists():
-                            return JsonResponse({'response_state': 400, 'msg': '导入数据重复！'})
-                        else:
-                            eventdetail = EventDetail.objects.create(
-                                building=ed[0],
-                                unit=ed[1],
-                                floor=ed[2],
-                                room_num=ed[3],
-                                unit_price=ed[4],
-                                area=ed[5],
-                                looking=ed[6],
-                                term=ed[7],
-                                type=ed[8],
-                                house_type=HouseType.objects.filter(name=ed[9]).first(),
-                                event=event)
-                            eventdetail.save()
-                            num += 1
-                    return JsonResponse({'response_state': 200, 'data': num})
+                        num = len(data)
+                    with transaction.atomic():
+                        EventDetail.objects.filter(event=event).delete()
+                        try:
+                            for ed in data:
+                                if not isinstance(ed[0], str):
+                                    ed[0] = str(int(ed[0]))
+                                if not isinstance(ed[1], str):
+                                    ed[1] = str(int(ed[1]))
+                                eventdetail = EventDetail.objects.create(
+                                    building=ed[0],
+                                    unit=ed[1],
+                                    floor=ed[2],
+                                    room_num=ed[3],
+                                    unit_price=ed[4],
+                                    area=ed[5],
+                                    looking=ed[6],
+                                    term=ed[7],
+                                    type=ed[8],
+                                    house_type=HouseType.objects.filter(name=ed[9]).first(),
+                                    event=event)
+                                eventdetail.save()
+                            return JsonResponse({'response_state': 200, 'data': num})
+                        except:
+                            os.remove('media/price/price.xlsx')
+                            return JsonResponse({'response_state': 400, 'msg': '导入数据格式不正确或有重复数据！'})
+                os.remove('media/price/price.xlsx')
                 return JsonResponse(
                     {'response_state': 400, 'msg': '导入数据超过限制数量！'})
             else:
+                os.remove('media/price/price.xlsx')
                 return JsonResponse(
                     {'response_state': 400, 'msg': '导入文件格式不正确！'})
-        os.remove('media/price/price.xlsx')
         return JsonResponse({'response_state': 400, 'msg': '没有该活动！'})
 
 
@@ -426,6 +429,7 @@ class ExportEventDetailView(View):
 
 
 @method_decorator(admin_required, name='dispatch')
+@method_decorator(event_permission, name='dispatch')
 class CustomListView(ListView):
     '''
     认筹名单列表
@@ -817,6 +821,7 @@ class GetEventView(View):
 
 
 @method_decorator(admin_required, name='dispatch')
+@method_decorator(event_permission, name='dispatch')
 class HouseTypeListView(ListView):
     '''
     户型列表
@@ -946,6 +951,7 @@ class OrderListView(View):
 
 
 @method_decorator(admin_required, name='dispatch')
+@method_decorator(event_permission, name='dispatch')
 class EventTVWall(TemplateView):
     template_name = 'wallList.html'
 
@@ -981,6 +987,7 @@ class EventTVWallInfoView(View):
 
 
 @method_decorator(admin_required, name='dispatch')
+@method_decorator(event_permission, name='dispatch')
 class EventTVWallOrder(TemplateView):
     template_name = 'orderInfo.html'
 

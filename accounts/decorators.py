@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from django.shortcuts import redirect
 
 from apt.models import Event
+from accounts.models import Customer
 
 
 RETURN_JSON = 1
@@ -25,6 +26,16 @@ def admin_required(func):
     return return_wrapper
 
 
+def event_permission(func):
+    @wraps(func)
+    def return_wrapper(request, *args, **kwargs):
+        if Event.objects.filter(id=kwargs['pk'],
+           company=request.user.company).exists():
+            return func(request, *args, **kwargs)
+        return redirect('/')
+    return return_wrapper
+
+
 def customer_login_required(func):
     @wraps(func)
     def wrapper(request, *args, **kwargs):
@@ -34,14 +45,18 @@ def customer_login_required(func):
         if not event.is_pub:
             logout(request)
             return JsonResponse({'response_state': 403, 'msg': '活动还未推出！'})
+        if not request.user.is_authenticated() or request.user.is_admin:
+            return JsonResponse({'response_state': 401, 'msg': '请登录！'})
+        try:
+            Customer.objects.get(user=request.user,event_id=eventid)
+        except:
+            return JsonResponse({'response_state': 401, 'msg': '您未参加该活动！'})
         if (now < event.test_start +
             timedelta(hours=-
                       0.5) or (now > event.test_end and now < event.event_start +
                                timedelta(hours=-
                                          0.5)) or now > event.event_end):
             return JsonResponse({'response_state': 401, 'msg': '不在活动登录期间！'})
-        if not request.user.is_authenticated() or request.user.is_admin:
-            return JsonResponse({'response_state': 401, 'msg': '请登录！'})
         return func(request, *args, **kwargs)
     return wrapper
 

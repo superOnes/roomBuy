@@ -86,6 +86,11 @@
     }
 
     $(function(){
+        var oH=$(window).height();
+        console.log(oH);
+        $(".wap").css({height:oH+"px",overflow:"hidden"});
+        $(".wapbox").css({height:oH+"px"});
+        $(".unitLists").css({height:(oH-54)+"px"});
         one(0);
     });
 
@@ -111,9 +116,9 @@
                 num=parseInt(unit.length/3)+1;
             }
         }
-
+        var oH=$(window).height();
         var time1=setInterval(function(){
-            $(".wapbox").eq(k).find(".wallList").css("margin-top","-910"*m+"px");
+            $(".wapbox").eq(k).find(".wallList").css("margin-top",("-"+(oH+10))*m+"px");
             timerfn($(unitList));
             m++;
             if(m==num+1){
@@ -140,7 +145,7 @@
         function fn(){
             var Ptop =  parseInt(ele.css("top"));
             var heightL =  parseInt(ele.css("height"));
-            Ptop -= 840;
+            Ptop -= $(window).height()-54;
             ele.css({"top":Ptop+"px"});
             if(Math.abs(Ptop)>heightL-5){
                 ele.css({"top":"0px"});

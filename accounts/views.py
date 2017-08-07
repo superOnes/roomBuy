@@ -182,6 +182,13 @@ class ImportView(View):
                 if row == 0 or row == 1:
                     os.remove('media/tmp/customer.xlsx')
                     return JsonResponse({'response_state': 400, 'msg': '导入的excel为空表！'})
+                value1 = sheet.cell(rowx=0, colx=0).value
+                value2 = sheet.cell(rowx=0, colx=1).value
+                value3 = sheet.cell(rowx=0, colx=2).value
+                value4 = sheet.cell(rowx=0, colx=3).value
+                head = [value1, value2, value3, value4]
+                if head != ['姓名', '手机号', '证件号', '备注']:
+                    return JsonResponse({'response_state': 400, 'msg': '导入文件不正确！'})
                 data = []
                 num = 0
                 for rx in range(1, row):
@@ -190,20 +197,30 @@ class ImportView(View):
                     value2 = sheet.cell(rowx=rx, colx=1).value
                     value3 = sheet.cell(rowx=rx, colx=2).value
                     value4 = sheet.cell(rowx=rx, colx=3).value
-
-                    if type(value1) == str and type(value4) == str:
-                        if type(value3) != str:
-                            try:
-                                value3 = str(int(value3))
-                            except:
-                                os.remove('media/tmp/customer.xlsx')
-                                return JsonResponse({'response_state': 400, 'msg': '身份证号有误！'})
+                    if type(value1) != str:
                         try:
-                            value2 = str(int(value2))
+                            value1 = str(int(value1))
+                        except:
+                            return JsonResponse({'response_state': 400, 'msg': '姓名格式不正确！'})
+                    if type(value4) != str:
+                        try:
+                            value4 =str(int(value4))
+                        except:
+                            return JsonResponse({'response_state': 400, 'msg': '备注格式不正确！'})
+                    if type(value3) != str:
+                        try:
+                            value3 = str(int(value3))
                         except:
                             os.remove('media/tmp/customer.xlsx')
-                            return JsonResponse({'response_state': 400, 'msg': '导入手机号格式有误！'})
-                        li = [value1, value2, value3, value4]
+                            return JsonResponse({'response_state': 400, 'msg': '身份证号有误！'})
+                    try:
+                        value2 = str(int(value2))
+                    except:
+                        os.remove('media/tmp/customer.xlsx')
+                        return JsonResponse({'response_state': 400, 'msg': '导入手机号格式有误！'})
+                    li = [value1, value2, value3, value4]
+                    # else:
+                    #     return JsonResponse({'respone_state': 400, 'msg': '导入数据'})
                     data.append(li)
                 mobile = list(map(lambda x: (x[1]), data))
                 if len(set(mobile)) < len(mobile):
@@ -231,7 +248,7 @@ class ImportView(View):
                             num += 1
                     except:
                         os.remove('media/tmp/customer.xlsx')
-                        return JsonResponse({'导入数据重复！'})
+                        return JsonResponse({'response_state': 400, 'msg': '导入数据重复！'})
                     os.remove('media/tmp/customer.xlsx')
                     return JsonResponse({'response_state': 200, 'data': num})
             return JsonResponse({'response_state': 400, 'msg': '导入文件格式不正确'})
@@ -250,7 +267,8 @@ class GetCustomerInfo(View):
                 'mobile': customer.mobile,
                 'identication': customer.identication,
             }
-            if customer.user.order_set.count() >= customer.count:
+            if customer.user.order_set.filter(is_test=False).count() \
+               >= customer.count:
                 return JsonResponse({'response_state': 301,
                                      'result': result,
                                      'msg': '该用户已备注或已购买，不可备注'})

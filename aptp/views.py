@@ -568,6 +568,7 @@ class AppOrderListView(View):
                 'event': obj.eventdetail.event.name,
                 'unit_price': obj.eventdetail.unit_price if obj.eventdetail.event.covered_space_price else '',
                 'orderid': obj.id,
+                'is_test': obj.is_test,
             }]
             valuelist.append(value)
         context = {}
@@ -616,6 +617,7 @@ class AppOrderInfoView(View):
                     'mobile': obj.user.customer.mobile,
                     'identication': obj.user.customer.identication,
                     'order_num': obj.order_num,
+                    'is_test': obj.is_test,
                     'total': (
                                 (obj.eventdetail.area) *
                                 (

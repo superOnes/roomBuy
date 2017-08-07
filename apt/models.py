@@ -118,3 +118,6 @@ class EventDetail(models.Model):
 
     def has_order(self):
         return self.order_set.filter(is_test=False).exists()
+
+    class Meta:
+        unique_together = (('building', 'unit', 'floor', 'room_num', 'event'))

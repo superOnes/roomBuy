@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
 <meta name="format-detection" content="telephone=no, email=no" />
-<title>云开盘</title>
+<title></title>
 <link type="text/css" rel="stylesheet" href="../css/reset.css"/>
 </head>
 <body>
@@ -95,6 +95,7 @@
         var eventname=localStorage.getItem("eventname");
         $(".loginLogo img").prop("src",http+cover);
         $(".login h1").html(decodeURI(eventname));
+        $("title").html(decodeURI(eventname));
 
         $(".proCancle").click(function(){
             $(".prols").empty();

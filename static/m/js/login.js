@@ -303,8 +303,8 @@ function houseList(data){
 
 	aPp.each(function(){
 		$(this).on("click",function(){
+            $(".shareCarList").empty();
 			$(".sharees").removeClass("listTile-style");
-			$(".shareCarList").empty();
 			aPp.removeClass('listTile-style');
 			$(this).addClass('listTile-style');
 			$.ajax({
@@ -651,8 +651,6 @@ function orderSu(data){
 function orderInfos(){
 	window.location.href="orderinfo.html?orderId="+$(".orderid").html()+"&id="+$(".id1").html();
 }
-
-/*订单*/
 function order(data){
 	if(data.objects.length==0){
 		$("body").append('<div class="noOne"><img src="../images/none.png" /><p>目前您没有任何订单！</p></div>');
@@ -689,24 +687,11 @@ function order(data){
 				'<p class="oferId" style="display:none">'+data.objects[i][0].orderid+'</p>'+
 				'</div>'
 			));
-
-			if(new Date(data.objects[i][0].time).getTime()>new Date($(".test_start").html()).getTime()&&
-                new Date(data.objects[i][0].time).getTime()<new Date($(".test_ent").html()).getTime()){
-				$(".order-all").eq(i).find(".order-right").append($('<img src="../images/test.png" />'));
-			}
-
+            if(data.objects[i][0].is_test){
+                $(".order-all").eq(i).find(".order-right").append($('<img src="../images/test.png" />'));
+            }
 		}
 	}
-
-
-}
-function data4(result){
-	var datap=$('<p class="event_start" style="display:none">'+result.event_start+'</p>'+
-		'<p class="event_end" style="display:none">'+result.event_end+'</p>'+
-		'<p class="test_ent" style="display:none">'+result.test_ent+'</p>'+
-		'<p class="test_start" style="display:none">'+result.test_start+'</p>'
-	);
-	$("body").append(datap);
 }
 
 /*订单详情*/
@@ -771,9 +756,6 @@ function checkInfo(data){
 				'</div>'
 	);
 	$(".orderInfoBox").append(orderInfo);
-	// var rr=new Date(data.limit).getTime();
-   //
-   // $(".order_time").html((new Date(rr).Format("yyyy年MM月dd日 hh:mm:ss")));
 	setInterval(function(){
 		 var dateNew= new Date(data.limit).getTime() - new Date().getTime();
 		 if(dateNew>0){
@@ -792,14 +774,11 @@ function checkInfo(data){
 		 }
 
 	},1000);
-
-    if(new Date(data.ordertime).getTime()>new Date($(".test_start").html()).getTime()&&
-       new Date(data.ordertime).getTime()<new Date($(".test_ent").html()).getTime()){
-		$(".order-middle2").empty();
-		$(".order-bottom-1 table").append($('<tr class="ordertype">'+
-												'<td>订单类型：</td>'+
-												'<td>公测订单</td>'+
-											'</tr>'))
-	}
-
+    if(data.is_test){
+        $(".order-middle2").empty();
+        $(".order-bottom-1 table").append($('<tr class="ordertype">'+
+            '<td>订单类型：</td>'+
+            '<td>公测订单</td>'+
+            '</tr>'))
+    }
 }

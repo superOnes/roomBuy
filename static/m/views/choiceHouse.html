@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width = device-width ,initial-scale = 1,minimum-scale = 1,maximum-scale = 1,user-scalable =no"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>云开盘</title>
+    <title></title>
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/swiper.min.css" />
 </head>
@@ -66,6 +66,8 @@ $(function(){
     if(eventname){
         localStorage.setItem("eventname",eventname);
     }
+
+    $("title").html(decodeURI(localStorage.getItem("eventname")));
     $.ajax({
         type:"get",
         url:http+"/app/detail/",

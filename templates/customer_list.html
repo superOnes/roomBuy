@@ -69,7 +69,7 @@
 			<td>{{ obj.mobile }}</td>
 			<td>{{ obj.identication }}</td>
 			<td>{{ obj.remark }}</td>
-			<td>{% if obj.user.order_set.count > 0 %}已选购{% else %}未购买{% endif %}</td>
+			<td>{% if obj.user.customer.has_order %}已选购{% else %}未购买{% endif %}</td>
 			<td> <p> <a data-toggle="modal" data-target="#deleteModal" data-id="{{obj.id}}" class="deleteOrder">删除</a> </p> </td>
 		</tr>
 		<!--删除确认框-->
@@ -107,7 +107,27 @@ $(".zxf_pagediv").createPage({
 	activepage: "current",
 	activepaf: "",
 	backfun: function(e) {  //回调
-		window.location.href="?page="+e.current;
+		if(e.current > {{ paginator.num_pages}}){
+			new $.zui.Messager("输入超出页数，请重新输入！", {
+				placement: "center",
+				type: "danger",
+			}).show('',function(){
+				setTimeout(function(){
+					window.location.reload();
+				},1500)
+			});
+		}else if(e.current <= 0){
+			new $.zui.Messager("请输入正整数！", {
+				placement: "center",
+				type: "danger",
+			}).show('',function(){
+				setTimeout(function(){
+					window.location.reload();
+				},1500)
+			});
+		}else{
+			window.location.href="?page="+e.current;
+		}
 	}
 });
 	//	删除认筹名单
