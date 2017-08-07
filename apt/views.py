@@ -24,7 +24,7 @@ from aptm import settings
 from accounts.models import Order, Customer
 from aptp.models import Follow
 from .models import Event, EventDetail, HouseType
-from accounts.decorators import admin_required
+from accounts.decorators import admin_required, event_permission
 from .forms import (EventForm, EventDetailForm, CustomerForm, HouseTypeForm,
                     EventDetailSignForm)
 
@@ -150,6 +150,7 @@ class EventStatus(View):
                 return JsonResponse({'success': False})
 
 
+@method_decorator(event_permission, name='dispatch')
 @method_decorator(admin_required, name='dispatch')
 class EventDetailListView(ListView):
     '''
@@ -287,7 +288,6 @@ class ImportEventDetailView(View):
                 sheet_name = workdata.sheet_names()[0]
                 sheet = workdata.sheet_by_name(sheet_name)
                 row = sheet.nrows
-                col = sheet.ncols
                 if row == 0:
                     os.remove('media/price/price.xlsx')
                     return JsonResponse({'response_state': 400, 'msg': '导入的excel为空表！'})
@@ -414,6 +414,7 @@ class ExportEventDetailView(View):
         return response
 
 
+@method_decorator(event_permission, name='dispatch')
 @method_decorator(admin_required, name='dispatch')
 class CustomListView(ListView):
     '''
@@ -805,6 +806,7 @@ class GetEventView(View):
         return JsonResponse({'success': True, 'data': event})
 
 
+@method_decorator(event_permission, name='dispatch')
 @method_decorator(admin_required, name='dispatch')
 class HouseTypeListView(ListView):
     '''
@@ -934,6 +936,7 @@ class OrderListView(View):
         return JsonResponse({'success': False})
 
 
+@method_decorator(event_permission, name='dispatch')
 @method_decorator(admin_required, name='dispatch')
 class EventTVWall(TemplateView):
     template_name = 'wallList.html'
@@ -969,6 +972,7 @@ class EventTVWallInfoView(View):
         return JsonResponse({'response_state': 200, 'result': result})
 
 
+@method_decorator(event_permission, name='dispatch')
 @method_decorator(admin_required, name='dispatch')
 class EventTVWallOrder(TemplateView):
     template_name = 'orderInfo.html'

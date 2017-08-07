@@ -25,6 +25,16 @@ def admin_required(func):
     return return_wrapper
 
 
+def event_permission(func):
+    @wraps(func)
+    def return_wrapper(request, *args, **kwargs):
+        if Event.objects.filter(id=kwargs['pk'],
+           company=request.user.company).exists():
+            return func(request, *args, **kwargs)
+        return redirect('/')
+    return return_wrapper
+
+
 def customer_login_required(func):
     @wraps(func)
     def wrapper(request, *args, **kwargs):
