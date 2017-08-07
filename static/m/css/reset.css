@@ -148,6 +148,16 @@ a, img {-webkit-touch-callout: none;}
     height:80%;
     overflow-y: scroll;
 }
+.proNew{
+    width:90%;
+    height:80%;
+    padding:10% 5%;
+    overflow-y: scroll;
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:999;
+}
 .prols h1{
     text-align:center;
     line-height:2rem;
@@ -155,6 +165,11 @@ a, img {-webkit-touch-callout: none;}
     font-weight:normal;
 }
 .prols p{font-size:.8rem;}
+.closePro{
+    position:absolute;
+    top:10px;
+    right:10px;
+}
 .probtn{
     width:100%;
     position:absolute;
@@ -773,6 +788,12 @@ div.shoued i{
     font-size:.8rem;
     line-height:1.4rem;
     margin-bottom:.5rem;
+}
+.infoImg {width:100%}
+.infoImg img{
+    width:200px;
+    height:150px;
+    margin:0 auto;
 }
 .houseShare span{
     padding:0 3%;

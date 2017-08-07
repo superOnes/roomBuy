@@ -276,7 +276,9 @@ function myShare(){
 			}else if(data.response_state==401||data.response_state==403){
                 alert(data.msg);
                 window.location.href="login.html?id="+$(".idNum").html();
-            }else{
+            }else if(data.response_state==405){
+                alert("活动尚未开始");
+			}else{
 				alert("页面错误");
 			}
 
@@ -408,6 +410,8 @@ function houseList(data){
                  }else if(data.response_state==401||data.response_state==403){
                         alert(data.msg);
                         window.location.href="login.html?id="+$(".idNum").html();
+                    }else if(data.response_state==405){
+                        alert("活动尚未开始");
                     }else{
                         alert(data.msg);
                     }
@@ -445,12 +449,12 @@ function houseList(data){
 /*详情信息*/
 function houseInfo(data){
 	var houseInfo=$('<div class="houseInfotop">'+
+				             '<p><span>'+data.floor+'#'+data.looking+'户</span></p>'+
+							'<p class="infoImg"><img /></p>'+
 							'<div class="houseShare clear">'+
 								'<span class="fl"><a href="javascript:;" onclick="backList()">返回房间列表</a></span>'+
 								'<span class="fl shareBt">收藏</span>'+
 							'</div>'+
-				            // '<p><span>'+data.floor+'#'+data.looking+'户</span></p>'+
-							'<p class="infoImg"><img /></p>'+
 							'<h1>'+data.building_unit+'</h1>'+
 
 					'</div>'+
@@ -552,7 +556,37 @@ function houseInfo(data){
 
 }
 function proldel(){
-	window.location.href="protocol.html?id="+$(".idd").html();
+    $.ajax({
+        type:"get",
+        url:http+"/app/orderpro/",
+        data:{
+            id:$(".idd").html()
+        },
+        success:function(data){
+            if(data.response_state==200){
+                $("body").append($('<div class="prols proNew">'+
+                    '<h1>'+data.objects[0].termname+'</h1>'+
+                    '<p>'+data.objects[0].term+'</p>'+
+                    '<p class="closePro"><img src="../images/close-icons.png" onclick="closePro()"></p>'+
+                    '</div>'
+                ));
+            }else if(data.response_state==401||data.response_state==403){
+                alert(data.msg);
+                window.location.href="login.html?id="+$(".idd").html();
+            }else if(data.response_state==405){
+                alert("活动尚未开始");
+            }else{
+                alert(data.msg);
+            }
+        },
+        error:function(){
+            alert("页面出错，请重试！");
+        }
+    });
+
+}
+function closePro(){
+    $(".proNew").remove();
 }
 function data5(result){
 	var datap=$('<p class="event_start" style="display:none">'+result.event_start+'</p>'+

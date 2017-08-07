@@ -97,6 +97,18 @@
 			}
 
 		});
+
+        pushHistory();
+        window.addEventListener("popstate", function(e) {
+            window.location.href="houseList.html?id="+id;
+        }, false);
+        function pushHistory() {
+            var state = {
+                title: "title",
+                url:"houseList.html?id="+id
+            };
+            window.history.pushState(state, state.title, state.url);
+        }
 	});
 
 	/*收藏按钮*/
@@ -121,6 +133,8 @@
                     }else if (data.response_state == 401||data.response_state==403) {
                         alert(data.msg);
 						window.location.href = "login.html?id="+id;
+					}else if(data.response_state == 405){
+					    alert("活动未开始");
 					}else {
 						alert(data.msg);
 					}
@@ -147,7 +161,9 @@
                 }else if(data.response_state==401||data.response_state==403){
                     alert(data.msg);
 					window.location.href="login.html?id="+id;
-				}else{
+				}else if(data.response_state == 405){
+                    alert("活动未开始");
+                }else{
 					alert(data.msg);
 				}
 

@@ -56,30 +56,7 @@
 		return null ;
 	}
 	var id = getParamValue("id");
-	$.ajax({
-		type:"get",
-		url:http+"/app/orderpro/",
-		data:{
-			id:id
-		},
-		success:function(data){
-			if(data.response_state==200){
-				$("body").append($('<div class="prols">'+
-										'<h1>'+data.objects[0].termname+'</h1>'+
-										'<p>'+data.objects[0].term+'</p>'+
-								  '</div>'
-				));
-			}else if(data.response_state==401||data.response_state==403){
-                alert(data.msg);
-                window.location.href="login.html?id="+id;
-            }else{
-				alert(data.msg);
-			}
-		},
-		error:function(){
-			alert("页面出错，请重试！");
-		}
-	});
+
 </script>
 </body>
 </html>
