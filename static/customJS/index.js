@@ -56,8 +56,8 @@ function submitFile(event,thisID){
 		async:true,
 		data:data,
 		cache: false,
-    processData: false,//发送的数据将被转换为对象，false就是不转化，默认为true
-    contentType: false,
+		processData: false,//发送的数据将被转换为对象，false就是不转化，默认为true
+		contentType: false,
 		success:function(results){
 			if(results.response_state == 200){
 				new $.zui.Messager('成功导入'+results.data+'个名单', {
