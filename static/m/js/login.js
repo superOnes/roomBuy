@@ -548,6 +548,7 @@ function houseInfo(data){
 		$(".infoImg").empty();
 	}else{
 		$(".infoImg img").prop("src",http+data.pic);
+        $(".infoImg img").css({width:"200px",height:"150px",margin:"0 auto"});
 	}
 
 	$(".dialog-cancle").click(function(){
