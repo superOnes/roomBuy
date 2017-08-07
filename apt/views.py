@@ -150,8 +150,8 @@ class EventStatus(View):
                 return JsonResponse({'success': False})
 
 
-@method_decorator(event_permission, name='dispatch')
 @method_decorator(admin_required, name='dispatch')
+@method_decorator(event_permission, name='dispatch')
 class EventDetailListView(ListView):
     '''
     房源/车位列表
@@ -414,8 +414,8 @@ class ExportEventDetailView(View):
         return response
 
 
-@method_decorator(event_permission, name='dispatch')
 @method_decorator(admin_required, name='dispatch')
+@method_decorator(event_permission, name='dispatch')
 class CustomListView(ListView):
     '''
     认筹名单列表
@@ -806,8 +806,8 @@ class GetEventView(View):
         return JsonResponse({'success': True, 'data': event})
 
 
-@method_decorator(event_permission, name='dispatch')
 @method_decorator(admin_required, name='dispatch')
+@method_decorator(event_permission, name='dispatch')
 class HouseTypeListView(ListView):
     '''
     户型列表
@@ -936,8 +936,8 @@ class OrderListView(View):
         return JsonResponse({'success': False})
 
 
-@method_decorator(event_permission, name='dispatch')
 @method_decorator(admin_required, name='dispatch')
+@method_decorator(event_permission, name='dispatch')
 class EventTVWall(TemplateView):
     template_name = 'wallList.html'
 
@@ -972,8 +972,8 @@ class EventTVWallInfoView(View):
         return JsonResponse({'response_state': 200, 'result': result})
 
 
-@method_decorator(event_permission, name='dispatch')
 @method_decorator(admin_required, name='dispatch')
+@method_decorator(event_permission, name='dispatch')
 class EventTVWallOrder(TemplateView):
     template_name = 'orderInfo.html'
 
