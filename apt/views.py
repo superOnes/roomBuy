@@ -3,6 +3,7 @@ import os
 import base64
 import qrcode
 import xlrd
+from django.db import transaction
 from xlwt import Workbook
 from io import BytesIO
 from copy import copy
@@ -273,7 +274,6 @@ class ImportEventDetailView(View):
         if id:
             event = Event.get(id)
             file = request.FILES.get('file')
-            EventDetail.objects.filter(event=event).delete()
             if not file:
                 return JsonResponse({'response_state': 400, 'msg': '没有选择文件！'})
             filename = file.name.split('.')[-1]
@@ -289,10 +289,10 @@ class ImportEventDetailView(View):
                 row = sheet.nrows
                 col = sheet.ncols
                 if row == 0:
+                    os.remove('media/price/price.xlsx')
                     return JsonResponse({'response_state': 400, 'msg': '导入的excel为空表！'})
-                num = len(EventDetail.objects.filter(event_id=id))
                 data = []
-                if num + row - 1 <= request.user.house_limit:
+                if row - 1 <= request.user.house_limit:
                     for rx in range(1, row):
                         li = []
                         value1 = sheet.cell(rowx=rx, colx=0).value
@@ -313,54 +313,43 @@ class ImportEventDetailView(View):
                                 value4 = int(value4)
                                 value8 = int(value8)
                             except:
-                                return JsonResponse({'response_state': 400, 'msg': 'excel数据格式不正确！'})
-                            li.append(value1)
-                            li.append(value2)
-                            li.append(value3)
-                            li.append(value4)
-                            li.append(value5)
-                            li.append(value6)
-                            li.append(value7)
-                            li.append(value8)
-                            li.append(value9)
-                            li.append(value10)
-                            if li in data:
-                                return JsonResponse({'response_state': 400, 'msg': 'excel中有重复数据，请查询后重试！'})
-                        else:
-                            return JsonResponse({'response_state': 400, 'msg': 'excel中数据格式不正确，请查询后重试！'})
+                                os.remove('media/price/price.xlsx')
+                                return JsonResponse({'response_state': 400, 'msg': 'excel中数据格式不正确！'})
+                            li = [value1, value2, value3, value4, value5, value6, value7, value8, value9, value10]
                         data.append(li)
-                    for ed in data:
-                        if not isinstance(ed[0], str):
-                            ed[0] = str(int(ed[0]))
-                        if not isinstance(ed[1], str):
-                            ed[1] = str(int(ed[1]))
-                        if EventDetail.objects.filter(
-                                event_id=id, building=ed[0],
-                                unit=ed[1], floor=ed[2],
-                                room_num=ed[3]).exists():
-                            return JsonResponse({'response_state': 400, 'msg': '导入数据重复！'})
-                        else:
-                            eventdetail = EventDetail.objects.create(
-                                building=ed[0],
-                                unit=ed[1],
-                                floor=ed[2],
-                                room_num=ed[3],
-                                unit_price=ed[4],
-                                area=ed[5],
-                                looking=ed[6],
-                                term=ed[7],
-                                type=ed[8],
-                                house_type=HouseType.objects.filter(name=ed[9]).first(),
-                                event=event)
-                            eventdetail.save()
-                            num += 1
-                    return JsonResponse({'response_state': 200, 'data': num})
+                        num = len(data)
+                    with transaction.atomic():
+                        EventDetail.objects.filter(event=event).delete()
+                        try:
+                            for ed in data:
+                                if not isinstance(ed[0], str):
+                                    ed[0] = str(int(ed[0]))
+                                if not isinstance(ed[1], str):
+                                    ed[1] = str(int(ed[1]))
+                                eventdetail = EventDetail.objects.create(
+                                    building=ed[0],
+                                    unit=ed[1],
+                                    floor=ed[2],
+                                    room_num=ed[3],
+                                    unit_price=ed[4],
+                                    area=ed[5],
+                                    looking=ed[6],
+                                    term=ed[7],
+                                    type=ed[8],
+                                    house_type=HouseType.objects.filter(name=ed[9]).first(),
+                                    event=event)
+                                eventdetail.save()
+                            return JsonResponse({'response_state': 200, 'data': num})
+                        except:
+                            os.remove('media/price/price.xlsx')
+                            return JsonResponse({'response_state': 400, 'msg': '导入数据有重复，请检查后重新导入！'})
+                os.remove('media/price/price.xlsx')
                 return JsonResponse(
                     {'response_state': 400, 'msg': '导入数据超过限制数量！'})
             else:
+                os.remove('media/price/price.xlsx')
                 return JsonResponse(
                     {'response_state': 400, 'msg': '导入文件格式不正确！'})
-        os.remove('media/price/price.xlsx')
         return JsonResponse({'response_state': 400, 'msg': '没有该活动！'})
 
 

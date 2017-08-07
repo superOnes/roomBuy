@@ -231,7 +231,7 @@ class ImportView(View):
                             num += 1
                     except:
                         os.remove('media/tmp/customer.xlsx')
-                        return JsonResponse({'导入数据重复！'})
+                        return JsonResponse({'response_state': 400, 'msg': '导入数据重复！'})
                     os.remove('media/tmp/customer.xlsx')
                     return JsonResponse({'response_state': 200, 'data': num})
             return JsonResponse({'response_state': 400, 'msg': '导入文件格式不正确'})
