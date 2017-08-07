@@ -382,7 +382,7 @@ class ExportEventDetailView(View):
             '单元',
             '楼层',
             '房号',
-            '面积单价',
+            '单价',
             '建筑面积',
             '朝向',
             '使用年限',
@@ -494,7 +494,7 @@ class ExportCustomerView(View):
         objs = Customer.objects.filter(event_id=pk)
         sheet = Workbook(encoding='utf-8')
         s = sheet.add_sheet('数据表')
-        list = ['姓名', '手机号', '身份证号', '备注']
+        list = ['姓名', '手机号', '证件号', '备注']
         col = 0
         for i in list:
             s.write(0, col, i)
