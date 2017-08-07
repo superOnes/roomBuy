@@ -190,20 +190,30 @@ class ImportView(View):
                     value2 = sheet.cell(rowx=rx, colx=1).value
                     value3 = sheet.cell(rowx=rx, colx=2).value
                     value4 = sheet.cell(rowx=rx, colx=3).value
-
-                    if type(value1) == str and type(value4) == str:
-                        if type(value3) != str:
-                            try:
-                                value3 = str(int(value3))
-                            except:
-                                os.remove('media/tmp/customer.xlsx')
-                                return JsonResponse({'response_state': 400, 'msg': '身份证号有误！'})
+                    if type(value1) != str:
                         try:
-                            value2 = str(int(value2))
+                            value1 = str(int(value1))
+                        except:
+                            return JsonResponse({'response_state': 400, 'msg': '姓名格式不正确！'})
+                    if type(value4) != str:
+                        try:
+                            value4 =str(int(value4))
+                        except:
+                            return JsonResponse({'response_state': 400, 'msg': '备注格式不正确！'})
+                    if type(value3) != str:
+                        try:
+                            value3 = str(int(value3))
                         except:
                             os.remove('media/tmp/customer.xlsx')
-                            return JsonResponse({'response_state': 400, 'msg': '导入手机号格式有误！'})
-                        li = [value1, value2, value3, value4]
+                            return JsonResponse({'response_state': 400, 'msg': '身份证号有误！'})
+                    try:
+                        value2 = str(int(value2))
+                    except:
+                        os.remove('media/tmp/customer.xlsx')
+                        return JsonResponse({'response_state': 400, 'msg': '导入手机号格式有误！'})
+                    li = [value1, value2, value3, value4]
+                    # else:
+                    #     return JsonResponse({'respone_state': 400, 'msg': '导入数据'})
                     data.append(li)
                 mobile = list(map(lambda x: (x[1]), data))
                 if len(set(mobile)) < len(mobile):
