@@ -4,3 +4,6 @@ db.sqlite3
 .DS_Store
 .idea/
 .project
+media/
+public/
+local_settings.py

@@ -1,0 +1,40 @@
+{% extends 'include/base.html' %} {% block main %}
+<style type="text/css">
+	.form-group>.col-sm-9 {
+		width: 80% !important;
+	}
+	.form-group>.col-sm-3 {
+		width: 15% !important;
+	}
+</style>
+<div style="padding:20px">
+	<p id="isPub1">{{form.is_pub.value|default:''}}</p>
+	<form class="form-horizontal" method="post" action="">
+		{% csrf_token %}
+		<div class="form-group">
+			<label class="col-sm-3">协议名称<i>*</i></label>
+			<div class="col-sm-9">
+				<input type="text" class="form-control" placeholder="协议名称" name="termname" value="{{form.termname.value|default:''}}" required />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3">协议内容<i>*</i></label>
+			<div class="col-sm-9">
+				<textarea class="form-control" style="height:150px;" name="term" required>{{form.term.value|default:''}}</textarea>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<input type="submit" class="btn btn-primary btn_edit" value="确定"></input>
+		</div>
+	</form>
+</div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		var pub = $("#isPub1").html();
+		if(pub == "True"){
+			$("#isPub1").html("活动已发布，不可编辑！").show();
+			$(".btn_edit").attr("disabled","disabled");
+		}
+	})
+</script>
+{% endblock %}

@@ -1,0 +1,390 @@
+body{
+	font-size:12px !important;
+	background-color:#fff;
+}
+a{
+	text-decoration:none;
+	color:#000;
+	cursor: pointer;
+}
+a:link{
+	text-decoration:none;
+}
+ul li{
+	list-style: none;
+}
+textarea{
+	resize: none !important;
+}
+a{
+	text-overflow: ellipsis;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button{
+    -webkit-appearance: none !important;
+    margin: 0;
+}
+input[type="number"]{
+    -moz-appearance: textfield;
+}
+
+/*登录 重置按钮样式*/
+.btn-sm{
+	margin: 0 10px !important;
+}
+
+/*退出按钮*/
+.quit{
+	font-size: 16px !important;
+}
+
+/*操作按钮样式*/
+.operation>a{
+	margin:0 5px;
+	line-height: 30px;
+}
+/*温馨提示*/
+.tip{
+	font-size: 16px;
+	text-align: center;
+	line-height: 30px;
+	color:red;
+}
+
+#priceFile{
+	margin: 0 0 0 100px !important;
+}
+
+
+
+
+/*表单的必填项*/
+.form-group>label{padding-top: 0 !important;position: relative;margin-top:10px !important;}
+.form-group>label>i{position: absolute;right:0;top:0;font-size: 16px;color:red;}
+
+
+/*创建活动的文件选择样式*/
+.myfileCover{
+	position: relative;
+}
+.myfileCover>p{
+		line-height:30px;
+}
+.myfileCover>p>b{
+	font-weight: normal;
+	text-align: center;
+	background: #D0EEFF;
+	border: 1px solid #99D3F5;
+	border-radius: 4px;
+	padding: 7px 12px;
+	overflow: hidden;
+	color: #1E88C7;
+}
+.myfileCover>input{
+	position: absolute;
+	top:0;
+	opacity: 0;
+}
+.myfileCover>div>img{
+	height:230px;
+}
+
+.myfilePlane_graph>p{
+	line-height: 30px;
+}
+.myfilePlane_graph>.col-sm-6{
+	width: 48% !important;
+	position: relative;
+	margin-bottom: 20px;
+}
+.myfilePlane_graph>label>input{
+	position: absolute;
+	cursor: pointer;
+	z-index: 10;
+	top:0;
+	opacity: 0;
+}
+.myfilePlane_graph>label>p{
+	text-align: center;
+	margin: 0 auto !important;
+  background: #D0EEFF;
+  border: 1px solid #99D3F5;
+  border-radius: 4px;
+  padding: 4px 12px;
+  overflow: hidden;
+  color: #1E88C7;
+  text-decoration: none;
+  text-indent: 0;
+  line-height: 20px;
+}
+.myfilePlane_graph>label>img{
+	display: block;
+	width: 100%;
+	padding: 5px;
+	border: 1px dashed #808080 ;
+	height: 130px;
+	margin-top:10px;
+}
+#isPub{
+	display: none;
+	text-align: center !important;
+	color:red;
+}
+#isPub1{
+	display: none;
+	text-align: center !important;
+	color:red;
+}
+
+
+
+.page-header{
+	margin:0 !important;
+}
+.row>.btn-primary{
+	margin: 15px 0 !important;
+}
+
+.form-group>.col-sm-9{
+	width: 70% !important;
+	display: inline-block !important;
+	vertical-align: middle;
+}
+.form-group>.col-sm-3{
+	display: inline-block !important;
+	width: 25% !important;
+	text-align: right;
+	vertical-align: middle;
+}
+
+.labelCenter{
+	width: 50px;
+	text-align: center;
+	display: inline-block !important;
+	vertical-align: middle;
+}
+
+
+/*头部样式*/
+.Xlogo{
+	width:100%;
+	background: #2c669c;
+}
+.Xlogo h1{
+	width:100%;
+	height:50px;
+	margin: 0;
+}
+.Xlogo h1 div{
+	float:left;
+	margin-top:15px;
+	margin-left:5%;
+}
+.Xlogo h1 div a{
+	color:#FFFFFF;
+	font-weight: normal;
+}
+.Xlogo h1 small{
+	float:right;
+	margin-top:15px;
+	margin-right:5%;
+	color:#FFFFFF;
+}
+.Xlogo h1 small>a{
+	margin: 0 15px;
+	font-size: 20px;
+	color:#dddddd;
+}
+
+.loginTitle{
+	font-size: 25px !important;
+	font-weight: normal;
+	text-align: center;
+	margin: 15px 0 !important;
+}
+.login-wrap{
+	position: relative;
+	width:100%;
+	box-sizing: border-box;
+	background: url(/static/images/index.png) no-repeat center center;
+	background-size:100% 100% ;
+}
+.loginBack{
+	position: absolute;
+	z-index: 1;
+	top:240px;
+	width:100%;
+	height:200px;
+	background: #2c669c;
+}
+.loginBack>h3{
+	color:#FFFFFF;
+	font-size: 35px !important;
+	font-weight: normal;
+	letter-spacing: 20px;
+	margin:30px 0 30px 10%;
+}
+.loginBack>p{
+	font-size: 20px;
+	color: #FFFFFF;
+	margin:0 0 30px 10%;
+}
+.loginTitle h3{
+	margin: 10px 0;
+	font-weight: normal;
+	font-size: 25px !important;
+}
+.login{
+	position: absolute;
+	z-index: 5;
+	width:470px;
+	padding: 30px;
+	border-radius: 10px;
+	box-shadow: 1px 1px 1px 3px rgba(250,250,250,1);
+	background: #FFFFFF;
+	top:200px;
+	right:10%;
+}
+
+/*表格边框*/
+.datatable{
+	border: 1px solid #dddddd !important;
+}
+
+#selectInp{
+	margin-bottom: 20px;
+}
+/*开盘下拉狂位置*/
+#selectInp>.col-md-3{
+	margin-top:5px;
+}
+
+
+
+/*event_list样式*/
+#listContent{
+	width:90%;
+	margin: 20px auto;
+}
+
+.navList{
+	margin-top:30px !important;
+}
+.navList>ul>li{
+	text-align: center;
+}
+
+/*表单框的间距*/
+.input-group{
+	margin: 15px 0 !important;
+}
+
+/*面包屑导航*/
+.breadcrumb{
+	font-size: 16px !important;
+	margin:0 !important;
+}
+
+/*tab切换下的导出按钮*/
+.tab-pane>.row{
+	float: right !important;
+	margin: -34px 1px 0 0 !important;
+}
+.tab-pane>.row>a{
+	margin: 0 !important;
+}
+
+.gridTitle{
+	border-bottom: 1px solid #CCCCCC;
+}
+
+@media only screen and (max-width: 1920px) {
+	#listContent{
+		width:85%;
+		min-height: 846px;
+	}
+}
+@media only screen and (max-width: 1440px) {
+	#listContent{
+		width:90%;
+		min-height: 630px;
+	}
+}
+@media only screen and (max-width: 1320px) {
+	#listContent{
+		min-height: 560px;
+	}
+}
+
+.btnHandleStatus{
+	height: 75px;
+}
+
+.btn-handle{
+	margin:20px;
+}
+
+#files{
+	margin-left:100px !important;
+}
+
+.status{
+	width:100%;
+	height:35px;
+}
+.status>ul{
+	padding: 0;
+}
+.status>ul>li{
+	line-height: 35px;
+	text-align: center;
+}
+
+.listWrap{
+	width:100%;
+	height:auto;
+	padding: 0 ;
+}
+.listWrap>li{
+	width: 100%;
+	height:auto;
+	padding: 15px 0;
+	border: 1px solid #D3D3D3;
+	box-sizing: border-box;
+	border: 1px solid #D3D3D3;
+	border-top:none;
+}
+.listWrap>li>ul{
+	padding: 0;
+}
+.listWrapCon>li>ul>li:nth-child(1),
+.listWrapCon>li>ul>li:nth-child(4),
+.listWrapCon>li>ul>li:nth-child(5){
+	line-height:70px ;
+}
+.listWrap>li>ul>li{
+	text-align: center;
+}
+.introduceHouse{
+	display: block;
+	margin: 15px;
+	line-height: 20px;
+	text-align: left;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+p[class='introduceHouse'] a{
+	color:#d3d3d3;
+}
+
+/*关联户型提示*/
+.house_hint{
+	padding: 20px 0 !important;
+}
+.house_hint>p{
+	text-indent: 2em !important;
+	text-align: center !important;
+	font-size: 16px !important;
+	line-height: 20px !important;
+}

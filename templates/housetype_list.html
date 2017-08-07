@@ -1,0 +1,93 @@
+{% extends 'include/main_base.html' %}
+{% block title %}户型编辑{% endblock %}
+{% block right %}
+<div>
+	<ol class="breadcrumb">
+		<i class="icon icon-home"></i>
+		<li>
+			<a href="{% url 'event_list' %}">
+				<h3>{{event.name}}</h3></a>
+		</li>
+		<li>
+			<a href="{% url 'room_list' pk=event.id %}">房源信息</a>
+		</li>
+		<li class="active">户型</li>
+	</ol>
+</div>
+<div class="row" style="padding:10px;margin-top:-20px;">
+	<a class="btn btn-primary" data-iframe="{% url 'event_house_type_create' pk=event.id %}" data-toggle=modal data-moveable="true">添加户型</a>
+</div>
+<table class="table datatable">
+	<thead>
+		<tr>
+			<th data-width='10%'>序号</th>
+			<th>户型名称</th>
+			<th>户型图片</th>
+			<th data-width='10%'>操作</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for obj in object_list %}
+		<tr>
+			<td>{{ forloop.counter }}</td>
+			<td>{{ obj.name }}</td>
+			<td><img src="{{MEDIA_URL}}{{obj.pic}}" width="200px"></td>
+			<td>
+				<p>
+					<a data-iframe="{% url 'event_house_type_update' pk=obj.id %}" data-toggle="modal">编辑</a>
+				</p>
+				<p>
+					<a data-toggle="modal" data-target="#deleteModal" data-id="{{obj.id}}" class="deleteOrder">删除</a>
+				</p>
+			</td>
+		</tr>
+		<!--删除弹窗-->
+		<div class="modal fade" id="deleteModal" data-id="">
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+						<h4 class="modal-title">删除户型</h4>
+					</div>
+					<div class="modal-body">
+						<p>确认删除户型？</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+						<button type="button" class="btn btn-primary" id="is_clear">确认</button>
+						<input type="hidden" value="" id="is_clear_status">
+					</div>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+	</tbody>
+</table>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('table.datatable').datatable({
+			sortable: true,
+		});
+		$(".deleteOrder").click(function(e) {
+			$("#is_clear_status").val($(e.currentTarget).data("id"));
+		})
+		$("#is_clear").click(function() {
+			var id = $("#is_clear_status").val();
+			$.ajax({
+				type: "POST",
+				data: {
+					id: id
+				},
+				url: "/dlhousetypes/",
+				async: true,
+				success: function() {
+					window.location.reload();
+				},
+				error: function() {
+					alert("删除失败！！！")
+				}
+			});
+		})
+	});
+</script>
+{% endblock %}
