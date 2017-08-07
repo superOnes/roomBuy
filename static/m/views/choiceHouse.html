@@ -66,7 +66,8 @@ $(function(){
     if(eventname){
         localStorage.setItem("eventname",eventname);
     }
-    $("title").html(decodeURI(eventname));
+
+    $("title").html(decodeURI(localStorage.getItem("eventname")));
     $.ajax({
         type:"get",
         url:http+"/app/detail/",

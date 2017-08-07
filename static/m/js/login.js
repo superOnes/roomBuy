@@ -651,17 +651,6 @@ function orderSu(data){
 function orderInfos(){
 	window.location.href="orderinfo.html?orderId="+$(".orderid").html()+"&id="+$(".id1").html();
 }
-
-/*订单*/
-function data4(result){
-    var datap=$('<p class="event_start" style="display:none">'+result.event_start+'</p>'+
-        '<p class="event_end" style="display:none">'+result.event_end+'</p>'+
-        '<p class="test_ent" style="display:none">'+result.test_ent+'</p>'+
-        '<p class="test_start" style="display:none">'+result.test_start+'</p>'
-    );
-    $("body").append(datap);
-}
-
 function order(data){
 	if(data.objects.length==0){
 		$("body").append('<div class="noOne"><img src="../images/none.png" /><p>目前您没有任何订单！</p></div>');
@@ -698,6 +687,9 @@ function order(data){
 				'<p class="oferId" style="display:none">'+data.objects[i][0].orderid+'</p>'+
 				'</div>'
 			));
+            if(data.objects[i][0].is_test){
+                $(".order-all").eq(i).find(".order-right").append($('<img src="../images/test.png" />'));
+            }
 		}
 	}
 }
@@ -782,8 +774,7 @@ function checkInfo(data){
 		 }
 
 	},1000);
-    if(new Date(data.ordertime).getTime()>new Date($(".test_start").html()).getTime()&&
-        new Date(data.ordertime).getTime()<new Date($(".test_ent").html()).getTime()){
+    if(data.is_test){
         $(".order-middle2").empty();
         $(".order-bottom-1 table").append($('<tr class="ordertype">'+
             '<td>订单类型：</td>'+

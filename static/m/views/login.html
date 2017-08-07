@@ -95,6 +95,7 @@
         var eventname=localStorage.getItem("eventname");
         $(".loginLogo img").prop("src",http+cover);
         $(".login h1").html(decodeURI(eventname));
+        $("title").html(decodeURI(eventname));
 
         $(".proCancle").click(function(){
             $(".prols").empty();
