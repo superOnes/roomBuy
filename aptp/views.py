@@ -37,7 +37,6 @@ class ProTimeView(View):
             if user:
                 if not user.is_admin:
                     login(request, user)
-                    request.session.set_expiry(300)
                     if not customer.protime:
                         customer.protime = datetime.now()
                         customer.save()
@@ -156,8 +155,11 @@ class AppEventDetailHouseListView(View):
         eventid = request.GET.get('id')
         event = Event.get(eventid)
         now = datetime.now()
-        if now < event.test_start or (
-                now > event.test_end and now < event.event_start):
+        if (now > event.test_start +
+            timedelta(hours=-
+                      0.5) and now < event.test_start) or (now > event.event_start +
+                                                           timedelta(hours=-
+                                                                     0.5) and now < event.event_start):
             response_state = 405
         else:
             response_state = None
@@ -178,7 +180,7 @@ class AppEventDetailHouseListView(View):
                     'room_num': obj.room_num,
                 }
                 room_num_list.append(value)
-        room_num_list.sort(key=lambda x: (x['floor'],x['room_num']))
+        room_num_list.sort(key=lambda x: (x['floor'], x['room_num']))
         context['objects'] = room_num_list
         context['response_state'] = response_state
         context['response_state'] = 200

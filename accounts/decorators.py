@@ -34,8 +34,11 @@ def customer_login_required(func):
         if not event.is_pub:
             logout(request)
             return JsonResponse({'response_state': 403, 'msg': '活动还未推出！'})
-        if (now < event.test_start + timedelta(hours=-0.5) or (now > event.test_end and now <
-                                       event.event_start + timedelta(hours=-0.5)) or now > event.event_end):
+        if (now < event.test_start +
+            timedelta(hours=-
+                      0.5) or (now > event.test_end and now < event.event_start +
+                               timedelta(hours=-
+                                         0.5)) or now > event.event_end):
             return JsonResponse({'response_state': 401, 'msg': '不在活动登录期间！'})
         if not request.user.is_authenticated() or request.user.is_admin:
             return JsonResponse({'response_state': 401, 'msg': '请登录！'})
@@ -49,7 +52,11 @@ def customer_login_time(func):
         eventid = request.GET.get('id', request.POST.get('id'))
         event = Event.get(eventid)
         now = datetime.now()
-        if now < event.test_start or (now >event.test_end and now < event.event_start):
+        if (now > event.test_start +
+            timedelta(hours=-
+                      0.5) and now < event.test_start) or (now > event.event_start +
+                                                           timedelta(hours=-
+                                                                     0.5) and now < event.event_start):
             return JsonResponse({'response_state': 405, 'msg': '活动还未正式开始！'})
         return func(request, *args, **kwargs)
     return wrapper
