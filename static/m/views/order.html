@@ -54,6 +54,8 @@
     }
     var id = getParamValue("id");
     $(function(){
+        var eventname=localStorage.getItem("eventname");
+        $("title").html(decodeURI(eventname));
         $.ajax({
             type:"get",
             url:http+"/app/detail/",
@@ -76,12 +78,20 @@
             },
             success:function(data){
                 if(data.response_state==200){
+
                     order(data);
                     $(".order-all").each(function(){
                         $(this).click(function(){
                             window.location.href="orderinfo.html?orderId="+$(this).find(".oferId").html()+"&id="+id;
                         })
                     });
+                    for(var i=0;i<data.objects.length;i++){
+                        if(new Date(data.objects[i][0].time).getTime()>new Date($(".test_start").html()).getTime()&&
+                            new Date(data.objects[i][0].time).getTime()<new Date($(".test_ent").html()).getTime()){
+                            $(".order-all").eq(i).find(".order-right").append($('<img src="../images/test.png" />'));
+                        }
+                    }
+
                 }else if(data.response_state==401||data.response_state==403){
                     alert(data.msg);
                     window.location.href="login.html?id="+id;
@@ -96,11 +106,6 @@
                 alert("页面出错，请重试！");
             }
         });
-
-
-
-
-
     })
 </script>
 
