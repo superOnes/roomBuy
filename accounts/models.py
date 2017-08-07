@@ -33,6 +33,9 @@ class Customer(models.Model):
         return cls.objects.filter(event_id=eid,
                                   identication=id).first()
 
+    class Meta:
+        unique_together = (('mobile', 'identication', 'event'))
+
 
 class User(AbstractUser):
     is_delete = models.BooleanField(default=False)

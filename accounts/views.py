@@ -162,9 +162,10 @@ class ImportView(View):
         id = request.POST.get('id')
         if id:
             event = Event.get(id)
-            Customer.objects.filter(event=event).delete()
+
             file = request.FILES.get('filename')
             if not file:
+                os.remove('media/tmp/customer.xlsx')
                 return JsonResponse({'response_state': 400, 'msg': '没有选择文件！'})
             filename = file.name.split('.')[-1]
             if filename == 'xlsx' or filename == 'xls':
@@ -178,7 +179,8 @@ class ImportView(View):
                 sheet = workdata.sheet_by_name(sheet_name)
                 row = sheet.nrows
                 col = sheet.ncols
-                if row == 0:
+                if row == 0 or row == 1:
+                    os.remove('media/tmp/customer.xlsx')
                     return JsonResponse({'response_state': 400, 'msg': '导入的excel为空表！'})
                 data = []
                 num = 0
@@ -189,32 +191,32 @@ class ImportView(View):
                     value3 = sheet.cell(rowx=rx, colx=2).value
                     value4 = sheet.cell(rowx=rx, colx=3).value
 
-                    if type(value1) == str and type(value3) == str and type(value4) == str:
+                    if type(value1) == str and type(value4) == str:
+                        if type(value3) != str:
+                            try:
+                                value3 = str(int(value3))
+                            except:
+                                os.remove('media/tmp/customer.xlsx')
+                                return JsonResponse({'response_state': 400, 'msg': '身份证号有误！'})
                         try:
                             value2 = str(int(value2))
                         except:
+                            os.remove('media/tmp/customer.xlsx')
                             return JsonResponse({'response_state': 400, 'msg': '导入手机号格式有误！'})
-                        li.append(value1)
-                        li.append(value2)
-                        li.append(value3)
-                        li.append(value4)
-                        if li in data:
-                            return JsonResponse({'response_state': 400, 'msg': 'excel中有重复数据，请查询后重试！'})
-                    else:
-                        return JsonResponse({'response_state': 400, 'msg': '导入excel表格数据格式不正确，请查询后重试！'})
+                        li = [value1, value2, value3, value4]
                     data.append(li)
-                for ct in data:
-                    if type(ct[1]) != str:
-                        ct[1] = str(int(ct[1]))
-                    if type(ct[2]) != str:
-                        ct[2] = str(int(ct[2]))
-                    if (Customer.objects.filter(event_id=id,
-                                                mobile=ct[1]) or Customer.objects.filter(event_id=id,
-                                                                                                   identication=ct[2])).exists():
-                        return JsonResponse({'response_state': 400, 'msg': '导入数据重复！'})
-                        continue
-                    else:
-                        with transaction.atomic():
+                mobile = list(map(lambda x: (x[1]), data))
+                if len(set(mobile)) < len(mobile):
+                    os.remove('media/tmp/customer.xlsx')
+                    return JsonResponse({'response_state': 400, 'msg': '手机号有重复，请查询后重试！'})
+                identification = list(map(lambda x: (x[2]), data))
+                if len(set(identification)) < len(identification):
+                    os.remove('media/tmp/customer.xlsx')
+                    return JsonResponse({'response_state': 400, 'msg': '身份证号有重复，请查询后重试！'})
+                with transaction.atomic():
+                    Customer.objects.filter(event=event).delete()
+                    try:
+                        for ct in data:
                             customer = Customer.objects.create(realname=ct[0],
                                                                mobile=ct[1],
                                                                identication=ct[2],
@@ -227,10 +229,12 @@ class ImportView(View):
                                 customer=customer,
                                 is_admin=False)
                             num += 1
-                return JsonResponse({'response_state': 200, 'data': num})
-            else:
-                return JsonResponse({'response_state': 400, 'msg': '导入文件格式不正确！'})
-        os.remove('media/tmp/customer.xlsx')
+                    except:
+                        os.remove('media/tmp/customer.xlsx')
+                        return JsonResponse({'导入数据重复！'})
+                    os.remove('media/tmp/customer.xlsx')
+                    return JsonResponse({'response_state': 200, 'data': num})
+            return JsonResponse({'response_state': 400, 'msg': '导入文件格式不正确'})
         return JsonResponse({'response_state': 400, 'msg': '导入数据失败'})
 
 
