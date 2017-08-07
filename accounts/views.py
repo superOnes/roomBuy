@@ -250,7 +250,8 @@ class GetCustomerInfo(View):
                 'mobile': customer.mobile,
                 'identication': customer.identication,
             }
-            if customer.user.order_set.count() >= customer.count:
+            if customer.user.order_set.filter(is_test=False).count() \
+               >= customer.count:
                 return JsonResponse({'response_state': 301,
                                      'result': result,
                                      'msg': '该用户已备注或已购买，不可备注'})

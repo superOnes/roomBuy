@@ -33,6 +33,9 @@ class Customer(models.Model):
         return cls.objects.filter(event_id=eid,
                                   identication=id).first()
 
+    def has_order(self):
+        return self.user.order_set.filter(is_test=False).exists()
+
     class Meta:
         unique_together = (('mobile', 'identication', 'event'))
 
@@ -54,9 +57,6 @@ class User(AbstractUser):
     @classmethod
     def get(cls, id):
         return get_object_or_404(cls.objects, id=id)
-
-    def get_order_count(self):
-        return self.order_set.filter(is_test=False).count()
 
 
 class Order(models.Model):

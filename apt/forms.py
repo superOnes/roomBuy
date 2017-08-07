@@ -73,7 +73,7 @@ class EventDetailSignForm(forms.ModelForm):
             if Order.objects.filter(eventdetail=self.instance,
                                     is_test=False).exists():
                 raise forms.ValidationError('该房源或车位已被选购')
-            elif customer.user.order_set.count() >= customer.count:
+            elif customer.has_order():
                 raise forms.ValidationError('该用户已购房')
         return customer
 
