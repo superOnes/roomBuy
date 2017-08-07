@@ -18,7 +18,7 @@ window.onload = function() {
 	});
 	//表单提交事件触发时，如果复选框是勾选状态则保存cookie
 	$("#loginForm").submit(function() {
-		if(remember.checked) {
+		if(oRemember.checked) {
 			setCookie('user', oUser.value, 7); //保存帐号到cookie，有效期7天
 			setCookie('pswd', oPswd.value, 7); //保存密码到cookie，有效期7天
 		}

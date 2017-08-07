@@ -22,6 +22,7 @@
 			<div class="col-sm-9 myfileCover">
 				<input type="file" class="form-control" id="pic" onchange='showPlane()' name="pic">
 				<p><b>添加的户型图片为</b><span class="picImgFile" style="margin-left:20px;">{{form.pic.value|default:''}}</span></p>
+				<p>建议上传图片大小为 380*230px</p>
 				<div style="width: 380px;">
 					<img src='{{MEDIA_URL}}{{object.pic}}' alt='' id='picImg' onerror="this.src='{{ STATIC_URL }}images/default.png'"  />
 				</div>
