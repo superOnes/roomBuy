@@ -85,18 +85,6 @@
 			}
 
 		});
-
-        pushHistory();
-        window.addEventListener("popstate", function(e) {
-            window.location.reload();
-        }, false);
-        function pushHistory() {
-            var state = {
-                title: "title",
-                url:"#"
-            };
-            window.history.pushState(state, state.title, state.url);
-        }
 	});
 
 	/*收藏按钮*/

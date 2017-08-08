@@ -83,20 +83,6 @@
                 alert("页面出错，请重试！");
             }
         });
-        pushHistory();
-        window.addEventListener("popstate", function(e) {
-            window.location.href="houseList.html?id="+idd;
-        }, false);
-        function pushHistory() {
-            var state = {
-                title: "title",
-                url:"#"
-            };
-            window.history.pushState(state, state.title, state.url);
-        }
-
-
-
     })
 </script>
 </body>

@@ -443,14 +443,12 @@ function houseList(data){
 /*详情信息*/
 function houseInfo(data){
 	var houseInfo=$('<div class="houseInfotop">'+
-				             '<p><span>'+data.floor+'#'+data.looking+'户</span></p>'+
+				             '<p><span class="backList"><a href="javascript:;" onclick="backList()">返回列表</a></span></p>'+
 							'<p class="infoImg"><img /></p>'+
 							'<div class="houseShare clear">'+
-								'<span class="fl"><a href="javascript:;" onclick="backList()">返回房间列表</a></span>'+
+        						'<h1 class="fl">'+data.building_unit+'</h1>'+
 								'<span class="fl shareBt">收藏</span>'+
 							'</div>'+
-							'<h1>'+data.building_unit+'</h1>'+
-
 					'</div>'+
 					'<ul class="houseInfoCont">'+
 						'<li>单价<br/><span class="shpri">￥'+data.unit_price+'/m²</span></li>'+
@@ -544,7 +542,7 @@ function proldel(){
                 $("body").append($('<div class="prols proNew">'+
                     '<h1>'+data.objects[0].termname+'</h1>'+
                     '<p>'+data.objects[0].term+'</p>'+
-                    '<p class="closePro"><img src="../images/close-icons.png" onclick="closePro()"></p>'+
+                    '<div class="closePro" onclick="closePro()">关闭</div>'+
                     '</div>'
                 ));
             }else if(data.response_state==401||data.response_state==403){
