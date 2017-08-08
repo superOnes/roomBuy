@@ -58,15 +58,6 @@ function getParamValue(name)
 }
 $(function(){
     var id = getParamValue("id");
-//    var cover=getParamValue("cover");
-//    var eventname=getParamValue("eventname");
-//    if(cover){
-//        localStorage.setItem("cover",cover);
-//    }
-//    if(eventname){
-//        localStorage.setItem("eventname",eventname);
-//    }
-
     $("title").html(decodeURI(localStorage.getItem("eventname")));
     $.ajax({
         type:"get",

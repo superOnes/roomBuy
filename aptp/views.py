@@ -14,6 +14,27 @@ from accounts.models import Order, Customer
 from accounts.decorators import customer_login_required, customer_login_time
 
 
+class EventInfo(View):
+    '''
+    登录页面的图片和活动名称
+    '''
+
+    def get(self, request):
+        eventid = request.GET.get('id')
+        try:
+            obj = Event.get(eventid)
+        except BaseException:
+            return JsonResponse({'response_state': 400, 'msg': '活动错误！'})
+        value = {
+            'cover': obj.cover.url,
+            'eventname': obj.name,
+        }
+        context = {}
+        context['objects'] = value
+        context['response_state'] = 200
+        return JsonResponse(context)
+
+
 class ProTimeView(View):
     '''
     同意协议时间

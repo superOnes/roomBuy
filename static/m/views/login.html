@@ -87,33 +87,37 @@
     $(function(){
 
         $(".wapLogin").hide();
+        var id = getParamValue("id");
         $.ajax({
 			type:"get",
 			url:http+"/app/eventinfo/",
-			data:{},
+			data:{
+			    id:id
+            },
             dataType:'JSON',
             success: function(data){
-                if(data.cover){
-					localStorage.setItem("cover",data.cover);
+                if(data.objects.cover){
+					localStorage.setItem("cover",data.objects.cover);
 				}
-				if(data.eventname){
-					localStorage.setItem("eventname",data.eventname);
+				if(data.objects.eventname){
+					localStorage.setItem("eventname",data.objects.eventname);
 				}
                 $(".wapLogin").show();
+				 var cover=localStorage.getItem("cover");
+                var eventname=localStorage.getItem("eventname");
+        $(".loginLogo img").prop("src",http+cover);
+        $(".login h1").html(eventname);
+        $("title").html(eventname);
 			}
 
 		});
-        var id = getParamValue("id");
+
         $(".loginId").html(id);
         if(!id){
             $("body").empty();
             $("body").append($("<div class='errorPage'><img src='../images/error.png' /><p>该地址无效！</p></div>"));
 		}
-        var cover=localStorage.getItem("cover");
-        var eventname=localStorage.getItem("eventname");
-        $(".loginLogo img").prop("src",http+cover);
-        $(".login h1").html(decodeURI(eventname));
-        $("title").html(decodeURI(eventname));
+
 
         $(".proCancle").click(function(){
             $(".prols").empty();
