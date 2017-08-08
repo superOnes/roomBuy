@@ -68,8 +68,8 @@ class EventListView(ListView):
             queryset = queryset.filter(Q(name__contains=self.value))
         for obj in queryset:
             obj.qr = url2qrcode(
-                'http://%s/static/m/views/choiceHouse.html?id=%s' %
-                (self.request.get_host(), obj.id))
+                'http://%s/static/m/views/choiceHouse.html?id=%s&cover=%s&eventname=%s' %
+                (self.request.get_host(), obj.id, obj.cover.url, obj.name))
             obj.save()
         return queryset
 
@@ -292,50 +292,24 @@ class ImportEventDetailView(View):
                 col = sheet.ncols
                 if row == 0:
                     os.remove('media/price/price.xlsx')
-                    return JsonResponse(
-                        {'response_state': 400, 'msg': '导入的excel为空表！'})
+                    return JsonResponse({'response_state': 400, 'msg': '导入的excel为空表！'})
                 data = []
-                # df = pd.read_excel('media/price/price.xlsx')
-                if col > 0:
-                    try:
-                        value1 = sheet.cell(rowx=0, colx=0).value
-                        value2 = sheet.cell(rowx=0, colx=1).value
-                        value3 = sheet.cell(rowx=0, colx=2).value
-                        value4 = sheet.cell(rowx=0, colx=3).value
-                        value5 = sheet.cell(rowx=0, colx=4).value
-                        value6 = sheet.cell(rowx=0, colx=5).value
-                        value7 = sheet.cell(rowx=0, colx=6).value
-                        value8 = sheet.cell(rowx=0, colx=7).value
-                        value9 = sheet.cell(rowx=0, colx=8).value
-                        value10 = sheet.cell(rowx=0, colx=9).value
-                    except BaseException:
-                        return JsonResponse(
-                            {'response_state': 400, 'msg': '导入文件不正确！'})
-                    head = [
-                        value1,
-                        value2,
-                        value3,
-                        value4,
-                        value5,
-                        value6,
-                        value7,
-                        value8,
-                        value9,
-                        value10]
-                if head != [
-                    '楼栋',
-                    '单元',
-                    '楼层',
-                    '房号',
-                    '单价',
-                    '建筑面积',
-                    '朝向',
-                    '使用年限',
-                    '户型',
-                        '户型图片名称']:
+                if col != 10:
+                    return JsonResponse({'response_state': 400, 'msg': '导入文件不正确！'})
+                value1 = sheet.cell(rowx=0, colx=0).value
+                value2 = sheet.cell(rowx=0, colx=1).value
+                value3 = sheet.cell(rowx=0, colx=2).value
+                value4 = sheet.cell(rowx=0, colx=3).value
+                value5 = sheet.cell(rowx=0, colx=4).value
+                value6 = sheet.cell(rowx=0, colx=5).value
+                value7 = sheet.cell(rowx=0, colx=6).value
+                value8 = sheet.cell(rowx=0, colx=7).value
+                value9 = sheet.cell(rowx=0, colx=8).value
+                value10 = sheet.cell(rowx=0, colx=9).value
+                head = [value1, value2, value3, value4, value5, value6, value7, value8, value9, value10]
+                if head != ['楼栋', '单元', '楼层', '房号', '单价', '建筑面积', '朝向', '使用年限', '户型', '户型图片名称']:
                     print('hahah')
-                    return JsonResponse(
-                        {'response_state': 400, 'msg': '导入文件不正确！'})
+                    return JsonResponse({'response_state': 400, 'msg': '导入文件不正确！'})
                 if row - 1 <= request.user.house_limit:
                     for rx in range(1, row):
                         li = []
@@ -349,27 +323,19 @@ class ImportEventDetailView(View):
                         value8 = sheet.cell(rowx=rx, colx=7).value
                         value9 = sheet.cell(rowx=rx, colx=8).value
                         value10 = sheet.cell(rowx=rx, colx=9).value
-                        if isinstance(
-                            value1, str) and isinstance(
-                            value2, str) and isinstance(
-                            value5, float) and isinstance(
-                            value6, float) and isinstance(
-                            value7, str) and isinstance(
-                            value9, str) and isinstance(
-                                value10, str):
+                        if type(value1) == str and type(value2) == str \
+                            and type(value5) == float and type(value6) == float and type(value7) == str and \
+                                type(value9) == str and type(value10) == str:
                             try:
                                 value3 = int(value3)
                                 value4 = int(value4)
                                 value8 = int(value8)
-                            except BaseException:
+                            except:
                                 os.remove('media/price/price.xlsx')
-                                return JsonResponse(
-                                    {'response_state': 400, 'msg': '导入数据格式不正确或有重复数据!'})
-                            li = [value1, value2, value3, value4, value5,
-                                  value6, value7, value8, value9, value10]
+                                return JsonResponse({'response_state': 400, 'msg': '导入数据格式不正确或有重复数据!'})
+                            li = [value1, value2, value3, value4, value5, value6, value7, value8, value9, value10]
                         else:
-                            return JsonResponse(
-                                {'response_state': 400, 'msg': '导入数据格式不正确或有重复数据!'})
+                            return JsonResponse({'response_state': 400, 'msg': '导入数据格式不正确或有重复数据!'})
                         data.append(li)
                         num = len(data)
                     with transaction.atomic():
@@ -393,12 +359,10 @@ class ImportEventDetailView(View):
                                     house_type=HouseType.objects.filter(name=ed[9]).first(),
                                     event=event)
                                 eventdetail.save()
-                            return JsonResponse(
-                                {'response_state': 200, 'data': num})
-                        except BaseException:
+                            return JsonResponse({'response_state': 200, 'data': num})
+                        except:
                             os.remove('media/price/price.xlsx')
-                            return JsonResponse(
-                                {'response_state': 400, 'msg': '导入数据格式不正确或有重复数据！'})
+                            return JsonResponse({'response_state': 400, 'msg': '导入数据格式不正确或有重复数据！'})
                 os.remove('media/price/price.xlsx')
                 return JsonResponse(
                     {'response_state': 400, 'msg': '导入数据超过限制数量！'})
@@ -455,9 +419,9 @@ class ExportEventDetailView(View):
             s.write(row, 7, obj.term)
             s.write(row, 8, obj.type)
             try:
-                name = obj.house_type.name
-            except BaseException:
-                name = None
+                name=obj.house_type.name
+            except:
+                name=None
             s.write(row, 9, name)
             row += 1
         sio = BytesIO()
@@ -607,7 +571,7 @@ class ExportHouseHotView(View):
             s.write(row, 1, obj.unit)
             s.write(row, 2, str(obj.floor))
             s.write(row, 3, str(obj.room_num))
-            s.write(row, 4, '已售' if obj.is_sold else '未售')
+            s.write(row, 4, '已售' if obj.is_sold else '未售' )
             s.write(row, 5, obj.unit_price)
             s.write(row, 6, obj.area)
             s.write(row, 7, obj.follow_set.count())
