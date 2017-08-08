@@ -303,7 +303,6 @@ class ImportEventDetailView(View):
                 value9 = sheet.cell(rowx=0, colx=8).value
                 value10 = sheet.cell(rowx=0, colx=9).value
                 head = [value1, value2, value3, value4, value5, value6, value7, value8, value9, value10]
-                print(head)
                 if head != ['楼栋', '单元',	'楼层',	'房号',	'单价',	'建筑面积',	'朝向',	'使用年限',	'户型',	'户型图片名称']:
                     return JsonResponse({'response_state': 400, 'msg': '导入文件不正确！'})
                 if row - 1 <= request.user.house_limit:
