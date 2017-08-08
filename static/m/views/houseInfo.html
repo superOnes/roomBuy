@@ -61,20 +61,6 @@
         $("title").html(decodeURI(eventname));
 		$.ajax({
 			type:"get",
-			url:http+"/app/detail/",
-			data:{
-				id:id
-			},
-			success:function(data){
-				if(data.response_state==200){
-					data5(data.objects[0]);
-				}
-			},
-			error:function(){}
-		});
-
-		$.ajax({
-			type:"get",
 			url:http+"/app/houseinfo/",
 			data:{
 				house:houseId,

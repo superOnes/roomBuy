@@ -36,17 +36,18 @@ class ProTimeView(View):
                 password=customer.identication)
             if user:
                 if not user.is_admin:
-                    login(request, user)
                     if not customer.protime:
                         customer.protime = datetime.now()
                         customer.save()
                     if session_key:
                         Session.objects.filter(pk=session_key).delete()
+                        login(request, user)
                         customer.session_key = request.session.session_key
                         customer.save()
                         return JsonResponse(
                             {'response_state': 200, 'msg': '登录成功', })
                     else:
+                        login(request, user)
                         customer.session_key = request.session.session_key
                         customer.save()
                         return JsonResponse(
@@ -198,10 +199,11 @@ class AppEventDetailHouseInfoView(View):
         user = request.user
         house = request.GET.get('house')
         eventdetobj = EventDetail.get(house)
-        test = True if datetime.now() <= eventdetobj.event.test_end else False
-        if not test and eventdetobj.sign_id and not eventdetobj.is_sold:
-            eventdetobj.is_sold = True
-            eventdetobj.save()
+        now = datetime.now()
+        if now > eventdetobj.event.test_start and now < eventdetobj.event.test_end:
+            test = True
+        if now > eventdetobj.event.event_start and now < eventdetobj.event.event_end:
+            test = False
         try:
             Follow.objects.get(user=user, eventdetail=eventdetobj)
         except BaseException:
@@ -212,23 +214,21 @@ class AppEventDetailHouseInfoView(View):
             pic = eventdetobj.house_type.pic.url
         except BaseException:
             pic = ''
-        house_type = eventdetobj.type
         value = [{'event': eventdetobj.event.name,
                   'realname': user.customer.realname,
                   'mobile': user.customer.mobile,
                   'identication': user.customer.identication,
                   'building_unit': eventdetobj.building + eventdetobj.unit + str(eventdetobj.floor) + '层' + str(eventdetobj.room_num),
-                  'total': '***' if test and not eventdetobj.event.test_price else ((eventdetobj.area) * (eventdetobj.unit_price)),
-                  'house_type': house_type,
+                  'total': '***' if (test and not eventdetobj.event.test_price) else ((eventdetobj.area) * (eventdetobj.unit_price)),
+                  'house_type': eventdetobj.type,
                   'pic': pic,
                   'floor': eventdetobj.floor,
                   'area': eventdetobj.area if eventdetobj.event.covered_space else '***',
                   'unit_price': eventdetobj.unit_price if eventdetobj.event.covered_space_price else '***',
                   'looking': eventdetobj.looking,
                   'term': eventdetobj.term,
-                  'is_sold': eventdetobj.is_sold,
                   'is_followed': is_followed,
-                  'is_testsold': eventdetobj.is_testsold,
+                  'sold': eventdetobj.is_testsold if test else eventdetobj.is_sold,
                   }]
         context = {}
         context['objects'] = value

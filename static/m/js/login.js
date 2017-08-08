@@ -277,7 +277,7 @@ function myShare(){
                 alert(data.msg);
                 window.location.href="login.html?id="+$(".idNum").html();
             }else if(data.response_state==405){
-                alert("活动尚未开始");
+                alert(data.msg);
 			}else{
 				alert("页面错误");
 			}
@@ -385,7 +385,7 @@ function houseList(data){
 										aLis.each(function(){
 											$(this).click(function(){
 												if(data.response_state==405){
-													alert("活动尚未开始！");
+													alert(data.msg);
 												}else{
 													var houseID=data.objects[$(this).index()].house;
 													window.location.href="houseInfo.html?house="+houseID+"&id="+$(".idNum").html();
@@ -411,7 +411,7 @@ function houseList(data){
                         alert(data.msg);
                         window.location.href="login.html?id="+$(".idNum").html();
                     }else if(data.response_state==405){
-                        alert("活动尚未开始");
+                        alert(data.msg);
                     }else{
                         alert(data.msg);
                     }
@@ -515,29 +515,11 @@ function houseInfo(data){
 	);
 	$("#houseInfo").after(infoBlack);
 	$("#houseInfo").append(houseInfo);
-
-	var event1=Math.floor(new Date($(".event_start").html()).getTime()/1000);
-	var event2=Math.floor(new Date($(".event_end").html()).getTime()/1000);
-	var test1=Math.floor(new Date($(".test_start").html()).getTime()/1000);
-	var test2=Math.floor(new Date($(".test_ent").html()).getTime()/1000);
-	var nowTime=Math.floor(new Date().getTime()/1000);
-
-	if(event1<nowTime && nowTime < event2){
-		if(data.is_sold){
+		if(data.sold){
 			$(".houseInfoOther").after($('<div class="houseBtnN">房间已售</div>'));
 		}else{
 			$(".houseInfoOther").after($('<div class="houseBtnY" onclick="buyNow()">立即选择</div>'));
 		}
-
-	}else if(test1<nowTime && nowTime<test2){
-		if(data.is_testsold){
-			$(".houseInfoOther").after($('<div class="houseBtnN">房间已售</div>'));
-		}else{
-			$(".houseInfoOther").after($('<div class="houseBtnY" onclick="buyNow()">立即选择</div>'));
-		}
-	}else{
-		$(".houseInfoOther").after($('<div class="houseBtnN">活动未开始</div>'));
-	}
 
 	$(".shareBt").bind("click",shareBtn);
 
@@ -575,7 +557,7 @@ function proldel(){
                 alert(data.msg);
                 window.location.href="login.html?id="+$(".idd").html();
             }else if(data.response_state==405){
-                alert("活动尚未开始");
+                alert(data.msg);
             }else{
                 alert(data.msg);
             }
