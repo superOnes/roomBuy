@@ -85,6 +85,24 @@
         return null ;
     }
     $(function(){
+
+        $(".wapLogin").hide();
+        $.ajax({
+			type:"get",
+			url:http+"/app/eventinfo/",
+			data:{},
+            dataType:'JSON',
+            success: function(data){
+                if(data.cover){
+					localStorage.setItem("cover",data.cover);
+				}
+				if(data.eventname){
+					localStorage.setItem("eventname",data.eventname);
+				}
+                $(".wapLogin").show();
+			}
+
+		});
         var id = getParamValue("id");
         $(".loginId").html(id);
         if(!id){
