@@ -329,11 +329,14 @@ class ImportEventDetailView(View):
                                 os.remove('media/price/price.xlsx')
                                 return JsonResponse({'response_state': 400, 'msg': 'excel中数据格式不正确！'})
                             li = [value1, value2, value3, value4, value5, value6, value7, value8, value9, value10]
+                        else:
+                            return JsonResponse({'response_state': 400, 'msg': 'excel中数据格式不正确！'})
                         data.append(li)
                         num = len(data)
                     with transaction.atomic():
-                        EventDetail.objects.filter(event=event).delete()
                         try:
+                            print('hahah')
+                            EventDetail.objects.filter(event=event).delete()
                             for ed in data:
                                 if not isinstance(ed[0], str):
                                     ed[0] = str(int(ed[0]))
