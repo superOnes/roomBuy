@@ -18,7 +18,6 @@
 
             success:function(data){
                 if(data.response_state==200){
-                    console.log(data);
                     createWap(data.result);
                 }
                 $("span").each(function(){
@@ -30,8 +29,7 @@
                     })
                 })
             },
-            error:function(data){
-                console.log(data);
+            error:function(){
                 alert("出错了");
             }
 
@@ -40,7 +38,8 @@
 
 
     function createWap(data){
-        var wap=$('<div class="wap">'+
+        var wap=$('<img id="bg1" src="{{STATIC_URL}}images/bg1.png">'+
+        		'<div class="wap">'+
                     '<div class="tips">'+
                         '<p>未售</p>'+
                         '<p class="bought">已售</p>'+
@@ -87,7 +86,9 @@
 
     $(function(){
         var oH=$(window).height();
-        console.log(oH);
+        var doH=window.screen.height ;
+        console.log(doH)
+        $("#bg1").css({height:doH+"px"});
         $(".wap").css({height:oH+"px",overflow:"hidden"});
         $(".wapbox").css({height:oH+"px"});
         $(".unitLists").css({height:(oH-54)+"px"});
