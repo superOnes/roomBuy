@@ -2,7 +2,6 @@
 import os
 import base64
 
-import pandas as pd
 import qrcode
 import xlrd
 from django.db import transaction
@@ -336,10 +335,10 @@ class ImportEventDetailView(View):
                                 value8 = int(value8)
                             except:
                                 os.remove('media/price/price.xlsx')
-                                return JsonResponse({'response_state': 400, 'msg': 'excel中数据格式不正确！'})
+                                return JsonResponse({'response_state': 400, 'msg': '导入数据格式不正确或有重复数据!'})
                             li = [value1, value2, value3, value4, value5, value6, value7, value8, value9, value10]
                         else:
-                            return JsonResponse({'response_state': 400, 'msg': 'excel中数据格式不正确！'})
+                            return JsonResponse({'response_state': 400, 'msg': '导入数据格式不正确或有重复数据!'})
                         data.append(li)
                         num = len(data)
                     with transaction.atomic():
