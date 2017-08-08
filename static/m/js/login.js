@@ -733,29 +733,31 @@ function checkInfo(data){
 				'</div>'
 	);
 	$(".orderInfoBox").append(orderInfo);
-	setInterval(function(){
-		 var dateNew= new Date(data.limit).getTime() - new Date().getTime();
-		 if(dateNew>0){
-             var hours = Math.floor(dateNew / (3600 * 1000));
-             //计算相差分钟数
-             var leave2 = dateNew % (3600 * 1000);       //计算小时数后剩余的毫秒数
-             var minutes = Math.floor(leave2 / (60 * 1000));
-             //计算相差秒数
-             var leave3 = leave2 % (60 * 1000);     //计算分钟数后剩余的毫秒数
-             var seconds = Math.round(leave3 / 1000);
-
-
-             $('.order-2').html((hours < 10 ? "0" + hours : hours) + "小时 " + (minutes < 10 ? "0" + minutes : minutes) + " 分钟" + (seconds < 10 ? "0" + seconds : seconds) + " 秒");
-		 }else{
-             $('.order-2').html("订单无效");
-		 }
-
-	},1000);
     if(data.is_test){
         $(".order-middle2").empty();
         $(".order-bottom-1 table").append($('<tr class="ordertype">'+
             '<td>订单类型：</td>'+
             '<td>公测订单</td>'+
-            '</tr>'))
+            '</tr>'));
+
+        setInterval(function(){
+            var dateNew= new Date(data.limit).getTime() - new Date().getTime();
+            if(dateNew>0){
+                var hours = Math.floor(dateNew / (3600 * 1000));
+                //计算相差分钟数
+                var leave2 = dateNew % (3600 * 1000);       //计算小时数后剩余的毫秒数
+                var minutes = Math.floor(leave2 / (60 * 1000));
+                //计算相差秒数
+                var leave3 = leave2 % (60 * 1000);     //计算分钟数后剩余的毫秒数
+                var seconds = Math.round(leave3 / 1000);
+
+
+                $('.order-2').html((hours < 10 ? "0" + hours : hours) + "小时 " + (minutes < 10 ? "0" + minutes : minutes) + " 分钟" + (seconds < 10 ? "0" + seconds : seconds) + " 秒");
+            }else{
+                $('.order-2').html("订单无效");
+            }
+
+        },1000);
+
     }
 }
