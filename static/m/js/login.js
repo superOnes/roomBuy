@@ -515,29 +515,11 @@ function houseInfo(data){
 	);
 	$("#houseInfo").after(infoBlack);
 	$("#houseInfo").append(houseInfo);
-
-	var event1=Math.floor(new Date($(".event_start").html()).getTime()/1000);
-	var event2=Math.floor(new Date($(".event_end").html()).getTime()/1000);
-	var test1=Math.floor(new Date($(".test_start").html()).getTime()/1000);
-	var test2=Math.floor(new Date($(".test_ent").html()).getTime()/1000);
-	var nowTime=Math.floor(new Date().getTime()/1000);
-
-	if(event1<nowTime && nowTime < event2){
 		if(data.is_sold){
 			$(".houseInfoOther").after($('<div class="houseBtnN">房间已售</div>'));
 		}else{
 			$(".houseInfoOther").after($('<div class="houseBtnY" onclick="buyNow()">立即选择</div>'));
 		}
-
-	}else if(test1<nowTime && nowTime<test2){
-		if(data.is_testsold){
-			$(".houseInfoOther").after($('<div class="houseBtnN">房间已售</div>'));
-		}else{
-			$(".houseInfoOther").after($('<div class="houseBtnY" onclick="buyNow()">立即选择</div>'));
-		}
-	}else{
-		$(".houseInfoOther").after($('<div class="houseBtnN">活动未开始</div>'));
-	}
 
 	$(".shareBt").bind("click",shareBtn);
 
