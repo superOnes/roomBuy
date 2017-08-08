@@ -370,17 +370,9 @@ function houseList(data){
 										$(".unite").after(romms);
 										for(var i=0;i<data.objects.length;i++){
 											$(".floorChose").append("<li>"+data.objects[i].floor_room_num+"</li>");
-											if(new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime()){
-												if(data.objects[i].is_sold){
-													$(".floorChose li").eq(i).addClass("floorLi-red");
-												}
+											if(data.objects[i].sold){
+												$(".floorChose li").eq(i).addClass("floorLi-red");
 											}
-											if(new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() <new Date($(".test_ent").html()).getTime()){
-												if(data.objects[i].is_testsold){
-													$(".floorChose li").eq(i).addClass("floorLi-red");
-												}
-											}
-
 										}
 										var aLis=$(".floorChose").find("li");
 
