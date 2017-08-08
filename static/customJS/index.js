@@ -46,6 +46,7 @@ $(document).ready(function(){
 
 //上传认筹名单文件
 function submitFile(event,thisID){
+	$(event).attr("disabled","disabled");
 	var files = $("#files")[0].files;
 	var data = new FormData(); //转化为表单格式的数据
     data.append('filename', files[0]);

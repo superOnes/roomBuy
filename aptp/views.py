@@ -14,6 +14,27 @@ from accounts.models import Order, Customer
 from accounts.decorators import customer_login_required, customer_login_time
 
 
+class EventInfo(View):
+    '''
+    登录页面的图片和活动名称
+    '''
+
+    def get(self, request):
+        eventid = request.GET.get('id')
+        try:
+            obj = Event.get(eventid)
+        except BaseException:
+            return JsonResponse({'response_state': 400, 'msg': '活动错误！'})
+        value = {
+            'cover': obj.cover.url,
+            'eventname': obj.name,
+        }
+        context = {}
+        context['objects'] = value
+        context['response_state'] = 200
+        return JsonResponse(context)
+
+
 class ProTimeView(View):
     '''
     同意协议时间
@@ -36,17 +57,18 @@ class ProTimeView(View):
                 password=customer.identication)
             if user:
                 if not user.is_admin:
-                    login(request, user)
                     if not customer.protime:
                         customer.protime = datetime.now()
                         customer.save()
                     if session_key:
                         Session.objects.filter(pk=session_key).delete()
+                        login(request, user)
                         customer.session_key = request.session.session_key
                         customer.save()
                         return JsonResponse(
                             {'response_state': 200, 'msg': '登录成功', })
                     else:
+                        login(request, user)
                         customer.session_key = request.session.session_key
                         customer.save()
                         return JsonResponse(
@@ -163,6 +185,10 @@ class AppEventDetailHouseListView(View):
             response_state = 405
         else:
             response_state = None
+            if now > event.test_start and now < event.test_end:
+                test = True
+            if now > event.event_start and now < event.event_end:
+                test = False
         building = request.GET.get('building')
         unit = request.GET.get('unit')
         context = {}
@@ -174,10 +200,9 @@ class AppEventDetailHouseListView(View):
                 value = {
                     'house': obj.id,
                     'floor_room_num': str(obj.floor) + '-' + str(obj.room_num),
-                    'is_sold': obj.is_sold,
-                    'is_testsold': obj.is_testsold,
                     'floor': obj.floor,
                     'room_num': obj.room_num,
+                    'sold': obj.is_testsold if test else obj.is_sold,
                 }
                 room_num_list.append(value)
         room_num_list.sort(key=lambda x: (x['floor'], x['room_num']))
@@ -198,10 +223,14 @@ class AppEventDetailHouseInfoView(View):
         user = request.user
         house = request.GET.get('house')
         eventdetobj = EventDetail.get(house)
-        test = True if datetime.now() <= eventdetobj.event.test_end else False
-        if not test and eventdetobj.sign_id and not eventdetobj.is_sold:
-            eventdetobj.is_sold = True
+        now = datetime.now()
+        if eventdetobj.sign_id:
+            eventdetobj.is_sold=True
             eventdetobj.save()
+        if now > eventdetobj.event.test_start and now < eventdetobj.event.test_end:
+            test = True
+        if now > eventdetobj.event.event_start and now < eventdetobj.event.event_end:
+            test = False
         try:
             Follow.objects.get(user=user, eventdetail=eventdetobj)
         except BaseException:
@@ -212,23 +241,21 @@ class AppEventDetailHouseInfoView(View):
             pic = eventdetobj.house_type.pic.url
         except BaseException:
             pic = ''
-        house_type = eventdetobj.type
         value = [{'event': eventdetobj.event.name,
                   'realname': user.customer.realname,
                   'mobile': user.customer.mobile,
                   'identication': user.customer.identication,
                   'building_unit': eventdetobj.building + eventdetobj.unit + str(eventdetobj.floor) + '层' + str(eventdetobj.room_num),
-                  'total': '***' if test and not eventdetobj.event.test_price else ((eventdetobj.area) * (eventdetobj.unit_price)),
-                  'house_type': house_type,
+                  'total': '***' if (test and not eventdetobj.event.test_price) else ((eventdetobj.area) * (eventdetobj.unit_price)),
+                  'house_type': eventdetobj.type,
                   'pic': pic,
                   'floor': eventdetobj.floor,
                   'area': eventdetobj.area if eventdetobj.event.covered_space else '***',
                   'unit_price': eventdetobj.unit_price if eventdetobj.event.covered_space_price else '***',
                   'looking': eventdetobj.looking,
                   'term': eventdetobj.term,
-                  'is_sold': eventdetobj.is_sold,
                   'is_followed': is_followed,
-                  'is_testsold': eventdetobj.is_testsold,
+                  'sold': eventdetobj.is_testsold if test else eventdetobj.is_sold,
                   }]
         context = {}
         context['objects'] = value
@@ -379,6 +406,7 @@ class AppHouseChoiceConfirmView(View):
                                 hours=event.limit)).strftime('%Y年%m月%d日 %H:%M:%S'),
                         'ordertime': order.time,
                         'orderid': order.id,
+                        'is_test': order.is_test,
                     })
             elif Order.objects.filter(user=user, eventdetail_id=obj[0],
                                       is_test=True).exists():
@@ -411,6 +439,7 @@ class AppHouseChoiceConfirmView(View):
                                 hours=event.limit)).strftime('%Y年%m月%d日 %H:%M:%S'),
                         'ordertime': order.time,
                         'orderid': order.id,
+                        'is_test': order.is_test,
                     })
             elif not obj[1] and obj[2]:
                 cursor.execute(
@@ -566,7 +595,7 @@ class AppOrderListView(View):
                     str(obj.eventdetail.room_num)),
                 'time': obj.time.strftime('%Y/%m/%d %H:%M:%S'),
                 'event': obj.eventdetail.event.name,
-                'unit_price': obj.eventdetail.unit_price if obj.eventdetail.event.covered_space_price else '',
+                'unit_price': obj.eventdetail.unit_price if obj.eventdetail.event.covered_space_price else '***',
                 'orderid': obj.id,
                 'is_test': obj.is_test,
             }]

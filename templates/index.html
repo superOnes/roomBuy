@@ -77,7 +77,6 @@
 		var oPswd = document.getElementById('pswd');
 		var oRemember = document.getElementById('remember');
 		
-		
 	//	本地缓存密码
 	    var loUser = localStorage.getItem("user") || "";
 	    var loPass = localStorage.getItem("pass") || "";
@@ -90,9 +89,6 @@
 	        if(oRemember.checked){
 	            localStorage.setItem("user",oUser.value);
 	            localStorage.setItem("pass",oPswd.value);
-	        }else{
-	            localStorage.setItem("user","");
-	            localStorage.setItem("pass","");
 	        }
 	    });
     }

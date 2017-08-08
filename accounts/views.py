@@ -126,10 +126,12 @@ class CustomerLogoutView(View):
 
     def post(self, request):
         user = request.user
+        if not user.is_authenticated:
+            return JsonResponse({'response_state': 400, 'msg': '您之前已经退出！'})
         user.customer.session_key = None
         user.customer.save()
         logout(request)
-        return JsonResponse({'response_state': 200, 'msg': '退出成功'})
+        return JsonResponse({'response_state': 200, 'msg': '退出成功！'})
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -182,6 +184,8 @@ class ImportView(View):
                 if row == 0 or row == 1:
                     os.remove('media/tmp/customer.xlsx')
                     return JsonResponse({'response_state': 400, 'msg': '导入的excel为空表！'})
+                if col != 4:
+                    return JsonResponse({'response_state': 400, 'msg': '导入文件不正确！'})
                 value1 = sheet.cell(rowx=0, colx=0).value
                 value2 = sheet.cell(rowx=0, colx=1).value
                 value3 = sheet.cell(rowx=0, colx=2).value

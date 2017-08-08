@@ -61,20 +61,6 @@
         $("title").html(decodeURI(eventname));
 		$.ajax({
 			type:"get",
-			url:http+"/app/detail/",
-			data:{
-				id:id
-			},
-			success:function(data){
-				if(data.response_state==200){
-					data5(data.objects[0]);
-				}
-			},
-			error:function(){}
-		});
-
-		$.ajax({
-			type:"get",
 			url:http+"/app/houseinfo/",
 			data:{
 				house:houseId,
@@ -99,18 +85,6 @@
 			}
 
 		});
-
-        pushHistory();
-        window.addEventListener("popstate", function(e) {
-            window.location.href="houseList.html?id="+id;
-        }, false);
-        function pushHistory() {
-            var state = {
-                title: "title",
-                url:"#"
-            };
-            window.history.pushState(state, state.title, state.url);
-        }
 	});
 
 	/*收藏按钮*/

@@ -1,5 +1,6 @@
 from django.conf.urls import url
 from .views import (
+    EventInfo,
     ProTimeView,
     AppEventDetailView,
     AppEventDetailListView,
@@ -15,6 +16,7 @@ from .views import (
     OrderProView, AppHouseChoiceConfirmTestView)
 
 urlpatterns = [
+    url(r'^eventinfo/', EventInfo.as_view(), name='app_eventinfo'),
     url(r'^detail/', AppEventDetailView.as_view(), name='app_eventdetail'),
     url(r'^houses/', AppEventDetailListView.as_view(), name='app_building_list'),
     url(r'^protime/', ProTimeView.as_view(), name='app_protocol_detail'),

@@ -167,9 +167,15 @@ a, img {-webkit-touch-callout: none;}
 }
 .prols p{font-size:.8rem;}
 .closePro{
-    position:absolute;
-    top:10px;
-    right:10px;
+    width:30%;
+    height:30px;
+    line-height:30px;
+    margin: 1.4rem auto 0;
+    border:solid 1px #f75c2e;
+    border-radius:30px;
+    background:#fff;
+    color:#f75c2e;
+    text-align:center;
 }
 .probtn{
     width:100%;
@@ -257,7 +263,7 @@ a, img {-webkit-touch-callout: none;}
     width: 95%;
     margin: 0.4rem auto 1.8rem;
     background: #fff;
-    padding: 0.4rem 0;
+    padding: 0.4rem 0 1rem;
     position: relative;
     border-bottom:solid 10px #eee;
 }
@@ -770,15 +776,6 @@ div.shoued i{
     padding:5%;
     border-bottom:solid 10px #eee;
 }
-.houseInfotop>p:nth-of-type(1) span{
-    border:solid 1px #999;
-    border-radius:4px;
-    font-size:.7rem;
-    padding:0 .5rem;
-    height:.5rem;
-    line-height:.5rem;
-
-}
 .houseInfotop>p:nth-of-type(2){
     width:100%;
     margin:.5rem auto;
@@ -793,18 +790,34 @@ div.shoued i{
 .infoImg {width:100%}
 .houseShare span{
     padding:0 3%;
-    height:1.6rem;
-    line-height:1.6rem;
+    height:1.2rem;
+    line-height:1.2rem;
     font-size:.8rem;
     font-weight:bold;
     color:#f75c2e;
     border-radius:6px;
     border:solid 1px #f75c2e;
+    margin-left:1rem;
+}
+.backList{
+    width:30%;
+    height:30px;
+    line-height:30px;
+    padding:0;
+    text-align:center;
+    background:#f75c2e;
+    display:block;
+    border-radius:6px;
+}
+.backList a {
+    color:#fff;
+    font-size:.8rem;
+    padding-left:20px;
+    background:url("../images/back.png") no-repeat .2rem center;
+    background-size:20%;
+    display:block;
 }
 .houseShare span a{ color:#f75c2e;}
-.houseShare span:nth-of-type(1){
-    margin-right:1.0rem;
-}
 .houseInfoCont{
     height:4.2rem;
     border-bottom:solid 10px #eee;
