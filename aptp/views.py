@@ -224,6 +224,9 @@ class AppEventDetailHouseInfoView(View):
         house = request.GET.get('house')
         eventdetobj = EventDetail.get(house)
         now = datetime.now()
+        if eventdetobj.sign_id:
+            eventdetobj.is_sold=True
+            eventdetobj.save()
         if now > eventdetobj.event.test_start and now < eventdetobj.event.test_end:
             test = True
         if now > eventdetobj.event.event_start and now < eventdetobj.event.event_end:
