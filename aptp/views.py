@@ -185,6 +185,10 @@ class AppEventDetailHouseListView(View):
             response_state = 405
         else:
             response_state = None
+            if now > event.test_start and now < event.test_end:
+                test = True
+            if now > event.event_start and now < event.event_end:
+                test = False
         building = request.GET.get('building')
         unit = request.GET.get('unit')
         context = {}
@@ -196,10 +200,9 @@ class AppEventDetailHouseListView(View):
                 value = {
                     'house': obj.id,
                     'floor_room_num': str(obj.floor) + '-' + str(obj.room_num),
-                    'is_sold': obj.is_sold,
-                    'is_testsold': obj.is_testsold,
                     'floor': obj.floor,
                     'room_num': obj.room_num,
+                    'sold': obj.is_testsold if test else obj.is_sold,
                 }
                 room_num_list.append(value)
         room_num_list.sort(key=lambda x: (x['floor'], x['room_num']))
@@ -589,7 +592,7 @@ class AppOrderListView(View):
                     str(obj.eventdetail.room_num)),
                 'time': obj.time.strftime('%Y/%m/%d %H:%M:%S'),
                 'event': obj.eventdetail.event.name,
-                'unit_price': obj.eventdetail.unit_price if obj.eventdetail.event.covered_space_price else '',
+                'unit_price': obj.eventdetail.unit_price if obj.eventdetail.event.covered_space_price else '***',
                 'orderid': obj.id,
                 'is_test': obj.is_test,
             }]
