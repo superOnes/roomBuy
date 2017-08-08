@@ -88,7 +88,7 @@
 
         pushHistory();
         window.addEventListener("popstate", function(e) {
-            window.location.href="houseList.html?id="+id;
+            window.location.reload();
         }, false);
         function pushHistory() {
             var state = {
