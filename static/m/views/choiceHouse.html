@@ -81,24 +81,6 @@ $(function(){
                 $(".btnL").bind("click",function(){
                     window.location.href="houseList.html?id="+id;
                });
-                $(".quitt").click(function(){
-                $(this).attr("disabled", "disabled");
-                $.ajax({
-                    type:"POST",
-                    url:http+"/acc/cusout/",
-                    data:{
-                        id:$(".ind1").html()
-                    },
-                    success:function(data){
-                        $(".quitt").removeAttr("disabled");
-                        window.location.href="login.html?id="+$(".ind1").html();
-                    },
-                    error:function(){
-                        $(".quitt").removeAttr("disabled");
-                        alert("退出出现未知错误！");
-                    }
-                    })
-                });
 
             }else if(data.response_state==401){
                 window.location.href="login.html?id="+id;
@@ -113,7 +95,30 @@ $(function(){
         error:function(){
             alert("出错了,请重试！");
         }
-    })
+    });
+
+    $(".quitt").click(function(){
+        $(this).attr("disabled", "disabled");
+        $.ajax({
+            type:"POST",
+            url:http+"/acc/cusout/",
+            data:{
+                id:$(".ind1").html()
+            },
+            success:function(data){
+                $(".quitt").removeAttr("disabled");
+                if(data.data.response_state==200){
+                    window.location.href="login.html?id="+$(".ind1").html();
+                }else if(data.data.response_state==400){
+                    alert(data.msg);
+                }
+            },
+            error:function(){
+                $(".quitt").removeAttr("disabled");
+                alert("退出出现未知错误！");
+            }
+        })
+    });
 });
 </script>
 </html>
