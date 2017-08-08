@@ -184,6 +184,8 @@ class ImportView(View):
                 if row == 0 or row == 1:
                     os.remove('media/tmp/customer.xlsx')
                     return JsonResponse({'response_state': 400, 'msg': '导入的excel为空表！'})
+                if col != 5:
+                    return JsonResponse({'response_state': 400, 'msg': '导入文件不正确！'})
                 value1 = sheet.cell(rowx=0, colx=0).value
                 value2 = sheet.cell(rowx=0, colx=1).value
                 value3 = sheet.cell(rowx=0, colx=2).value
