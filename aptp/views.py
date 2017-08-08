@@ -36,17 +36,18 @@ class ProTimeView(View):
                 password=customer.identication)
             if user:
                 if not user.is_admin:
-                    login(request, user)
                     if not customer.protime:
                         customer.protime = datetime.now()
                         customer.save()
                     if session_key:
                         Session.objects.filter(pk=session_key).delete()
+                        login(request, user)
                         customer.session_key = request.session.session_key
                         customer.save()
                         return JsonResponse(
                             {'response_state': 200, 'msg': '登录成功', })
                     else:
+                        login(request, user)
                         customer.session_key = request.session.session_key
                         customer.save()
                         return JsonResponse(
