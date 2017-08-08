@@ -257,7 +257,7 @@ a, img {-webkit-touch-callout: none;}
     width: 95%;
     margin: 0.4rem auto 1.8rem;
     background: #fff;
-    padding: 0.4rem 0;
+    padding: 0.4rem 0 1rem;
     position: relative;
     border-bottom:solid 10px #eee;
 }
@@ -334,7 +334,7 @@ a, img {-webkit-touch-callout: none;}
     height:2.2rem;
     width:100%;
     background: #f75c2e;
-    padding-top: 0.7rem;
+    margin-top: 0.7rem;
     position:fixed;
     bottom:0;
     left:0;
