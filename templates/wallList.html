@@ -19,6 +19,10 @@
             success:function(data){
                 if(data.response_state==200){
                     createWap(data.result);
+                    var oH=$(window).height();
+                    $(".wap").css({height:oH+"px",overflow:"hidden"});
+                    $(".wapbox").css({height:oH+"px"});
+                    $(".unitLists").css({height:(oH-54)+"px"});
                 }
                 $("span").each(function(){
                     $(this).click(function(){
@@ -85,13 +89,6 @@
     }
 
     $(function(){
-        var oH=$(window).height();
-        var doH=window.screen.height ;
-        console.log(doH)
-        $("#bg1").css({height:doH+"px"});
-        $(".wap").css({height:oH+"px",overflow:"hidden"});
-        $(".wapbox").css({height:oH+"px"});
-        $(".unitLists").css({height:(oH-54)+"px"});
         one(0);
     });
 
