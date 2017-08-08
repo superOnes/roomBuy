@@ -1,6 +1,8 @@
 
 import os
 import base64
+
+import pandas as pd
 import qrcode
 import xlrd
 from django.db import transaction
@@ -288,22 +290,29 @@ class ImportEventDetailView(View):
                 sheet_name = workdata.sheet_names()[0]
                 sheet = workdata.sheet_by_name(sheet_name)
                 row = sheet.nrows
+                col = sheet.ncols
                 if row == 0:
                     os.remove('media/price/price.xlsx')
                     return JsonResponse({'response_state': 400, 'msg': '导入的excel为空表！'})
                 data = []
-                value1 = sheet.cell(rowx=0, colx=0).value
-                value2 = sheet.cell(rowx=0, colx=1).value
-                value3 = sheet.cell(rowx=0, colx=2).value
-                value4 = sheet.cell(rowx=0, colx=3).value
-                value5 = sheet.cell(rowx=0, colx=4).value
-                value6 = sheet.cell(rowx=0, colx=5).value
-                value7 = sheet.cell(rowx=0, colx=6).value
-                value8 = sheet.cell(rowx=0, colx=7).value
-                value9 = sheet.cell(rowx=0, colx=8).value
-                value10 = sheet.cell(rowx=0, colx=9).value
-                head = [value1, value2, value3, value4, value5, value6, value7, value8, value9, value10]
-                if head != ['楼栋', '单元',	'楼层',	'房号',	'单价',	'建筑面积',	'朝向',	'使用年限',	'户型',	'户型图片名称']:
+                # df = pd.read_excel('media/price/price.xlsx')
+                if col > 0:
+                    try:
+                        value1 = sheet.cell(rowx=0, colx=0).value
+                        value2 = sheet.cell(rowx=0, colx=1).value
+                        value3 = sheet.cell(rowx=0, colx=2).value
+                        value4 = sheet.cell(rowx=0, colx=3).value
+                        value5 = sheet.cell(rowx=0, colx=4).value
+                        value6 = sheet.cell(rowx=0, colx=5).value
+                        value7 = sheet.cell(rowx=0, colx=6).value
+                        value8 = sheet.cell(rowx=0, colx=7).value
+                        value9 = sheet.cell(rowx=0, colx=8).value
+                        value10 = sheet.cell(rowx=0, colx=9).value
+                    except:
+                        return JsonResponse({'response_state': 400, 'msg': '导入文件不正确！'})
+                    head = [value1, value2, value3, value4, value5, value6, value7, value8, value9, value10]
+                if head != ['楼栋', '单元', '楼层', '房号', '单价', '建筑面积', '朝向', '使用年限', '户型', '户型图片名称']:
+                    print('hahah')
                     return JsonResponse({'response_state': 400, 'msg': '导入文件不正确！'})
                 if row - 1 <= request.user.house_limit:
                     for rx in range(1, row):
@@ -335,7 +344,6 @@ class ImportEventDetailView(View):
                         num = len(data)
                     with transaction.atomic():
                         try:
-                            print('hahah')
                             EventDetail.objects.filter(event=event).delete()
                             for ed in data:
                                 if not isinstance(ed[0], str):
