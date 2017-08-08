@@ -628,6 +628,9 @@ function orderSu(data){
 	);
 
 	$(".success-container").append(sucess);
+	if(data.is_test){
+		$(".prompt-warning").empty();
+	}
 
 }
 function orderInfos(){
