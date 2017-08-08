@@ -379,6 +379,7 @@ class AppHouseChoiceConfirmView(View):
                                 hours=event.limit)).strftime('%Y年%m月%d日 %H:%M:%S'),
                         'ordertime': order.time,
                         'orderid': order.id,
+                        'is_test': order.is_test,
                     })
             elif Order.objects.filter(user=user, eventdetail_id=obj[0],
                                       is_test=True).exists():
@@ -411,6 +412,7 @@ class AppHouseChoiceConfirmView(View):
                                 hours=event.limit)).strftime('%Y年%m月%d日 %H:%M:%S'),
                         'ordertime': order.time,
                         'orderid': order.id,
+                        'is_test': order.is_test,
                     })
             elif not obj[1] and obj[2]:
                 cursor.execute(

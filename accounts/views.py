@@ -126,10 +126,12 @@ class CustomerLogoutView(View):
 
     def post(self, request):
         user = request.user
+        if not user.is_authenticated:
+            return JsonResponse({'response_state': 400, 'msg': '您之前已经退出！'})
         user.customer.session_key = None
         user.customer.save()
         logout(request)
-        return JsonResponse({'response_state': 200, 'msg': '退出成功'})
+        return JsonResponse({'response_state': 200, 'msg': '退出成功！'})
 
 
 @method_decorator(admin_required, name='dispatch')
