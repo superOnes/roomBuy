@@ -29,6 +29,20 @@ class EventForm(forms.ModelForm):
                     raise forms.ValidationError('活动开始时间应比公测结束时间晚1天！')
                 if cleaned_data['event_start'] >= cleaned_data['event_end']:
                     raise forms.ValidationError('活动结束时间不能提前于活动开始时间！')
+            num = 0
+            if 'cover' not in cleaned_data:
+                raise forms.ValidationError('封面图不得为空！')
+            num += cleaned_data['cover'].size
+            if cleaned_data['plane_graph'] is not None:
+                num += cleaned_data['plane_graph'].size
+            if cleaned_data['plane_graph1'] is not None:
+                num += cleaned_data['plane_graph1'].size
+            if cleaned_data['plane_graph2'] is not None:
+                num += cleaned_data['plane_graph2'].size
+            if cleaned_data['plane_graph3'] is not None:
+                num += cleaned_data['plane_graph3'].size
+            if num > 2097152:
+                raise forms.ValidationError('添加图片大小总和不得超过2M!')
         return cleaned_data
 
 
