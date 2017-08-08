@@ -515,7 +515,7 @@ function houseInfo(data){
 	);
 	$("#houseInfo").after(infoBlack);
 	$("#houseInfo").append(houseInfo);
-		if(data.is_sold){
+		if(data.sold){
 			$(".houseInfoOther").after($('<div class="houseBtnN">房间已售</div>'));
 		}else{
 			$(".houseInfoOther").after($('<div class="houseBtnY" onclick="buyNow()">立即选择</div>'));
