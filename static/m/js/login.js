@@ -17,18 +17,19 @@ $(function(){
 		//	$(".tips").html("证件号格式错误！");
 		//}
 		else{
-			var tel=$(".titleph").val(),personId=$(".titlezj").val();
-            $(".btnlog").attr("disabled", "disabled");
+			var tel=$(".titleph").val(),personId=$(".titlezj").val(),id=$(".loginId").html();
+			var $btnlog=$(".btnlog");
+            $btnlog.attr("disabled", "disabled");
 			$.ajax({
 				type:"POST",
 				url:http+"/acc/cuslog/",
 				data:{
 					tel:tel,
 					personId:personId,
-					id:$(".loginId").html()
+					id:id
 				},
 				success:function(data){
-                    $(".btnlog").removeAttr("disabled");
+                    $btnlog.removeAttr("disabled");
 					if(data.response_state==200){
 
 						prol(data.objects[0]);
@@ -38,7 +39,7 @@ $(function(){
 					}
 				},
 				error:function(){
-                    $(".btnlog").removeAttr("disabled");
+                    $btnlog.removeAttr("disabled");
 					alert("页面出错，请重试");
 				}
 
@@ -161,9 +162,6 @@ function createList(data){
 					'<label class="click-down fr" name="true"><i></i></label>'+
 				'</div>'+
 			'</div>'+
-			'<ul class="shareCarList houseTap">'+
-
-			'</ul>'+
 			'<div class="endTime">'+
 				'<i></i>'+
 				'<p id="endTimeing"></p>'+
@@ -252,10 +250,14 @@ function myShare(){
 		},
 		success:function(data){
 			if(data.response_state==200){
-				$(".shareCarList").empty();
+				$(".shareCarList").remove();
 				if(data.objects.length==0){
-					$(".shareCarList").append('<div class="noOne"><img src="../images/none.png" /><p>目前您没有任何收藏！</p></div>');
+					$(".houseList").after('<ul class="shareCarList houseTap">'+
+                        							'<div class="noOne"><img src="../images/none.png" /><p>目前您没有任何收藏！</p></div>'+
+                        						'</ul>'
+						);
 				}else{
+                    $(".houseList").after('<ul class="shareCarList houseTap"></ul>');
 					for(var i=0;i<data.objects.length;i++){
 						$(".shareCarList").append($('<li class="shareCar-list">'+
 							'<a class="share-a">'+
@@ -303,7 +305,7 @@ function houseList(data){
 
 	aPp.each(function(){
 		$(this).on("click",function(){
-            $(".shareCarList").empty();
+            $(".shareCarList").remove();
 			$(".sharees").removeClass("listTile-style");
 			aPp.removeClass('listTile-style');
 			$(this).addClass('listTile-style');
@@ -323,7 +325,7 @@ function houseList(data){
 											'<div class="unite clear"></div>'+
 									'</div>'
 						);
-						$(".shareCarList").after(unit);
+						$(".houseList").after(unit);
 					}
 
 					for(var i=0;i<data.objects[0].unit.length;i++){
