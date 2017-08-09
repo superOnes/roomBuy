@@ -28,8 +28,8 @@
 				</div>
 			</div>
 		</div>
-		{% if form.num.errors %}
-		<div class="alert alert-danger" style="font-size:14px;font-weight:bold">{{form.num.errors}}</div>
+		{% if form.name.errors %}
+		<div class="alert alert-danger" style="font-size:14px;font-weight:bold">{{form.name.errors}}</div>
 		{% endif %}
 		<input type="text" name="event" value="{{form.event.value|default:''}}" style="display:none">
 		<div class="modal-footer">
