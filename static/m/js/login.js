@@ -739,7 +739,7 @@ function checkInfo(data){
             '<td>订单类型：</td>'+
             '<td>公测订单</td>'+
             '</tr>'));
-
+    }else{
         setInterval(function(){
             var dateNew= new Date(data.limit).getTime() - new Date().getTime();
             if(dateNew>0){
@@ -758,6 +758,5 @@ function checkInfo(data){
             }
 
         },1000);
-
     }
 }
