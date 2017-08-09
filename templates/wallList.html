@@ -23,6 +23,8 @@
                     $(".wap").css({height:oH+"px",overflow:"hidden"});
                     $(".wapbox").css({height:oH+"px"});
                     $(".unitLists").css({height:(oH-54)+"px"});
+
+                    one(0);
                 }
                 $("span").each(function(){
                     $(this).click(function(){
@@ -39,8 +41,7 @@
 
         })
     });
-
-
+    
     function createWap(data){
         var wap=$('<img id="bg1" src="{{STATIC_URL}}images/bg1.png">'+
         		'<div class="wap">'+
@@ -87,10 +88,6 @@
             }
         }
     }
-
-    $(function(){
-        one(0);
-    });
 
     function one(k){
         var wapBox=$(".wapbox");
