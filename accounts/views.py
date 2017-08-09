@@ -201,6 +201,7 @@ class ImportView(View):
                     value2 = sheet.cell(rowx=rx, colx=1).value
                     value3 = sheet.cell(rowx=rx, colx=2).value
                     value4 = sheet.cell(rowx=rx, colx=3).value
+                    # print(value1, value2, value3, value4)
                     if type(value1) != str:
                         try:
                             value1 = str(int(value1))
@@ -226,11 +227,18 @@ class ImportView(View):
                     # else:
                     #     return JsonResponse({'respone_state': 400, 'msg': '导入数据'})
                     data.append(li)
+                realname = list(map(lambda x: (x[0]), data))
+                for rl in realname:
+                    if len(rl) == 0:
+                        return JsonResponse({'response_state': 400, 'msg': '姓名,手机号，证件号不能为空！'})
                 mobile = list(map(lambda x: (x[1]), data))
                 if len(set(mobile)) < len(mobile):
                     os.remove('media/tmp/customer.xlsx')
                     return JsonResponse({'response_state': 400, 'msg': '手机号有重复，请查询后重试！'})
                 identification = list(map(lambda x: (x[2]), data))
+                for idt in identification:
+                    if len(idt) == 0:
+                        return JsonResponse({'response_state': 400, 'msg': '姓名,手机号，证件号不能为空！'})
                 if len(set(identification)) < len(identification):
                     os.remove('media/tmp/customer.xlsx')
                     return JsonResponse({'response_state': 400, 'msg': '身份证号有重复，请查询后重试！'})
