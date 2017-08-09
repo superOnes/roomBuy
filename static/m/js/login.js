@@ -557,14 +557,6 @@ function proldel(){
 function closePro(){
     $(".proNew").remove();
 }
-function data5(result){
-	var datap=$('<p class="event_start" style="display:none">'+result.event_start+'</p>'+
-		'<p class="event_end" style="display:none">'+result.event_end+'</p>'+
-		'<p class="test_ent" style="display:none">'+result.test_ent+'</p>'+
-		'<p class="test_start" style="display:none">'+result.test_start+'</p>'
-	);
-	$("body").append(datap);
-}
 function buyNow(){
     $("#houseInfoBlack").show();
 }
