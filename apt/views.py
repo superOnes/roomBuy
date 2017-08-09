@@ -15,7 +15,7 @@ from django.shortcuts import resolve_url
 from django.views import View
 from django.views.generic import ListView, DetailView, TemplateView
 from django.views.generic.edit import CreateView, UpdateView
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, Http404
 from django.db.models import Q
 from django.http import QueryDict
 from django.utils.decorators import method_decorator
@@ -992,9 +992,18 @@ class EventTVWallInfoView(View):
 
 
 @method_decorator(admin_required, name='dispatch')
-@method_decorator(event_permission, name='dispatch')
 class EventTVWallOrder(TemplateView):
     template_name = 'orderInfo.html'
+
+    def get(self, request, *args, **kwargs):
+        try:
+            order = Order.objects.get(eventdetail_id=kwargs['pk'],
+                                      is_test=False)
+            if order.eventdetail.event.company != request.user.company:
+                raise Http404('没有访问权限')
+        except:
+            raise Http404('哎呀，网页走丢了')
+        return super(EventTVWallOrder, self).get(request, *args, **kwargs)
 
     def get_context_data(self, pk):
         context = super(EventTVWallOrder, self).get_context_data()
