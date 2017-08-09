@@ -127,7 +127,7 @@ class CustomerLogoutView(View):
     def post(self, request):
         user = request.user
         if not user.is_authenticated:
-            return JsonResponse({'response_state': 400, 'msg': '您之前已经退出！'})
+            return JsonResponse({'response_state': 400, 'msg': '您之前没登录或已经退出！'})
         user.customer.session_key = None
         user.customer.save()
         logout(request)

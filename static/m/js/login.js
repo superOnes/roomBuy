@@ -508,8 +508,8 @@ function houseInfo(data){
 		}
 
 	$(".shareBt").bind("click",shareBtn);
-
-	if(data.is_followed[0]){
+	/*这里去掉[0]*/
+	if(data.is_followed){
 		$(".shareBt").html("已收藏").css({background:"#999",border:"none",color:"#fff"})
 	}
 	if(data.pic==""){
@@ -686,7 +686,7 @@ function checkInfo(data){
 								'<table>'+
 									'<tr>'+
 										'<td>户型：</td>'+
-										'<td>'+data.houst_type+'</td>'+
+										'<td>'+data.house_type+'</td>'+//改正拼写
 									'</tr>'+
 									'<tr>'+
 										'<td>建筑面积：</td>'+
