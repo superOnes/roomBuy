@@ -72,6 +72,6 @@ def customer_login_time(func):
                       0.5) and now < event.test_start) or (now > event.event_start +
                                                            timedelta(hours=-
                                                                      0.5) and now < event.event_start):
-            return JsonResponse({'response_state': 405, 'msg': '活动还未正式开始！'})
+            return JsonResponse({'response_state': 405, 'msg': '活动还未正式开始，请稍候！'})
         return func(request, *args, **kwargs)
     return wrapper

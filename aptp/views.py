@@ -175,22 +175,13 @@ class AppEventDetailHouseListView(View):
 
     def get(self, request):
         eventid = request.GET.get('id')
-        event = Event.get(eventid)
-        now = datetime.now()
-        if (now > event.test_start +
-            timedelta(hours=-
-                      0.5) and now < event.test_start) or (now > event.event_start +
-                                                           timedelta(hours=-
-                                                                     0.5) and now < event.event_start):
-            response_state = 405
-        else:
-            response_state = None
-            if now > event.test_start and now < event.test_end:
-                test = True
-            if now > event.event_start and now < event.event_end:
-                test = False
         building = request.GET.get('building')
         unit = request.GET.get('unit')
+        event = Event.get(eventid)
+        now = datetime.now()
+        test = True
+        if  now > event.event_start and now < event.event_end:
+            test = False
         context = {}
         eventdetobj = EventDetail.objects.filter(
             event_id=eventid, building=building, unit=unit)
@@ -207,7 +198,6 @@ class AppEventDetailHouseListView(View):
                 room_num_list.append(value)
         room_num_list.sort(key=lambda x: (x['floor'], x['room_num']))
         context['objects'] = room_num_list
-        context['response_state'] = response_state
         context['response_state'] = 200
         return JsonResponse(context)
 
@@ -224,13 +214,12 @@ class AppEventDetailHouseInfoView(View):
         house = request.GET.get('house')
         eventdetobj = EventDetail.get(house)
         now = datetime.now()
-        if eventdetobj.sign_id:
-            eventdetobj.is_sold=True
-            eventdetobj.save()
-        if now > eventdetobj.event.test_start and now < eventdetobj.event.test_end:
-            test = True
+        test = True
         if now > eventdetobj.event.event_start and now < eventdetobj.event.event_end:
             test = False
+        if (not test) and eventdetobj.sign_id:
+            eventdetobj.is_sold = True
+            eventdetobj.save()
         try:
             Follow.objects.get(user=user, eventdetail=eventdetobj)
         except BaseException:
