@@ -30,17 +30,17 @@ $(document).ready(function(){
 // 	$("#customerOrder").submit(function(){
 // 		var inputMobile = $("input[name='mobile']").val();
 // 		var inputIdent = $("input[name='identication']").val();
-// 		var pattern = /\d{17}[\d|x]|\d{15}/;
+// 		var pattern = /^\d{17}[\d|X]$/;
 // 		if(inputMobile.length < 11){
 // 			new $.zui.Messager('请输入正确的手机号！', {
 // 				placement:'center',
-// 				type: 'primary'
+// 				type: 'danger'
 // 			}).show();
 // 　			return false;
 // 		}else if(!pattern.test(inputIdent)){
 // 			new $.zui.Messager('请输入正确的身份证号码！', {
 // 				placement:'center',
-// 				type: 'primary' // 定义颜色主题
+// 				type: 'danger' // 定义颜色主题
 // 			}).show();
 // 　			return false;
 // 		}
