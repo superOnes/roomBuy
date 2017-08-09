@@ -127,14 +127,14 @@ class AppEventDetailListView(View):
         eventobj = Event.get(eventid)
         context = {}
         eventdetobj = EventDetail.objects.filter(event_id=eventid)
-        buildinglist = []
+        buildinglist = set()
         for obj in eventdetobj:
-            buildinglist.append((obj.building))
+            buildinglist.add(obj.building)
         value = [{
             'event_name': eventobj.name,
             'customer_count': eventobj.customer_set.count(),
             'event_start': (eventobj.event_start).strftime("%Y/%m/%d %H:%M:%S"),
-            'building': sorted(list(set(buildinglist))),
+            'building': sorted(buildinglist),
         }]
         context['objects'] = value
         context['response_state'] = 200
@@ -153,11 +153,11 @@ class AppEventDetailUnitListView(View):
         context = {}
         eventdetobj = EventDetail.objects.filter(
             building=building, event_id=eventid)
-        unitlist = []
+        unitlist=set()
         for obj in eventdetobj:
-            unitlist.append((obj.unit))
+            unitlist.add(obj.unit)
         value = [{
-            'unit': sorted(list(set(unitlist)))
+            'unit': sorted(unitlist)
         }]
         context['objects'] = value
         context['response_state'] = 200
