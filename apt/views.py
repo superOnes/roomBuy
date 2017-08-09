@@ -359,7 +359,7 @@ class ImportEventDetailView(View):
                                 looking=ed[6],
                                 term=ed[7],
                                 type=ed[8],
-                                house_type=HouseType.objects.filter(name=ed[9]).first(),
+                                house_type=HouseType.objects.filter(event=event, name=ed[9]).first(),
                                 event=event)
                             eventdetail.save()
                         os.remove('media/price/price.xlsx')
