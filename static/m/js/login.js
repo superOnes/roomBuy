@@ -378,14 +378,8 @@ function houseList(data){
 
 										aLis.each(function(){
 											$(this).click(function(){
-												if(data.response_state==405){
-													alert(data.msg);
-												}else{
-													var houseID=data.objects[$(this).index()].house;
-													window.location.href="houseInfo.html?house="+houseID+"&id="+$(".idNum").html();
-												}
-
-
+												var houseID=data.objects[$(this).index()].house;
+												window.location.href="houseInfo.html?house="+houseID+"&id="+$(".idNum").html();
 											})
 										})
                                     }else if(data.response_state==401||data.response_state==403){
