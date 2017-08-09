@@ -28,6 +28,13 @@ input[type="number"]{
     -moz-appearance: textfield;
 }
 
+
+.messagers-holder.bottom{
+	bottom: 400px !important;
+}
+
+
+
 /*登录 重置按钮样式*/
 .btn-sm{
 	margin: 0 10px !important;

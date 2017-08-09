@@ -72,12 +72,11 @@
 			$("#is_clear_status").val($(e.currentTarget).data("id"));
 		})
 		$("#is_clear").click(function() {
+			$(this).attr("disabled","disabled");
 			var id = $("#is_clear_status").val();
 			$.ajax({
 				type: "POST",
-				data: {
-					id: id
-				},
+				data: { id: id },
 				url: "/dlhousetypes/",
 				async: true,
 				success: function() {

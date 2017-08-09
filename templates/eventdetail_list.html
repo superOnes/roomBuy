@@ -213,7 +213,8 @@
 			$("#status_status").val($(e.currentTarget).data("id"));
 			$("#status_issue").modal();
 		});
-		$(".status_confirm").on("click", function(e) {
+		$(".status_confirm").click(function(e) {
+			$(this).attr("disabled","disabled");
 			var id = $("#status_status").val();
 			$.ajax({
 				type: "PUT",
@@ -242,6 +243,7 @@
 			$id = $(e.currentTarget).data("id");
 		});
 		$("#deleteHouse").click(function() {
+			$(this).attr("disabled","disabled");
 			$.ajax({
 				type: "POST",
 				url: "/eventdetaildel/",
@@ -265,7 +267,8 @@
 		$(".house-type").on('click', function(e) {
 			var event_id = $(e.currentTarget).data("id");
 			$("#house-type-modal").modal();
-			$(".house-type-save").on("click", function() {
+			$(".house-type-save").click(function() {
+				$(this).attr("disabled","disabled");
 				$.ajax({
 					type: "post",
 					url: "/housetypes/",

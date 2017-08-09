@@ -49,14 +49,14 @@
 		<div class="form-group">
 			<label class="col-sm-3 control-label">单价<i>*</i></label>
 			<div class="col-sm-9">
-				<input type="text" class="form-control" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)"
+				<input type="text" class="form-control" onkeyup="(this.v=function(){this.value=this.value.replace(/^[0]\d*$|[^0-9]+/,'');}).call(this)"
 					onblur="this.v();" placeholder="单价" name="unit_price" required>
 			</div>
 		</div>
 		<div class="form-group">
 			<label class="col-sm-3 control-label">使用年限<i>*</i></label>
 			<div class="col-sm-9">
-				<input type="text" class="form-control" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)"
+				<input type="text" class="form-control" onkeyup="(this.v=function(){this.value=this.value.replace(/^[0]\d*$|[^0-9]+/,'');}).call(this)"
 					onblur="this.v();" placeholder="使用年限" name="term" required>
 			</div>
 		</div>

@@ -40,9 +40,10 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		$("#houseTypeCreate").submit(function(){
+			$(".btn-primary").attr("disabled","disabled");
 			var inputPic = $(".picImgFile").html();
 			if(inputPic == ""){
-				new $.zui.Messager('请添加户型照片!！', {
+				new $.zui.Messager('请添加户型照片!', {
 					placement:'center',
 					type: 'important' // 定义颜色主题
 				}).show();

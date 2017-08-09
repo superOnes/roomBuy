@@ -12,12 +12,17 @@ $(document).ready(function(){
 		var	pattern = /[0-9-()（）]{7,15}/;
 
 		if(!pattern.test(inputPhone)){
-			alert('请输入正确的电话号码！')
+			new $.zui.Messager('请输入正确的手机号！', {
+				placement:'bottom',
+				type: 'danger'
+			}).show();
 　			return false;
 		}else if($(".coverImgFile").html() == "") {
-			console.log($(".event_start").value);
-			alert('请添加封面')
-		　	return false;
+			new $.zui.Messager('请添加封面！', {
+				placement:'bottom',
+				type: 'danger'
+			}).show();
+　			return false;
 		}
 	});
 
