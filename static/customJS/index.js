@@ -219,6 +219,7 @@ function getorderSelect(){
 				$("#eventList").append("<option value='"+result[i].id+"'>"+result[i].name+"</option>")
 			};
 			$("#eventList option:first").attr("selected","selected");
+			getorderList(result.length,0,"")
 			return true;
 		},
 		error:function(){

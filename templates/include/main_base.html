@@ -22,7 +22,7 @@
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-		        <button type="button" class="btn btn-primary" onclick="quit()">确认</button>
+		        <button type="button" class="btn btn-primary" onclick="quit(this)">确认</button>
 		      </div>
 		    </div>
 		  </div>
@@ -45,19 +45,20 @@
   </div>
 </section>
 <script type="text/javascript">
-	function quit(){
-	$.ajax({
-		type:"POST",
-		url:"/acc/logout/",
-		async:true,
-		success:function(){
-			window.location.href="/acc/login/";
-		},
-		error:function(){
-			alert("退出失败！")
-		}
-	});
-}
+	function quit(e){
+    $(e).attr("disabled","disabled");
+    $.ajax({
+      type:"POST",
+      url:"/acc/logout/",
+      async:true,
+      success:function(){
+        window.location.href="/acc/login/";
+      },
+      error:function(){
+        alert("退出失败！")
+      }
+    });
+  }
 
 </script>
 {% endblock %}
