@@ -725,7 +725,7 @@ class ExportOrderView(View):
             else:
                 objs = queryset
         except BaseException:
-            raise forms.ValidationError('导出失败请重试！')
+            raise Http404('导出时发生错误！')
         sheet = Workbook(encoding='utf-8')
         s = sheet.add_sheet('数据表')
         list = [
