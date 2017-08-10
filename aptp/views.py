@@ -212,7 +212,7 @@ class AppEventDetailHouseInfoView(View):
         eventdetobj = EventDetail.get(house)
         now = datetime.now()
         test = True
-        if now > eventdetobj.event.event_start and now < eventdetobj.event.event_end:
+        if eventdetobj.event.event_start < now < eventdetobj.event.event_end:
             test = False
         if (not test) and eventdetobj.sign_id:
             eventdetobj.is_sold = True

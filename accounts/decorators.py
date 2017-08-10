@@ -51,11 +51,9 @@ def customer_login_required(func):
             Customer.objects.get(user=request.user,event_id=eventid)
         except:
             return JsonResponse({'response_state': 401, 'msg': '您未参加该活动！'})
-        if (now < event.test_start +
-            timedelta(hours=-
-                      0.5) or (now > event.test_end and now < event.event_start +
-                               timedelta(hours=-
-                                         0.5)) or now > event.event_end):
+        if (now < event.test_start + timedelta(hours=-0.5)
+            or (event.test_end < now < event.event_start +timedelta(hours=-0.5))
+            or now > event.event_end):
             return JsonResponse({'response_state': 401, 'msg': '不在活动登录期间！'})
         return func(request, *args, **kwargs)
     return wrapper
@@ -67,11 +65,8 @@ def customer_login_time(func):
         eventid = request.GET.get('id', request.POST.get('id'))
         event = Event.get(eventid)
         now = datetime.now()
-        if (now > event.test_start +
-            timedelta(hours=-
-                      0.5) and now < event.test_start) or (now > event.event_start +
-                                                           timedelta(hours=-
-                                                                     0.5) and now < event.event_start):
+        if (event.test_start + timedelta (hours=-0.5) < now < event.test_start) \
+                or (event.event_start + timedelta (hours=-0.5) < now < event.event_start):
             return JsonResponse({'response_state': 405, 'msg': '活动还未正式开始，请稍候！'})
         return func(request, *args, **kwargs)
     return wrapper

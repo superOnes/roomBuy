@@ -92,11 +92,9 @@ class CustomerLoginView(View):
         event = Event.get(eventid)
         now = datetime.now()
         if event.is_pub:
-            if (now < event.test_start +
-                timedelta(hours=-
-                          0.5) or (now > event.test_end and now < event.event_start +
-                                   timedelta(hours=-
-                                             0.5)) or now > event.event_end):
+            if (now < event.test_start + timedelta (hours=-0.5)
+                or (event.test_end < now < event.event_start + timedelta (hours=-0.5))
+                or now > event.event_end):
                 return JsonResponse(
                     {'response_state': 400, 'msg': '不在活动登录期间！'})
             try:
