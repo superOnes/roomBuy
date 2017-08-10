@@ -95,7 +95,7 @@
       $.ajax({
         type:'post',
         async:true,
-        url:'http://10.7.10.193:8000/acc/settings/',
+        url:'/acc/settings/',
         data:{oldpassword:oldpassword,newpassword1:newpassword1,newpassword2:newpassword2},
         success:function(results){
           if(results.response_state == 200){
