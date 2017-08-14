@@ -262,7 +262,34 @@ function getorderList(thisId,is_test,searchValue){
 			alert("获取开盘数据失败！！！")
 		}
 	})
+};
+// 批量操作请求
+function batch(eventId,ids,isStatic){
+	$.ajax({
+		type:'post',
+		url:'http://10.7.10.198:8000/updownframe/rooms/',
+		data:{event:eventId,checklist:ids,state:isStatic},
+		asunc:true,
+		success:function(){
+			new $.zui.Messager('提示消息：成功', {
+				placement:'center',
+				type: 'success' // 定义颜色主题
+			}).show("",function(){
+				window.location.reload();
+			});
+		},
+		error:function(){
+			new $.zui.Messager('操作失败，请检查网络！', {
+				placement:'center',
+				type: 'danger' // 定义颜色主题
+			}).show('',function(){
+				$(".btn").removeAttr("disabled","disabled");
+			});
+		}
+	})
 }
+
+
 
 //文件图片上传显示
 	function getPath(obj,fileQuery,transImg) {

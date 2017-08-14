@@ -16,7 +16,8 @@
 	</ol>
 </div>
 <div class="row" style="padding:10px;margin-top:-20px;">
-	<a class="btn btn-primary" data-iframe="{% url 'room_create' pk=event.id %}" data-toggle=modal>添加房间/车位</a>
+	<a class="btn btn-primary" data-target="#batch" data-toggle="modal">批量操作</a>
+	<a class="btn btn-primary" data-iframe="{% url 'room_create' pk=event.id %}" data-toggle="modal">添加房间/车位</a>
 	<button type="button" class="btn btn-default lead" data-toggle="modal" data-target="#exampleModal" data-moveable="true">导入房源</button>
 	<a href="{% url 'room_export' pk=event.id %}" class="btn btn-default">导出房源</a>
 	<a href="{% url 'event_house_type_list' pk=event.id %}" class="btn btn-default" target="_blank" data-moveable="true">编辑户型</a>
@@ -54,6 +55,25 @@
 			</div>
 		</div>
 	</div>
+	<!--批量操作-->
+	<div class="modal fade" id="batch" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="exampleModalLabel">批量上架/下架</h4>
+				</div>
+				<div class="modal-body">
+					<p class="tip">批量上架：已上架的车位、房源会保持上架状态</p>
+					<p class="tip">批量下架：已下架的车位、房源会保持下架状态</p>
+				</div>
+				<div class="modal-footer batchFotter">
+					<button type="button" class="btn btn-default btn-sm" onclick="batchHandle(0)">下架</button>
+					<button type="button" class="btn btn-primary btn-sm" onclick="batchHandle(1)">上架</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 <table class="table datatable">
 	<thead>
@@ -74,7 +94,7 @@
 	</thead>
 	<tbody>
 		{% for obj in object_list %}
-		<tr>
+		<tr data-id="{{ obj.id }}">
 			<td>{{ forloop.counter }}</td>
 			<td>{{ obj.building }}{{ obj.unit }}<br/>{{ obj.floor }}-{{ obj.room_num }}</td>
 			<td>
@@ -177,7 +197,20 @@
 {% endif %}
 {% endblock %} {% block js %}
 <script type="text/javascript">
+// 批量操作
+function batchHandle(isStatic){
+	$(".btn-sm").attr("disabled","disabled");
+	// 获取选中的id
+	var ids = $(".table-datatable tbody tr.active") .map(function(){
+		return $(this).data('id');
+	}).get();
+	var eventId = {{event.id}};
+	batch(eventId,ids,isStatic);
+};
 	$(document).ready(function() {
+		// checkbox选择
+		$('table.datatable').datatable( {checkable: true} );
+		//分页
 		$(".zxf_pagediv").createPage({
 			pageNum: {{ paginator.num_pages}},//总页码
 			current: {{ page_obj.number }},//当前页
@@ -208,7 +241,6 @@
 			}
 		});
 
-		$('table.datatable').datatable();
 		$('.status').on('click', function(e) {
 			$("#status_status").val($(e.currentTarget).data("id"));
 			$("#status_issue").modal();
