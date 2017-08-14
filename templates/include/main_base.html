@@ -86,6 +86,13 @@
   </div>
 </section>
 <script type="text/javascript">
+$(document).ready(function(){
+  //密码清空
+  $("#edit").on('hide.zui.modal',function(){
+    $("input[name='oldpassword']").val("");
+    $("input[name='newpassword1']").val("");
+    $("input[name='newpassword2']").val("");
+  });
   $("#affirmEdit").click(function(){
     var oldpassword = $("input[name='oldpassword']").val();
     var newpassword1 = $("input[name='newpassword1']").val();
@@ -140,7 +147,7 @@
       }
     });
   }
-
+});
 
 </script>
 {% endblock %}
