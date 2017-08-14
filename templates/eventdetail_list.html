@@ -204,7 +204,7 @@ function batchHandle(isStatic){
 	var ids = $(".table-datatable tbody tr.active") .map(function(){
 		return $(this).data('id');
 	}).get();
-	batch(eventId,ids,isStatic);
+	batch(ids,isStatic);
 };
 	$(document).ready(function() {
 		// checkbox选择
