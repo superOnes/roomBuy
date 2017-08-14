@@ -264,11 +264,11 @@ function getorderList(thisId,is_test,searchValue){
 	})
 };
 // 批量操作请求
-function batch(eventId,ids,isStatic){
+function batch(ids,isStatic){
 	$.ajax({
 		type:'post',
 		url:'/updownframe/rooms/',
-		data:{event:eventId,checklist:ids,state:isStatic},
+		data:{checklist:ids,state:isStatic},
 		asunc:true,
 		success:function(){
 			new $.zui.Messager('提示消息：成功', {

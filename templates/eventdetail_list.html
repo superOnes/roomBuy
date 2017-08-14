@@ -204,7 +204,6 @@ function batchHandle(isStatic){
 	var ids = $(".table-datatable tbody tr.active") .map(function(){
 		return $(this).data('id');
 	}).get();
-	var eventId = {{event.id}};
 	batch(eventId,ids,isStatic);
 };
 	$(document).ready(function() {
