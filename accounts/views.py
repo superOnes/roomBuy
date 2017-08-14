@@ -55,7 +55,6 @@ class PersonalSettingsView(View):
         user = request.user
         if user.is_admin and not user.is_delete:
             oldpassword = request.POST.get('oldpassword')
-            print(oldpassword)
             user = authenticate(username=user.username, password=oldpassword)
             if user:
                 newpassword1 = request.POST.get('newpassword1')

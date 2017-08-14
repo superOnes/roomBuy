@@ -636,10 +636,7 @@ class ExportBuyHotView(View):
 
     def get(self, request):
         eventid = request.GET.get('id')
-        print(eventid)
         objs = Customer.objects.filter(event_id=eventid)
-        print(len(objs))
-        print(objs[0].realname)
         sheet = Workbook(encoding='utf-8')
         s = sheet.add_sheet('数据表')
         list = [
