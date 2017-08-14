@@ -116,7 +116,8 @@ class CustomerForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super(CustomerForm, self).clean()
-        if 'name' not in cleaned_data or 'identication' not in cleaned_data:
+        if 'realname' not in cleaned_data or \
+           'identication' not in cleaned_data:
             raise forms.ValidationError('姓名或证件号添加不正确')
         self.instance.event = self.initial['event']
         customer = Customer.objects.filter(event=self.instance.event)
