@@ -636,7 +636,10 @@ class ExportBuyHotView(View):
 
     def get(self, request):
         eventid = request.GET.get('id')
+        print(eventid)
         objs = Customer.objects.filter(event_id=eventid)
+        print(len(objs))
+        print(objs[0].realname)
         sheet = Workbook(encoding='utf-8')
         s = sheet.add_sheet('数据表')
         list = [
@@ -663,45 +666,44 @@ class ExportBuyHotView(View):
             response.write(sio.getvalue())
             return response
         row = 1
-        if objs:
-            for obj in objs:
-                order = Order.objects.filter(
-                    eventdetail__event_id=eventid, user__customer=obj)
-                s.write(row, 0, obj.realname)
-                s.write(row, 1, obj.mobile)
-                s.write(row, 2, obj.identication)
-                s.write(row, 3, obj.protime.strftime(
-                    "%Y/%m/%d %H:%M:%S") if obj.protime else '')
-                s.write(row, 4, obj.user.follow_set.count())
-                if len(order):
-                    order = order[0]
-                    s.write(row, 5, order.eventdetail.building +
-                            order.eventdetail.unit +
-                            str(order.eventdetail.floor) +
-                            '层' +
-                            str(order.eventdetail.room_num) if order.is_test else '')
-                    s.write(row, 6, (order.time).strftime(
-                        "%Y/%m/%d %H:%M:%S") if order.is_test else '')
-                    s.write(row, 7, order.eventdetail.building +
-                            order.eventdetail.unit +
-                            str(order.eventdetail.floor) +
-                            '层' +
-                            str(order.eventdetail.room_num) if not order.is_test else '')
-                    s.write(row, 8, (order.time).strftime(
-                        "%Y/%m/%d %H:%M:%S") if not order.is_test else '')
-                else:
-                    s.write(row, 5, None)
-                    s.write(row, 6, None)
-                    s.write(row, 7, None)
-                    s.write(row, 8, None)
-                row += 1
-            sio = BytesIO()
-            sheet.save(sio)
-            sio.seek(0)
-            response = HttpResponse(content_type='application/vnd.ms-excel')
-            response['Content-Disposition'] = 'attachment;filename=goufangredu.xls'
-            response.write(sio.getvalue())
-            return response
+        for obj in objs:
+            order = Order.objects.filter(
+                eventdetail__event_id=eventid, user__customer=obj)
+            s.write(row, 0, obj.realname)
+            s.write(row, 1, obj.mobile)
+            s.write(row, 2, obj.identication)
+            s.write(row, 3, obj.protime.strftime(
+                "%Y/%m/%d %H:%M:%S") if obj.protime else '')
+            s.write(row, 4, obj.user.follow_set.count())
+            if order:
+                order = order[0]
+                s.write(row, 5, order.eventdetail.building +
+                        order.eventdetail.unit +
+                        str(order.eventdetail.floor) +
+                        '层' +
+                        str(order.eventdetail.room_num) if order.is_test else '')
+                s.write(row, 6, (order.time).strftime(
+                    "%Y/%m/%d %H:%M:%S") if order.is_test else '')
+                s.write(row, 7, order.eventdetail.building +
+                        order.eventdetail.unit +
+                        str(order.eventdetail.floor) +
+                        '层' +
+                        str(order.eventdetail.room_num) if not order.is_test else '')
+                s.write(row, 8, (order.time).strftime(
+                    "%Y/%m/%d %H:%M:%S") if not order.is_test else '')
+            else:
+                s.write(row, 5, None)
+                s.write(row, 6, None)
+                s.write(row, 7, None)
+                s.write(row, 8, None)
+            row += 1
+        sio = BytesIO()
+        sheet.save(sio)
+        sio.seek(0)
+        response = HttpResponse(content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = 'attachment;filename=goufangredu.xls'
+        response.write(sio.getvalue())
+        return response
 
 
 @method_decorator(admin_required, name='dispatch')
