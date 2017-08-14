@@ -74,7 +74,8 @@
 				for(var i = 0; i < result.length; i++) {
 					$(".selectInp").append("<option value='" + result[i].id + "'>" + result[i].name + "</option>");
 				};
-				$exportEach.attr("href", "/export/buyhot/?id=" + result.length)
+				var eventId = $(".selectInp option:first").val();
+				$exportEach.attr("href", "/export/buyhot/?id=" + eventId)
 				$(".selectInp option:first").attr("selected", "selected");
 			},
 			error: function() {
