@@ -612,7 +612,7 @@ class ExportHouseHotView(View):
             s.write(row, 1, obj.unit)
             s.write(row, 2, str(obj.floor))
             s.write(row, 3, str(obj.room_num))
-            s.write(row, 4, '已售' if obj.is_sold else '未售')
+            s.write(row, 4, '已售' if obj.has_order() else '未售')
             s.write(row, 5, obj.unit_price)
             s.write(row, 6, obj.area)
             s.write(row, 7, obj.follow_set.count())
