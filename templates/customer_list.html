@@ -12,7 +12,7 @@
 	</ol>
 </div>
 <div class="row" style="padding:10px;margin-top:-20px;">
-	<a class="btn btn-primary" data-iframe="{% url 'custom_create' pk=event.id %}" data-toggle=modal>添加认筹名单</a>
+	<a class="btn btn-primary" data-iframe="{% url 'custom_create' pk=event.id %}" data-toggle="modal" data-backdrop="static">添加认筹名单</a>
 	<button type="button" class="btn btn-default" data-toggle="modal" data-target="#exampleModal" data-moveable="true" data-moveable="true">导入认筹名单</button>
 	<a href="{% url 'customer_export' pk=event.id %}" class="btn btn-default">导出认筹名单</a>
 	<div class="col-lg-3" style="float: right;">

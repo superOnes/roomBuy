@@ -149,7 +149,8 @@ function deleteOrder(thisId){
 			window.location.reload();
 		},
 		error:function(){
-			alert("未知错误")
+			alert("未知错误");
+			$("#is_clear").removeAttr("disabled","disabled")
 		}
 	});
 };
