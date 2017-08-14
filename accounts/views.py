@@ -203,12 +203,10 @@ class ImportView(View):
                 data = []
                 num = 0
                 for rx in range(1, row):
-                    li = []
                     value1 = sheet.cell(rowx=rx, colx=0).value
                     value2 = sheet.cell(rowx=rx, colx=1).value
                     value3 = sheet.cell(rowx=rx, colx=2).value
                     value4 = sheet.cell(rowx=rx, colx=3).value
-                    # print(value1, value2, value3, value4)
                     if not isinstance(value1, str):
                         try:
                             value1 = str(int(value1))
@@ -235,12 +233,10 @@ class ImportView(View):
                         return JsonResponse(
                             {'response_state': 400, 'msg': '导入手机号格式有误！'})
                     li = [value1, value2, value3, value4]
-                    # else:
-                    # return JsonResponse({'respone_state': 400, 'msg':
-                    # '导入数据'})
                     data.append(li)
                 realname = list(map(lambda x: (x[0]), data))
                 for rl in realname:
+                    rl.replace(' ', '')
                     if len(rl) == 0:
                         return JsonResponse(
                             {'response_state': 400, 'msg': '姓名,手机号，证件号不能为空！'})
@@ -251,6 +247,7 @@ class ImportView(View):
                         {'response_state': 400, 'msg': '手机号有重复，请查询后重试！'})
                 identification = list(map(lambda x: (x[2]), data))
                 for idt in identification:
+                    idt.replace(' ', '')
                     if len(idt) == 0:
                         return JsonResponse(
                             {'response_state': 400, 'msg': '姓名,手机号，证件号不能为空！'})
