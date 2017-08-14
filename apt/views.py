@@ -1088,16 +1088,11 @@ class UpDownFrameView(View):
     def post(self, request, *args, **kwargs):
         state = request.POST.get('state')
         eventdetail_id = request.POST.getlist('checklist[]')
-        event = request.POST.get('event')
-        if event and eventdetail_id:
-            for ed_id in eventdetail_id:
-                eventdetail = EventDetail.objects.get(id=ed_id, event=event)
-                if state == 0:
-                    eventdetail.status = True
-                    eventdetail.save()
-                else:
-                    eventdetail.status = False
-                    eventdetail.save()
-            return JsonResponse({'success': True})
-        return JsonResponse({'success': False})
+        ed = EventDetail.objects.filter(id__in=eventdetail_id)
+        if int(state) == 0:
+            ed.update(status=False)
+        if int(state) == 1:
+            ed.update(status=True)
+        return JsonResponse({'success': True})
+
 
