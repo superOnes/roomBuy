@@ -1079,3 +1079,25 @@ class EventTVWallOrderView(View):
             'price': ed.unit_price,
         }
         return JsonResponse({'response_state': 200, 'result': result})
+
+
+class UpDownFrameView(View):
+    '''
+    上架/下架
+    '''
+    def post(self, request, *args, **kwargs):
+        state = request.POST.get('state')
+        eventdetail_id = request.POST.getlist('checklist[]')
+        event = request.POST.get('event')
+        if event and eventdetail_id:
+            for ed_id in eventdetail_id:
+                eventdetail = EventDetail.objects.get(id=ed_id, event=event)
+                if state == 0:
+                    eventdetail.status = True
+                    eventdetail.save()
+                else:
+                    eventdetail.status = False
+                    eventdetail.save()
+            return JsonResponse({'success': True})
+        return JsonResponse({'success': False})
+

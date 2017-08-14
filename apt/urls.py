@@ -14,7 +14,7 @@ from .views import (EventListView, EventCreateView, ImportEventDetailView,
                     PurcharseHeatView, GetEventView, OrderListView,
                     EventDetailSignUpdateView, DeleteHouseTypeView,
                     ExportOrderView, EventTVWall, EventTVWallInfoView,
-                    EventTVWallOrder, EventTVWallOrderView)
+                    EventTVWallOrder, EventTVWallOrderView, UpDownFrameView)
 
 
 urlpatterns = [
@@ -46,6 +46,8 @@ urlpatterns = [
     url(r'^import/rooms/', ImportEventDetailView.as_view()),
     url(r'^(?P<pk>\d+)/export/rooms/', ExportEventDetailView.as_view(),
         name='room_export'),
+    url(r'^updownframe/rooms/', UpDownFrameView.as_view(),
+        name='room_updown'),
 
     # 认筹名单
     url(r'^(?P<pk>\d+)/customs/$', CustomListView.as_view(),

@@ -267,7 +267,7 @@ function getorderList(thisId,is_test,searchValue){
 function batch(eventId,ids,isStatic){
 	$.ajax({
 		type:'post',
-		url:'/updownframe/rooms/',
+		url:'updownframe/rooms/',
 		data:{event:eventId,checklist:ids,state:isStatic},
 		asunc:true,
 		success:function(){
