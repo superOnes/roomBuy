@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.shortcuts import get_object_or_404
 
-from apt.models import Event, EventDetail, Company
+from apt.models import Event, EventDetail, Client
 
 
 class Customer(models.Model):
@@ -43,9 +43,7 @@ class Customer(models.Model):
 class User(AbstractUser):
     is_delete = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
-    company = models.ForeignKey(Company, null=True, blank=True)
-    house_limit = models.IntegerField('房源数量限制', default=0)
-    expire_date = models.DateTimeField('账号过期日期', null=True, blank=True)
+    client = models.ForeignKey(Client, null=True, blank=True)
     customer = models.OneToOneField(Customer, null=True, blank=True)
 
     @classmethod

@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'apt',
     'accounts',
-    'aptp'
+    'aptp',
+    'backstage'
 ]
 
 MIDDLEWARE = [
