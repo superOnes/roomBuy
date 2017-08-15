@@ -583,8 +583,25 @@ function confrim(){
 	if(!$(".dialog-check").prop("checked")){
 		alert("请同意《活动协议》");
 	}else{
+        $("#houseInfoBlack").hide();
+        var code=$('<div class="windowBlack" id="code">'+
+						'<div class="codebox">' +
+							'<img/>'+
+							'<p>'+
+								'<input type="text" class="codeText" />'+
+								'<input type="button" class="codeBtn" onclick="codeSure()" />'+
+							'</p>'+
+						'</div>'+
+			'</div>');
+        $("body").append(code);
+
+	}
+}
+function codeSure(){
+	if($(".codeText").val().length!=0){
         window.location.href = "houseSuccess.html?house="+id+"&id="+idd;
 	}
+
 }
 Date.prototype.Format = function(fmt)
 { //author: meizz
