@@ -19,7 +19,7 @@ from django.db import transaction
 from apt.models import Event, EventDetail
 from aptm import settings
 from .models import User, Customer, Order
-from .decorators import customer_login_time, admin_required
+from .decorators import customer_login_required, admin_required
 
 
 class LoginView(View):
@@ -63,8 +63,10 @@ class PersonalSettingsView(View):
                     user.set_password(newpassword2)
                     user.save()
                     login(request, user)
-                    return JsonResponse({'response_state': 200, 'msg': '密码修改成功'})
-                return JsonResponse({'response_state': 400, 'msg': '两次新密码输入不一致'})
+                    return JsonResponse(
+                        {'response_state': 200, 'msg': '密码修改成功'})
+                return JsonResponse(
+                    {'response_state': 400, 'msg': '两次新密码输入不一致'})
             return JsonResponse({'response_state': 400, 'msg': '原密码输入错误'})
         return JsonResponse({'response_state': 400, 'msg': '您不是管理员用户'})
 
@@ -91,9 +93,9 @@ class CustomerLoginView(View):
         event = Event.get(eventid)
         now = datetime.now()
         if event.is_pub:
-            if (now < event.test_start + timedelta (hours=-0.5)
-                or (event.test_end < now < event.event_start + timedelta (hours=-0.5))
-                or now > event.event_end):
+            if (now < event.test_start + timedelta(hours=-0.5)
+                or (event.test_end < now < event.event_start + timedelta(hours=-0.5))
+                    or now > event.event_end):
                 return JsonResponse(
                     {'response_state': 400, 'msg': '不在活动登录期间！'})
             try:
@@ -120,8 +122,6 @@ class CustomerLoginView(View):
         return JsonResponse({'response_state': 403, 'msg': '活动还未正式推出！'})
 
 
-# @method_decorator(customer_login_required, name='dispatch')
-@method_decorator(customer_login_time, name='dispatch')
 class CustomerLogoutView(View):
     '''
     顾客退出登录
