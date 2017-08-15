@@ -235,7 +235,7 @@ class ImportView(View):
                     data.append(li)
                 realname = list(map(lambda x: (x[0]), data))
                 for rl in realname:
-                    rl.replace(' ', '')
+                    rl = str(rl).replace(' ', '')
                     if len(rl) == 0:
                         return JsonResponse(
                             {'response_state': 400, 'msg': '姓名,手机号，证件号不能为空！'})
@@ -246,7 +246,7 @@ class ImportView(View):
                         {'response_state': 400, 'msg': '手机号有重复，请查询后重试！'})
                 identification = list(map(lambda x: (x[2]), data))
                 for idt in identification:
-                    idt.replace(' ', '')
+                    idt = str(idt).replace(' ', '')
                     if len(idt) == 0:
                         return JsonResponse(
                             {'response_state': 400, 'msg': '姓名,手机号，证件号不能为空！'})
