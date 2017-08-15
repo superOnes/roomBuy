@@ -150,7 +150,7 @@ function deleteOrder(thisId){
 		},
 		error:function(){
 			alert("未知错误");
-			$("#is_clear").removeAttr("disabled","disabled")
+			$(this).removeAttr("disabled","disabled")
 		}
 	});
 };
@@ -264,7 +264,21 @@ function getorderList(thisId,is_test,searchValue){
 			alert("获取开盘数据失败！！！")
 		}
 	})
-}
+};
+	function quit(e){
+    $(e).attr("disabled","disabled");
+    $.ajax({
+      type:"POST",
+      url:"/acc/logout/",
+      async:true,
+      success:function(){
+        window.location.href="/acc/login/";
+      },
+      error:function(){
+        alert("退出失败！")
+      }
+    });
+  }
 
 //文件图片上传显示
 	function getPath(obj,fileQuery,transImg) {

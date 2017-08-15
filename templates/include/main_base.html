@@ -133,21 +133,8 @@ $(document).ready(function(){
       }).show();
     };
   });
-	function quit(e){
-    $(e).attr("disabled","disabled");
-    $.ajax({
-      type:"POST",
-      url:"/acc/logout/",
-      async:true,
-      success:function(){
-        window.location.href="/acc/login/";
-      },
-      error:function(){
-        alert("退出失败！")
-      }
-    });
-  }
 });
+
 
 </script>
 {% endblock %}

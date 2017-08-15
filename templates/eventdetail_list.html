@@ -84,7 +84,7 @@
 			<td>{{obj.type}}</td>
 			<td>朝 {{obj.looking}}</td>
 			<td>{{obj.term}} 年</td>
-			<td>{{ obj.status|yesno:"上架,未上架"}}</td>
+			<td>{{ obj.status|yesno:"已上架,未上架"}}</td>
 			<td>
 				<a data-iframe="{% url 'room_ht_update' pk=obj.id %}" data-toggle="modal" data-title="关联户型">
 					{{ obj.house_type.name }} <i class="icon icon-edit"></i></a>
