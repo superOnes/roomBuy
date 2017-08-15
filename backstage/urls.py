@@ -1,9 +1,9 @@
 
 from django.conf.urls import url
 
-from backstage.views import ManagerView
+from backstage.views import LoginView
 
 urlpatterns = [
-    url(r'^manager/', ManagerView.as_view(), name='manager'),
+    url(r'^login/$', LoginView.as_view(), name='login'),
 ]
 

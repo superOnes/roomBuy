@@ -2,9 +2,9 @@ from django.shortcuts import render
 from django.views.generic import View
 
 
-class ManagerView(View):
+class LoginView(View):
     '''
-    登陆
+    登录
     '''
     def get(self, request):
-        return render(request, 'manager.html')
+        return render(request, 'back/login.html')
