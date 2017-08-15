@@ -28,5 +28,6 @@ urlpatterns = [
     url(r'^login/', TemplateView.as_view(template_name='index.html')),
     url(r'^dialog-success/$', TemplateView.as_view(template_name='popup/dialog_success.html'), name='dialog_success'),
     url(r'^app/', include('aptp.urls')),
+    url(r'^backstage/', include('backstage.urls')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
