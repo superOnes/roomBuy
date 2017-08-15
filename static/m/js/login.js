@@ -184,8 +184,11 @@ function myOrder() {
     window.location.href="order.html?id="+$(".idNum").html()
 }
 function updataTime(data) {
+    var count = $('<div class="countBlack">'+
+        '<p><span>30</span>秒<br/>后开始选择!</p>'+
+        '</div>');
+    $("body").append(count);
 	setInterval(function() {
-
 		var date = new Date().getTime();  //当前时间
 		//活动结束时间
 		var date1 = new Date(data.event_start).getTime();//开盘
@@ -194,9 +197,17 @@ function updataTime(data) {
 		var date4 = new Date($(".test_ent").html()).getTime();//公测
 		var date5 = date2 - date;  //时间差的毫秒数
 		var date6 = date4 - date;
+        var count1=Math.floor((date3-date)/1000);
+        var count2=Math.floor((date1-date)/1000);
 		//计算出相差天数
 		if(date<date3){
 			$('#endTimeing').html("公测活动未开始");
+            if(count1<=30&&count1>0){
+                $(".countBlack").show();
+                $(".countBlack p span").html(count1);
+            }else{
+                $(".countBlack").hide();
+            }
 		}else if(date>date3&&date<date4){
 			if (date6 > 0) {
 				var dayss = Math.floor(date6 / (24 * 3600 * 1000));
@@ -214,6 +225,12 @@ function updataTime(data) {
 			}
 		}else if(date>date4&&date<date1){
 			$('#endTimeing').html("开盘活动未开始");
+            if(count2<=30&&count2>0){
+                $(".countBlack").show();
+                $(".countBlack p span").html(count2);
+            }else{
+                $(".countBlack").hide();
+            }
 		}else if(date>date1&&date<date2){
 			if (date5 > 0) {
 				var days = Math.floor(date5 / (24 * 3600 * 1000));
