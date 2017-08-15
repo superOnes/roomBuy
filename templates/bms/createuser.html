@@ -13,7 +13,7 @@
 	}
 </style>
 <div style="padding:20px">
-	<form class="form-horizontal" method="post" id="customerOrder">
+	<form class="form-horizontal" id="customerOrder" enctype="multipart/form-data">
 		{% csrf_token %}
 		<div class="form-group">
 			<label class="col-sm-2">用户名<i>*</i></label>

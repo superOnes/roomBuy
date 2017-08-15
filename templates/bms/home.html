@@ -11,21 +11,21 @@
 			    <label for="province" style="float:left;">省份</label>
 			    <div class="col-sm-3">
 			      <select class="form-control" id="province">
-			        <option>北京</option>
-			        <option>上海</option>
+			        <option value="0">北京</option>
+			        <option value="1">上海</option>
 			      </select>
 			    </div>
 			    <label for="downtown" style="float:left;">市区</label>
 			    <div class="col-sm-3">
 			    	<select class="form-control" id="downtown">
-				        <option>北京</option>
-				        <option>上海</option>
+				        <option value="0">北京</option>
+				        <option value="1">上海</option>
 				    </select>
 			    </div>
 			    <div class="col-sm-4 input-group" style="margin: 0 !important;padding: 0 10px;">
 				    <input type="text" class="form-control" placeholder="搜索用户" id="searchInput">
 				    <span class="input-group-btn">
-				        <button class="btn btn-default" type="button" onclick="search()" style="padding: 5.5px 12px;">搜索</button>
+				        <button class="btn btn-default" type="button" id="searchUser" style="padding: 5.5px 12px;">搜索</button>
 				    </span>
 			    </div>
 			</div>
@@ -45,7 +45,7 @@
 				<th>操作</th>
 			</tr>
 		</thead>
-		<tbody>
+		<tbody id="userList">
 			{% for obj in object_list %}
 			<tr>
 				<td>{{ forloop.counter }}</td>
@@ -98,4 +98,19 @@
 		</tbody>
 	</table>
 </div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		cityList();
+		$("#province").change(function(){
+			filterUser($(this).val(),$("#downtown").val());
+		});
+		$("#downtown").change(function(){
+			filterUser($("#province").val(),$(this).val());
+		});
+		$("#searchUser").click(function(){
+			var searchVal = $("#searchInput").val();
+			filterUser($("#province").val(),$("#downtown").val(),searchVal);
+		});
+	})
+</script>
 {% endblock %}
