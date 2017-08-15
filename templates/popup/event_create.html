@@ -133,17 +133,15 @@
 			<div class="col-sm-9 myfileCover">
 				<input type="file" class="form-control" id="cover" onchange='showCover()' name="cover">
 				<p><b>添加的封面图为</b><span class="coverImgFile" style="margin-left:20px;">{{form.cover.value|default:''}}</span></p>
-				<p>建议上传图片大小为 380*230px(接近4:3)</p>
 				<div style="width: 380px;height: 230px;">
 					<img src='{{MEDIA_URL}}{{object.cover}}' alt='' id='coverImg' onerror="this.src='{{ STATIC_URL }}images/default.png'" />
 				</div>
 			</div>
 		</div>
-		<p style="font-size: 16px;color:red;text-align: center;">封面图和平面图总共大小不得大于2M</p>
+		<p style="margin-left:30%;color:red;">封面图和平面图总共大小必须小于2M，建议上传图片宽高比为4:3</p>
 		<div class="form-group">
 			<label class="col-sm-3 control-label" style="vertical-align: top;">平面图</label>
 			<div class="col-sm-9 myfilePlane_graph">
-				<p>建议上传图片大小为 160*120px(4:3)</p>
 				<label class="col-sm-6" for="" style="padding-left: 0;">
 					<p>选择平面图</p>
 					<input type="file" class="form-control" id="plane_graph1" onchange='showPlane_graph1()' name="plane_graph">
