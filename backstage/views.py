@@ -30,3 +30,12 @@ class HomeListView(ListView):
 
     def get_queryset(self):
         return self.model.objects.filter(is_admin=True)
+
+
+class CreateView(View):
+    '''
+    登录
+    '''
+    def get(self, request):
+        return render(request, 'bms/createuser.html')
+        

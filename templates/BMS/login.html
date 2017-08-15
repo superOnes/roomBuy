@@ -1,69 +1,63 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="UTF-8">
-		<title>云开盘管理员系统</title>
-		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}src/zui/css/zui.min.css"/>
-		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}style/bms.css"/>
-		<script src="{{ STATIC_URL }}src/jquery-3.2.1.min.js" type="text/javascript" charset="utf-8"></script>
-		<script src="{{ STATIC_URL }}src/zui/js/zui.js" type="text/javascript" charset="utf-8"></script>
-	</head>
-	<body>
-		<section class="login-wrap" id="login-wrap">
-			<div class="loginBack">
-				<h3>云开盘管理员系统</h3>
-				<p>Cloud opening administrator system</p>
+{% extends 'include/base.html' %} 
+{% block title %}云开盘管理用户{% endblock %}
+{% block main %}
+<section class="login-wrap" id="login-wrap">
+	<div class="loginBack">
+		<h3>云开盘管理员系统</h3>
+		<p>Cloud opening administrator system</p>
+	</div>
+	<div class="login">
+		<form class="form-horizontal login-form" method="post" action="" id="loginForm">
+			{% csrf_token %}
+			<div class="loginTitle">
+				<h3>用户登录</h3>
 			</div>
-			<div class="login">
-				<form class="form-horizontal login-form" method="post" action="" id="loginForm">
-					{% csrf_token %}
-					<div class="loginTitle">
-						<h3>用户登录</h3>
-					</div>
-					<div class="form-group">
-						<label for="inputText3" class="col-sm-2 control-label">用户名</label>
-						<div class="col-sm-10">
-							<input type="text" class="form-control" id="user" placeholder="用户名" name="username">
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="inputPassword3" class="col-sm-2 control-label">密码</label>
-						<div class="col-sm-10">
-							<input type="password" class="form-control" id="pswd" placeholder="密码" name="password">
-						</div>
-					</div>
-					<div class="form-group">
-					    <div class="col-sm-offset-2 col-sm-10">
-					      <div class="checkbox">
-					        <label>
-					          <input type="checkbox" id="remember"> 记住我
-					        </label>
-					      </div>
-					    </div>
-					  </div>
-					{% if messages %}
-					<div class="form-group" id="messages">
-						<label for="inputMessages" class="col-sm-2 control-label">提示</label>
-						<div class="col-sm-10">
-							{% for msg in messages %}
-							<p style="margin-top:6px;color: red;">{{ msg }}</p>
-							{% endfor %}
-						</div>
-					</div>
-					{% endif %} {% if next %}
-					<input type="text" name="next" value="{{next}}" style="display:None"> {% endif %}
-					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-10">
-							<button type="submit" class="btn btn-primary">登录</button>
-							<button type="reset" class="btn btn-default">重置</button>
-						</div>
-					</div>
-				</form>
+			<div class="form-group">
+				<label for="inputText3" class="col-sm-2 control-label">用户名</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="user" placeholder="用户名" name="username">
+				</div>
 			</div>
-		</section>
-	</body>
-	<script type="text/javascript">
+			<div class="form-group">
+				<label for="inputPassword3" class="col-sm-2 control-label">密码</label>
+				<div class="col-sm-10">
+					<input type="password" class="form-control" id="pswd" placeholder="密码" name="password">
+				</div>
+			</div>
+			<div class="form-group">
+			    <div class="col-sm-offset-2 col-sm-10">
+			      <div class="checkbox">
+			        <label>
+			          <input type="checkbox" id="remember"> 记住我
+			        </label>
+			      </div>
+			    </div>
+			  </div>
+			{% if messages %}
+			<div class="form-group" id="messages">
+				<label for="inputMessages" class="col-sm-2 control-label">提示</label>
+				<div class="col-sm-10">
+					{% for msg in messages %}
+					<p style="margin-top:6px;color: red;">{{ msg }}</p>
+					{% endfor %}
+				</div>
+			</div>
+			{% endif %} {% if next %}
+			<input type="text" name="next" value="{{next}}" style="display:None"> {% endif %}
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button type="submit" class="btn btn-primary">登录</button>
+					<button type="reset" class="btn btn-default">重置</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</section>
+<script type="text/javascript">
+	$("#login-wrap").height($(window).height());
+	$(window).resize(function(){
 		$("#login-wrap").height($(window).height());
+<<<<<<< HEAD
 		$(window).resize(function(){
 			$("#login-wrap").height($(window).height());
 		});
@@ -90,3 +84,29 @@
 	    }
 	</script>
 </html>
+=======
+	});
+	window.onload = function() {
+		var oForm = document.getElementById('loginForm');
+		var oUser = document.getElementById('user');
+		var oPswd = document.getElementById('pswd');
+		var oRemember = document.getElementById('remember');
+		
+	//	本地缓存密码
+	    var loUser = localStorage.getItem("user") || "";
+	    var loPass = localStorage.getItem("pass") || "";
+	    oUser.value = loUser;
+	    oPswd.value = loPass;
+	        if(loUser !== "" && loPass !== ""){
+	            oRemember.setAttribute("checked","");
+	        }
+	    $("#loginForm").submit(function(){
+	        if(oRemember.checked){
+	            localStorage.setItem("user",oUser.value);
+	            localStorage.setItem("pass",oPswd.value);
+	        }
+	    });
+    }
+</script>
+{% endblock %}
+>>>>>>> twp

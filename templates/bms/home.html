@@ -1,88 +1,101 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="UTF-8">
-		<title>云开盘管理用户</title>
-		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}src/zui/css/zui.min.css"/>
-		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}style/bms.css"/>
-		<script src="{{ STATIC_URL }}src/jquery-3.2.1.min.js" type="text/javascript" charset="utf-8"></script>
-		<script src="{{ STATIC_URL }}src/zui/js/zui.js" type="text/javascript" charset="utf-8"></script>
-	</head>
-	<body>
-		<div class="userTit">
-		  <h2><span class="code">用户管理</span></h2>
-		</div>
-		<div class="userlist">
-			<div class="row">
-				<div class="form-horizontal">
-				    <div class="form-group col-sm-10">
-					    <label for="province" style="float:left;">省份</label>
-					    <div class="col-sm-3">
-					      <select class="form-control" id="province">
-					        <option>北京</option>
-					        <option>上海</option>
-					      </select>
-					    </div>
-					    <label for="downtown" style="float:left;">市区</label>
-					    <div class="col-sm-3">
-					    	<select class="form-control" id="downtown">
-						        <option>北京</option>
-						        <option>上海</option>
-						    </select>
-					    </div>
-					    <div class="col-sm-4 input-group" style="padding: 0 10px;">
-						    <input type="text" class="form-control" placeholder="搜索用户" id="searchInput">
-						    <span class="input-group-btn">
-						        <button class="btn btn-default" type="button" onclick="search()">搜索</button>
-						    </span>
-					    </div>
-					</div>
-					<div class="col-sm-2" style="text-align: right;">
-						<a class="btn btn-primary" data-moveable="true" data-iframe="{% url 'event_create' %}" data-toggle="modal">创建用户</a>
-					</div>
+{% extends 'include/base.html' %} 
+{% block title %}云开盘管理用户{% endblock %}
+{% block main %}
+<div class="userTit">
+  <h2><span class="code">用户管理</span></h2>
+</div>
+<div class="userlist">
+	<div class="row">
+		<div class="form-horizontal">
+		    <div class="form-group col-sm-10">
+			    <label for="province" style="float:left;">省份</label>
+			    <div class="col-sm-3">
+			      <select class="form-control" id="province">
+			        <option>北京</option>
+			        <option>上海</option>
+			      </select>
+			    </div>
+			    <label for="downtown" style="float:left;">市区</label>
+			    <div class="col-sm-3">
+			    	<select class="form-control" id="downtown">
+				        <option>北京</option>
+				        <option>上海</option>
+				    </select>
+			    </div>
+			    <div class="col-sm-4 input-group" style="margin: 0 !important;padding: 0 10px;">
+				    <input type="text" class="form-control" placeholder="搜索用户" id="searchInput">
+				    <span class="input-group-btn">
+				        <button class="btn btn-default" type="button" onclick="search()" style="padding: 5.5px 12px;">搜索</button>
+				    </span>
 			    </div>
 			</div>
-			<table class="table table-bordered table-hover table-striped">
-				<thead>
-					<tr>
-						<th>序号</th>
-						<th>用户名</th>
-						<th>权限</th>
-						<th>操作</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for obj in object_list %}
-					<tr>
-						<td>{{ forloop.counter }}</td>
-						<td>{{ obj.name }}</td>
-						<td></td>
-						<td>
-							<p><a data-iframe="{% url 'event_detail' pk=obj.id %}" data-toggle="modal" data-title="活动详情">查看</a></p>
-							<p><a data-toggle="modal" data-target="#deleteModal">删除</a></p>
-						</td>
-					</tr>
-					<!--删除用户-->
-					<div class="modal fade" id="deleteModal">
-					  <div class="modal-dialog modal-sm">
-					    <div class="modal-content">
-					      <div class="modal-header">
-					        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
-					        <h4 class="modal-title">删除用户</h4>
-					      </div>
-					      <div class="modal-body">
-					        <p>确认清除<b>{{ obj.name }}</b>？</p>
-					      </div>
-					      <div class="modal-footer">
-					        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					        <button type="button" class="btn btn-primary" onclick="deleteOrder({{obj.id}},'/acc/ctdelete/')">确认</button>
-					      </div>
-					    </div>
-					  </div>
-					</div>
-					{% endfor %}
-				</tbody>
-			</table>
-		</div>
-	</body>
-</html>
+			<div class="col-sm-2" style="text-align: right;">
+				<a class="btn btn-primary" data-backdrop="static" data-iframe="{% url 'createuser' %}" data-moveable="true" data-toggle="modal">创建用户</a>
+			</div>
+	    </div>
+	</div>
+	<table class="table table-bordered table-hover table-striped">
+		<thead>
+			<tr>
+				<th>序号</th>
+				<th>用户名</th>
+				<th>昵称</th>
+				<th>可发布数量</th>
+				<th>账号过期时间</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for obj in object_list %}
+			<tr>
+				<td>{{ forloop.counter }}</td>
+				<td>{{ obj.name }}</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>
+					<a data-toggle="modal" data-target="#passwordClear" style="margin: 0 20px;">密码重置</a>
+					<a data-toggle="modal" data-target="#deleteModal">删除</a>
+				</td>
+			</tr>
+			<!--重置密码-->
+			<div class="modal fade" id="passwordClear">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+			        <h4 class="modal-title">重置密码</h4>
+			      </div>
+			      <div class="modal-body">
+			        <p style="text-align: center;font-size: 20px;">确认重置<b>{{ obj.name }}</b>的密码吗？</p>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			        <button type="button" class="btn btn-primary" onclick="">确认</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+			<!--删除用户-->
+			<div class="modal fade" id="deleteModal">
+			  <div class="modal-dialog modal-sm">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+			        <h4 class="modal-title">删除用户</h4>
+			      </div>
+			      <div class="modal-body">
+			        <p>确认删除<b>{{ obj.name }}</b>？</p>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			        <button type="button" class="btn btn-primary" onclick="">确认</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+{% endblock %}
