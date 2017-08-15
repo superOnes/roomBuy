@@ -57,34 +57,6 @@
 	$("#login-wrap").height($(window).height());
 	$(window).resize(function(){
 		$("#login-wrap").height($(window).height());
-<<<<<<< HEAD
-		$(window).resize(function(){
-			$("#login-wrap").height($(window).height());
-		});
-		window.onload = function() {
-			var oForm = document.getElementById('loginForm');
-			var oUser = document.getElementById('user');
-			var oPswd = document.getElementById('pswd');
-			var oRemember = document.getElementById('remember');
-
-		//	本地缓存密码
-		    var loUser = localStorage.getItem("user") || "";
-		    var loPass = localStorage.getItem("pass") || "";
-		    oUser.value = loUser;
-		    oPswd.value = loPass;
-		        if(loUser !== "" && loPass !== ""){
-		            oRemember.setAttribute("checked","");
-		        }
-		    $("#loginForm").submit(function(){
-		        if(oRemember.checked){
-		            localStorage.setItem("user",oUser.value);
-		            localStorage.setItem("pass",oPswd.value);
-		        }
-		    });
-	    }
-	</script>
-</html>
-=======
 	});
 	window.onload = function() {
 		var oForm = document.getElementById('loginForm');
@@ -109,4 +81,3 @@
     }
 </script>
 {% endblock %}
->>>>>>> twp
