@@ -79,3 +79,23 @@ a{
 	font-weight: normal;
 	color:#FFFFFF !important;
 }
+
+
+
+
+/*用户列表*/
+.userTit{
+	margin-bottom: 20px;
+}
+.userTit>h2{
+	margin: 0;
+	padding: 20px 30px 10px;
+	background: #3f6cb3;
+}
+.code{
+	font-size: 20px;
+	color:#FFFFFF;
+}
+.userlist{
+	padding: 0 40px;
+}

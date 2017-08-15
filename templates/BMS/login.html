@@ -2,10 +2,11 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title></title>
+		<title>云开盘管理员系统</title>
 		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}src/zui/css/zui.min.css"/>
 		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}style/bms.css"/>
 		<script src="{{ STATIC_URL }}src/jquery-3.2.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="{{ STATIC_URL }}src/zui/js/zui.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body>
 		<section class="login-wrap" id="login-wrap">
@@ -14,7 +15,7 @@
 				<p>Cloud opening administrator system</p>
 			</div>
 			<div class="login">
-				<form class="form-horizontal login-form" method="post" action="{% url 'acc_login' %}" id="loginForm">
+				<form class="form-horizontal login-form" method="post" action="" id="loginForm">
 					{% csrf_token %}
 					<div class="loginTitle">
 						<h3>用户登录</h3>
