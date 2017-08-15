@@ -1,5 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import View, ListView
+from django.contrib import messages
+from django.contrib.auth import authenticate
+from django.core.urlresolvers import reverse
 
 from accounts.models import User
 
@@ -10,6 +13,15 @@ class LoginView(View):
     '''
     def get(self, request):
         return render(request, 'bms/login.html')
+
+    def post(self, request):
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+        if user.is_superuser:
+            return redirect(reverse('bms_home'))
+        messages.error(request, '用户名或密码不正确')
+        return redirect(reverse('bms_login'))
 
 
 class HomeListView(ListView):
