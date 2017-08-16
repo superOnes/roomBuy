@@ -46,7 +46,8 @@ class HomeListView(ListView):
         #     user = user.filter(Q(company__city=self.city))
         # if self.value:
         #     user = user.filter(Q(username__contains=self.value))
-        queryset = [{'username': u.username,
+        queryset = [{'id': u.id,
+                     'username': u.username,
                     'name': u.company.name,
                      'house_limit': u.company.house_limit,
                      'province': u.company.province.name
@@ -131,12 +132,14 @@ class DeleteUserView(View):
         '''
         删除账户
         '''
-        def delete(self, request):
-            params = QueryDict(request.body, encoding=request.encoding)
-            user = params.get('id')
-            if user.company.event_set.all():
-                User.remove(params.get('id'))
-                return JsonResponse({'success': True, 'msg': '删除成功！'})
+        def post(self, request):
+            id = request.POST.get('id')
+            if id:
+                user = User.objects.get(id=id)
+                if user:
+                    if user.company.event_set.all() is not None:
+                        User.delete(user.get(id))
+                        return JsonResponse({'success': True, 'msg': '删除成功！'})
             return JsonResponse({'success': False, 'msg': '删除失败！'})
 
 
@@ -154,7 +157,7 @@ class GetProvinceView(View):
 
 class GetCityView(View):
     '''
-    市列表
+    市区列表
     '''
     def get(self, request, *args, **kwargs):
         proid = request.GET.get('proid')
