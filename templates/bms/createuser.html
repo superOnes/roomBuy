@@ -71,11 +71,12 @@
 	</form>
 </div>
 <script type="text/javascript">
+// 地址的二级联动
 	createUser();
-$("#provinceC").change(function(){
-	createUser($(this).val());
-});
-// 选择开始日期
+	$("#provinceC").change(function(){
+		createUser($(this).val());
+	});
+	// 选择开始日期
 	$(".form-datetime").datetimepicker({
 		weekStart: 1,
 		todayBtn: 1,
