@@ -5,12 +5,12 @@ from django.shortcuts import get_object_or_404
 from aptm.settings import CUSTOMER_MODEL
 
 
-class Client(models.Model):
+class Company(models.Model):
     name = models.CharField('昵称', max_length=100)
     house_limit = models.IntegerField('房源数量限制', default=0)
     expire_date = models.DateTimeField('账号过期日期', null=True, blank=True)
-    province = models.ForeignKey(Province)
-    city = models.ForeignKey(City)
+    province = models.ForeignKey(Province, null=True, blank=True)
+    city = models.ForeignKey(City, null=True, blank=True)
 
 
 class Event(models.Model):
@@ -54,7 +54,7 @@ class Event(models.Model):
     termname = models.CharField('协议名称', max_length=100, null=True, blank=True)
     term = models.TextField('协议内容', null=True, blank=True)
     is_pub = models.BooleanField('是否发布', default=False)
-    company = models.ForeignKey(Client)
+    company = models.ForeignKey(Company)
 
     @classmethod
     def get(cls, id):
@@ -66,11 +66,11 @@ class Event(models.Model):
 
     @classmethod
     def get_all_by_company(cls, cid):
-        return cls.objects.filter(client_id=cid).order_by('-id')
+        return cls.objects.filter(company_id=cid).order_by('-id')
 
     @classmethod
     def get_last_event(cls, cid):
-        return cls.objects.filter(client_id=cid).last()
+        return cls.objects.filter(company_id=cid).last()
 
 
 class HouseType(models.Model):

@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.shortcuts import get_object_or_404
 
-from apt.models import Event, EventDetail, Client
+from apt.models import Event, EventDetail, Company
 
 
 class Customer(models.Model):
@@ -43,7 +43,7 @@ class Customer(models.Model):
 class User(AbstractUser):
     is_delete = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
-    client = models.ForeignKey(Client, null=True, blank=True)
+    company = models.ForeignKey(Company, null=True, blank=True)
     customer = models.OneToOneField(Customer, null=True, blank=True)
 
     @classmethod

@@ -34,8 +34,13 @@ class HomeListView(ListView):
 
 class CreateView(View):
     '''
-    登录
+    创建用户
     '''
     def get(self, request):
         return render(request, 'bms/createuser.html')
-        
+
+    def post(self, request):
+        name = request.POST.get('username')
+        house_limit = request.POST.get('house_limit')
+        expire_date = request.POST.get('expire_date')
+

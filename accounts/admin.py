@@ -2,21 +2,21 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from accounts.models import User
-from apt.models import Client
+from apt.models import Company
 
 
 class MyUserCreationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'is_admin', 'password1', 'password2', 'client')
+        fields = ('username', 'is_admin', 'password1', 'password2', 'company')
 
 
 class MyUserChangeForm(UserChangeForm):
 
     class Meta:
         model = User
-        fields = ('username', 'is_admin', 'password', 'client')
+        fields = ('username', 'is_admin', 'password', 'company')
 
 
 class MyUserAdmin(UserAdmin):
@@ -25,17 +25,17 @@ class MyUserAdmin(UserAdmin):
     add_form = MyUserCreationForm
 
     fieldsets = (
-        (None, {'fields': ('username', 'is_admin', 'password', 'client')}),
+        (None, {'fields': ('username', 'is_admin', 'password', 'company')}),
     )
 
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
             'fields': ('username', 'is_admin', 'password1', 'password2',
-                       'client')}
+                       'company')}
          ),
     )
 
 
 admin.site.register(User, MyUserAdmin)
-admin.site.register(Client)
+admin.site.register(Company)
