@@ -1,33 +1,34 @@
-//ajax提交form表单的方式
-$('#customerOrder').submit(function() {
-   var AjaxURL= "/backstage/createuser/";
-   console.log($('#customerOrder').serialize());
-   $.ajax({
-       type: "POST",
-       dataType: "html",
-       url: AjaxURL + '?Action=' + 'SubmitHandlingFee' + '&OrderNumber=' + $.trim($("#<%=this.txtOrderNumber.ClientID %>").val()),
-       data: $('#customerOrder').serialize(),
-       success: function (data) {
-           var strresult=data;
-           alert(strresult);
-           //加载最大可退金额
-           // $("#spanMaxAmount").html(strresult);
-           return false
-       },
-       error: function(data) {
-           alert("error:"+data.responseText);
-           return false
-       }
-   });
-});
+// //ajax提交form表单的方式
+// $('#customerOrder').submit(function() {
+//    var AjaxURL= "http://10.7.10.198:8000/backstage/createuser/";
+//    console.log($('#customerOrder').serialize());
+//    $.ajax({
+//        type: "POST",
+//        dataType: "html",
+//        url: AjaxURL + '?Action=' + 'SubmitHandlingFee' + '&OrderNumber=' + $.trim($("#<%=this.txtOrderNumber.ClientID %>").val()),
+//        data: $('#customerOrder').serialize(),
+//        success: function (data) {
+//            var strresult=data;
+//            alert(strresult);
+//            //加载最大可退金额
+//            // $("#spanMaxAmount").html(strresult);
+//            return false
+//        },
+//        error: function(data) {
+//            alert("error:"+data.responseText);
+//            return false
+//        }
+//    });
+//    return false
+// });
 
-
+// 用户页获取地址
 function cityList(provinceId){
  if(!provinceId){
-   var urls = "http://10.7.10.198:8000/backstage/getprovince/";
+   var urls = "/backstage/getprovince/";
    var appendObj = $("#province");
  }else {
-   var urls = "http://10.7.10.198:8000/backstage/getcity/";
+   var urls = "/backstage/getcity/";
    var appendObj = $("#downtown");
  }
  $.ajax({
@@ -39,9 +40,9 @@ function cityList(provinceId){
      $(".tip").hide();
      var data = results.data;
      if(results.success){
-       appendObj.children("option").remove();
+       appendObj.children(".city").remove();
        for(var i=0; i<data.length; i++){
-         appendObj.append("<option value="+data[i].id+">"+data[i].name+"</option>")
+         appendObj.append("<option class='city' value="+data[i].id+">"+data[i].name+"</option>")
        };
      }else {
        $("#userList tr").remove();
@@ -49,13 +50,44 @@ function cityList(provinceId){
      }
    },
    error:function(){
-     new $.zui.Messager('获取用户数据失败，请检查网络！', {
+     new $.zui.Messager('获取省份、市区数据失败，请检查网络！', {
        placement:'center',
        type: 'danger'
      }).show();
    }
  });
-}
+};
+// 创建用户获取地址
+function createUser(provinceId){
+  if(!provinceId){
+    var urls = "/backstage/getprovince/";
+    var appendObj = $("#provinceC");
+  }else {
+    var urls = "/backstage/getcity/";
+    var appendObj = $("#downtownC");
+  }
+  $.ajax({
+    type:"get",
+    url:urls,
+    async:true,
+    data:{proid:provinceId},
+    success:function(results){
+      var data = results.data;
+      if(results.success){
+        appendObj.children(".city").remove();
+        for(var i=0; i<data.length; i++){
+          appendObj.append("<option class='city' value="+data[i].id+">"+data[i].name+"</option>")
+        };
+      }
+    },
+    error:function(){
+      new $.zui.Messager('获取省份、市区数据失败，请检查网络！', {
+        placement:'center',
+        type: 'danger'
+      }).show();
+    }
+  });
+};
 
 //获取用户列表数据
 function filterUser(province,downtown,value){
