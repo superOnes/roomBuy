@@ -1,6 +1,17 @@
-{% extends 'include/base.html' %} 
-{% block title %}云开盘管理用户{% endblock %}
-{% block main %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>云开盘后台管理员系统</title>
+		<link href="{{ STATIC_URL }}style/bms.css" rel="stylesheet" type="text/css"/>
+		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}src/zui/css/zui.min.css"/>
+		<link href="{{ STATIC_URL }}src/zui/lib/datatable/zui.datatable.min.css" rel="stylesheet">
+	</head>
+	<script src="{{ STATIC_URL }}src/jquery-3.2.1.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="{{ STATIC_URL }}customJS/bms.js" type="text/javascript" charset="utf-8"></script>
+	<script src="{{ STATIC_URL }}src/zui/js/zui.js" type="text/javascript" charset="utf-8"></script>
+<body>
 <section class="login-wrap" id="login-wrap">
 	<div class="loginBack">
 		<h3>云开盘管理员系统</h3>
@@ -32,7 +43,7 @@
 			        </label>
 			      </div>
 			    </div>
-			  </div>
+		  </div>
 			{% if messages %}
 			<div class="form-group" id="messages">
 				<label for="inputMessages" class="col-sm-2 control-label">提示</label>
@@ -43,7 +54,7 @@
 				</div>
 			</div>
 			{% endif %} {% if next %}
-			<input type="text" name="next" value="{{next}}" style="display:None"> {% endif %}
+			<input type="text" name="next" value="{{next}}" style="display:none"> {% endif %}
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-10">
 					<button type="submit" class="btn btn-primary">登录</button>
@@ -63,7 +74,7 @@
 		var oUser = document.getElementById('user');
 		var oPswd = document.getElementById('pswd');
 		var oRemember = document.getElementById('remember');
-		
+
 	//	本地缓存密码
 	    var loUser = localStorage.getItem("user") || "";
 	    var loPass = localStorage.getItem("pass") || "";
@@ -80,4 +91,5 @@
 	    });
     }
 </script>
-{% endblock %}
+</body>
+</html>

@@ -1,4 +1,4 @@
-{% extends 'include/base.html' %} 
+{% extends 'include/base.html' %}
 {% block main %}
 <style type="text/css">
 	.col-sm-2, .col-sm-10{
@@ -11,8 +11,11 @@
 		width: 75% !important;
 		text-align: left;
 	}
+	.form-horizontal .form-group{
+		margin: 15px -10px !impotant;
+	}
 </style>
-<div style="padding:20px">
+<div style="padding:20px;">
 	<form class="form-horizontal" id="customerOrder" enctype="multipart/form-data">
 		{% csrf_token %}
 		<div class="form-group">
@@ -55,6 +58,10 @@
 	</form>
 </div>
 <script type="text/javascript">
+$(document).ready(function(){
+	$(".form-group").css({"marginTop":"25px"})
+	$(".form-group").eq(0).css({"marginTop":"0"})
+})
 // 选择开始日期
 	$(".form-datetime").datetimepicker({
 		weekStart: 1,

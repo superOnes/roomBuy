@@ -1,6 +1,6 @@
  //ajax提交form表单的方式
 $('#customerOrder').submit(function() {
-    var AjaxURL= "../OrderManagement/AjaxModifyOrderService.aspx";       
+    var AjaxURL= "/backstage/login/";
     console.log($('#customerOrder').serialize());
     $.ajax({
         type: "POST",
@@ -11,7 +11,7 @@ $('#customerOrder').submit(function() {
             var strresult=data;
             alert(strresult);
             //加载最大可退金额
-            $("#spanMaxAmount").html(strresult);
+            // $("#spanMaxAmount").html(strresult);
         },
         error: function(data) {
             alert("error:"+data.responseText);
