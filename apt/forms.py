@@ -62,7 +62,8 @@ class EventDetailForm(forms.ModelForm):
                     and cleaned_data['floor'] == ed.floor \
                     and cleaned_data['room_num'] == ed.room_num:
                 raise forms.ValidationError('该车位/房源已存在！')
-        if event.eventdetail_set.count() >= int(current_user.house_limit):
+        if event.eventdetail_set.count() >= \
+           int(current_user.company.house_limit):
             raise forms.ValidationError('车位/房源数量超出上限，不可添加')
         return cleaned_data
 
