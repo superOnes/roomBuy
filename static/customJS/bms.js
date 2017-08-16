@@ -93,7 +93,7 @@ function createUser(provinceId){
 function filterUser(province,downtown,value){
  $.ajax({
    type:"get",
-   url:"",
+   url:"http://10.7.10.198:8000/",
    async:true,
    data:{province:province,downtown:downtown,value:value},
    success:function(data){
@@ -110,4 +110,26 @@ function filterUser(province,downtown,value){
      alert("获取用户列表失败。")
    }
  });
+};
+
+function deleteUser(id){
+  $.ajax({
+    type:"post",
+    url:"/backstage/delete/",
+    async:true,
+    data:{id:id},
+    success:function(data){
+      if(data.success){
+        window.location.reload();
+      }else{
+        new $.zui.Messager(data.msg, {
+          placement:'center',
+          type: 'danger'
+        }).show();
+      }
+    },
+    error:function(){
+      alert("删除失败，请检查网络！");
+    }
+  });
 }
