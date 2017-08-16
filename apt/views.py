@@ -398,7 +398,9 @@ class ImportEventDetailView(View):
                                 looking=ed[6],
                                 term=ed[7],
                                 type=ed[8],
-                                house_type=HouseType.objects.filter(event=event, name=ed[9]).first(),
+                                house_type=HouseType.objects.filter(
+                                    event=event,
+                                    name=ed[9]).first(),
                                 event=event)
                             eventdetail.save()
                         os.remove('media/price/price.xlsx')
@@ -664,33 +666,40 @@ class ExportBuyHotView(View):
             return response
         row = 1
         for obj in objs:
-            order = Order.objects.filter(
-                eventdetail__event_id=eventid, user__customer=obj)
             s.write(row, 0, obj.realname)
             s.write(row, 1, obj.mobile)
             s.write(row, 2, obj.identication)
             s.write(row, 3, obj.protime.strftime(
                 "%Y/%m/%d %H:%M:%S") if obj.protime else '')
             s.write(row, 4, obj.user.follow_set.count())
-            if order:
-                order = order[0]
+            testorder = Order.objects.filter(
+                eventdetail__event_id=eventid,
+                user__customer=obj,
+                is_test=True)
+            if testorder:
+                order = testorder[0]
                 s.write(row, 5, order.eventdetail.building +
                         order.eventdetail.unit +
                         str(order.eventdetail.floor) +
                         '层' +
-                        str(order.eventdetail.room_num) if order.is_test else '')
+                        str(order.eventdetail.room_num))
                 s.write(row, 6, (order.time).strftime(
-                    "%Y/%m/%d %H:%M:%S") if order.is_test else '')
+                    "%Y/%m/%d %H:%M:%S"))
+            else:
+                s.write(row, 5, None)
+                s.write(row, 6, None)
+            nottestorder = Order.objects.filter(
+                eventdetail__event_id=eventid, user__customer=obj, is_test=False)
+            if nottestorder:
+                order = nottestorder[0]
                 s.write(row, 7, order.eventdetail.building +
                         order.eventdetail.unit +
                         str(order.eventdetail.floor) +
                         '层' +
-                        str(order.eventdetail.room_num) if not order.is_test else '')
+                        str(order.eventdetail.room_num))
                 s.write(row, 8, (order.time).strftime(
-                    "%Y/%m/%d %H:%M:%S") if not order.is_test else '')
+                    "%Y/%m/%d %H:%M:%S"))
             else:
-                s.write(row, 5, None)
-                s.write(row, 6, None)
                 s.write(row, 7, None)
                 s.write(row, 8, None)
             row += 1
@@ -1018,7 +1027,8 @@ class EventTVWallInfoView(View):
     def get(self, request, pk):
         result = []
         eventdetails = Event.get(pk).eventdetail_set.all()
-        buildings = sorted(list(set(eventdetails.values_list('building', flat=True))))
+        buildings = sorted(
+            list(set(eventdetails.values_list('building', flat=True))))
         for b in buildings:
             units = eventdetails.filter(building=b).order_by('unit') \
                                 .values_list('unit', flat=True)
