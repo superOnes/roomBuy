@@ -19,7 +19,7 @@ from django.db import transaction
 from apt.models import Event, EventDetail
 from aptm import settings
 from .models import User, Customer, Order
-from .decorators import customer_login_time, admin_required
+from .decorators import customer_login_required, admin_required
 
 
 class LoginView(View):
@@ -51,20 +51,24 @@ class PersonalSettingsView(View):
     用户修改个人密码
     '''
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         user = request.user
-        oldpassword = request.POST.get('oldpassword')
-        newpassword1 = request.POST.get('newpassword1')
-        newpassword2 = request.POST.get('newpassword2')
-        user = authenticate(username=user.username, password=oldpassword)
-        if user is not None:
-            if newpassword1 == newpassword2:
-                user.set_password(newpassword2)
-                user.save()
-                login(request, user)
-                return JsonResponse({'success': True, 'msg': '密码修改成功！'})
-            return JsonResponse({'success': False, 'msg': '两次密码输入不一致，请重新输入！'})
-        return JsonResponse({'success': False, 'msg': '密码错误！'})
+        if user.is_admin and not user.is_delete:
+            oldpassword = request.POST.get('oldpassword')
+            user = authenticate(username=user.username, password=oldpassword)
+            if user:
+                newpassword1 = request.POST.get('newpassword1')
+                newpassword2 = request.POST.get('newpassword2')
+                if newpassword1 == newpassword2:
+                    user.set_password(newpassword2)
+                    user.save()
+                    login(request, user)
+                    return JsonResponse(
+                        {'response_state': 200, 'msg': '密码修改成功'})
+                return JsonResponse(
+                    {'response_state': 400, 'msg': '两次新密码输入不一致'})
+            return JsonResponse({'response_state': 400, 'msg': '原密码输入错误'})
+        return JsonResponse({'response_state': 400, 'msg': '您不是管理员用户'})
 
 
 class LogoutView(View):
@@ -89,8 +93,9 @@ class CustomerLoginView(View):
         event = Event.get(eventid)
         now = datetime.now()
         if event.is_pub:
-            if (now < event.test_start + timedelta(hours=-0.5) or (now > event.test_end and now < event.event_start +
-                                   timedelta(hours=-0.5)) or now > event.event_end):
+            if (now < event.test_start + timedelta(hours=-0.5)
+                or (event.test_end < now < event.event_start + timedelta(hours=-0.5))
+                    or now > event.event_end):
                 return JsonResponse(
                     {'response_state': 400, 'msg': '不在活动登录期间！'})
             try:
@@ -117,8 +122,6 @@ class CustomerLoginView(View):
         return JsonResponse({'response_state': 403, 'msg': '活动还未正式推出！'})
 
 
-# @method_decorator(customer_login_required, name='dispatch')
-@method_decorator(customer_login_time, name='dispatch')
 class CustomerLogoutView(View):
     '''
     顾客退出登录
@@ -126,10 +129,12 @@ class CustomerLogoutView(View):
 
     def post(self, request):
         user = request.user
+        if not user.is_authenticated:
+            return JsonResponse({'response_state': 400, 'msg': '您之前没登录或已经退出！'})
         user.customer.session_key = None
         user.customer.save()
         logout(request)
-        return JsonResponse({'response_state': 200, 'msg': '退出成功'})
+        return JsonResponse({'response_state': 200, 'msg': '退出成功！'})
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -181,64 +186,80 @@ class ImportView(View):
                 col = sheet.ncols
                 if row == 0 or row == 1:
                     os.remove('media/tmp/customer.xlsx')
-                    return JsonResponse({'response_state': 400, 'msg': '导入的excel为空表！'})
+                    return JsonResponse(
+                        {'response_state': 400, 'msg': '导入的excel为空表！'})
+                if col != 4:
+                    return JsonResponse(
+                        {'response_state': 400, 'msg': '导入文件不正确！'})
                 value1 = sheet.cell(rowx=0, colx=0).value
                 value2 = sheet.cell(rowx=0, colx=1).value
                 value3 = sheet.cell(rowx=0, colx=2).value
                 value4 = sheet.cell(rowx=0, colx=3).value
                 head = [value1, value2, value3, value4]
                 if head != ['姓名', '手机号', '证件号', '备注']:
-                    return JsonResponse({'response_state': 400, 'msg': '导入文件不正确！'})
+                    return JsonResponse(
+                        {'response_state': 400, 'msg': '导入文件不正确！'})
                 data = []
                 num = 0
                 for rx in range(1, row):
-                    li = []
                     value1 = sheet.cell(rowx=rx, colx=0).value
                     value2 = sheet.cell(rowx=rx, colx=1).value
                     value3 = sheet.cell(rowx=rx, colx=2).value
                     value4 = sheet.cell(rowx=rx, colx=3).value
-                    if type(value1) != str:
+                    if not isinstance(value1, str):
                         try:
                             value1 = str(int(value1))
-                        except:
-                            return JsonResponse({'response_state': 400, 'msg': '姓名格式不正确！'})
-                    if type(value4) != str:
+                        except BaseException:
+                            return JsonResponse(
+                                {'response_state': 400, 'msg': '姓名格式不正确！'})
+                    if not isinstance(value4, str):
                         try:
-                            value4 =str(int(value4))
-                        except:
-                            return JsonResponse({'response_state': 400, 'msg': '备注格式不正确！'})
-                    if type(value3) != str:
+                            value4 = str(int(value4))
+                        except BaseException:
+                            return JsonResponse(
+                                {'response_state': 400, 'msg': '备注格式不正确！'})
+                    if not isinstance(value3, str):
                         try:
                             value3 = str(int(value3))
-                        except:
+                        except BaseException:
                             os.remove('media/tmp/customer.xlsx')
-                            return JsonResponse({'response_state': 400, 'msg': '身份证号有误！'})
+                            return JsonResponse(
+                                {'response_state': 400, 'msg': '身份证号有误！'})
                     try:
                         value2 = str(int(value2))
-                    except:
+                    except BaseException:
                         os.remove('media/tmp/customer.xlsx')
-                        return JsonResponse({'response_state': 400, 'msg': '导入手机号格式有误！'})
+                        return JsonResponse(
+                            {'response_state': 400, 'msg': '导入手机号格式有误！'})
                     li = [value1, value2, value3, value4]
-                    # else:
-                    #     return JsonResponse({'respone_state': 400, 'msg': '导入数据'})
                     data.append(li)
+                realname = list(map(lambda x: (x[0]), data))
+                for rl in realname:
+                    rl = str(rl).replace(' ', '')
+                    if len(rl) == 0:
+                        return JsonResponse(
+                            {'response_state': 400, 'msg': '姓名,手机号，证件号不能为空！'})
                 mobile = list(map(lambda x: (x[1]), data))
                 if len(set(mobile)) < len(mobile):
                     os.remove('media/tmp/customer.xlsx')
-                    return JsonResponse({'response_state': 400, 'msg': '手机号有重复，请查询后重试！'})
+                    return JsonResponse(
+                        {'response_state': 400, 'msg': '手机号有重复，请查询后重试！'})
                 identification = list(map(lambda x: (x[2]), data))
+                for idt in identification:
+                    idt = str(idt).replace(' ', '')
+                    if len(idt) == 0:
+                        return JsonResponse(
+                            {'response_state': 400, 'msg': '姓名,手机号，证件号不能为空！'})
                 if len(set(identification)) < len(identification):
                     os.remove('media/tmp/customer.xlsx')
-                    return JsonResponse({'response_state': 400, 'msg': '身份证号有重复，请查询后重试！'})
+                    return JsonResponse(
+                        {'response_state': 400, 'msg': '身份证号有重复，请查询后重试！'})
                 with transaction.atomic():
                     Customer.objects.filter(event=event).delete()
                     try:
                         for ct in data:
-                            customer = Customer.objects.create(realname=ct[0],
-                                                               mobile=ct[1],
-                                                               identication=ct[2],
-                                                               remark=ct[3],
-                                                               event=event)
+                            customer = Customer.objects.create(
+                                realname=ct[0], mobile=ct[1], identication=ct[2], remark=ct[3], event=event)
                             customer.save()
                             User.objects.create_user(
                                 username=uuid.uuid1(),
@@ -246,9 +267,10 @@ class ImportView(View):
                                 customer=customer,
                                 is_admin=False)
                             num += 1
-                    except:
+                    except BaseException:
                         os.remove('media/tmp/customer.xlsx')
-                        return JsonResponse({'response_state': 400, 'msg': '导入数据重复！'})
+                        return JsonResponse(
+                            {'response_state': 400, 'msg': '导入数据重复！'})
                     os.remove('media/tmp/customer.xlsx')
                     return JsonResponse({'response_state': 200, 'data': num})
             return JsonResponse({'response_state': 400, 'msg': '导入文件格式不正确'})

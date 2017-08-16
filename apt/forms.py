@@ -16,19 +16,32 @@ class EventForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super(EventForm, self).clean()
+        if 'test_start' not in cleaned_data or 'test_end' not in cleaned_data \
+                or 'event_start' not in cleaned_data or 'event_end' not in cleaned_data:
+            raise forms.ValidationError('公测开始时间、结束时间和活动开始、结束时间都不能为空！')
         if not self.instance.id:
-            if 'test_start' not in cleaned_data or 'test_end' not in cleaned_data \
-                    or 'event_start' not in cleaned_data or 'event_end' not in cleaned_data:
-                raise forms.ValidationError('公测开始时间、结束时间和活动开始、结束时间都不能为空！')
-            else:
-                if cleaned_data['test_start'] < datetime.now():
-                    raise forms.ValidationError('公测开始时间不得早于当前时间！')
-                if cleaned_data['test_start'] >= cleaned_data['test_end']:
-                    raise forms.ValidationError('公测结束时间不能提前于公测开始时间！')
-                if cleaned_data['event_start'] < cleaned_data['test_end'] + timedelta(days=1):
-                    raise forms.ValidationError('活动开始时间应比公测结束时间晚1天！')
-                if cleaned_data['event_start'] >= cleaned_data['event_end']:
-                    raise forms.ValidationError('活动结束时间不能提前于活动开始时间！')
+            if cleaned_data['test_start'] < datetime.now():
+                raise forms.ValidationError('公测开始时间不得早于当前时间！')
+        if cleaned_data['test_start'] >= cleaned_data['test_end']:
+            raise forms.ValidationError('公测结束时间不能提前于公测开始时间！')
+        if cleaned_data['event_start'] < cleaned_data['test_end'] + timedelta(days=1):
+            raise forms.ValidationError('活动开始时间应比公测结束时间晚1天！')
+        if cleaned_data['event_start'] >= cleaned_data['event_end']:
+            raise forms.ValidationError('活动结束时间不能提前于活动开始时间！')
+        num = 0
+        if 'cover' not in cleaned_data:
+            raise forms.ValidationError('封面图不得为空！')
+        num += cleaned_data['cover'].size
+        if cleaned_data['plane_graph'] is not None:
+            num += cleaned_data['plane_graph'].size
+        if cleaned_data['plane_graph1'] is not None:
+            num += cleaned_data['plane_graph1'].size
+        if cleaned_data['plane_graph2'] is not None:
+            num += cleaned_data['plane_graph2'].size
+        if cleaned_data['plane_graph3'] is not None:
+            num += cleaned_data['plane_graph3'].size
+        if num > 2097152:
+            raise forms.ValidationError('添加图片大小总和不得超过2M!')
         return cleaned_data
 
 
@@ -103,6 +116,9 @@ class CustomerForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super(CustomerForm, self).clean()
+        if 'realname' not in cleaned_data or \
+           'identication' not in cleaned_data:
+            raise forms.ValidationError('姓名或证件号添加不正确')
         self.instance.event = self.initial['event']
         customer = Customer.objects.filter(event=self.instance.event)
         for ct in customer:

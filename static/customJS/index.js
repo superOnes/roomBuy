@@ -12,12 +12,17 @@ $(document).ready(function(){
 		var	pattern = /[0-9-()（）]{7,15}/;
 
 		if(!pattern.test(inputPhone)){
-			alert('请输入正确的电话号码！')
+			new $.zui.Messager('请输入正确的手机号！', {
+				placement:'bottom',
+				type: 'danger'
+			}).show();
 　			return false;
 		}else if($(".coverImgFile").html() == "") {
-			console.log($(".event_start").value);
-			alert('请添加封面')
-		　	return false;
+			new $.zui.Messager('请添加封面！', {
+				placement:'bottom',
+				type: 'danger'
+			}).show();
+　			return false;
 		}
 	});
 
@@ -25,17 +30,17 @@ $(document).ready(function(){
 // 	$("#customerOrder").submit(function(){
 // 		var inputMobile = $("input[name='mobile']").val();
 // 		var inputIdent = $("input[name='identication']").val();
-// 		var pattern = /\d{17}[\d|x]|\d{15}/;
+// 		var pattern = /^\d{17}[\d|X]$/;
 // 		if(inputMobile.length < 11){
 // 			new $.zui.Messager('请输入正确的手机号！', {
 // 				placement:'center',
-// 				type: 'primary'
+// 				type: 'danger'
 // 			}).show();
 // 　			return false;
 // 		}else if(!pattern.test(inputIdent)){
 // 			new $.zui.Messager('请输入正确的身份证号码！', {
 // 				placement:'center',
-// 				type: 'primary' // 定义颜色主题
+// 				type: 'danger' // 定义颜色主题
 // 			}).show();
 // 　			return false;
 // 		}
@@ -46,6 +51,7 @@ $(document).ready(function(){
 
 //上传认筹名单文件
 function submitFile(event,thisID){
+	$(event).attr("disabled","disabled");
 	var files = $("#files")[0].files;
 	var data = new FormData(); //转化为表单格式的数据
     data.append('filename', files[0]);
@@ -143,7 +149,8 @@ function deleteOrder(thisId){
 			window.location.reload();
 		},
 		error:function(){
-			alert("未知错误")
+			alert("未知错误");
+			$(this).removeAttr("disabled","disabled")
 		}
 	});
 };
@@ -218,6 +225,8 @@ function getorderSelect(){
 				$("#eventList").append("<option value='"+result[i].id+"'>"+result[i].name+"</option>")
 			};
 			$("#eventList option:first").attr("selected","selected");
+			var eventId = $("#eventList option:first").val();
+			getorderList(eventId,0,"")
 			return true;
 		},
 		error:function(){
@@ -255,7 +264,21 @@ function getorderList(thisId,is_test,searchValue){
 			alert("获取开盘数据失败！！！")
 		}
 	})
-}
+};
+	function quit(e){
+    $(e).attr("disabled","disabled");
+    $.ajax({
+      type:"POST",
+      url:"/acc/logout/",
+      async:true,
+      success:function(){
+        window.location.href="/acc/login/";
+      },
+      error:function(){
+        alert("退出失败！")
+      }
+    });
+  }
 
 //文件图片上传显示
 	function getPath(obj,fileQuery,transImg) {

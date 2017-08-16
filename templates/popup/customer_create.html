@@ -24,14 +24,15 @@
 		<div class="form-group">
 			<label class="col-sm-2">手机号<i>*</i></label>
 			<div class="col-sm-10">
-				<input type="text" class="form-control"  onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)"
+				<input type="text" class="form-control"  onkeyup="(this.v=function(){this.value=this.value.replace(/^[0]\d*$|[^0-9]+/,'');}).call(this)"
 					onblur="this.v();" placeholder="请输入手机号"  maxlength="11" name="mobile" required>
 			</div>
 		</div>
 		<div class="form-group">
 			<label class="col-sm-2">身份证<i>*</i></label>
 			<div class="col-sm-10">
-				<input type="text" class="form-control" placeholder="请输入身份证" maxlength="18" name="identication" required>
+				<input type="text" class="form-control" onkeyup="(this.v=function(){this.value=this.value.replace(/\s/,'');}).call(this)"
+					onblur="this.v();" placeholder="请输入身份证" maxlength="18" name="identication" required>
 			</div>
 		</div>
 		<div class="form-group">

@@ -58,15 +58,6 @@ function getParamValue(name)
 }
 $(function(){
     var id = getParamValue("id");
-    var cover=getParamValue("cover");
-    var eventname=getParamValue("eventname");
-    if(cover){
-        localStorage.setItem("cover",cover);
-    }
-    if(eventname){
-        localStorage.setItem("eventname",eventname);
-    }
-
     $("title").html(decodeURI(localStorage.getItem("eventname")));
     $.ajax({
         type:"get",
@@ -81,22 +72,28 @@ $(function(){
                 $(".btnL").bind("click",function(){
                     window.location.href="houseList.html?id="+id;
                });
+
                 $(".quitt").click(function(){
-                $(this).attr("disabled", "disabled");
-                $.ajax({
-                    type:"POST",
-                    url:http+"/acc/cusout/",
-                    data:{
-                        id:$(".ind1").html()
-                    },
-                    success:function(data){
-                        $(".quitt").removeAttr("disabled");
-                        window.location.href="login.html?id="+$(".ind1").html();
-                    },
-                    error:function(){
-                        $(".quitt").removeAttr("disabled");
-                        alert("退出出现未知错误！");
-                    }
+                    $(this).attr("disabled", "disabled");
+                    $.ajax({
+                        type:"POST",
+                        url:http+"/acc/cusout/",
+                        data:{
+                            id:$(".ind1").html()
+                        },
+                        success:function(data){
+                            $(".quitt").removeAttr("disabled");
+                            if(data.response_state==200){
+                                window.location.href="login.html?id="+$(".ind1").html();
+                            }else if(data.response_state==400){
+                                alert(data.msg);
+                                window.location.href="login.html?id="+$(".ind1").html();
+                            }
+                        },
+                        error:function(){
+                            $(".quitt").removeAttr("disabled");
+                            alert("退出出现未知错误！");
+                        }
                     })
                 });
 
@@ -113,7 +110,9 @@ $(function(){
         error:function(){
             alert("出错了,请重试！");
         }
-    })
+    });
+
+
 });
 </script>
 </html>

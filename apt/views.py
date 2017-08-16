@@ -1,6 +1,7 @@
 
 import os
 import base64
+
 import qrcode
 import xlrd
 from django.db import transaction
@@ -14,7 +15,7 @@ from django.shortcuts import resolve_url
 from django.views import View
 from django.views.generic import ListView, DetailView, TemplateView
 from django.views.generic.edit import CreateView, UpdateView
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, Http404
 from django.db.models import Q
 from django.http import QueryDict
 from django.utils.decorators import method_decorator
@@ -67,8 +68,8 @@ class EventListView(ListView):
             queryset = queryset.filter(Q(name__contains=self.value))
         for obj in queryset:
             obj.qr = url2qrcode(
-                'http://%s/static/m/views/choiceHouse.html?id=%s&cover=%s&eventname=%s' %
-                (self.request.get_host(), obj.id, obj.cover.url, obj.name))
+                'http://%s/static/m/views/choiceHouse.html?id=%s' %
+                (self.request.get_host(), obj.id))
             obj.save()
         return queryset
 
@@ -129,8 +130,6 @@ class EventStatus(View):
 
     def put(self, request):
         user = request.user
-        if not user.is_authenticated():
-            return JsonResponse({'success': False, 'response_status': 300})
         put = QueryDict(request.body, encoding=request.encoding)
         id = put.get('id')
         if not id:
@@ -288,10 +287,16 @@ class ImportEventDetailView(View):
                 sheet_name = workdata.sheet_names()[0]
                 sheet = workdata.sheet_by_name(sheet_name)
                 row = sheet.nrows
+                col = sheet.ncols
                 if row == 0:
                     os.remove('media/price/price.xlsx')
-                    return JsonResponse({'response_state': 400, 'msg': '导入的excel为空表！'})
+                    return JsonResponse(
+                        {'response_state': 400, 'msg': '导入的excel为空表！'})
                 data = []
+                if col != 10:
+                    os.remove('media/price/price.xlsx')
+                    return JsonResponse(
+                        {'response_state': 400, 'msg': '导入文件不正确！'})
                 value1 = sheet.cell(rowx=0, colx=0).value
                 value2 = sheet.cell(rowx=0, colx=1).value
                 value3 = sheet.cell(rowx=0, colx=2).value
@@ -302,66 +307,110 @@ class ImportEventDetailView(View):
                 value8 = sheet.cell(rowx=0, colx=7).value
                 value9 = sheet.cell(rowx=0, colx=8).value
                 value10 = sheet.cell(rowx=0, colx=9).value
-                head = [value1, value2, value3, value4, value5, value6, value7, value8, value9, value10]
-                print(head)
-                if head != ['楼栋', '单元',	'楼层',	'房号',	'单价',	'建筑面积',	'朝向',	'使用年限',	'户型',	'户型图片名称']:
-                    return JsonResponse({'response_state': 400, 'msg': '导入文件不正确！'})
-                if row - 1 <= request.user.house_limit:
-                    for rx in range(1, row):
-                        li = []
-                        value1 = sheet.cell(rowx=rx, colx=0).value
-                        value2 = sheet.cell(rowx=rx, colx=1).value
-                        value3 = sheet.cell(rowx=rx, colx=2).value
-                        value4 = sheet.cell(rowx=rx, colx=3).value
-                        value5 = sheet.cell(rowx=rx, colx=4).value
-                        value6 = sheet.cell(rowx=rx, colx=5).value
-                        value7 = sheet.cell(rowx=rx, colx=6).value
-                        value8 = sheet.cell(rowx=rx, colx=7).value
-                        value9 = sheet.cell(rowx=rx, colx=8).value
-                        value10 = sheet.cell(rowx=rx, colx=9).value
-                        if type(value1) == str and type(value2) == str \
-                            and type(value5) == float and type(value6) == float and type(value7) == str and \
-                                type(value9) == str and type(value10) == str:
-                            try:
-                                value3 = int(value3)
-                                value4 = int(value4)
-                                value8 = int(value8)
-                            except:
-                                os.remove('media/price/price.xlsx')
-                                return JsonResponse({'response_state': 400, 'msg': 'excel中数据格式不正确！'})
-                            li = [value1, value2, value3, value4, value5, value6, value7, value8, value9, value10]
-                        data.append(li)
-                        num = len(data)
-                    with transaction.atomic():
-                        EventDetail.objects.filter(event=event).delete()
+                head = [
+                    value1,
+                    value2,
+                    value3,
+                    value4,
+                    value5,
+                    value6,
+                    value7,
+                    value8,
+                    value9,
+                    value10]
+                if head != [
+                    '楼栋',
+                    '单元',
+                    '楼层',
+                    '房号',
+                    '单价',
+                    '建筑面积',
+                    '朝向',
+                    '使用年限',
+                    '户型',
+                        '户型图片名称']:
+                    os.remove('media/price/price.xlsx')
+                    return JsonResponse(
+                        {'response_state': 400, 'msg': '导入文件不正确！'})
+                if row - 1 > request.user.house_limit:
+                    os.remove('media/price/price.xlsx')
+                    return JsonResponse(
+                        {'response_state': 400, 'msg': '导入数据超出限制！'})
+                for rx in range(1, row):
+                    value1 = sheet.cell(rowx=rx, colx=0).value
+                    value2 = sheet.cell(rowx=rx, colx=1).value
+                    value3 = sheet.cell(rowx=rx, colx=2).value
+                    value4 = sheet.cell(rowx=rx, colx=3).value
+                    value5 = sheet.cell(rowx=rx, colx=4).value
+                    value6 = sheet.cell(rowx=rx, colx=5).value
+                    value7 = sheet.cell(rowx=rx, colx=6).value
+                    value8 = sheet.cell(rowx=rx, colx=7).value
+                    value9 = sheet.cell(rowx=rx, colx=8).value
+                    value10 = sheet.cell(rowx=rx, colx=9).value
+                    if isinstance(
+                        value1, str) and isinstance(
+                        value2, str) and isinstance(
+                        value5, float) and isinstance(
+                        value6, float) and isinstance(
+                        value7, str) and isinstance(
+                        value9, str) and isinstance(
+                            value10, str):
                         try:
-                            for ed in data:
-                                if not isinstance(ed[0], str):
-                                    ed[0] = str(int(ed[0]))
-                                if not isinstance(ed[1], str):
-                                    ed[1] = str(int(ed[1]))
-                                eventdetail = EventDetail.objects.create(
-                                    building=ed[0],
-                                    unit=ed[1],
-                                    floor=ed[2],
-                                    room_num=ed[3],
-                                    unit_price=ed[4],
-                                    area=ed[5],
-                                    looking=ed[6],
-                                    term=ed[7],
-                                    type=ed[8],
-                                    house_type=HouseType.objects.filter(name=ed[9]).first(),
-                                    event=event)
-                                eventdetail.save()
-                            return JsonResponse({'response_state': 200, 'data': num})
-                        except:
+                            value3 = int(value3)
+                            value4 = int(value4)
+                            value8 = int(value8)
+                        except BaseException:
                             os.remove('media/price/price.xlsx')
-                            return JsonResponse({'response_state': 400, 'msg': '导入数据格式不正确或有重复数据！'})
-                os.remove('media/price/price.xlsx')
-                return JsonResponse(
-                    {'response_state': 400, 'msg': '导入数据超过限制数量！'})
+                            return JsonResponse(
+                                {'response_state': 400, 'msg': '导入数据格式不正确或有重复数据!'})
+                        li = [
+                            value1,
+                            value2,
+                            value3,
+                            value4,
+                            value5,
+                            value6,
+                            value7,
+                            value8,
+                            value9,
+                            value10]
+                    else:
+                        os.remove('media/price/price.xlsx')
+                        return JsonResponse(
+                            {'response_state': 400, 'msg': '导入数据格式不正确或有重复数据!'})
+                    data.append(li)
+                    num = len(data)
+                with transaction.atomic():
+                    try:
+                        EventDetail.objects.filter(event=event).delete()
+                        for ed in data:
+                            if not isinstance(ed[0], str):
+                                ed[0] = str(int(ed[0]))
+                            if not isinstance(ed[1], str):
+                                ed[1] = str(int(ed[1]))
+                            eventdetail = EventDetail.objects.create(
+                                building=ed[0],
+                                unit=ed[1],
+                                floor=ed[2],
+                                room_num=ed[3],
+                                unit_price=ed[4],
+                                area=ed[5],
+                                looking=ed[6],
+                                term=ed[7],
+                                type=ed[8],
+                                house_type=HouseType.objects.filter(
+                                    event=event,
+                                    name=ed[9]).first(),
+                                event=event)
+                            eventdetail.save()
+                        os.remove('media/price/price.xlsx')
+                        return JsonResponse(
+                            {'response_state': 200, 'data': num})
+                    except BaseException:
+                        os.remove('media/price/price.xlsx')
+                        return JsonResponse(
+                            {'response_state': 400, 'msg': '导入数据格式不正确或有重复数据！'})
             else:
-                os.remove('media/price/price.xlsx')
                 return JsonResponse(
                     {'response_state': 400, 'msg': '导入文件格式不正确！'})
         return JsonResponse({'response_state': 400, 'msg': '没有该活动！'})
@@ -413,9 +462,9 @@ class ExportEventDetailView(View):
             s.write(row, 7, obj.term)
             s.write(row, 8, obj.type)
             try:
-                name=obj.house_type.name
-            except:
-                name=None
+                name = obj.house_type.name
+            except BaseException:
+                name = None
             s.write(row, 9, name)
             row += 1
         sio = BytesIO()
@@ -565,7 +614,7 @@ class ExportHouseHotView(View):
             s.write(row, 1, obj.unit)
             s.write(row, 2, str(obj.floor))
             s.write(row, 3, str(obj.room_num))
-            s.write(row, 4, '已售' if obj.is_sold else '未售' )
+            s.write(row, 4, '已售' if obj.has_order() else '未售')
             s.write(row, 5, obj.unit_price)
             s.write(row, 6, obj.area)
             s.write(row, 7, obj.follow_set.count())
@@ -616,45 +665,51 @@ class ExportBuyHotView(View):
             response.write(sio.getvalue())
             return response
         row = 1
-        if objs:
-            for obj in objs:
-                order = obj.user.order_set.all()
-                testorder = obj.user.order_set.filter(is_test=True).first()
-                openorder = obj.user.order_set.filter(is_test=False).first()
-                s.write(row, 0, obj.realname)
-                s.write(row, 1, obj.mobile)
-                s.write(row, 2, obj.identication)
-                s.write(row, 3, obj.protime.strftime(
-                    "%Y/%m/%d %H:%M:%S") if obj.protime else '')
-                s.write(row, 4, obj.user.follow_set.count())
-                if order:
-                    s.write(row, 5, testorder.eventdetail.building +
-                            testorder.eventdetail.unit +
-                            str(testorder.eventdetail.floor) +
-                            '层' +
-                            str(testorder.eventdetail.room_num) if testorder else '')
-                    s.write(row, 6, (testorder.time).strftime(
-                        "%Y/%m/%d %H:%M:%S") if testorder else '')
-                    s.write(row, 7, openorder.eventdetail.building +
-                            openorder.eventdetail.unit +
-                            str(openorder.eventdetail.floor) +
-                            '层' +
-                            str(openorder.eventdetail.room_num) if openorder else '')
-                    s.write(row, 8, (openorder.time).strftime(
-                        "%Y/%m/%d %H:%M:%S") if openorder else '')
-                else:
-                    s.write(row, 5, None)
-                    s.write(row, 6, None)
-                    s.write(row, 7, None)
-                    s.write(row, 8, None)
-                row += 1
-            sio = BytesIO()
-            sheet.save(sio)
-            sio.seek(0)
-            response = HttpResponse(content_type='application/vnd.ms-excel')
-            response['Content-Disposition'] = 'attachment;filename=goufangredu.xls'
-            response.write(sio.getvalue())
-            return response
+        for obj in objs:
+            s.write(row, 0, obj.realname)
+            s.write(row, 1, obj.mobile)
+            s.write(row, 2, obj.identication)
+            s.write(row, 3, obj.protime.strftime(
+                "%Y/%m/%d %H:%M:%S") if obj.protime else '')
+            s.write(row, 4, obj.user.follow_set.count())
+            testorder = Order.objects.filter(
+                eventdetail__event_id=eventid,
+                user__customer=obj,
+                is_test=True)
+            if testorder:
+                order = testorder[0]
+                s.write(row, 5, order.eventdetail.building +
+                        order.eventdetail.unit +
+                        str(order.eventdetail.floor) +
+                        '层' +
+                        str(order.eventdetail.room_num))
+                s.write(row, 6, (order.time).strftime(
+                    "%Y/%m/%d %H:%M:%S"))
+            else:
+                s.write(row, 5, None)
+                s.write(row, 6, None)
+            nottestorder = Order.objects.filter(
+                eventdetail__event_id=eventid, user__customer=obj, is_test=False)
+            if nottestorder:
+                order = nottestorder[0]
+                s.write(row, 7, order.eventdetail.building +
+                        order.eventdetail.unit +
+                        str(order.eventdetail.floor) +
+                        '层' +
+                        str(order.eventdetail.room_num))
+                s.write(row, 8, (order.time).strftime(
+                    "%Y/%m/%d %H:%M:%S"))
+            else:
+                s.write(row, 7, None)
+                s.write(row, 8, None)
+            row += 1
+        sio = BytesIO()
+        sheet.save(sio)
+        sio.seek(0)
+        response = HttpResponse(content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = 'attachment;filename=goufangredu.xls'
+        response.write(sio.getvalue())
+        return response
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -678,7 +733,7 @@ class ExportOrderView(View):
             else:
                 objs = queryset
         except BaseException:
-            raise forms.ValidationError('导出失败请重试！')
+            raise Http404('导出时发生错误！')
         sheet = Workbook(encoding='utf-8')
         s = sheet.add_sheet('数据表')
         list = [
@@ -706,12 +761,17 @@ class ExportOrderView(View):
         row = 1
         for obj in objs:
             s.write(row, 0, obj.time.strftime("%Y/%m/%d %H:%M:%S"))
-            s.write(row, 1, obj.eventdetail.room_num)
+            s.write(row, 1, obj.eventdetail.building +
+                    obj.eventdetail.unit +
+                    str(obj.eventdetail.floor) +
+                    '层' +
+                    str(obj.eventdetail.room_num))
             s.write(row, 2, obj.eventdetail.unit_price)
             s.write(row, 3, obj.eventdetail.area)
             s.write(row, 4, obj.user.customer.realname)
             s.write(row, 5, obj.user.customer.mobile)
             s.write(row, 6, obj.user.customer.identication)
+            s.write(row, 7, obj.user.customer.remark)
             row += 1
         sio = BytesIO()
         sheet.save(sio)
@@ -967,7 +1027,8 @@ class EventTVWallInfoView(View):
     def get(self, request, pk):
         result = []
         eventdetails = Event.get(pk).eventdetail_set.all()
-        buildings = list(set(eventdetails.values_list('building', flat=True)))
+        buildings = sorted(
+            list(set(eventdetails.values_list('building', flat=True))))
         for b in buildings:
             units = eventdetails.filter(building=b).order_by('unit') \
                                 .values_list('unit', flat=True)
@@ -987,9 +1048,18 @@ class EventTVWallInfoView(View):
 
 
 @method_decorator(admin_required, name='dispatch')
-@method_decorator(event_permission, name='dispatch')
 class EventTVWallOrder(TemplateView):
     template_name = 'orderInfo.html'
+
+    def get(self, request, *args, **kwargs):
+        try:
+            order = Order.objects.get(eventdetail_id=kwargs['pk'],
+                                      is_test=False)
+            if order.eventdetail.event.company != request.user.company:
+                raise Http404('没有访问权限')
+        except BaseException:
+            raise Http404('哎呀，网页走丢了')
+        return super(EventTVWallOrder, self).get(request, *args, **kwargs)
 
     def get_context_data(self, pk):
         context = super(EventTVWallOrder, self).get_context_data()

@@ -11,7 +11,7 @@
 	</ol>
 </div>
 <div class="row" style="padding:10px;margin-top:-20px">
-	<a class="btn btn-primary" data-moveable="true" data-iframe="{% url 'event_create' %}" data-toggle="modal">创建活动</a>
+	<a class="btn btn-primary" data-moveable="true" data-iframe="{% url 'event_create' %}" data-toggle="modal" data-backdrop="static">创建活动</a>
 	<div class="col-sm-3 col-md-3 col-lg-3" style="float: right;">
 		<form class="form-horizontal searchWrap" method="get" action="">
 			<div class="input-group">
@@ -41,7 +41,7 @@
 		{% for obj in object_list %}
 		<tr>
 			<td>{{ forloop.counter }}</td>
-			<td><a data-iframe="{% url 'event_update' pk=obj.id %}" data-toggle="modal" data-title="编辑活动" title="编辑活动">{{ obj.name }}&nbsp;&nbsp;<i class="icon icon-pencil"></i></a></td>
+			<td><a data-iframe="{% url 'event_update' pk=obj.id %}" data-toggle="modal" data-title="编辑活动" title="编辑活动" data-backdrop="static">{{ obj.name }}&nbsp;&nbsp;<i class="icon icon-pencil"></i></a></td>
 			<td>
 				<p>{{ obj.test_start }}</p>
 				<p>至</p>
@@ -68,7 +68,7 @@
 					<a href="javascript:void(0)" data-id="{{obj.id}}" class="is_pub">{% if obj.is_pub == False %}发布{% else %}取消发布{% endif %}</a>
 				</p>
 				<p>
-					<a data-iframe="{% url 'event_term_update' pk=obj.id %}" data-toggle="modal">编辑协议</a>
+					<a data-iframe="{% url 'event_term_update' pk=obj.id %}" data-toggle="modal" data-backdrop="static">编辑协议</a>
 				<p>
 					<a data-toggle="modal" data-target="#deleteModal" data-id="{{obj.id}}" class="deleteOrder">清除公测订单</a>
 				</p>
@@ -131,7 +131,8 @@
 			}
 			$("#is_pub_issue").modal();
 		});
-		$(".is_pub_confirm").on("click", function(e) {
+		$(".is_pub_confirm").click(function(e) {
+			$(this).attr("disabled","disabled");
 			var id = $("#is_pub_status").val();
 			$.ajax({
 				type: "PUT",
@@ -141,20 +142,19 @@
 				success: function(result) {
 					if(result.success){
 						window.location.reload();
-					}else{
-                        if(result.response_status == 300){
-                            window.location.href="acc/login";
-                        } else {
-                            new $.zui.Messager('请完善协议内容！', {
+					}else if(result.response_status == 300){
+						window.location.href="acc/login";
+					} else {
+						new $.zui.Messager('请完善协议内容！', {
 							placement:'center',
 							type: 'primary' // 定义颜色主题
-                            }).show();
-                　			return false;
-                        }
+						}).show();
+						return false;
 					}
 				},
 				error: function() {
-					alert("未知错误")
+					alert("未知错误");
+					$(this).removeAttr("disabled","disabled");
 				}
 			});
 		});
@@ -163,6 +163,7 @@
 			$("#is_clear_status").val($(e.currentTarget).data("id"));
 		});
 		$("#is_clear").click(function() {
+			$(this).attr("disabled","disabled");
 			var thisId = $("#is_clear_status").val();
 			deleteOrder(thisId);
 		})

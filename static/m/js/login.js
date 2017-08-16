@@ -17,18 +17,19 @@ $(function(){
 		//	$(".tips").html("证件号格式错误！");
 		//}
 		else{
-			var tel=$(".titleph").val(),personId=$(".titlezj").val();
-            $(".btnlog").attr("disabled", "disabled");
+			var tel=$(".titleph").val(),personId=$(".titlezj").val(),id=$(".loginId").html();
+			var $btnlog=$(".btnlog");
+            $btnlog.attr("disabled", "disabled");
 			$.ajax({
 				type:"POST",
 				url:http+"/acc/cuslog/",
 				data:{
 					tel:tel,
 					personId:personId,
-					id:$(".loginId").html()
+					id:id
 				},
 				success:function(data){
-                    $(".btnlog").removeAttr("disabled");
+                    $btnlog.removeAttr("disabled");
 					if(data.response_state==200){
 
 						prol(data.objects[0]);
@@ -38,7 +39,7 @@ $(function(){
 					}
 				},
 				error:function(){
-                    $(".btnlog").removeAttr("disabled");
+                    $btnlog.removeAttr("disabled");
 					alert("页面出错，请重试");
 				}
 
@@ -161,9 +162,6 @@ function createList(data){
 					'<label class="click-down fr" name="true"><i></i></label>'+
 				'</div>'+
 			'</div>'+
-			'<ul class="shareCarList houseTap">'+
-
-			'</ul>'+
 			'<div class="endTime">'+
 				'<i></i>'+
 				'<p id="endTimeing"></p>'+
@@ -252,10 +250,14 @@ function myShare(){
 		},
 		success:function(data){
 			if(data.response_state==200){
-				$(".shareCarList").empty();
+				$(".shareCarList").remove();
 				if(data.objects.length==0){
-					$(".shareCarList").append('<div class="noOne"><img src="../images/none.png" /><p>目前您没有任何收藏！</p></div>');
+					$(".houseList").after('<ul class="shareCarList houseTap">'+
+                        							'<div class="noOne"><img src="../images/none.png" /><p>目前您没有任何收藏！</p></div>'+
+                        						'</ul>'
+						);
 				}else{
+                    $(".houseList").after('<ul class="shareCarList houseTap"></ul>');
 					for(var i=0;i<data.objects.length;i++){
 						$(".shareCarList").append($('<li class="shareCar-list">'+
 							'<a class="share-a">'+
@@ -303,7 +305,7 @@ function houseList(data){
 
 	aPp.each(function(){
 		$(this).on("click",function(){
-            $(".shareCarList").empty();
+            $(".shareCarList").remove();
 			$(".sharees").removeClass("listTile-style");
 			aPp.removeClass('listTile-style');
 			$(this).addClass('listTile-style');
@@ -323,7 +325,7 @@ function houseList(data){
 											'<div class="unite clear"></div>'+
 									'</div>'
 						);
-						$(".shareCarList").after(unit);
+						$(".houseList").after(unit);
 					}
 
 					for(var i=0;i<data.objects[0].unit.length;i++){
@@ -368,30 +370,16 @@ function houseList(data){
 										$(".unite").after(romms);
 										for(var i=0;i<data.objects.length;i++){
 											$(".floorChose").append("<li>"+data.objects[i].floor_room_num+"</li>");
-											if(new Date($(".event_start").html()).getTime()<new Date().getTime()&&new Date().getTime() < new Date($(".event_end").html()).getTime()){
-												if(data.objects[i].is_sold){
-													$(".floorChose li").eq(i).addClass("floorLi-red");
-												}
+											if(data.objects[i].sold){
+												$(".floorChose li").eq(i).addClass("floorLi-red");
 											}
-											if(new Date($(".test_start").html()).getTime()<new Date().getTime()&&new Date().getTime() <new Date($(".test_ent").html()).getTime()){
-												if(data.objects[i].is_testsold){
-													$(".floorChose li").eq(i).addClass("floorLi-red");
-												}
-											}
-
 										}
 										var aLis=$(".floorChose").find("li");
 
 										aLis.each(function(){
 											$(this).click(function(){
-												if(data.response_state==405){
-													alert(data.msg);
-												}else{
-													var houseID=data.objects[$(this).index()].house;
-													window.location.href="houseInfo.html?house="+houseID+"&id="+$(".idNum").html();
-												}
-
-
+												var houseID=data.objects[$(this).index()].house;
+												window.location.href="houseInfo.html?house="+houseID+"&id="+$(".idNum").html();
 											})
 										})
                                     }else if(data.response_state==401||data.response_state==403){
@@ -449,14 +437,12 @@ function houseList(data){
 /*详情信息*/
 function houseInfo(data){
 	var houseInfo=$('<div class="houseInfotop">'+
-				             '<p><span>'+data.floor+'#'+data.looking+'户</span></p>'+
+				             '<p><span class="backList"><a href="javascript:;" onclick="backList()">返回列表</a></span></p>'+
 							'<p class="infoImg"><img /></p>'+
 							'<div class="houseShare clear">'+
-								'<span class="fl"><a href="javascript:;" onclick="backList()">返回房间列表</a></span>'+
+        						'<h1 class="fl">'+data.building_unit+'</h1>'+
 								'<span class="fl shareBt">收藏</span>'+
 							'</div>'+
-							'<h1>'+data.building_unit+'</h1>'+
-
 					'</div>'+
 					'<ul class="houseInfoCont">'+
 						'<li>单价<br/><span class="shpri">￥'+data.unit_price+'/m²</span></li>'+
@@ -522,8 +508,8 @@ function houseInfo(data){
 		}
 
 	$(".shareBt").bind("click",shareBtn);
-
-	if(data.is_followed[0]){
+	/*这里去掉[0]*/
+	if(data.is_followed){
 		$(".shareBt").html("已收藏").css({background:"#999",border:"none",color:"#fff"})
 	}
 	if(data.pic==""){
@@ -550,7 +536,7 @@ function proldel(){
                 $("body").append($('<div class="prols proNew">'+
                     '<h1>'+data.objects[0].termname+'</h1>'+
                     '<p>'+data.objects[0].term+'</p>'+
-                    '<p class="closePro"><img src="../images/close-icons.png" onclick="closePro()"></p>'+
+                    '<div class="closePro" onclick="closePro()">关闭</div>'+
                     '</div>'
                 ));
             }else if(data.response_state==401||data.response_state==403){
@@ -570,14 +556,6 @@ function proldel(){
 }
 function closePro(){
     $(".proNew").remove();
-}
-function data5(result){
-	var datap=$('<p class="event_start" style="display:none">'+result.event_start+'</p>'+
-		'<p class="event_end" style="display:none">'+result.event_end+'</p>'+
-		'<p class="test_ent" style="display:none">'+result.test_ent+'</p>'+
-		'<p class="test_start" style="display:none">'+result.test_start+'</p>'
-	);
-	$("body").append(datap);
 }
 function buyNow(){
     $("#houseInfoBlack").show();
@@ -628,6 +606,9 @@ function orderSu(data){
 	);
 
 	$(".success-container").append(sucess);
+	if(data.is_test){
+		$(".prompt-warning").empty();
+	}
 
 }
 function orderInfos(){
@@ -705,7 +686,7 @@ function checkInfo(data){
 								'<table>'+
 									'<tr>'+
 										'<td>户型：</td>'+
-										'<td>'+data.houst_type+'</td>'+
+										'<td>'+data.house_type+'</td>'+//改正拼写
 									'</tr>'+
 									'<tr>'+
 										'<td>建筑面积：</td>'+
@@ -738,29 +719,30 @@ function checkInfo(data){
 				'</div>'
 	);
 	$(".orderInfoBox").append(orderInfo);
-	setInterval(function(){
-		 var dateNew= new Date(data.limit).getTime() - new Date().getTime();
-		 if(dateNew>0){
-             var hours = Math.floor(dateNew / (3600 * 1000));
-             //计算相差分钟数
-             var leave2 = dateNew % (3600 * 1000);       //计算小时数后剩余的毫秒数
-             var minutes = Math.floor(leave2 / (60 * 1000));
-             //计算相差秒数
-             var leave3 = leave2 % (60 * 1000);     //计算分钟数后剩余的毫秒数
-             var seconds = Math.round(leave3 / 1000);
-
-
-             $('.order-2').html((hours < 10 ? "0" + hours : hours) + "小时 " + (minutes < 10 ? "0" + minutes : minutes) + " 分钟" + (seconds < 10 ? "0" + seconds : seconds) + " 秒");
-		 }else{
-             $('.order-2').html("订单无效");
-		 }
-
-	},1000);
     if(data.is_test){
         $(".order-middle2").empty();
         $(".order-bottom-1 table").append($('<tr class="ordertype">'+
             '<td>订单类型：</td>'+
             '<td>公测订单</td>'+
-            '</tr>'))
+            '</tr>'));
+    }else{
+        setInterval(function(){
+            var dateNew= new Date(data.limit).getTime() - new Date().getTime();
+            if(dateNew>0){
+                var hours = Math.floor(dateNew / (3600 * 1000));
+                //计算相差分钟数
+                var leave2 = dateNew % (3600 * 1000);       //计算小时数后剩余的毫秒数
+                var minutes = Math.floor(leave2 / (60 * 1000));
+                //计算相差秒数
+                var leave3 = leave2 % (60 * 1000);     //计算分钟数后剩余的毫秒数
+                var seconds = Math.round(leave3 / 1000);
+
+
+                $('.order-2').html((hours < 10 ? "0" + hours : hours) + "小时 " + (minutes < 10 ? "0" + minutes : minutes) + " 分钟" + (seconds < 10 ? "0" + seconds : seconds) + " 秒");
+            }else{
+                $('.order-2').html("订单无效");
+            }
+
+        },1000);
     }
 }

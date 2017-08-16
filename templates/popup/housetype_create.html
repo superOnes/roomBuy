@@ -28,8 +28,8 @@
 				</div>
 			</div>
 		</div>
-		{% if form.num.errors %}
-		<div class="alert alert-danger" style="font-size:14px;font-weight:bold">{{form.num.errors}}</div>
+		{% if form.name.errors %}
+		<div class="alert alert-danger" style="font-size:14px;font-weight:bold">{{form.name.errors}}</div>
 		{% endif %}
 		<input type="text" name="event" value="{{form.event.value|default:''}}" style="display:none">
 		<div class="modal-footer">
@@ -40,9 +40,10 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		$("#houseTypeCreate").submit(function(){
+			$(".btn-primary").attr("disabled","disabled");
 			var inputPic = $(".picImgFile").html();
 			if(inputPic == ""){
-				new $.zui.Messager('请添加户型照片!！', {
+				new $.zui.Messager('请添加户型照片!', {
 					placement:'center',
 					type: 'important' // 定义颜色主题
 				}).show();

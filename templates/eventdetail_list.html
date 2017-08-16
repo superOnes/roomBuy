@@ -16,7 +16,7 @@
 	</ol>
 </div>
 <div class="row" style="padding:10px;margin-top:-20px;">
-	<a class="btn btn-primary" data-iframe="{% url 'room_create' pk=event.id %}" data-toggle=modal>添加房间/车位</a>
+	<a class="btn btn-primary" data-iframe="{% url 'room_create' pk=event.id %}" data-toggle="modal" data-backdrop="static">添加房间/车位</a>
 	<button type="button" class="btn btn-default lead" data-toggle="modal" data-target="#exampleModal" data-moveable="true">导入房源</button>
 	<a href="{% url 'room_export' pk=event.id %}" class="btn btn-default">导出房源</a>
 	<a href="{% url 'event_house_type_list' pk=event.id %}" class="btn btn-default" target="_blank" data-moveable="true">编辑户型</a>
@@ -60,7 +60,7 @@
 		<tr>
 			<th data-width="5%">序号</th>
 			<th>车位/房间号</th>
-			<th>单价</th>
+			<th data-width="10%">单价</th>
 			<th>建筑面积</th>
 			<th>户型</th>
 			<th>朝向</th>
@@ -69,7 +69,7 @@
 			<th>关联户型</th>
 			<th>选购状态</th>
 			<th>备注状态</th>
-			<th>操作</th>
+			<th data-width="10%">操作</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -84,26 +84,20 @@
 			<td>{{obj.type}}</td>
 			<td>朝 {{obj.looking}}</td>
 			<td>{{obj.term}} 年</td>
-			<td>{{ obj.status|yesno:"上架,未上架"}}</td>
+			<td>{{ obj.status|yesno:"已上架,未上架"}}</td>
 			<td>
 				<a data-iframe="{% url 'room_ht_update' pk=obj.id %}" data-toggle="modal" data-title="关联户型">
 					{{ obj.house_type.name }} <i class="icon icon-edit"></i></a>
 			</td>
 			<td>{{obj.has_order|yesno:"已选购,未选购"}}</td>
 			<td>{% if obj.sign %}<i class="icon icon-check"></i>{% endif %}</td>
-			<td>
-				<p>
-					<a href="javascript:void(0)" data-id="{{obj.id}}" class="status">{{obj.status|yesno:'取消上架,上架'}}</a>
-				</p>
-				<p>
+			<td class="handle">
+					<a href="javascript:void(0)" data-id="{{obj.id}}" class="status" title="{{obj.status|yesno:'上架,下架'}}">{% if obj.status == True %}<i class="icon icon-toggle-on"></i>{% else %}<i class="icon icon-toggle-off"></i>{% endif %}</a>
+				<!-- <p>
 					<a data-iframe="{% url 'room_remark_update' pk=obj.id %}" data-toggle="modal">情况描述</a>
-				</p>
-				<p>
-					<a data-iframe="{% url 'room_sign_update' pk=obj.id %}" data-toggle="modal" data-size="sm" data-fade="false">备注</a>
-				</p>
-				<p>
-					<a data-target="#deleteModal" data-toggle="modal" data-id="{{obj.id}}" class="deleteHouse">删除</a>
-				</p>
+				</p> -->
+					<a data-iframe="{% url 'room_sign_update' pk=obj.id %}" data-toggle="modal" data-size="sm" data-fade="false" title='备注'><i class="icon icon-bookmark-empty"></i></a>
+					<a data-target="#deleteModal" data-toggle="modal" data-id="{{obj.id}}" class="deleteHouse" title='删除'><i class="icon icon-trash"></i></a>
 			</td>
 		</tr>
 		<!--取消上架-->
@@ -213,7 +207,8 @@
 			$("#status_status").val($(e.currentTarget).data("id"));
 			$("#status_issue").modal();
 		});
-		$(".status_confirm").on("click", function(e) {
+		$(".status_confirm").click(function(e) {
+			$(this).attr("disabled","disabled");
 			var id = $("#status_status").val();
 			$.ajax({
 				type: "PUT",
@@ -242,6 +237,7 @@
 			$id = $(e.currentTarget).data("id");
 		});
 		$("#deleteHouse").click(function() {
+			$(this).attr("disabled","disabled");
 			$.ajax({
 				type: "POST",
 				url: "/eventdetaildel/",
@@ -265,7 +261,8 @@
 		$(".house-type").on('click', function(e) {
 			var event_id = $(e.currentTarget).data("id");
 			$("#house-type-modal").modal();
-			$(".house-type-save").on("click", function() {
+			$(".house-type-save").click(function() {
+				$(this).attr("disabled","disabled");
 				$.ajax({
 					type: "post",
 					url: "/housetypes/",
