@@ -37,9 +37,9 @@ class LoginView(View):
         user = authenticate(username=username, password=password)
         if user:
             if user.is_admin:
-                # if user.expire_date is None \
-                #    or user.expire_date > datetime.now():
-                login(request, user)
+                if user.company.expire_date is None \
+                   or user.company.expire_date > datetime.now():
+                    login(request, user)
                 return redirect(nxt)
         messages.error(request, '用户名或密码不正确')
         return redirect(reverse('acc_login'))

@@ -18,8 +18,8 @@ def admin_required(func):
     def return_wrapper(request, *args, **kwargs):
         if request.user.is_authenticated():
             if request.user.is_admin:
-                if request.user.expire_date is None \
-                   or request.user.expire_date > datetime.now():
+                if request.user.company.expire_date is None \
+                   or request.user.company.expire_date > datetime.now():
                     return func(request, *args, **kwargs)
             logout(request)
         return redirect('/acc/login/?next=%s' % request.get_full_path())

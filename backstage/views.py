@@ -38,9 +38,3 @@ class CreateView(View):
     '''
     def get(self, request):
         return render(request, 'bms/createuser.html')
-
-    def post(self, request):
-        name = request.POST.get('username')
-        house_limit = request.POST.get('house_limit')
-        expire_date = request.POST.get('expire_date')
-
