@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.http import JsonResponse, request
 from django.http import QueryDict
 from django.shortcuts import render, redirect
@@ -35,7 +36,16 @@ class HomeListView(ListView):
     model = User
 
     def get_queryset(self):
+        # self.value = self.request.GET.get('value')
+        # self.province = self.request.GET.get('province')
+        # self.city = self.request.GET.get('city')
         user = self.model.objects.filter(is_admin=True)
+        # if self.province:
+        #     user = user.filter(Q(company__province=self.province))
+        # if self.city:
+        #     user = user.filter(Q(company__city=self.city))
+        # if self.value:
+        #     user = user.filter(Q(username__contains=self.value))
         queryset = [{'username': u.username,
                     'name': u.company.name,
                      'house_limit': u.company.house_limit,
@@ -68,7 +78,6 @@ class CreateView(View):
         expire_date = request.POST.get('expire_date')
         province = request.POST.get('province')
         city = request.POST.get('city')
-        print(username, password, name, house_limit, expire_date, province, city)
         if username is None or password is None or name is None \
                 or province is None or city is None:
             return JsonResponse({'successs': False})
@@ -124,8 +133,11 @@ class DeleteUserView(View):
         '''
         def delete(self, request):
             params = QueryDict(request.body, encoding=request.encoding)
-            User.remove(params.get('id'))
-            return JsonResponse({'success': True})
+            user = params.get('id')
+            if user.company.event_set.all():
+                User.remove(params.get('id'))
+                return JsonResponse({'success': True, 'msg': '删除成功！'})
+            return JsonResponse({'success': False, 'msg': '删除失败！'})
 
 
 class GetProvinceView(View):
