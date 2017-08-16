@@ -93,7 +93,7 @@
         var wapBox=$(".wapbox");
         var unitList =wapBox.eq(k).find(".unitList");
         for(var i = 0;i<unitList.length;i++){
-            timerfn($(unitList[i]));
+            timerfn(unitList.eq(i));
         }
 
         var unit = wapBox.eq(k).find(".unit");
@@ -114,7 +114,9 @@
         var oH=$(window).height();
         var time1=setInterval(function(){
             $(".wapbox").eq(k).find(".wallList").css("margin-top",("-"+(oH+10))*m+"px");
-            timerfn($(unitList));
+            for(var i = 0;i<unitList.length;i++){
+                timerfn(unitList.eq(i));
+            }
             m++;
             if(m==num+1){
                 i=0;
@@ -138,12 +140,12 @@
         ele.timer = setInterval(fn,2000);
 
         function fn(){
-            var Ptop =  parseInt(ele.css("top"));
+            var Ptop = parseInt(ele.css("top"));
             var heightL =  parseInt(ele.css("height"));
             Ptop -= $(window).height()-54;
-            ele.css({"top":Ptop+"px"});
-            if(Math.abs(Ptop)>heightL-5){
-                ele.css({"top":"0px"});
+            ele.css({top:Ptop+"px"});
+            if(Math.abs(Ptop)>(heightL-5)){
+                ele.css({top:"0px"});
                 ele.timer?clearInterval(ele.timer):null;
             }
         }
