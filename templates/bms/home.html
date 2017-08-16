@@ -1,4 +1,4 @@
-{% extends 'include/base.html' %} 
+{% extends 'include/base.html' %}
 {% block title %}云开盘管理用户{% endblock %}
 {% block main %}
 <div class="userTit">
@@ -11,15 +11,13 @@
 			    <label for="province" style="float:left;">省份</label>
 			    <div class="col-sm-3">
 			      <select class="form-control" id="province">
-			        <option value="0">北京</option>
-			        <option value="1">上海</option>
+			        <option value="0">---请选择省份---</option>
 			      </select>
 			    </div>
 			    <label for="downtown" style="float:left;">市区</label>
 			    <div class="col-sm-3">
 			    	<select class="form-control" id="downtown">
-				        <option value="0">北京</option>
-				        <option value="1">上海</option>
+              <option value="0">---请选择市区---</option>
 				    </select>
 			    </div>
 			    <div class="col-sm-4 input-group" style="margin: 0 !important;padding: 0 10px;">
@@ -97,11 +95,16 @@
 			{% endfor %}
 		</tbody>
 	</table>
+  <div class="tip" style="display:none;">
+    <p style='font-size: 20px;color: #CCCCCC;text-align: center;'>没有符合条件的用户！</p>
+  </div>
 </div>
 <script type="text/javascript">
 	$(document).ready(function(){
+    filterUser();
 		cityList();
 		$("#province").change(function(){
+      cityList($(this).val());
 			filterUser($(this).val(),$("#downtown").val());
 		});
 		$("#downtown").change(function(){
