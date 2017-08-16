@@ -35,7 +35,22 @@ class HomeListView(ListView):
     model = User
 
     def get_queryset(self):
-        return self.model.objects.filter(is_admin=True)
+        user = self.model.objects.filter(is_admin=True)
+        queryset = [{'username': u.username,
+                    'name': u.company.name,
+                     'house_limit': u.company.house_limit,
+                     'province': u.company.province.name
+                     if u.company.province else '',
+                     'city': u.company.city.name
+                     if u.company.city else '',
+                     'expire_date': u.company.expire_date
+                     if u.company.expire_date else '',
+                     } for u in user]
+        return queryset
+
+    def get_context_date(self):
+        context = super(HomeListView, self).get_context_data()
+        return context
 
 
 class CreateView(View):
