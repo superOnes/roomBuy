@@ -176,8 +176,10 @@ class AppEventDetailHouseListView(View):
         unit = request.GET.get('unit')
         event = Event.get(eventid)
         now = datetime.now()
-        test = True
-        if now > event.event_start and now < event.event_end:
+        test = None
+        if event.test_start + timedelta(hours=-0.5) < now < event.test_end:
+            test = True
+        if event.event_start + timedelta(hours=-0.5) < now < event.event_end:
             test = False
         context = {}
         eventdetobj = EventDetail.objects.filter(
