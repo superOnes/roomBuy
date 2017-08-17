@@ -13,7 +13,8 @@ from .views import (
     FollowView,
     AppEventDetailUnitListView,
     AppEventDetailHouseListView,
-    OrderProView, AppHouseChoiceConfirmTestView)
+    OrderProView, AppHouseChoiceConfirmTestView,
+    Captcha, CheckCaptcha)
 
 urlpatterns = [
     url(r'^eventinfo/', EventInfo.as_view(), name='app_eventinfo'),
@@ -21,7 +22,7 @@ urlpatterns = [
     url(r'^houses/', AppEventDetailListView.as_view(), name='app_building_list'),
     url(r'^protime/', ProTimeView.as_view(), name='app_protocol_detail'),
     url(r'^unit/', AppEventDetailUnitListView.as_view(), name='app_unit_list'),
-    url(r'^houselist/$', AppEventDetailHouseListView.as_view(), name='app_house_list'),
+    url(r'^houselist/', AppEventDetailHouseListView.as_view(), name='app_house_list'),
     url(r'^houseinfo/', AppEventDetailHouseInfoView.as_view(), name='app_house_info'),
     url(r'^addfollow/', AddFollow.as_view(), name='app_house_follow'),
     url(r'^cancelfollow/', CancelFollow.as_view(), name='app_house_cancelfollow'),
@@ -29,7 +30,9 @@ urlpatterns = [
     url(r'^orderconfirm/', AppHouseChoiceConfirmView.as_view(), name='app_follow_view'),
     url(r'^orderinfo/', AppOrderInfoView.as_view(), name='app_order_info'),
     url(r'^orderpro/', OrderProView.as_view(), name='app_order_pro'),
-    url(r'^orderslist', AppOrderListView.as_view(), name='app_order_list'),
+    url(r'^orderslist/', AppOrderListView.as_view(), name='app_order_list'),
+    url(r'^captcha/', Captcha.as_view(), name='app_captcha'),
+    url(r'^checkcaptcha/', CheckCaptcha.as_view(), name='app_checkcaptcha'),
     # 订单确认测试接口
     url(r'^orderconfirmtest/', AppHouseChoiceConfirmTestView.as_view()),
 ]

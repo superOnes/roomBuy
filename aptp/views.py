@@ -1,4 +1,5 @@
 import time
+import random
 from datetime import datetime, timedelta
 
 from django.views.generic import View
@@ -153,7 +154,7 @@ class AppEventDetailUnitListView(View):
         context = {}
         eventdetobj = EventDetail.objects.filter(
             building=building, event_id=eventid)
-        unitlist=set()
+        unitlist = set()
         for obj in eventdetobj:
             unitlist.add(obj.unit)
         value = [{
@@ -318,6 +319,40 @@ class FollowView(View):
         context['objects'] = list
         context['response_state'] = 200
         return JsonResponse(context)
+
+
+@method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_time, name='dispatch')
+class Captcha(View):
+    '''
+    安全验证
+    '''
+
+    def get(self, request):
+        var = random.sample(range(10), 2)
+        sym = random.sample(['+', '*'], 1)[0]
+        dic = {'+': var[0] + var[1], '*': var[0] * var[1]}
+        formula = str(var[0]) + sym + str(var[1])
+        value = dic.get(sym)
+        vars = random.sample(range(100), 3)
+        vars.append(value)
+        opt=set(vars)
+        request.session['value']=value
+        return JsonResponse({'formula':formula,'opt':opt})
+
+
+@method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_time, name='dispatch')
+class CheckCaptcha(View):
+    '''
+    结果校验
+    '''
+
+    def post(self, request):
+        value = request.POST.get('value')
+        if not (value == request.session['value']):
+            return JsonResponse({'response_state': 412, 'msg': '计算错误！'})
+        return JsonResponse({'response_state': 200, 'msg': '正确！'})
 
 
 @method_decorator(customer_login_required, name='dispatch')
