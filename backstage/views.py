@@ -36,16 +36,20 @@ class HomeListView(ListView):
     model = User
 
     def get_queryset(self):
-        # self.value = self.request.GET.get('value')
-        # self.province = self.request.GET.get('province')
-        # self.city = self.request.GET.get('city')
+        self.value = self.request.GET.get('value')
+        self.province = self.request.GET.get('province')
+        self.city = self.request.GET.get('city')
         user = self.model.objects.filter(is_admin=True)
-        # if self.province:
-        #     user = user.filter(Q(company__province=self.province))
-        # if self.city:
-        #     user = user.filter(Q(company__city=self.city))
-        # if self.value:
-        #     user = user.filter(Q(username__contains=self.value))
+        print(self.value, self.province, self.city)
+        if self.province:
+            user = user.filter(Q(company__province=self.province))
+            print(user)
+        if self.city:
+            user = user.filter(Q(company__city=self.city))
+            print(user)
+        if self.value:
+            user = user.filter(Q(username__contains=self.value))
+            print(user)
         queryset = [{'id': u.id,
                      'username': u.username,
                     'name': u.company.name,
@@ -59,9 +63,10 @@ class HomeListView(ListView):
                      } for u in user]
         return queryset
 
-    def get_context_date(self):
-        context = super(HomeListView, self).get_context_data()
-        return context
+    # def get_context_date(self):
+    #     context = super(HomeListView, self).get_context_data()
+    #     context['privince'] = Province.objects.all()
+    #     return context
 
 
 class CreateView(View):
@@ -81,8 +86,6 @@ class CreateView(View):
         city = request.POST.get('city')
         if username is None or password is None or name is None:
             return JsonResponse({'successs': False})
-        if province == 0:
-            return JsonResponse({'success': False})
         filteruser = User.objects.filter(username=username)
         if filteruser:
             return JsonResponse({'success': False, 'msg': '用户名已存在'})
