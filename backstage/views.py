@@ -51,7 +51,7 @@ class HomeListView(ListView):
                     'name': u.company.name,
                      'house_limit': u.company.house_limit,
                      'province': u.company.province.name
-                     if u.company.province else '',
+                     if u.company.province is not None else '',
                      'city': u.company.city.name
                      if u.company.city else '',
                      'expire_date': u.company.expire_date
@@ -79,17 +79,17 @@ class CreateView(View):
         expire_date = request.POST.get('expire_date')
         province = request.POST.get('province')
         city = request.POST.get('city')
-        if username is None or password is None or name is None \
-                or province is None or city is None:
+        if username is None or password is None or name is None:
             return JsonResponse({'successs': False})
+        if province == 0:
+            return JsonResponse({'success': False})
         filteruser = User.objects.filter(username=username)
         if filteruser:
             return JsonResponse({'success': False, 'msg': '用户名已存在'})
         else:
             company = Company.objects.create(name=name,
                                              house_limit=house_limit,
-                                             expire_date=expire_date
-                                             if expire_date else '',
+                                             expire_date=expire_date if expire_date else None,
                                              province_id=province,
                                              city_id=city)
             User.objects.create_user(
