@@ -351,7 +351,7 @@ class CheckCaptcha(View):
 
     def post(self, request):
         value = request.POST.get('value')
-        if not (value == request.session['value']):
+        if not (int(value) == int(request.session['value'])):
             return JsonResponse({'response_state': 412, 'msg': '计算错误！'})
         return JsonResponse({'response_state': 200, 'msg': '正确！'})
 

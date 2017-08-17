@@ -1084,22 +1084,21 @@ div.shoued i{
     text-align:center;
     border:solid 1px #fff;
     border-radius:8px;
-    padding-left:20px;
     margin-left:25%;
     margin-bottom:5%;
 }
 .codeOption+p{padding-top:5%;}
 .countBlack p{
-    width:100px;
-    height:100px;
+    width:120px;
+    height:120px;
     line-height:1.2rem;
     text-align:center;
-    border-radius:50px;
-    background:#eb2c43;
+    border-radius:60px;
+    background:#f7592f;
     color:#fff;
     font-size:.7rem;
     margin:50% auto;
-    padding:5% 3% 0;
+    padding:8% 3% 0;
 }
 .countBlack p span{ font-size:1.8rem;}
 .dialog{
