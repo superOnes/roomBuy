@@ -332,7 +332,7 @@ class ImportEventDetailView(View):
                     os.remove('media/price/price.xlsx')
                     return JsonResponse(
                         {'response_state': 400, 'msg': '导入文件不正确！'})
-                if row - 1 > request.user.house_limit:
+                if row - 1 > request.user.company.house_limit:
                     os.remove('media/price/price.xlsx')
                     return JsonResponse(
                         {'response_state': 400, 'msg': '导入数据超出限制！'})
@@ -379,7 +379,6 @@ class ImportEventDetailView(View):
                         return JsonResponse(
                             {'response_state': 400, 'msg': '导入数据格式不正确或有重复数据!'})
                     data.append(li)
-                    num = len(data)
                 with transaction.atomic():
                     try:
                         EventDetail.objects.filter(event=event).delete()
@@ -403,7 +402,7 @@ class ImportEventDetailView(View):
                             eventdetail.save()
                         os.remove('media/price/price.xlsx')
                         return JsonResponse(
-                            {'response_state': 200, 'data': num})
+                            {'response_state': 200, 'data': len(data)})
                     except BaseException:
                         os.remove('media/price/price.xlsx')
                         return JsonResponse(
