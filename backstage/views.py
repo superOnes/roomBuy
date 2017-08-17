@@ -40,17 +40,12 @@ class HomeListView(ListView):
         self.province = self.request.GET.get('province')
         self.city = self.request.GET.get('city')
         user = self.model.objects.filter(is_admin=True)
-        # print(self.city)
-        if self.province != 0:
-            user = user.filter(Q(company__province_id=self.province))
-            print(user)
-        if self.city != 0:
-            user = user.filter(Q(company__city=self.city))
-            print(user)
+        if self.province != '0':
+            user = user.filter(company__province_id=self.province)
+        if self.city != '0':
+            user = user.filter(company__city_id=self.city)
         if self.value:
-            user = user.filter(Q(username__contains=self.value))
-            # print(user)
-        print(user)
+            user = user.filter(username__contains=self.value)
         queryset = [{'id': u.id,
                      'username': u.username,
                     'name': u.company.name,

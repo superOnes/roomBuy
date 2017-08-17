@@ -485,6 +485,60 @@ class Command(BaseCommand):
             City.objects.create(cityid=654200, name='塔城地区', province=P27)
             City.objects.create(cityid=654300, name='阿勒泰地区', province=P27)
             City.objects.create(cityid=659000, name='自治区直辖县级行政区划', province=P27)
+
+        #北京
+        s1 = Province.objects.get(provinceid=110000)
+        if s1:
+            City.objects.create(cityid=110101, name='东城区', province=s1)
+            City.objects.create(cityid=110102, name='西城区', province=s1)
+            City.objects.create(cityid=110103, name='崇文区', province=s1)
+            City.objects.create(cityid=110104, name='宣武区', province=s1)
+            City.objects.create(cityid=110105, name='朝阳区', province=s1)
+            City.objects.create(cityid=110106, name='丰台区', province=s1)
+            City.objects.create(cityid=110107, name='石景山区', province=s1)
+            City.objects.create(cityid=110108, name='海淀区', province=s1)
+            City.objects.create(cityid=110109, name='门头沟区', province=s1)
+            City.objects.create(cityid=110111, name='房山区', province=s1)
+            City.objects.create(cityid=110112, name='通州区', province=s1)
+            City.objects.create(cityid=110113, name='顺义区', province=s1)
+            City.objects.create(cityid=110114, name='昌平区', province=s1)
+            City.objects.create(cityid=110115, name='大兴区', province=s1)
+            City.objects.create(cityid=110116, name='怀柔区', province=s1)
+            City.objects.create(cityid=110117, name='平谷区', province=s1)
+            City.objects.create(cityid=110228, name='密云县', province=s1)
+            City.objects.create(cityid=120229, name='延庆县', province=s1)
+
+        # 天津市
+        s2 = Province.objects.get(provinceid=120000)
+        if s2:
+            City.objects.create(cityid=120101, name='和平区', province=s2)
+            City.objects.create(cityid=120102, name='河东区', province=s2)
+            City.objects.create(cityid=120103, name='河西区', province=s2)
+            City.objects.create(cityid=120104, name='南开区', province=s2)
+            City.objects.create(cityid=120105, name='河北区', province=s2)
+            City.objects.create(cityid=120106, name='红桥区', province=s2)
+            City.objects.create(cityid=120107, name='塘沽区', province=s2)
+            City.objects.create(cityid=120108, name='汉沽区', province=s2)
+            City.objects.create(cityid=120109, name='大港区', province=s2)
+            City.objects.create(cityid=120110, name='东丽区', province=s2)
+            City.objects.create(cityid=120111, name='西青区', province=s2)
+            City.objects.create(cityid=120112, name='津南区', province=s2)
+            City.objects.create(cityid=120113, name='北辰区', province=s2)
+            City.objects.create(cityid=120114, name='武清区', province=s2)
+            City.objects.create(cityid=120115, name='宝坻区', province=s2)
+            City.objects.create(cityid=120221, name='宁河县', province=s2)
+            City.objects.create(cityid=120223, name='静海县', province=s2)
+            City.objects.create(cityid=120225, name='蓟县', province=s2)
+
+        # 上海市
+        s3 = Province.objects.get(provinceid=310000)
+        if s3:
+            City.objects.create(cityid=120115, name='宝坻区', province=s2)
+            City.objects.create(cityid=120221, name='宁河县', province=s2)
+            City.objects.create(cityid=120223, name='静海县', province=s2)
+            City.objects.create(cityid=120225, name='蓟县', province=s2)
+
+        # 重庆市
         # 香港
         # 澳门
         # 台湾
