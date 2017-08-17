@@ -21,6 +21,53 @@
 //    });
 //    return false
 // });
+function test(){
+  var username = $("input[name='username']").val();
+  var name = $("input[name='name']").val();
+  var password = $("input[name='password']").val();
+  var house_limit = $("input[name='house_limit']").val();
+  var province = $("#provinceC").val();
+  var downtown = $("#downtownC").val();
+  if(username=="" || name=="" || password=="" || house_limit=="" || province==0 || downtown==0){
+      new $.zui.Messager("请填写必填项", {
+        placement:'center',
+        type: 'danger'
+      }).show()
+  }else{
+    var form = new FormData(document.getElementById("customerOrder"));
+    $.ajax({
+        url:"/backstage/createuser/",
+        type:"post",
+        data:form,
+        processData:false,
+        contentType:false,
+        success:function(data){
+          if(data.success){
+            new $.zui.Messager('创建成功！', {
+              placement:'center',
+              type: 'success'
+            }).show("",function(){
+              setTimeout(function(){
+                window.location.reload();
+              },1000)
+            });
+          }else {
+            new $.zui.Messager(data.msg, {
+              placement:'center',
+              type: 'danger'
+            }).show()
+          }
+        },
+        error:function(e){
+          new $.zui.Messager("创建失败，请检查网络！", {
+            placement:'center',
+            type: 'danger'
+          }).show()
+        }
+    });
+  }
+}
+
 
 // 用户页获取地址
 function cityList(provinceId){
@@ -107,11 +154,11 @@ function filterUser(province,downtown,value){
      }
    },
    error:function(){
-     alert("获取用户列表失败。")
+    //  alert("获取用户列表失败。")
    }
  });
 };
-
+// 删除用户
 function deleteUser(id){
   $.ajax({
     type:"post",
@@ -130,6 +177,50 @@ function deleteUser(id){
     },
     error:function(){
       alert("删除失败，请检查网络！");
+    }
+  });
+}
+// 密码重置
+function resetUser(id){
+  $.ajax({
+    type:"put",
+    url:"/backstage/reset/",
+    async:true,
+    data:{id:id},
+    success:function(data){
+      if(data.success){
+        window.location.reload();
+      }else{
+        new $.zui.Messager(data.msg, {
+          placement:'center',
+          type: 'danger'
+        }).show();
+      }
+    },
+    error:function(){
+      alert("重置密码失败，请检查网络！");
+    }
+  });
+}
+// 编辑用户
+function editUser(id){
+  $.ajax({
+    type:"post",
+    url:"/backstage/delete/",
+    async:true,
+    data:{id:id},
+    success:function(data){
+      if(data.success){
+        window.location.reload();
+      }else{
+        new $.zui.Messager(data.msg, {
+          placement:'center',
+          type: 'danger'
+        }).show();
+      }
+    },
+    error:function(){
+      alert("保存失败，请检查网络！");
     }
   });
 }
