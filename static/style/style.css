@@ -216,7 +216,7 @@ input[type="number"]{
 	position: relative;
 	width:100%;
 	box-sizing: border-box;
-	background: url(/static/images/index.png) no-repeat center center;
+	background: url(/static/images/index.jpg) no-repeat center center;
 	background-size:100% 100% ;
 }
 .loginBack{
