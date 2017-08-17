@@ -1,5 +1,6 @@
 import time
 import random
+import json
 from datetime import datetime, timedelta
 
 from django.views.generic import View
@@ -321,8 +322,8 @@ class FollowView(View):
         return JsonResponse(context)
 
 
-@method_decorator(customer_login_required, name='dispatch')
-@method_decorator(customer_login_time, name='dispatch')
+# @method_decorator(customer_login_required, name='dispatch')
+# @method_decorator(customer_login_time, name='dispatch')
 class Captcha(View):
     '''
     安全验证
@@ -338,11 +339,11 @@ class Captcha(View):
         vars.append(value)
         opt=set(vars)
         request.session['value']=value
-        return JsonResponse({'formula':formula,'opt':opt})
+        return JsonResponse({'formula':formula,'opt':list(opt)})
 
 
-@method_decorator(customer_login_required, name='dispatch')
-@method_decorator(customer_login_time, name='dispatch')
+# @method_decorator(customer_login_required, name='dispatch')
+# @method_decorator(customer_login_time, name='dispatch')
 class CheckCaptcha(View):
     '''
     结果校验
