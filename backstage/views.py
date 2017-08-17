@@ -143,6 +143,21 @@ class DeleteUserView(View):
             return JsonResponse({'success': False, 'msg': '删除失败！'})
 
 
+class PasswordResetView(View):
+    '''
+    密码重置
+    '''
+    def put(self, request):
+        put = QueryDict(request.body, encoding=request.encoding)
+        id = put.get('id')
+        if id:
+            user = User.get(id)
+            user.set_password(111111)
+            user.save()
+            return JsonResponse({'success': True})
+        return JsonResponse({'success': False, 'msg': '用户不存在'})
+
+
 class GetProvinceView(View):
     '''
     省份列表
