@@ -108,7 +108,6 @@ class ModifyUserView(View):
         put = QueryDict(request.body, encoding=request.encoding)
         id = put.get('id')
         username = put.get('username')
-        password = put.get('password')
         name = put.get('name')
         house_limit = put.get('house_limit')
         expire_date = put.get('expire_date')
@@ -118,12 +117,13 @@ class ModifyUserView(View):
             user = User.get(id)
             company = user.company
             user.username = username
-            user.password = password
             company.name = name
             company.house_limit = house_limit
             company.expire_date = expire_date
             company.province = province
             company.city = city
+            user.save()
+            company.save()
             return JsonResponse({'success': True})
         return JsonResponse({'success': False})
 
