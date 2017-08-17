@@ -584,17 +584,63 @@ function confrim(){
 		alert("请同意《活动协议》");
 	}else{
         $("#houseInfoBlack").hide();
-        var code=$('<div class="windowBlack" id="code">'+
-						'<div class="codebox">' +
-							'<img/>'+
-							'<p>'+
-								'<input type="text" class="codeText" />'+
-								'<input type="button" class="codeBtn" onclick="codeSure()" />'+
-							'</p>'+
-						'</div>'+
-			'</div>');
+        $(".code").remove();
+        var code = $('<div class="code">' +
+            '<div class="codebox">' +
+            '<h3>安全验证</h3>' +
+            '<p>安全验证问题：</p>' +
+            '<p class="questi">1+1</p>' +
+            '<ul class="codeOption">' +
+            '<li>A: <span>1</span></li>' +
+            '<li>B: <span>1</span></li>' +
+            '<li>C: <span>1</span></li>' +
+            '<li>D: <span>1</span></li>' +
+            '</ul>' +
+				'<p>请在提交前回答！</p>'+
+            '</div>' +
+            '</div>');
         $("body").append(code);
+        $(".codeOption li").each(function(){
+        	$(this).click(function(){
+        		$(this).css({color:"#f95c30",background:"#fff",border:"none"}).siblings().css({color:"#fff",background:"none",border:"solid 1px #fff"});
+        		var capcha=$(this).find("span").html();
+        		$.ajax({
+                    type: "POST",
+                    url: http + "/app/checkcaptcha/",
+                    data: {
+                        id: idd,
+                        capcha:capcha
+                    },
+                    success: function (data) {
+                    	if(data.response_state==200){
+                            console.log(data);
+						}else{
+                    		alert(data.msg);
+						}
 
+
+                    },
+                    error: function () {
+                        alert("页面出错，请重试！");
+                    }
+				})
+        		
+			})
+		});
+        $.ajax({
+            type: "get",
+            url: http + "/app/captcha/",
+            data: {
+                id: idd
+            },
+            success: function (data) {
+                console.log(data);
+
+            },
+            error: function () {
+                alert("页面出错，请重试！");
+            }
+        })
 	}
 }
 function codeSure(){
