@@ -40,16 +40,17 @@ class HomeListView(ListView):
         self.province = self.request.GET.get('province')
         self.city = self.request.GET.get('city')
         user = self.model.objects.filter(is_admin=True)
-        print(self.value, self.province, self.city)
-        if self.province:
-            user = user.filter(Q(company__province=self.province))
+        # print(self.city)
+        if self.province != 0:
+            user = user.filter(Q(company__province_id=self.province))
             print(user)
-        if self.city:
+        if self.city != 0:
             user = user.filter(Q(company__city=self.city))
             print(user)
         if self.value:
             user = user.filter(Q(username__contains=self.value))
-            print(user)
+            # print(user)
+        print(user)
         queryset = [{'id': u.id,
                      'username': u.username,
                     'name': u.company.name,
@@ -63,10 +64,12 @@ class HomeListView(ListView):
                      } for u in user]
         return queryset
 
-    # def get_context_date(self):
-    #     context = super(HomeListView, self).get_context_data()
-    #     context['privince'] = Province.objects.all()
-    #     return context
+    def get_context_data(self):
+        context = super(HomeListView, self).get_context_data()
+        context['province'] = self.province
+        context['city'] = self.city
+        context['value'] = self.value
+        return context
 
 
 class CreateView(View):
@@ -183,6 +186,3 @@ class GetCityView(View):
         city = [{'id': ct.id,
                  'name': ct.name} for ct in city_list]
         return JsonResponse({'success': True, 'data': city})
-
-
-

@@ -21,6 +21,11 @@
 //    });
 //    return false
 // });
+//获取用户列表数据
+function filterUser(province,downtown,value){
+  window.location.href="?province="+province+"&city="+downtown+"&value="+value;
+};
+
 function test(){
   var username = $("input[name='username']").val();
   var name = $("input[name='name']").val();
@@ -136,29 +141,6 @@ function createUser(provinceId){
   });
 };
 
-//获取用户列表数据
-function filterUser(province,downtown,value){
-  window.location.href="?province="+province+"city="+downtown+"&value="+value;
-//  $.ajax({
-//    type:"get",
-//    url:"http://10.7.10.198:8000/backstage/",
-//    async:true,
-//    data:{province:province,downtown:downtown,value:value},
-//    success:function(data){
-// //			console.log(data);
-//      if(data.success){
-// //				$("#userList").remove("tr").append("<tr><td>"+ +"</td><td>"++"</td><td>"++"</td>"
-// //				+"<td>"+ +"</td><td>"+ +"</td></tr>")
-//      }else{
-//        $("#userList").remove("tr");
-// //				alert("没有符合条件的用户！")
-//      }
-//    },
-//    error:function(){
-//     //  alert("获取用户列表失败。")
-//    }
- // });
-};
 // 删除用户
 function deleteUser(id){
   $.ajax({

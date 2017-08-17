@@ -36,11 +36,11 @@
 				    </select>
 			    </div>
 			    <div class="col-sm-4 input-group" style="margin: 0 !important;padding: 0 10px;">
-            <form class="form-horizontal searchWrap" method="get" action="http://10.7.10.198:8000/backstage/userlist/">
+            <form class="form-horizontal searchWrap" method="get" action="/backstage/userlist/">
         			<div class="input-group" style="margin: 0 !important;">
         				<input type="text" class="form-control" placeholder="账户名" id="searchInput" name="value" value="{{value|default:''}}">
         				<span class="input-group-btn">
-        			    <button class="btn btn-default" type="submit">搜索</button>
+        			    <button class="btn btn-default" type="button" id="searchUser">搜索</button>
         			  </span>
         			</div>
         		</form>
@@ -196,14 +196,6 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
-    alert({{ object.province }})
-      // var aa = {{ object.province }};
-      // var bb = {{ object.city }};
-    // console.log(aa);
-    // console.log(bb);
-    function filterUser(province,downtown,value){
-      window.location.href="?province="+province+"city="+downtown+"&value="+value;
-    };
     // 选择开始日期
     $(".form-datetime").datetimepicker({
       weekStart: 1,
@@ -236,6 +228,21 @@
 			var searchVal = $("#searchInput").val();
 			filterUser($("#province").val(),$("#downtown").val(),searchVal);
 		});
+
+
+    var province = {{ province }};
+    var city = {{ city }};
+    setTimeout(function(){
+      if(province){
+        $("#province option").eq(province).attr("selected","selected");
+        cityList(province);
+        setTimeout(function(){
+          if(city){
+              $("#downtown option").eq(city).attr("selected","selected");
+          }
+        },100)
+      }
+    },100);
 
     // 删除用户
     var userID;
