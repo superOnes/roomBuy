@@ -322,8 +322,8 @@ class FollowView(View):
         return JsonResponse(context)
 
 
-# @method_decorator(customer_login_required, name='dispatch')
-# @method_decorator(customer_login_time, name='dispatch')
+@method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_time, name='dispatch')
 class Captcha(View):
     '''
     安全验证
@@ -342,8 +342,8 @@ class Captcha(View):
         return JsonResponse({'formula':formula,'opt':list(opt)})
 
 
-# @method_decorator(customer_login_required, name='dispatch')
-# @method_decorator(customer_login_time, name='dispatch')
+@method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_time, name='dispatch')
 class CheckCaptcha(View):
     '''
     结果校验
@@ -351,10 +351,9 @@ class CheckCaptcha(View):
 
     def post(self, request):
         value = request.POST.get('value')
-        if not (int(value) == int(request.session['value'])):
-            return JsonResponse({'response_state': 412, 'msg': '计算错误！'})
-        return JsonResponse({'response_state': 200, 'msg': '正确！'})
-
+        if int(value) == int(request.session['value']):
+            return JsonResponse ({'response_state': 200, 'msg': '正确！'})
+        return JsonResponse({'response_state': 412, 'msg': '计算错误！'})
 
 @method_decorator(customer_login_required, name='dispatch')
 @method_decorator(customer_login_time, name='dispatch')
