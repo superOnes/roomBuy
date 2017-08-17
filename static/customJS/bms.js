@@ -138,25 +138,26 @@ function createUser(provinceId){
 
 //获取用户列表数据
 function filterUser(province,downtown,value){
- $.ajax({
-   type:"get",
-   url:"http://10.7.10.198:8000/",
-   async:true,
-   data:{province:province,downtown:downtown,value:value},
-   success:function(data){
-//			console.log(data);
-     if(data.success){
-//				$("#userList").remove("tr").append("<tr><td>"+ +"</td><td>"++"</td><td>"++"</td>"
-//				+"<td>"+ +"</td><td>"+ +"</td></tr>")
-     }else{
-       $("#userList").remove("tr");
-//				alert("没有符合条件的用户！")
-     }
-   },
-   error:function(){
-    //  alert("获取用户列表失败。")
-   }
- });
+  window.location.href="?province="+province+"city="+downtown+"&value="+value;
+//  $.ajax({
+//    type:"get",
+//    url:"http://10.7.10.198:8000/backstage/",
+//    async:true,
+//    data:{province:province,downtown:downtown,value:value},
+//    success:function(data){
+// //			console.log(data);
+//      if(data.success){
+// //				$("#userList").remove("tr").append("<tr><td>"+ +"</td><td>"++"</td><td>"++"</td>"
+// //				+"<td>"+ +"</td><td>"+ +"</td></tr>")
+//      }else{
+//        $("#userList").remove("tr");
+// //				alert("没有符合条件的用户！")
+//      }
+//    },
+//    error:function(){
+//     //  alert("获取用户列表失败。")
+//    }
+ // });
 };
 // 删除用户
 function deleteUser(id){
@@ -201,26 +202,26 @@ function resetUser(id){
       alert("重置密码失败，请检查网络！");
     }
   });
-}
-// 编辑用户
-function editUser(id){
-  $.ajax({
-    type:"post",
-    url:"/backstage/delete/",
-    async:true,
-    data:{id:id},
-    success:function(data){
-      if(data.success){
-        window.location.reload();
-      }else{
-        new $.zui.Messager(data.msg, {
-          placement:'center',
-          type: 'danger'
-        }).show();
-      }
-    },
-    error:function(){
-      alert("保存失败，请检查网络！");
-    }
-  });
-}
+};
+// // 编辑用户
+// function editUser(id){
+//   $.ajax({
+//     type:"post",
+//     url:"/backstage/delete/",
+//     async:true,
+//     data:{id:id},
+//     success:function(data){
+//       if(data.success){
+//         window.location.reload();
+//       }else{
+//         new $.zui.Messager(data.msg, {
+//           placement:'center',
+//           type: 'danger'
+//         }).show();
+//       }
+//     },
+//     error:function(){
+//       alert("保存失败，请检查网络！");
+//     }
+//   });
+// }

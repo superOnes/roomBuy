@@ -36,14 +36,18 @@
 				    </select>
 			    </div>
 			    <div class="col-sm-4 input-group" style="margin: 0 !important;padding: 0 10px;">
-				    <input type="text" class="form-control" placeholder="搜索管理员用户" id="searchInput">
-				    <span class="input-group-btn">
-				        <button class="btn btn-default" type="button" id="searchUser" style="padding: 5.5px 12px;">搜索</button>
-				    </span>
+            <form class="form-horizontal searchWrap" method="get" action="http://10.7.10.198:8000/backstage/userlist/">
+        			<div class="input-group" style="margin: 0 !important;">
+        				<input type="text" class="form-control" placeholder="账户名" id="searchInput" name="value" value="{{value|default:''}}">
+        				<span class="input-group-btn">
+        			    <button class="btn btn-default" type="submit">搜索</button>
+        			  </span>
+        			</div>
+        		</form>
 			    </div>
 			</div>
 			<div class="col-sm-2" style="text-align: right;">
-				<button class="btn btn-primary" data-backdrop="static" data-target="#createModal" data-moveable="true" data-toggle="modal">创建管理员</button>
+				<button class="btn btn-primary" data-backdrop="static" data-target="#createModal" data-moveable="true" data-toggle="modal">开通新账户</button>
 			</div>
 	    </div>
 	</div>
@@ -51,7 +55,7 @@
 		<thead>
 			<tr>
 				<th>序号</th>
-				<th>用户名</th>
+				<th>账户名</th>
 				<th>昵称</th>
 				<th>可发布数量</th>
 				<th>省份</th>
@@ -71,7 +75,7 @@
 				<td>{{ obj.city }}</td>
 				<td>{{ obj.expire_date }}</td>
 				<td>
-					<a data-toggle="modal" data-target="#createModal" data-id="{{obj.id}}" class="editUser">编辑管理员</a>
+					<a data-toggle="modal" data-target="#createModal" data-id="{{obj.id}}" class="editUser">编辑账户</a>
 					<a data-toggle="modal" data-target="#passwordClear" data-id="{{obj.id}}" class="resetUser" style="margin: 0 20px;">密码重置</a>
 					<a data-toggle="modal" data-target="#deleteModal" data-id="{{obj.id}}" class="deleteUser">删除</a>
 				</td>
@@ -125,7 +129,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
-        <h4 class="modal-title">删除管理员</h4>
+        <h4 class="modal-title">开通新账户</h4>
       </div>
       <div class="modal-body">
         <div style="padding:20px;">
@@ -192,31 +196,41 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
-    // 地址的二级联动
+    alert({{ object.province }})
+      // var aa = {{ object.province }};
+      // var bb = {{ object.city }};
+    // console.log(aa);
+    // console.log(bb);
+    function filterUser(province,downtown,value){
+      window.location.href="?province="+province+"city="+downtown+"&value="+value;
+    };
+    // 选择开始日期
+    $(".form-datetime").datetimepicker({
+      weekStart: 1,
+      todayBtn: 1,
+      autoclose: 1,
+      todayHighlight: 1,
+      startView: 2,
+      forceParse: 0,
+      showMeridian: 1,
+      startDate: new Date(),
+      format: "yyyy-mm-dd hh:ii"
+    });
+    // 创建管理员地址的二级联动
     	createUser();
     	$("#provinceC").change(function(){
     		createUser($(this).val());
     	});
-    	// 选择开始日期
-    	$(".form-datetime").datetimepicker({
-    		weekStart: 1,
-    		todayBtn: 1,
-    		autoclose: 1,
-    		todayHighlight: 1,
-    		startView: 2,
-    		forceParse: 0,
-    		showMeridian: 1,
-    		startDate: new Date(),
-    		format: "yyyy-mm-dd hh:ii"
-    	});
-    filterUser();
+
+      // 获取管理员列表、地址
+    // filterUser();
 		cityList();
 		$("#province").change(function(){
       cityList($(this).val());
-			filterUser($(this).val(),$("#downtown").val());
+			filterUser($(this).val(),$("#downtown").val()," ");
 		});
 		$("#downtown").change(function(){
-			filterUser($("#province").val(),$(this).val());
+			filterUser($("#province").val(),$(this).val()," ");
 		});
 		$("#searchUser").click(function(){
 			var searchVal = $("#searchInput").val();
