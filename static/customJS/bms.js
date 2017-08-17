@@ -26,7 +26,9 @@ function test(){
   var name = $("input[name='name']").val();
   var password = $("input[name='password']").val();
   var house_limit = $("input[name='house_limit']").val();
-  if(username=="" || name=="" || password=="" || house_limit==""){
+  var province = $("#provinceC").val();
+  var downtown = $("#downtownC").val();
+  if(username=="" || name=="" || password=="" || house_limit=="" || province==0 || downtown==0){
       new $.zui.Messager("请填写必填项", {
         placement:'center',
         type: 'danger'
