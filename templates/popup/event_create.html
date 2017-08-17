@@ -33,7 +33,8 @@
 		<div class="form-group row">
 			<label class="col-sm-3 control-label">活动名称<i>*</i></label>
 			<div class="col-sm-9">
-				<input type="text" class="form-control" placeholder="活动名称" name="name" value="{{form.name.value|default:''}}" required>
+				<input type="text" class="form-control" onkeyup="(this.v=function(){this.value=this.value.replace(' ','');}).call(this)"
+					onblur="this.v();" placeholder="活动名称" name="name" value="{{form.name.value|default:''}}" required>
 			</div>
 		</div>
 		<div class="form-group">

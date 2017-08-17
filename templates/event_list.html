@@ -148,7 +148,9 @@
 						new $.zui.Messager('请完善协议内容！', {
 							placement:'center',
 							type: 'primary' // 定义颜色主题
-						}).show();
+						}).show('',function(){
+							$(".is_pub_confirm").removeAttr("disabled","disabled");
+						});
 						return false;
 					}
 				},
