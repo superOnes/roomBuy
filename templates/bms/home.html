@@ -23,7 +23,7 @@
 	<div class="row">
 		<div class="form-horizontal">
 		    <div class="form-group col-sm-10">
-          <form method="get" id="search">
+          <form class="form-horizontal" method="get" id="search">
   			    <label for="province" style="float:left;">省份</label>
   			    <div class="col-sm-3">
   			      <select class="form-control" id="province" name="province">
@@ -57,7 +57,7 @@
           </form>
 			</div>
 			<div class="col-sm-2" style="text-align: right;">
-				<button class="btn btn-primary" data-backdrop="static" data-target="#createModal" data-moveable="true" data-toggle="modal" title="开通新账户">开通新账户</button>
+				<button class="btn btn-primary" data-backdrop="static" data-target="#createModal" data-moveable="true" data-toggle="modal">开通新账户</button>
 			</div>
 	    </div>
 	</div>
@@ -300,32 +300,6 @@
 
       // 获取管理员列表、地址
     // filterUser();
-		// cityList();
-		// $("#province").change(function(){
-    //   cityList($(this).val());
-		// 	filterUser($(this).val(),$("#downtown").val()," ");
-		// });
-		// $("#downtown").change(function(){
-		// 	filterUser($("#province").val(),$(this).val()," ");
-		// });
-		// $("#searchUser").click(function(){
-		// 	var searchVal = $("#searchInput").val();
-		// 	filterUser($("#province").val(),$("#downtown").val(),searchVal);
-		// });
-
-    // var province = {{ province }};
-    // var city = {{ city }};
-    // if(province){
-    //   setTimeout(function(){
-    //     $("#province option[value='"+province+"']").attr("selected","selected");
-    //   },100);
-    //   cityList(province);
-    //   setTimeout(function(){
-    //     if(city){
-    //       $("#downtown option[value='"+city+"']").attr("selected","selected");
-    //     }
-    //   },100)
-    // }
 
     // 删除用户
     var userID;

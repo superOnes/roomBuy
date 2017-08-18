@@ -15,7 +15,7 @@ function editUser(userID){
         editUserCity()
         editUserCity(data.province);
         setTimeout(function(){
-          $("#provinceE option[value='"+data.province+"']").attr("selected","selected");
+          $("#provinceE option").eq(data.province).attr("selected","selected");
           $("#downtownE option[value='"+data.city+"']").attr("selected","selected");
         },100);
     },
@@ -83,6 +83,7 @@ function editSubmit(userID){
 function filterUser(province,downtown,value){
   window.location.href="?province="+province+"&city="+downtown+"&value="+value;
 };
+
 function test(){
   var createOrderUser = $("#createModal");
   var username = createOrderUser.find("input[name='username']").val();

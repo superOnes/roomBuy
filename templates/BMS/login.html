@@ -25,7 +25,7 @@
 		<p>Cloud opening administrator system</p>
 	</div>
 	<div class="login">
-		<form class="form-horizontal login-form" method="post" action="" id="loginForm">
+		<form class="form-horizontal login-form" method="post" action="{% url 'login' %}" id="loginback">
 			{% csrf_token %}
 			<div class="loginTitle">
 				<h3>用户登录</h3>
@@ -77,7 +77,7 @@
 		$("#login-wrap").height($(window).height());
 	});
 	window.onload = function() {
-		var oForm = document.getElementById('loginForm');
+		var oForm = document.getElementById('loginback');
 		var oUser = document.getElementById('user');
 		var oPswd = document.getElementById('pswd');
 		var oRemember = document.getElementById('remember');
@@ -90,7 +90,7 @@
 	        if(loUser !== "" && loPass !== ""){
 	            oRemember.setAttribute("checked","");
 	        }
-	    $("#loginForm").submit(function(){
+	    $("#loginback").submit(function(){
 	        if(oRemember.checked){
 	            localStorage.setItem("user",oUser.value);
 	            localStorage.setItem("pass",oPswd.value);
