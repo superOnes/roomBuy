@@ -4,12 +4,26 @@
 		{% csrf_token %}
 		<div class="input-group">
 			<label for="inputText3" class="input-group-addon">房源单价<i>*</i></label>
-			<input type="text" class="form-control" onkeyup="(this.v=function(){this.value=this.value.replace(/^[0]\d*$|[^0-9]+/,'');}).call(this)"
-				onblur="this.v();" placeholder="房源单价" name="unit_price" required value="{{ object.unit_price }}">
+			<input type="text" class="form-control" onKeyUp="amount(this)" placeholder="房源单价" name="unit_price" required value="{{ object.unit_price }}">
 		</div>
 		<div class="modal-footer">
 			<input type="submit" class="btn btn-primary" value="确定"></input>
 		</div>
 	</form>
 </div>
+<script type="text/javascript">
+function amount(th){
+    var regStrs = [
+        ['^[0]\d*$', ''], //首位不可为0
+        ['^[.]\d*$', ''], //首位不可为.
+        ['[^\\d\\.]+$', ''], //禁止录入任何非数字和点
+        ['\\.(\\d?)\\.+', '.$1'], //禁止录入两个以上的点
+        ['^(\\d+\\.\\d{2}).+', '$1'] //禁止录入小数点后两位以上
+    ];
+    for(i=0; i<regStrs.length; i++){
+        var reg = new RegExp(regStrs[i][0]);
+        th.value = th.value.replace(reg, regStrs[i][1]);
+    }
+}
+</script>
 {% endblock %}
