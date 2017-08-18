@@ -155,10 +155,10 @@ class DeleteUserView(View):
         if id:
             user = User.objects.get(id=id)
             if user:
-                if user.company.event_set.all() is not None:
+                if user.company.event_set.all() is None:
                     User.delete(user.get(id))
                     return JsonResponse({'success': True, 'msg': '删除成功！'})
-        return JsonResponse({'success': False, 'msg': '删除失败！'})
+        return JsonResponse({'success': False, 'msg': '该账户已创建活动，不可删除！'})
 
 
 @method_decorator(superuser_required(), name='dispatch')
