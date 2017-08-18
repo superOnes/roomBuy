@@ -38,14 +38,20 @@ class HomeListView(ListView):
     template_name = 'bms/home.html'
     model = User
 
-    def get_queryset(self):
+    def get(self, request, *args, **kwargs):
+        self.province = int(request.GET.get('province', 0))
+        self.city = int(request.GET.get('city', 0))
         self.value = self.request.GET.get('value')
-        self.province = self.request.GET.get('province')
-        self.city = self.request.GET.get('city')
+        self.province_objects = Province.all().values('id', 'name')
+        self.city_objects = City.get_city_by_province(self.province) \
+                                .values('id', 'name')
+        return super(HomeListView, self).get(request, *args, **kwargs)
+
+    def get_queryset(self):
         user = self.model.objects.filter(is_admin=True)
-        if self.province != '0':
+        if self.province != 0:
             user = user.filter(company__province_id=self.province)
-        if self.city != '0':
+        if self.city != 0:
             user = user.filter(company__city_id=self.city)
         if self.value:
             user = user.filter(username__contains=self.value)
@@ -64,6 +70,8 @@ class HomeListView(ListView):
 
     def get_context_data(self):
         context = super(HomeListView, self).get_context_data()
+        context['province_objects'] = self.province_objects
+        context['city_objects'] = self.city_objects
         context['province'] = self.province
         context['city'] = self.city
         context['value'] = self.value
