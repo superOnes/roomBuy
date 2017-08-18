@@ -3,7 +3,7 @@ from django.http import QueryDict
 from django.shortcuts import render, redirect
 from django.views.generic import View, ListView
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
 from django.utils.decorators import method_decorator
 
@@ -196,6 +196,15 @@ class PasswordResetView(View):
         user.set_password(111111)
         user.save()
         return JsonResponse({'success': True, 'msg': '密码修改成功！'})
+
+
+class LogoutView(View):
+    '''
+    退出登录
+    '''
+    def post(self, request):
+        logout(request)
+        return JsonResponse({'success': True, 'msg': '退出登录成功'})
 
 
 @method_decorator(superuser_required(), name='dispatch')
