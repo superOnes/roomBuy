@@ -135,7 +135,7 @@ class ModifyUserView(View):
             user.username = username
             company.name = name
             company.house_limit = house_limit
-            company.expire_date = expire_date
+            company.expire_date = expire_date if expire_date else None
             company.province_id = province
             company.city_id = city
             user.save()
