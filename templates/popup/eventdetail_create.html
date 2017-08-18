@@ -49,8 +49,7 @@
 		<div class="form-group">
 			<label class="col-sm-3 control-label">单价<i>*</i></label>
 			<div class="col-sm-9">
-				<input type="text" class="form-control" onkeyup="(this.v=function(){this.value=this.value.replace(/^[0]\d*$|[^0-9]+/,'');}).call(this)"
-					onblur="this.v();" placeholder="单价" name="unit_price" required>
+				<input type="text" class="form-control" onKeyUp="amount(this)" placeholder="单价" name="unit_price" required>
 			</div>
 		</div>
 		<div class="form-group">
@@ -74,4 +73,21 @@
 		</div>
 	</form>
 </div>
+<script type="text/javascript">
+// 编辑单价
+function amount(th){
+		var regStrs = [
+				['^[0]\d*$', ''], //首位不可为0
+				['^[.]\d*$', ''], //首位不可为.
+				['[^\\d\\.]+$', ''], //禁止录入任何非数字和点
+				['\\.(\\d?)\\.+', '.$1'], //禁止录入两个以上的点
+				['^(\\d+\\.\\d{2}).+', '$1'] //禁止录入小数点后两位以上
+		];
+		for(i=0; i<regStrs.length; i++){
+				var reg = new RegExp(regStrs[i][0]);
+				th.value = th.value.replace(reg, regStrs[i][1]);
+		}
+}
+
+</script>
 {% endblock %}

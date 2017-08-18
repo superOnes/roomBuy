@@ -149,7 +149,8 @@ function deleteOrder(thisId){
 			window.location.reload();
 		},
 		error:function(){
-			alert("未知错误")
+			alert("未知错误");
+			$(this).removeAttr("disabled","disabled")
 		}
 	});
 };
@@ -224,7 +225,8 @@ function getorderSelect(){
 				$("#eventList").append("<option value='"+result[i].id+"'>"+result[i].name+"</option>")
 			};
 			$("#eventList option:first").attr("selected","selected");
-			getorderList(result.length,0,"")
+			var eventId = $("#eventList option:first").val();
+			getorderList(eventId,0,"")
 			return true;
 		},
 		error:function(){
@@ -263,6 +265,7 @@ function getorderList(thisId,is_test,searchValue){
 		}
 	})
 };
+
 // 批量操作请求
 function batch(ids,isStatic){
 	$.ajax({
@@ -289,7 +292,20 @@ function batch(ids,isStatic){
 	})
 }
 
-
+	function quit(e){
+    $(e).attr("disabled","disabled");
+    $.ajax({
+      type:"POST",
+      url:"/acc/logout/",
+      async:true,
+      success:function(){
+        window.location.href="/acc/login/";
+      },
+      error:function(){
+        alert("退出失败！")
+      }
+    });
+  }
 
 //文件图片上传显示
 	function getPath(obj,fileQuery,transImg) {

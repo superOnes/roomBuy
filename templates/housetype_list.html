@@ -15,7 +15,7 @@
 	</ol>
 </div>
 <div class="row" style="padding:10px;margin-top:-20px;">
-	<a class="btn btn-primary" data-iframe="{% url 'event_house_type_create' pk=event.id %}" data-toggle=modal data-moveable="true">添加户型</a>
+	<a class="btn btn-primary" data-iframe="{% url 'event_house_type_create' pk=event.id %}" data-toggle=modal data-moveable="true" data-backdrop="static">添加户型</a>
 </div>
 <table class="table datatable">
 	<thead>
@@ -34,7 +34,7 @@
 			<td><img src="{{MEDIA_URL}}{{obj.pic}}" width="200px"></td>
 			<td>
 				<p>
-					<a data-iframe="{% url 'event_house_type_update' pk=obj.id %}" data-toggle="modal">编辑</a>
+					<a data-iframe="{% url 'event_house_type_update' pk=obj.id %}" data-toggle="modal" data-backdrop="static">编辑</a>
 				</p>
 				<p>
 					<a data-toggle="modal" data-target="#deleteModal" data-id="{{obj.id}}" class="deleteOrder">删除</a>
