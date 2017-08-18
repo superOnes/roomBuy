@@ -43,15 +43,12 @@ class HomeListView(ListView):
         self.province = self.request.GET.get('province')
         self.city = self.request.GET.get('city')
         user = self.model.objects.filter(is_admin=True)
-        print(self.province, self.city)
         if self.province != '0':
             user = user.filter(company__province_id=self.province)
-            print(user)
         if self.city != '0':
             user = user.filter(company__city_id=self.city)
         if self.value:
             user = user.filter(username__contains=self.value)
-        print(user)
         queryset = [{'id': u.id,
                      'username': u.username,
                      'name': u.company.name,
@@ -116,15 +113,14 @@ class ModifyUserView(View):
     修改用户信息
     '''
 
-    def put(self, requests, *args, **kwargs):
-        put = QueryDict(request.body, encoding=request.encoding)
-        id = put.get('id')
-        username = put.get('username')
-        name = put.get('name')
-        house_limit = put.get('house_limit')
-        expire_date = put.get('expire_date')
-        province = put.get('province')
-        city = put.get('city')
+    def post(self, request, *args, **kwargs):
+        id = request.POST.get('id')
+        username = request.POST.get('username')
+        name = request.POST.get('name')
+        house_limit = request.POST.get('house_limit')
+        expire_date = request.POST.get('expire_date')
+        province = request.POST.get('province')
+        city = request.POST.get('city')
         if id:
             user = User.get(id)
             company = user.company
@@ -132,8 +128,8 @@ class ModifyUserView(View):
             company.name = name
             company.house_limit = house_limit
             company.expire_date = expire_date
-            company.province = province
-            company.city = city
+            company.province_id = province
+            company.city_id = city
             user.save()
             company.save()
             return JsonResponse({'success': True})
@@ -143,8 +139,8 @@ class ModifyUserView(View):
 @method_decorator(superuser_required(), name='dispatch')
 class DeleteUserView(View):
     '''
-        删除账户
-        '''
+    删除账户
+    '''
 
     def post(self, request):
         id = request.POST.get('id')
@@ -157,6 +153,7 @@ class DeleteUserView(View):
         return JsonResponse({'success': False, 'msg': '删除失败！'})
 
 
+@method_decorator(superuser_required(), name='dispatch')
 class BackView(View):
     '''
     返回数据
@@ -172,7 +169,7 @@ class BackView(View):
                     queryset = {'username': user.username,
                                 'name': company.name,
                                 'house_limit': company.house_limit,
-                                'expire_date': company.expire_date,
+                                'expire_date': company.expire_date.strftime("%Y-%m-%d %H:%M:%S"),
                                 'province': company.province.id,
                                 'city': company.city.id}
                     return JsonResponse({'success': True, 'data': queryset})
