@@ -4,7 +4,7 @@ function editUser(userID){
   var editOrderUser = $("#editOrderUser");
   $.ajax({
     type:'post',
-    url:'/backstage/back/',
+    url:'/admin/back/',
     async:true,
     data:{id:userID},
     success:function(results){
@@ -46,7 +46,7 @@ function editSubmit(userID){
     var form = new FormData(document.getElementById("editOrderUser"));
     form.append('id',userID)
     $.ajax({
-        url:"/backstage/modify/",
+        url:"/admin/modify/",
         type:"post",
         data:form,
         processData:false,
@@ -95,7 +95,7 @@ function test(){
   }else{
     var form = new FormData(document.getElementById("customerOrder"));
     $.ajax({
-        url:"/backstage/createuser/",
+        url:"/admin/createuser/",
         type:"post",
         data:form,
         processData:false,
@@ -130,10 +130,10 @@ function test(){
 // 编辑用户获取地址
 function editUserCity(provinceId){
   if(!provinceId){
-    var urls = "/backstage/getprovince/";
+    var urls = "/admin/getprovince/";
     var appendObj = $("#provinceE");
   }else {
-    var urls = "/backstage/getcity/";
+    var urls = "/admin/getcity/";
     var appendObj = $("#downtownE");
   }
   $.ajax({
@@ -162,10 +162,10 @@ function editUserCity(provinceId){
 // 创建用户获取地址
 function createUser(provinceId){
   if(!provinceId){
-    var urls = "/backstage/getprovince/";
+    var urls = "/admin/getprovince/";
     var appendObj = $("#provinceC");
   }else {
-    var urls = "/backstage/getcity/";
+    var urls = "/admin/getcity/";
     var appendObj = $("#downtownC");
   }
   $.ajax({
@@ -195,7 +195,7 @@ function createUser(provinceId){
 function deleteUser(id){
   $.ajax({
     type:"post",
-    url:"/backstage/delete/",
+    url:"/admin/delete/",
     async:true,
     data:{id:id},
     success:function(data){
@@ -217,7 +217,7 @@ function deleteUser(id){
 function resetUser(id){
   $.ajax({
     type:"put",
-    url:"/backstage/reset/",
+    url:"/admin/reset/",
     async:true,
     data:{id:id},
     success:function(data){
@@ -240,7 +240,7 @@ function resetUser(id){
 function loginOutYes(){
   $.ajax({
     type:'post',
-    url:'/backstage/logout/',
+    url:'/admin/logout/',
     async:true,
     success:function(){
         window.location.reload();
