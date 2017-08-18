@@ -1,5 +1,5 @@
 {% extends 'include/base.html' %}
-{% block title %}云开盘管理用户{% endblock %}
+{% block title %}云开盘管理账户{% endblock %}
 {% block main %}
 <style media="screen">
   .table>thead>tr>th, .table>tbody>tr>td{
@@ -17,7 +17,7 @@
   }
 </style>
 <div class="userTit">
-  <h2><span class="code">管理员管理</span></h2>
+  <h2><span class="code">账户管理</span></h2>
 </div>
 <div class="userlist">
 	<div class="row">
@@ -47,7 +47,7 @@
 			    </div>
 			</div>
 			<div class="col-sm-2" style="text-align: right;">
-				<button class="btn btn-primary" data-backdrop="static" data-target="#createModal" data-moveable="true" data-toggle="modal">开通新账户</button>
+				<button class="btn btn-primary" data-backdrop="static" data-target="#createModal" data-moveable="true" data-toggle="modal" title="开通新账户">开通新账户</button>
 			</div>
 	    </div>
 	</div>
@@ -75,7 +75,7 @@
 				<td>{{ obj.city }}</td>
 				<td>{{ obj.expire_date }}</td>
 				<td>
-					<a data-toggle="modal" data-target="#createModal" data-id="{{obj.id}}" class="editUser">编辑账户</a>
+					<a data-toggle="modal" data-target="#editModal" data-id="{{obj.id}}" class="editUser">编辑账户</a>
 					<a data-toggle="modal" data-target="#passwordClear" data-id="{{obj.id}}" class="resetUser" style="margin: 0 20px;">密码重置</a>
 					<a data-toggle="modal" data-target="#deleteModal" data-id="{{obj.id}}" class="deleteUser">删除</a>
 				</td>
@@ -99,7 +99,7 @@
 			  </div>
 			</div>
 			<!--删除用户-->
-			<div class="modal fade" id="deleteModal" data-id="">
+			<div class="modal fade" id="deleteModal">
 			  <div class="modal-dialog modal-sm">
 			    <div class="modal-content">
 			      <div class="modal-header">
@@ -119,10 +119,74 @@
 			{% endfor %}
 		</tbody>
 	</table>
+  <!--编辑账户-->
+  <div class="modal fade" id="editModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+          <h4 class="modal-title">编辑账户</h4>
+        </div>
+        <div class="modal-body">
+          <div style="padding:20px;">
+            <form class="form-horizontal" id="editOrderUser">
+              <div class="form-group">
+                <label class="col-sm-2">用户名<i>*</i></label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" placeholder="请填写用户名" name="username">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2">昵称<i>*</i></label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" placeholder="请填写昵称" name="name" >
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2">可发布房源数量<i>*</i></label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" onkeyup="(this.v=function(){this.value=this.value.replace(/^[0]\d*$|[^0-9]+/,'');}).call(this)"
+                    onblur="this.v();"  placeholder="请输入数量" name="house_limit">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2">省份<i>*</i></label>
+                <div class="col-sm-10">
+                  <select class="form-control" id="provinceE" name="province">
+                    <option value="0">---请选择省份---</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2">市区<i>*</i></label>
+                <div class="col-sm-10">
+                  <select class="form-control" id="downtownE" name="city">
+                    <option value="0">---请选择市区---</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2">账号过期时间</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control form-datetime" readonly name="expire_date" value="{{form.expire_date.value|default:''|date:'Y-m-d H:i'}}" >
+                </div>
+                <div class="col-sm-10" style="margin:10px 0 -10px 20%;text-align:center;color:red;"><small>可以选填该管理员的账号过期时间</small></div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-primary" id="editUser">确认</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="tip" style="display:none;">
     <p style='font-size: 20px;color: #CCCCCC;text-align: center;'>没有符合条件的管理员用户！</p>
   </div>
 </div>
+
 <!--创建用户-->
 <div class="modal fade" id="createModal">
   <div class="modal-dialog">
@@ -157,7 +221,7 @@
         			<label class="col-sm-2">可发布房源数量<i>*</i></label>
         			<div class="col-sm-10">
         				<input type="text" class="form-control" onkeyup="(this.v=function(){this.value=this.value.replace(/^[0]\d*$|[^0-9]+/,'');}).call(this)"
-        					onblur="this.v();"  placeholder="请输入数量" name="house_limit" >
+        					onblur="this.v();"  placeholder="请输入数量" name="house_limit"  value="{{form.house_limit.value|default:''}}">
         			</div>
         		</div>
         		<div class="form-group">
@@ -171,7 +235,7 @@
         		<div class="form-group">
         			<label class="col-sm-2">市区<i>*</i></label>
         			<div class="col-sm-10">
-        				<select class="form-control" id="downtownC" name="city">
+        				<select class="form-control" id="downtownC" name="city" value="{{form.city.value|default:''}}">
         					<option value="0">---请选择市区---</option>
         				</select>
         			</div>
@@ -179,7 +243,7 @@
         		<div class="form-group">
         			<label class="col-sm-2">账号过期时间</label>
         			<div class="col-sm-10">
-        				<input type="text" class="form-control form-datetime" readonly name="expire_date" value="{{form.test_start.value|default:''|date:'Y-m-d H:i'}}" >
+        				<input type="text" class="form-control form-datetime" readonly name="expire_date" value="{{form.expire_date.value|default:''|date:'Y-m-d H:i'}}" >
         			</div>
         			<div class="col-sm-10" style="margin:10px 0 -10px 20%;text-align:center;color:red;"><small>可以选填该管理员的账号过期时间</small></div>
         		</div>
@@ -213,6 +277,9 @@
     	$("#provinceC").change(function(){
     		createUser($(this).val());
     	});
+    	$("#provinceE").change(function(){
+    		editUserCity($(this).val());
+    	});
 
       // 获取管理员列表、地址
     // filterUser();
@@ -232,17 +299,17 @@
 
     var province = {{ province }};
     var city = {{ city }};
-    setTimeout(function(){
       if(province){
-        $("#province option").eq(province).attr("selected","selected");
+        setTimeout(function(){
+          $("#province option").eq(province).attr("selected","selected");
+        },100);
         cityList(province);
         setTimeout(function(){
           if(city){
-              $("#downtown option").eq(city).attr("selected","selected");
+            $("#downtown option[value='"+city+"']").attr("selected","selected");
           }
         },100)
       }
-    },100);
 
     // 删除用户
     var userID;
@@ -258,8 +325,9 @@
     // 编辑用户
     $(".editUser").click(function(e){
       userID = $(e.currentTarget).data("id");
+      editUser(userID);
     });
-    $("#editUser").click(function(){ editUser(userID); })
+    $("#editUser").click(function(){ editSubmit(userID); })
 	})
 </script>
 {% endblock %}
