@@ -169,7 +169,8 @@ class BackView(View):
                     queryset = {'username': user.username,
                                 'name': company.name,
                                 'house_limit': company.house_limit,
-                                'expire_date': company.expire_date.strftime("%Y-%m-%d %H:%M:%S"),
+                                'expire_date': company.expire_date.strftime("%Y-%m-%d %H:%M:%S")
+                                if company.expire_date else None,
                                 'province': company.province.id,
                                 'city': company.city.id}
                     return JsonResponse({'success': True, 'data': queryset})
