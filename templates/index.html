@@ -1,4 +1,4 @@
-{% extends 'include/base.html' %} 
+{% extends 'include/base.html' %}
 {% block title %}登录云开盘{% endblock %}
 {% block main %}
 <style type="text/css">
@@ -20,8 +20,8 @@
 </header>
 <section class="login-wrap" id="login-wrap">
 	<div class="loginBack">
-		<h3>选房后台操作系统</h3>
-		<p>Choose room background operation system</p>
+		<h3>云开盘后台系统</h3>
+		<p>Yunkaipan &nbsp; System</p>
 	</div>
 	<div class="login">
 		<form class="form-horizontal login-form" method="post" action="{% url 'acc_login' %}" id="loginForm">
@@ -76,7 +76,7 @@
 		var oUser = document.getElementById('user');
 		var oPswd = document.getElementById('pswd');
 		var oRemember = document.getElementById('remember');
-		
+
 	//	本地缓存密码
 	    var loUser = localStorage.getItem("user") || "";
 	    var loPass = localStorage.getItem("pass") || "";

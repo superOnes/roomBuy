@@ -46,7 +46,9 @@
 				new $.zui.Messager('请添加户型照片!', {
 					placement:'center',
 					type: 'important' // 定义颜色主题
-				}).show();
+				}).show('',function(){
+					$(".btn-primary").removeAttr("disabled","disabled");
+				});
 	　			return false;
 			}
 		});
