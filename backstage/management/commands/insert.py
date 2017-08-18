@@ -533,12 +533,45 @@ class Command(BaseCommand):
         # 上海市
         s3 = Province.objects.get(provinceid=310000)
         if s3:
-            City.objects.create(cityid=120115, name='宝坻区', province=s2)
-            City.objects.create(cityid=120221, name='宁河县', province=s2)
-            City.objects.create(cityid=120223, name='静海县', province=s2)
-            City.objects.create(cityid=120225, name='蓟县', province=s2)
+            City.objects.create(cityid=310101, name='黄浦区', province=s3)
+            City.objects.create(cityid=310103, name='卢湾区', province=s3)
+            City.objects.create(cityid=310104, name='徐汇区', province=s3)
+            City.objects.create(cityid=310105, name='长宁区', province=s3)
+            City.objects.create(cityid=310106, name='静安区', province=s3)
+            City.objects.create(cityid=310107, name='普陀区', province=s3)
+            City.objects.create(cityid=310108, name='闸北区', province=s3)
+            City.objects.create(cityid=310109, name='虹口区', province=s3)
+            City.objects.create(cityid=310110, name='杨浦区', province=s3)
+            City.objects.create(cityid=310112, name='闵行区', province=s3)
+            City.objects.create(cityid=310113, name='宝山区', province=s3)
+            City.objects.create(cityid=310114, name='嘉定区', province=s3)
+            City.objects.create(cityid=310115, name='浦东新区', province=s3)
+            City.objects.create(cityid=310116, name='金山区', province=s3)
+            City.objects.create(cityid=310117, name='松江区', province=s3)
+            City.objects.create(cityid=310118, name='青浦区', province=s3)
+            City.objects.create(cityid=310119, name='南汇区', province=s3)
+            City.objects.create(cityid=310120, name='奉贤区', province=s3)
+            City.objects.create(cityid=310130, name='崇明县', province=s3)
 
         # 重庆市
+        s4 = Province.objects.get(provinceid=500000)
+        if s4:
+            City.objects.create(cityid=500101, name='万州区', province=s4)
+            City.objects.create(cityid=500102, name='沛陵区', province=s4)
+            City.objects.create(cityid=500103, name='渝中区', province=s4)
+            City.objects.create(cityid=500104, name='大渡口区', province=s4)
+            City.objects.create(cityid=500105, name='江北区', province=s4)
+            City.objects.create(cityid=500106, name='沙坪坝区', province=s4)
+            City.objects.create(cityid=500107, name='九龙坡区', province=s4)
+            City.objects.create(cityid=500108, name='南岸区', province=s4)
+            City.objects.create(cityid=500109, name='北碚区', province=s4)
+            City.objects.create(cityid=500110, name='万盛区', province=s4)
+            City.objects.create(cityid=500111, name='双桥区', province=s4)
+            City.objects.create(cityid=500112, name='渝北区', province=s4)
+            City.objects.create(cityid=500113, name='巴南区', province=s4)
+            City.objects.create(cityid=500114, name='黔江区', province=s4)
+            City.objects.create(cityid=500115, name='长寿区', province=s4)
+
         # 香港
         # 澳门
         # 台湾
