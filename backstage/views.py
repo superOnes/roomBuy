@@ -1,4 +1,4 @@
-from django.http import JsonResponse, request
+from django.http import JsonResponse
 from django.http import QueryDict
 from django.shortcuts import render, redirect
 from django.views.generic import View, ListView
@@ -169,21 +169,17 @@ class BackView(View):
 
     def post(self, request, *args, **kwargs):
         id = request.POST.get('id')
-        if id:
-            user = User.objects.get(id=id)
-            if user:
-                company = Company.objects.get(user=user)
-                if company:
-                    queryset = {'username': user.username,
-                                'name': company.name,
-                                'house_limit': company.house_limit,
-                                'expire_date': company.expire_date.strftime("%Y-%m-%d %H:%M:%S")
-                                if company.expire_date else None,
-                                'province': company.province.id,
-                                'city': company.city.id}
-                    return JsonResponse({'success': True, 'data': queryset})
-                return JsonResponse({'success': False})
-            return JsonResponse({'success': False})
+        user = User.get(id)
+        company = Company.objects.get(user=user)
+        if company:
+            queryset = {'username': user.username,
+                        'name': company.name,
+                        'house_limit': company.house_limit,
+                        'expire_date': company.expire_date.strftime("%Y-%m-%d %H:%M:%S")
+                        if company.expire_date else None,
+                        'province': company.province.id if company.province else '',
+                        'city': company.city.id if company.city else ''}
+            return JsonResponse({'success': True, 'data': queryset})
         return JsonResponse({'success': False})
 
 
@@ -196,12 +192,10 @@ class PasswordResetView(View):
     def put(self, request):
         put = QueryDict(request.body, encoding=request.encoding)
         id = put.get('id')
-        if id:
-            user = User.get(id)
-            user.set_password(111111)
-            user.save()
-            return JsonResponse({'success': True})
-        return JsonResponse({'success': False, 'msg': '用户不存在'})
+        user = User.get(id)
+        user.set_password(111111)
+        user.save()
+        return JsonResponse({'success': True, 'msg': '密码修改成功！'})
 
 
 @method_decorator(superuser_required(), name='dispatch')
