@@ -1,4 +1,5 @@
 //编辑账户
+// 获取内容
 function editUser(userID){
   var editOrderUser = $("#editOrderUser");
   $.ajax({
@@ -15,7 +16,7 @@ function editUser(userID){
         editUserCity()
         editUserCity(data.province);
         setTimeout(function(){
-          $("#provinceE option").eq(data.province).attr("selected","selected");
+          $("#provinceE option[value='"+data.province+"']").attr("selected","selected");
           $("#downtownE option[value='"+data.city+"']").attr("selected","selected");
         },100);
     },
@@ -27,6 +28,7 @@ function editUser(userID){
     }
   })
 };
+// 编辑提交
 function editSubmit(userID){
   var editOrderUser = $("#editOrderUser");
   var username = editOrderUser.find("input[name='username']").val();
@@ -76,14 +78,7 @@ function editSubmit(userID){
   }
 }
 
-
-
-
-//获取用户列表数据
-function filterUser(province,downtown,value){
-  window.location.href="?province="+province+"&city="+downtown+"&value="+value;
-};
-
+// 创建提交
 function test(){
   var createOrderUser = $("#createModal");
   var username = createOrderUser.find("input[name='username']").val();
@@ -132,42 +127,6 @@ function test(){
   }
 }
 
-
-// 用户页获取地址
-function cityList(provinceId){
- if(!provinceId){
-   var urls = "/backstage/getprovince/";
-   var appendObj = $("#province");
- }else {
-   var urls = "/backstage/getcity/";
-   var appendObj = $("#downtown");
- }
- $.ajax({
-   type:"get",
-   url:urls,
-   async:true,
-   data:{proid:provinceId},
-   success:function(results){
-     $(".tip").hide();
-     var data = results.data;
-     if(results.success){
-       appendObj.children(".city").remove();
-       for(var i=0; i<data.length; i++){
-         appendObj.append("<option class='city' value="+data[i].id+">"+data[i].name+"</option>")
-       };
-     }else {
-       $("#userList tr").remove();
-       $(".tip").show();
-     }
-   },
-   error:function(){
-     new $.zui.Messager('获取省份、市区数据失败，请检查网络！', {
-       placement:'center',
-       type: 'danger'
-     }).show();
-   }
- });
-};
 // 编辑用户获取地址
 function editUserCity(provinceId){
   if(!provinceId){
@@ -276,3 +235,25 @@ function resetUser(id){
     }
   });
 };
+
+// 退出
+function loginOutYes(){
+  $.ajax({
+    type:'post',
+    url:'http://10.7.10.198:8000/backstage/logout/',
+    async:true,
+    success:function(){
+      new $.zui.Messager("退出成功！", {
+        placement:'center',
+        type: 'danger'
+      }).show("",function(){
+        setTimeout(function(){
+          window.location.reload();
+        },1000)
+      });
+    },
+    error:function(){
+      alert("退出失败，请检查网络！")
+    }
+  })
+}

@@ -21,7 +21,16 @@ a{
 	text-overflow: ellipsis;
 }
 
-
+#loginOut{
+	font-weight: 400;
+	float: right !important;
+	margin-top:-5px;
+	background: #3f6cb3;
+	border: none;
+}
+#loginOut:hover{
+	box-shadow: none;
+}
 .loginTitle{
 	font-size: 25px !important;
 	font-weight: normal;

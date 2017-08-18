@@ -17,14 +17,17 @@
   }
 </style>
 <div class="userTit">
-  <h2><span class="code">账户管理</span></h2>
+  <h2>
+    <span class="code">账户管理</span>
+    <button id="loginOut" class="btn btn-primary" data-target="#loginOutModal" data-toggle="modal">退出</button>
+  </h2>
 </div>
 <div class="userlist">
 	<div class="row">
 		<div class="form-horizontal">
 		    <div class="form-group col-sm-10">
           <form class="form-horizontal" method="get" id="search">
-  			    <label for="province" style="float:left;">省份</label>
+  			    <label for="province" style="float:left;margin-top:7px">省份</label>
   			    <div class="col-sm-3">
   			      <select class="form-control" id="province" name="province">
   			        <option value="0">---请选择省份---</option>
@@ -35,7 +38,7 @@
                 {% endfor %}
   			      </select>
   			    </div>
-  			    <label for="downtown" style="float:left;">市区</label>
+  			    <label for="downtown" style="float:left;margin-top:7px;">市区</label>
   			    <div class="col-sm-3">
     			    	<select class="form-control" id="city" name="city">
                   <option value="0">---请选择市区---</option>
@@ -50,7 +53,7 @@
           			<div class="input-group" style="margin: 0 !important;">
           				<input type="text" class="form-control" placeholder="账户名" id="searchInput" name="value" value="{{value|default:''}}">
           				<span class="input-group-btn">
-          			    <button class="btn btn-default" type="submit" id="searchUser">搜索</button>
+          			    <button class="btn btn-default" type="submit" id="searchUser" style="padding:5.5px 12px;">搜索</button>
           			  </span>
           			</div>
   			    </div>
@@ -85,11 +88,29 @@
 				<td>{{ obj.city }}</td>
 				<td>{{ obj.expire_date }}</td>
 				<td>
-					<a data-toggle="modal" data-target="#editModal" data-id="{{obj.id}}" class="editUser">编辑账户</a>
+					<a data-toggle="modal"  data-backdrop="static" data-target="#editModal" data-id="{{obj.id}}" class="editUser">编辑账户</a>
 					<a data-toggle="modal" data-target="#passwordClear" data-id="{{obj.id}}" class="resetUser" style="margin: 0 20px;">密码重置</a>
 					<a data-toggle="modal" data-target="#deleteModal" data-id="{{obj.id}}" class="deleteUser">删除</a>
 				</td>
 			</tr>
+			<!--退出-->
+			<div class="modal fade" id="loginOutModal">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+			        <h4 class="modal-title">退出确认</h4>
+			      </div>
+			      <div class="modal-body">
+			        <p style="text-align: center;font-size: 20px;">要离开云开盘管理账户系统吗？</p>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			        <button type="button" class="btn btn-primary" id="loginOutYes" onclick="loginOutYes()">确认</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
 			<!--重置密码-->
 			<div class="modal fade" id="passwordClear">
 			  <div class="modal-dialog">
@@ -297,9 +318,6 @@
     	$("#provinceE").change(function(){
     		editUserCity($(this).val());
     	});
-
-      // 获取管理员列表、地址
-    // filterUser();
 
     // 删除用户
     var userID;
