@@ -3,7 +3,7 @@ from django.conf.urls import url
 
 from backstage.views import LoginView, HomeListView, CreateView,\
     GetProvinceView, GetCityView, DeleteUserView, ModifyUserView,\
-    PasswordResetView
+    PasswordResetView, BackView
 
 urlpatterns = [
     url(r'^login/$', LoginView.as_view(), name='login'),
@@ -13,5 +13,6 @@ urlpatterns = [
     url(r'^getcity/$', GetCityView.as_view(), name='get_city'),
     url(r'^modify/$', ModifyUserView.as_view(), name='modify'),
     url(r'^reset/$', PasswordResetView.as_view(), name='reset'),
-    url(r'^delete/$', DeleteUserView.as_view(), name='delete')
+    url(r'^delete/$', DeleteUserView.as_view(), name='delete'),
+    url(r'^back/$', BackView.as_view(), name='back')
 ]

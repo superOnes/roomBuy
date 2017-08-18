@@ -17,6 +17,7 @@ class LoginView(View):
     '''
     登录
     '''
+
     def get(self, request):
         return render(request, 'bms/login.html')
 
@@ -42,12 +43,15 @@ class HomeListView(ListView):
         self.province = self.request.GET.get('province')
         self.city = self.request.GET.get('city')
         user = self.model.objects.filter(is_admin=True)
+        print(self.province, self.city)
         if self.province != '0':
             user = user.filter(company__province_id=self.province)
+            print(user)
         if self.city != '0':
             user = user.filter(company__city_id=self.city)
         if self.value:
             user = user.filter(username__contains=self.value)
+        print(user)
         queryset = [{'id': u.id,
                      'username': u.username,
                      'name': u.company.name,
@@ -74,6 +78,7 @@ class CreateView(View):
     '''
     创建用户
     '''
+
     def get(self, request):
         return render(request, 'bms/createuser.html')
 
@@ -110,6 +115,7 @@ class ModifyUserView(View):
     '''
     修改用户信息
     '''
+
     def put(self, requests, *args, **kwargs):
         put = QueryDict(request.body, encoding=request.encoding)
         id = put.get('id')
@@ -136,18 +142,43 @@ class ModifyUserView(View):
 
 @method_decorator(superuser_required(), name='dispatch')
 class DeleteUserView(View):
-        '''
+    '''
         删除账户
         '''
-        def post(self, request):
-            id = request.POST.get('id')
-            if id:
-                user = User.objects.get(id=id)
-                if user:
-                    if user.company.event_set.all() is not None:
-                        User.delete(user.get(id))
-                        return JsonResponse({'success': True, 'msg': '删除成功！'})
-            return JsonResponse({'success': False, 'msg': '删除失败！'})
+
+    def post(self, request):
+        id = request.POST.get('id')
+        if id:
+            user = User.objects.get(id=id)
+            if user:
+                if user.company.event_set.all() is not None:
+                    User.delete(user.get(id))
+                    return JsonResponse({'success': True, 'msg': '删除成功！'})
+        return JsonResponse({'success': False, 'msg': '删除失败！'})
+
+
+class BackView(View):
+    '''
+    返回数据
+    '''
+
+    def post(self, request, *args, **kwargs):
+        id = request.POST.get('id')
+        if id:
+            user = User.objects.get(id=id)
+            if user:
+                company = Company.objects.get(user=user)
+                if company:
+                    queryset = {'username': user.username,
+                                'name': company.name,
+                                'house_limit': company.house_limit,
+                                'expire_date': company.expire_date,
+                                'province': company.province.id,
+                                'city': company.city.id}
+                    return JsonResponse({'success': True, 'data': queryset})
+                return JsonResponse({'success': False})
+            return JsonResponse({'success': False})
+        return JsonResponse({'success': False})
 
 
 @method_decorator(superuser_required(), name='dispatch')
@@ -155,6 +186,7 @@ class PasswordResetView(View):
     '''
     密码重置
     '''
+
     def put(self, request):
         put = QueryDict(request.body, encoding=request.encoding)
         id = put.get('id')
@@ -184,6 +216,7 @@ class GetCityView(View):
     '''
     市区列表
     '''
+
     def get(self, request, *args, **kwargs):
         proid = request.GET.get('proid')
         city_list = City.objects.filter(province_id=proid)
