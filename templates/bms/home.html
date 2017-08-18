@@ -299,17 +299,17 @@
 
     var province = {{ province }};
     var city = {{ city }};
-      if(province){
-        setTimeout(function(){
-          $("#province option").eq(province).attr("selected","selected");
-        },100);
-        cityList(province);
-        setTimeout(function(){
-          if(city){
-            $("#downtown option[value='"+city+"']").attr("selected","selected");
-          }
-        },100)
-      }
+    if(province){
+      setTimeout(function(){
+        $("#province option[value='"+province+"']").attr("selected","selected");
+      },100);
+      cityList(province);
+      setTimeout(function(){
+        if(city){
+          $("#downtown option[value='"+city+"']").attr("selected","selected");
+        }
+      },100)
+    }
 
     // 删除用户
     var userID;
