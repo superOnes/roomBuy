@@ -19,7 +19,7 @@ class LoginView(View):
     '''
 
     def get(self, request):
-        return render(request, 'BMS/login.html')
+        return render(request, 'bms/login.html')
 
     def post(self, request):
         username = request.POST.get('username')
