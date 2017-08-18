@@ -240,17 +240,10 @@ function resetUser(id){
 function loginOutYes(){
   $.ajax({
     type:'post',
-    url:'http://10.7.10.198:8000/backstage/logout/',
+    url:'/backstage/logout/',
     async:true,
     success:function(){
-      new $.zui.Messager("退出成功！", {
-        placement:'center',
-        type: 'danger'
-      }).show("",function(){
-        setTimeout(function(){
-          window.location.reload();
-        },1000)
-      });
+        window.location.reload();
     },
     error:function(){
       alert("退出失败，请检查网络！")

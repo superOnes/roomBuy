@@ -204,7 +204,7 @@ class LogoutView(View):
     '''
     def post(self, request):
         logout(request)
-        return JsonResponse({'success': True, 'msg': '退出登录成功'})
+        return JsonResponse({'success': True})
 
 
 @method_decorator(superuser_required(), name='dispatch')
