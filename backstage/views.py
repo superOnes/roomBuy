@@ -1,4 +1,3 @@
-from django.db.models import Q
 from django.http import JsonResponse, request
 from django.http import QueryDict
 from django.shortcuts import render, redirect
@@ -6,8 +5,10 @@ from django.views.generic import View, ListView
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.core.urlresolvers import reverse
+from django.utils.decorators import method_decorator
 
 from accounts.models import User
+from accounts.decorators import superuser_required, RETURN_PAGE
 from apt.models import Company
 from backstage.models import Province, City
 
@@ -31,6 +32,7 @@ class LoginView(View):
         return redirect(reverse('login'))
 
 
+@method_decorator(superuser_required(RETURN_PAGE), name='dispatch')
 class HomeListView(ListView):
     template_name = 'bms/home.html'
     model = User
@@ -48,7 +50,7 @@ class HomeListView(ListView):
             user = user.filter(username__contains=self.value)
         queryset = [{'id': u.id,
                      'username': u.username,
-                    'name': u.company.name,
+                     'name': u.company.name,
                      'house_limit': u.company.house_limit,
                      'province': u.company.province.name
                      if u.company.province is not None else '',
@@ -67,6 +69,7 @@ class HomeListView(ListView):
         return context
 
 
+@method_decorator(superuser_required(), name='dispatch')
 class CreateView(View):
     '''
     创建用户
@@ -90,7 +93,8 @@ class CreateView(View):
         else:
             company = Company.objects.create(name=name,
                                              house_limit=house_limit,
-                                             expire_date=expire_date if expire_date else None,
+                                             expire_date=expire_date
+                                             if expire_date else None,
                                              province_id=province,
                                              city_id=city)
             User.objects.create_user(
@@ -101,6 +105,7 @@ class CreateView(View):
             return JsonResponse({'success': True, 'msg': '创建成功！'})
 
 
+@method_decorator(superuser_required(), name='dispatch')
 class ModifyUserView(View):
     '''
     修改用户信息
@@ -129,6 +134,7 @@ class ModifyUserView(View):
         return JsonResponse({'success': False})
 
 
+@method_decorator(superuser_required(), name='dispatch')
 class DeleteUserView(View):
         '''
         删除账户
@@ -144,6 +150,7 @@ class DeleteUserView(View):
             return JsonResponse({'success': False, 'msg': '删除失败！'})
 
 
+@method_decorator(superuser_required(), name='dispatch')
 class PasswordResetView(View):
     '''
     密码重置
@@ -159,6 +166,7 @@ class PasswordResetView(View):
         return JsonResponse({'success': False, 'msg': '用户不存在'})
 
 
+@method_decorator(superuser_required(), name='dispatch')
 class GetProvinceView(View):
     '''
     省份列表
@@ -167,10 +175,11 @@ class GetProvinceView(View):
     def get(self, request, *args, **kwargs):
         province_list = Province.objects.all()
         province = [{'id': pv.id,
-                  'name': pv.name} for pv in province_list]
+                     'name': pv.name} for pv in province_list]
         return JsonResponse({'success': True, 'data': province})
 
 
+@method_decorator(superuser_required(), name='dispatch')
 class GetCityView(View):
     '''
     市区列表

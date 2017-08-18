@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from django.contrib.auth import logout
 from django.http import JsonResponse
 from django.shortcuts import redirect
+from django.core.urlresolvers import reverse
 
 from apt.models import Event
 from accounts.models import Customer
@@ -11,6 +12,20 @@ from accounts.models import Customer
 
 RETURN_JSON = 1
 RETURN_PAGE = 2
+
+
+def superuser_required(return_type=RETURN_JSON):
+    def func_wrapper(func):
+        @wraps(func)
+        def return_wrapper(request, *args, **kwargs):
+            if request.user.is_authenticated() and request.user.is_superuser:
+                return func(request, *args, **kwargs)
+            response = JsonResponse({'success': False, 'msg': '请登录'})
+            if return_type == RETURN_PAGE:
+                response = redirect(reverse('login'))
+            return response
+        return return_wrapper
+    return func_wrapper
 
 
 def admin_required(func):
@@ -48,7 +63,7 @@ def customer_login_required(func):
         if not request.user.is_authenticated() or request.user.is_admin:
             return JsonResponse({'response_state': 401, 'msg': '请登录！'})
         try:
-            Customer.objects.get(user=request.user,event_id=eventid)
+            Customer.objects.get(user=request.user, event_id=eventid)
         except:
             return JsonResponse({'response_state': 401, 'msg': '您未参加该活动！'})
         if (now < event.test_start +
