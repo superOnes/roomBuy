@@ -184,9 +184,22 @@ function myOrder() {
     window.location.href="order.html?id="+$(".idNum").html()
 }
 function updataTime(data) {
-    var count = $('<div class="countBlack">'+
-        '<p><span>30</span>秒<br/>后开始选择!</p>'+
-        '</div>');
+    // var count = $('<div class="countBlack">'+
+    //     '<p><span>30</span>秒<br/>后开始选择!</p>'+
+    //     '</div>');
+	var count = $('<div class="countBlack">'+
+					'<div class="game_time">'+
+						'<div class="hold">'+
+							'<div class="pie pie1"></div>'+
+						'</div>'+
+						'<div class="hold">'+
+							'<div class="pie pie2"></div>'+
+						'</div>'+
+						'<div class="bg"> </div>'+
+						'<div class="time"></div>'+
+					'</div>'+
+					'</div>'
+	);
     $("body").append(count);
 	setInterval(function() {
 		var date = new Date().getTime();  //当前时间
@@ -202,12 +215,14 @@ function updataTime(data) {
 		//计算出相差天数
 		if(date<date3){
 			$('#endTimeing').html("公测活动未开始");
-            if(count1<=30&&count1>0){
-                $(".countBlack").show();
-                $(".countBlack p span").html(count1);
-            }else{
-                $(".countBlack").hide();
-            }
+            // if(count1<=30&&count1>0){
+            //     $(".countBlack").show();
+            //     countTime();
+            //
+            //     // $(".countBlack p span").html(count1);
+            // }else{
+            //     $(".countBlack").hide();
+            // }
 		}else if(date>date3&&date<date4){
 			if (date6 > 0) {
 				var dayss = Math.floor(date6 / (24 * 3600 * 1000));
@@ -227,10 +242,10 @@ function updataTime(data) {
 			$('#endTimeing').html("开盘活动未开始");
             if(count2<=30&&count2>0){
                 $(".countBlack").show();
-                $(".countBlack p span").html(count2);
+                countTime();
             }else{
                 $(".countBlack").hide();
-            }
+			}
 		}else if(date>date1&&date<date2){
 			if (date5 > 0) {
 				var days = Math.floor(date5 / (24 * 3600 * 1000));
@@ -253,6 +268,110 @@ function updataTime(data) {
 
 	},1000)
 }
+// function countTime(){
+//     i = 0;
+//     j = 0;
+//     count = 0;
+//     MM = 0;
+//     SS = 30;  // 秒 90s
+//     MS = 0;
+//     totle = (MM+1)*600;
+//     d = 180*(MM+1);
+//     MM = "0" + MM;
+//     var gameTime = 30;
+//     var showTime = function(){
+//         totle = totle - 1;
+//         if (totle == 0) {
+//             $(".game_time").hide();
+//             clearInterval(s);
+//             clearInterval(t1);
+//             // clearInterval(t2);
+//             $(".pie2").css("-o-transform", "rotate(" + d + "deg)");
+//             $(".pie2").css("-moz-transform", "rotate(" + d + "deg)");
+//             $(".pie2").css("-webkit-transform", "rotate(" + d + "deg)");
+//         } else {
+//             if (totle > 0 && MS > 0) {
+//                 MS = MS - 1;
+//                 if (MS < 10) {
+//                     MS = "0" + MS
+//                 }
+//                 ;
+//             }
+//             ;
+//             if (MS == 0 && SS > 0) {
+//                 MS = 10;
+//                 SS = SS - 1;
+//                 if (SS < 10) {
+//                     SS = "0" + SS
+//                 }
+//                 ;
+//             }
+//             ;
+//             if (SS == 0 && MM > 0) {
+//                 SS = 30;
+//                 MM = MM - 1;
+//                 if (MM < 10) {
+//                     MM = "0" + MM
+//                 }
+//                 ;
+//             }
+//             ;
+//         }
+//         ;
+//         $(".time").html(SS + "s");
+//
+//     };
+//
+//     var start1 = function(){
+//         //i = i + 0.6;
+//         i = i + 360/((gameTime)*10);  //旋转的角度  90s 为 0.4  60s为0.6   30s为1.2
+//         count = count + 1;
+//         if(count <= (gameTime/2*10)){  // 一半的角度  90s 为 450
+//             $(".pie1").css("-o-transform","rotate(" + i + "deg)");
+//             $(".pie1").css("-moz-transform","rotate(" + i + "deg)");
+//             $(".pie1").css("-webkit-transform","rotate(" + i + "deg)");
+//         }else{
+//             $(".pie2").css("backgroundColor", "#f7592f");
+//             $(".pie2").css("-o-transform","rotate(" + i + "deg)");
+//             $(".pie2").css("-moz-transform","rotate(" + i + "deg)");
+//             $(".pie2").css("-webkit-transform","rotate(" + i + "deg)");
+//         }
+//     };
+//
+//     var start2 = function(){
+//         j = j + 1.2;
+//         count = count + 1;
+//         if (count == 300) {
+//             count = 0;
+//             clearInterval(t2);
+//             t1 = setInterval("start1()", 100);
+//         }
+//         $(".pie2").css("-o-transform","rotate(" + j + "deg)");
+//         $(".pie2").css("-moz-transform","rotate(" + j + "deg)");
+//         $(".pie2").css("-webkit-transform","rotate(" + j + "deg)");
+//     };
+//
+//     var countDown = function() {
+//         //80*80px 时间进度条
+//         i = 0;
+//         j = 0;
+//         count = 0;
+//         MM = 0;
+//         SS = gameTime;
+//         MS = 0;
+//         totle = (MM + 1) * gameTime * 10;
+//         d = 180 * (MM + 1);
+//         MM = "0" + MM;
+//
+//         showTime();
+//
+//         s = setInterval("showTime()", 100);
+//         start1();
+//         //start2();
+//         t1 = setInterval("start1()", 100);
+//     };
+//     countDown();
+// }
 
 /*我的收藏*/
 function myShare(){
