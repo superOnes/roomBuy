@@ -79,7 +79,40 @@
                 }else if(data.response_state==405){
                     window.location.href="houseInfo.html?house="+id+"&id="+idd;
                 }else{
-                    $(".success-container").append('<div class="noOne"><img src="../images/none.png" /><p>'+data.msg+'</p></div>');
+                    buyFailure(data);
+                    $.ajax({
+                        type:"get",
+                        url:http+"/app/retfoll/",
+                        data:{
+                            house:id,
+                            id:idd
+                        },
+                        success:function(data){
+                            console.log(data);
+                            for(var i=0;i<data.objects.length;i++){
+                                $(".shareFrom").append($('<li class="shareCar-list">'+
+                                    '<a class="share-a">'+
+                                    '<p>'+data.objects[i][0].eventdetail+'</p>'+
+                                    '<span>￥'+data.objects[i][0].price+'</span>'+
+                                    '<p style="display:none" class="shareId">'+data.objects[i][0].house+'</p>'+
+                                    '</a>'+
+                                    '</li>'
+                                ));
+                                if(data.objects[i][0].sold){
+                                    $(".shareCar-list").eq(i).find(".share-a").append($('<p class="sold">已售</p>'));
+                                }
+                            }
+                            $(".shareCar-list").each(function(){
+                                $(this).click(function(){
+                                    window.location.href="houseInfo.html?house="+$(this).find(".shareId").html()+"&id="+idd;
+                                })
+                            })
+
+                        },
+                        error:function(){
+                            alert("页面出错!");
+                        }
+                    })
                 }
 
             },

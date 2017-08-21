@@ -183,196 +183,6 @@ function data3(result){
 function myOrder() {
     window.location.href="order.html?id="+$(".idNum").html()
 }
-function updataTime(data) {
-    // var count = $('<div class="countBlack">'+
-    //     '<p><span>30</span>秒<br/>后开始选择!</p>'+
-    //     '</div>');
-	var count = $('<div class="countBlack">'+
-					'<div class="game_time">'+
-						'<div class="hold">'+
-							'<div class="pie pie1"></div>'+
-						'</div>'+
-						'<div class="hold">'+
-							'<div class="pie pie2"></div>'+
-						'</div>'+
-						'<div class="bg"> </div>'+
-						'<div class="time"></div>'+
-					'</div>'+
-					'</div>'
-	);
-    $("body").append(count);
-	setInterval(function() {
-		var date = new Date().getTime();  //当前时间
-		//活动结束时间
-		var date1 = new Date(data.event_start).getTime();//开盘
-		var date2 = new Date($(".event_end").html()).getTime();//开盘
-		var date3 = new Date($(".test_start").html()).getTime();//公测
-		var date4 = new Date($(".test_ent").html()).getTime();//公测
-		var date5 = date2 - date;  //时间差的毫秒数
-		var date6 = date4 - date;
-        var count1=Math.floor((date3-date)/1000);
-        var count2=Math.floor((date1-date)/1000);
-		//计算出相差天数
-		if(date<date3){
-			$('#endTimeing').html("公测活动未开始");
-            // if(count1<=30&&count1>0){
-            //     $(".countBlack").show();
-            //     countTime();
-            //
-            //     // $(".countBlack p span").html(count1);
-            // }else{
-            //     $(".countBlack").hide();
-            // }
-		}else if(date>date3&&date<date4){
-			if (date6 > 0) {
-				var dayss = Math.floor(date6 / (24 * 3600 * 1000));
-				//计算出小时数
-				var leave11 = date6 % (24 * 3600 * 1000);   //计算天数后剩余的毫秒数
-				var hourss = Math.floor(leave11 / (3600 * 1000));
-				//计算相差分钟数
-				var leave22 = leave11 % (3600 * 1000);       //计算小时数后剩余的毫秒数
-				var minutess = Math.floor(leave22 / (60 * 1000));
-				//计算相差秒数
-				var leave33 = leave22 % (60 * 1000);     //计算分钟数后剩余的毫秒数
-				var secondss = Math.round(leave33 / 1000);
-
-				$('#endTimeing').html("距公测结束还有 " + (dayss < 10 ? "0" + dayss : dayss) + "天 " + (hourss < 10 ? "0" + hourss : hourss) + "小时 " + (minutess < 10 ? "0" + minutess : minutess) + " 分钟" + (secondss < 10 ? "0" + secondss : secondss) + " 秒");
-			}
-		}else if(date>date4&&date<date1){
-			$('#endTimeing').html("开盘活动未开始");
-            if(count2<=30&&count2>0){
-                $(".countBlack").show();
-                countTime();
-            }else{
-                $(".countBlack").hide();
-			}
-		}else if(date>date1&&date<date2){
-			if (date5 > 0) {
-				var days = Math.floor(date5 / (24 * 3600 * 1000));
-				//计算出小时数
-				var leave1 = date5 % (24 * 3600 * 1000);   //计算天数后剩余的毫秒数
-				var hours = Math.floor(leave1 / (3600 * 1000));
-				//计算相差分钟数
-				var leave2 = leave1 % (3600 * 1000);       //计算小时数后剩余的毫秒数
-				var minutes = Math.floor(leave2 / (60 * 1000));
-				//计算相差秒数
-				var leave3 = leave2 % (60 * 1000);     //计算分钟数后剩余的毫秒数
-				var seconds = Math.round(leave3 / 1000);
-
-				$('#endTimeing').html("距开盘结束还有 " + (days < 10 ? "0" + days : days) + "天 " + (hours < 10 ? "0" + hours : hours) + "小时 " + (minutes < 10 ? "0" + minutes : minutes) + " 分钟" + (seconds < 10 ? "0" + seconds : seconds) + " 秒");
-			}
-
-		}else {
-			$('#endTimeing').html("开盘活动已结束");
-		}
-
-	},1000)
-}
-// function countTime(){
-//     i = 0;
-//     j = 0;
-//     count = 0;
-//     MM = 0;
-//     SS = 30;  // 秒 90s
-//     MS = 0;
-//     totle = (MM+1)*600;
-//     d = 180*(MM+1);
-//     MM = "0" + MM;
-//     var gameTime = 30;
-//     var showTime = function(){
-//         totle = totle - 1;
-//         if (totle == 0) {
-//             $(".game_time").hide();
-//             clearInterval(s);
-//             clearInterval(t1);
-//             // clearInterval(t2);
-//             $(".pie2").css("-o-transform", "rotate(" + d + "deg)");
-//             $(".pie2").css("-moz-transform", "rotate(" + d + "deg)");
-//             $(".pie2").css("-webkit-transform", "rotate(" + d + "deg)");
-//         } else {
-//             if (totle > 0 && MS > 0) {
-//                 MS = MS - 1;
-//                 if (MS < 10) {
-//                     MS = "0" + MS
-//                 }
-//                 ;
-//             }
-//             ;
-//             if (MS == 0 && SS > 0) {
-//                 MS = 10;
-//                 SS = SS - 1;
-//                 if (SS < 10) {
-//                     SS = "0" + SS
-//                 }
-//                 ;
-//             }
-//             ;
-//             if (SS == 0 && MM > 0) {
-//                 SS = 30;
-//                 MM = MM - 1;
-//                 if (MM < 10) {
-//                     MM = "0" + MM
-//                 }
-//                 ;
-//             }
-//             ;
-//         }
-//         ;
-//         $(".time").html(SS + "s");
-//
-//     };
-//
-//     var start1 = function(){
-//         //i = i + 0.6;
-//         i = i + 360/((gameTime)*10);  //旋转的角度  90s 为 0.4  60s为0.6   30s为1.2
-//         count = count + 1;
-//         if(count <= (gameTime/2*10)){  // 一半的角度  90s 为 450
-//             $(".pie1").css("-o-transform","rotate(" + i + "deg)");
-//             $(".pie1").css("-moz-transform","rotate(" + i + "deg)");
-//             $(".pie1").css("-webkit-transform","rotate(" + i + "deg)");
-//         }else{
-//             $(".pie2").css("backgroundColor", "#f7592f");
-//             $(".pie2").css("-o-transform","rotate(" + i + "deg)");
-//             $(".pie2").css("-moz-transform","rotate(" + i + "deg)");
-//             $(".pie2").css("-webkit-transform","rotate(" + i + "deg)");
-//         }
-//     };
-//
-//     var start2 = function(){
-//         j = j + 1.2;
-//         count = count + 1;
-//         if (count == 300) {
-//             count = 0;
-//             clearInterval(t2);
-//             t1 = setInterval("start1()", 100);
-//         }
-//         $(".pie2").css("-o-transform","rotate(" + j + "deg)");
-//         $(".pie2").css("-moz-transform","rotate(" + j + "deg)");
-//         $(".pie2").css("-webkit-transform","rotate(" + j + "deg)");
-//     };
-//
-//     var countDown = function() {
-//         //80*80px 时间进度条
-//         i = 0;
-//         j = 0;
-//         count = 0;
-//         MM = 0;
-//         SS = gameTime;
-//         MS = 0;
-//         totle = (MM + 1) * gameTime * 10;
-//         d = 180 * (MM + 1);
-//         MM = "0" + MM;
-//
-//         showTime();
-//
-//         s = setInterval("showTime()", 100);
-//         start1();
-//         //start2();
-//         t1 = setInterval("start1()", 100);
-//     };
-//     countDown();
-// }
-
 /*我的收藏*/
 function myShare(){
 	$(".sharees").addClass("listTile-style");
@@ -812,8 +622,23 @@ function orderSu(data){
 	if(data.is_test){
 		$(".prompt-warning").empty();
 	}
-
 }
+
+/*购买失败*/
+function buyFailure(data){
+	var failure = $('<div class="noOne">' +
+						'<img src="../images/none.png" /><p>'+data.msg+'</p>' +
+					'</div>'+
+					'<div class="recommend clear">' +
+						'<i></i><p>为您推荐</p><i></i>'+
+					'</div>'+
+					'<ul class="shareFrom"></ul>'
+	);
+    $(".success-container").append(failure);
+}
+
+
+
 function orderInfos(){
 	window.location.href="orderinfo.html?orderId="+$(".orderid").html()+"&id="+$(".id1").html();
 }

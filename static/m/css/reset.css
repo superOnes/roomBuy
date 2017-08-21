@@ -663,7 +663,7 @@ div.shoued i{
     margin:.8rem;
     border-bottom: solid 1px #eeeeee;
 }
-.shareCar-list a{color:#222;display:block;}
+.shareCar-list a{color:#222;display:block;position:relative;}
 .shareCar-list p{
     line-height: 2rem;
 }
@@ -671,6 +671,14 @@ div.shoued i{
     line-height: 1.6rem;
     margin-bottom: 1rem;
     font-size: .8rem;
+}
+.shareCar-list .sold{
+    position:absolute;
+    right:10%;
+    top:5%;
+    padding:10px 20px;
+    border:solid 1px #eee;
+    color:#f75c2e;
 }
 
 /*遮罩层*/
@@ -1053,7 +1061,7 @@ div.shoued i{
 .code{ display:block; }
 .codebox{
     width:80%;
-    height:60%;
+    height:66%;
     text-align:center;
     color:#fff;
     font-size:.8rem;
@@ -1182,12 +1190,25 @@ div.shoued i{
 .dialog-content-4 .dialog-confirm{
     color:#f26343;
 }
-.noOne{ padding-top:50%;width:100%;text-align:center;}
+.noOne{ padding-top:10%;width:100%;text-align:center;}
 .noOne img{
     width:60px;
     height:60px;
     background:100%;
     margin:0 auto 1.2rem;
+}
+.recommend { padding:5%;}
+.recommend * { float:left;}
+.recommend > i{
+    width:40%;
+    height:1px;
+    background:#b3b3b3;
+}
+.recommend p{
+    padding-left:20px;
+    background:url("../images/share.png") no-repeat left center;
+    font-size:.7rem;
+    margin:0 20px;
 }
 /*成功提示*/
 .prompt{
