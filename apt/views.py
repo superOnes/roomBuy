@@ -535,6 +535,12 @@ class CustomerDeleteView(View):
     def post(self, request):
         id = request.POST.get('id')
         if id:
+            eventdetail = Customer.get(id).user.order_set.get(is_test=0)
+            if eventdetail:
+                EventDetail.objects.filter(
+                    id=eventdetail.eventdetail_id).update(is_sold=0)
+            if EventDetail.objects.filter(sign_id=id):
+                EventDetail.objects.filter(sign_id=id).update(sign_id='')
             Customer.get(id).delete()
             return JsonResponse({'success': True})
         return JsonResponse({'success': False})
