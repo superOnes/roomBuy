@@ -556,7 +556,7 @@ class ExportCustomerView(View):
         objs = Customer.objects.filter(event_id=pk)
         sheet = Workbook(encoding='utf-8')
         s = sheet.add_sheet('数据表')
-        list = ['姓名', '手机号', '证件号', '备注', '状态', '置业顾问', '顾问电话']
+        list = ['姓名', '手机号', '证件号', '备注', '置业顾问', '顾问电话']
         col = 0
         for i in list:
             s.write(0, col, i)
@@ -576,9 +576,8 @@ class ExportCustomerView(View):
             s.write(row, 1, obj.mobile)
             s.write(row, 2, obj.identication)
             s.write(row, 3, obj.remark)
-            s.write(row, 4, '已选购' if obj.has_order() else '未选购')
-            s.write(row, 5, obj.consultant)
-            s.write(row, 6, obj.phone)
+            s.write(row, 4, obj.consultant)
+            s.write(row, 5, obj.phone)
             row += 1
         sio = BytesIO()
         sheet.save(sio)

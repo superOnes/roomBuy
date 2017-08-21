@@ -340,6 +340,8 @@ class Captcha(View):
         vars = random.sample(range(100), 3)
         vars.append(value)
         opt = set(vars)
+        if len(opt)==3:
+            opt.add(101)
         request.session['value'] = value
         return JsonResponse({'formula': formula, 'opt': list(opt)})
 
