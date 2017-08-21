@@ -87,12 +87,19 @@ function test(){
   var house_limit = createOrderUser.find("input[name='house_limit']").val();
   var province = $("#provinceC").val();
   var downtown = $("#downtownC").val();
+  var passPatt = /^[a-zA-Z0-9]{6,10}$/;
   if(username=="" || name=="" || password=="" || house_limit=="" || province==0 || downtown==0){
       new $.zui.Messager("请填写必填项", {
         placement:'center',
         type: 'danger'
       }).show()
-  }else{
+  }else if(!passPatt.test(password)){
+    new $.zui.Messager("请输入6-10位数字字母结合的密码", {
+      placement:'center',
+      type: 'danger'
+    }).show();
+    return false;
+  }else {
     var form = new FormData(document.getElementById("customerOrder"));
     $.ajax({
         url:"/admin/createuser/",

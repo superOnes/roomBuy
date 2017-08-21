@@ -133,7 +133,7 @@
 			<label class="col-sm-3 control-label" style="vertical-align: top;">活动封面<i>*</i></label>
 			<div class="col-sm-9 myfileCover">
 				<input type="file" class="form-control" id="cover" onchange='showCover()' name="cover">
-				<p><b>添加的封面图为</b><span class="coverImgFile" style="margin-left:20px;">{{form.cover.value|default:''}}</span></p>
+				<p><b>选择封面图</b><span class="coverImgFile" style="margin-left:20px;">{{form.cover.value|default:''}}</span></p>
 				<div style="width: 380px;height: 230px;">
 					<img src='{{MEDIA_URL}}{{object.cover}}' alt='' id='coverImg' onerror="this.src='{{ STATIC_URL }}images/default.png'" />
 				</div>
