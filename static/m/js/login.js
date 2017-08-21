@@ -626,10 +626,7 @@ function orderSu(data){
 
 /*购买失败*/
 function buyFailure(data){
-	var failure = $('<div class="noOne">' +
-						'<img src="../images/none.png" /><p>'+data.msg+'</p>' +
-					'</div>'+
-					'<div class="recommend clear">' +
+	var failure = $('<div class="recommend clear">' +
 						'<i></i><p>为您推荐</p><i></i>'+
 					'</div>'+
 					'<ul class="shareFrom"></ul>'
