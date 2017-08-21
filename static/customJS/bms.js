@@ -222,7 +222,14 @@ function resetUser(id){
     data:{id:id},
     success:function(data){
       if(data.success){
-        window.location.reload();
+        new $.zui.Messager("密码重置成功！", {
+          placement:'center',
+          type: 'danger'
+        }).show("",function(){
+          setTimeout(function(){
+            window.location.reload();
+          },1000)
+        });
       }else{
         new $.zui.Messager(data.msg, {
           placement:'center',

@@ -199,7 +199,7 @@ function statisticsData(thisId){
 				$listBuyer.find("tr").remove();
 				for (var i=0; i<result.length; i++) {
 					$listBuyer.append("<tr><td>"+(i+1)+"</td><td>"+result[i].name+"</td><td>"+result[i].mobile+"</td><td>"+result[i].identication+"</td>"+
-					"<td>"+result[i].protime+"</td><td>"+result[i].count+"</td><td>"+result[i].testroom+"</td>"+
+					"<td>"+result[i].consultant+"</td><td>"+result[i].phone+"</td><td>"+result[i].protime+"</td><td>"+result[i].count+"</td><td>"+result[i].testroom+"</td>"+
 					"<td>"+result[i].testtime+"</td><td>"+result[i].openroom+"</td><td>"+result[i].opentime+"</td></tr>")
 				}
 			}else{
