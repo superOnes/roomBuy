@@ -30,7 +30,7 @@ class EventForm(forms.ModelForm):
             raise forms.ValidationError('活动结束时间不能提前于活动开始时间！')
         num = 0
         if 'cover' not in cleaned_data:
-            raise forms.ValidationError('封面图不得为空！')
+            raise forms.ValidationError('封面图片格式不得为空或检查图片格式！')
         num += cleaned_data['cover'].size
         if cleaned_data['plane_graph'] is not None:
             num += cleaned_data['plane_graph'].size
