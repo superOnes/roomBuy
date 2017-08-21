@@ -17,7 +17,7 @@
 </div>
 <div class="row" style="padding:10px;margin-top:-20px;">
 	<a class="btn btn-primary" data-target="#batch" data-toggle="modal">批量操作</a>
-	<a class="btn btn-primary" data-iframe="{% url 'room_create' pk=event.id %}" data-toggle="modal" data-backdrop="static">添加房间/车位</a>
+	<a class="btn btn-primary" data-iframe="{% url 'room_create' pk=event.id %}" data-toggle="modal" data-backdrop="static">添加车位/房源</a>
 	<button type="button" class="btn btn-default lead" data-toggle="modal" data-target="#exampleModal" data-moveable="true">导入房源</button>
 	<a href="{% url 'room_export' pk=event.id %}" class="btn btn-default">导出房源</a>
 	<a href="{% url 'event_house_type_list' pk=event.id %}" class="btn btn-default" target="_blank" data-moveable="true">编辑户型</a>
@@ -25,7 +25,7 @@
 	<div class="col-lg-3" style="float: right;">
 		<form class="form-horizontal searchWrap" method="get" action="">
 			<div class="input-group">
-				<input type="text" class="form-control" placeholder="车位/房间号" id="searchInput" name="value" value="{{value|default:''}}">
+				<input type="text" class="form-control" placeholder="车位/房号" id="searchInput" name="value" value="{{value|default:''}}">
 				<span class="input-group-btn">
 			    <button class="btn btn-default" type="submit">搜索</button>
 			  </span>
@@ -79,7 +79,7 @@
 	<thead>
 		<tr>
 			<th data-width="5%">序号</th>
-			<th>车位/房间号</th>
+			<th>车位/房间</th>
 			<th data-width="10%">单价</th>
 			<th>建筑面积</th>
 			<th>户型</th>

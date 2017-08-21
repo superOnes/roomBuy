@@ -146,7 +146,6 @@ function deleteOrder(thisId){
 					window.location.reload();
 				});
 			}
-			window.location.reload();
 		},
 		error:function(){
 			alert("未知错误");

@@ -72,8 +72,8 @@
 			<td>{{ obj.identication }}</td>
 			<td>{{ obj.remark }}</td>
 			<td>{% if obj.user.customer.has_order %}已选购{% else %}未购买{% endif %}</td>
-			<td>{{ obj.consultant }}</td>
-			<td>{{ obj.phone }}</td>
+			<td>{{obj.consultant|default:''}}</td>
+			<td>{{obj.phone|default:''}}</td>
 			<td> <p> <a data-toggle="modal" data-target="#deleteModal" data-id="{{obj.id}}" class="deleteOrder">删除</a> </p> </td>
 		</tr>
 		<!--删除确认框-->
