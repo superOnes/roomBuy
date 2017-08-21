@@ -1106,7 +1106,8 @@ class EventTVWallOrderView(View):
             'event': ed.event.name,
             'house_type': ed.type if ed.type else '',
             'area': ed.area,
-            'price': ed.unit_price,
+            'price': format(ed.unit_price, ','),
+            'total': format(ed.area * ed.unit_price, ',')
         }
         return JsonResponse({'response_state': 200, 'result': result})
 
