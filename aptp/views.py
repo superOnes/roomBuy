@@ -226,12 +226,12 @@ class AppEventDetailHouseInfoView(View):
                   'mobile': user.customer.mobile,
                   'identication': user.customer.identication,
                   'building_unit': eventdetobj.building + eventdetobj.unit + str(eventdetobj.floor) + '层' + str(eventdetobj.room_num),
-                  'total': '***' if (test and not eventdetobj.event.test_price) else ((eventdetobj.area) * (eventdetobj.unit_price)),
+                  'total': '***' if (test and not eventdetobj.event.test_price) else format(((eventdetobj.area) * (eventdetobj.unit_price)),','),
                   'house_type': eventdetobj.type,
                   'pic': eventdetobj.house_type.pic.url if eventdetobj.house_type else '',
                   'floor': eventdetobj.floor,
                   'area': eventdetobj.area if eventdetobj.event.covered_space else '***',
-                  'unit_price': eventdetobj.unit_price if eventdetobj.event.covered_space_price else '***',
+                  'unit_price': format(eventdetobj.unit_price,',') if eventdetobj.event.covered_space_price else '***',
                   'looking': eventdetobj.looking,
                   'term': eventdetobj.term,
                   'is_followed': True if len(Follow.objects.filter(user=user, eventdetail=eventdetobj)) else False,
@@ -311,11 +311,11 @@ class FollowView(View):
                         obj.eventdetail.unit +
                         str(obj.eventdetail.floor) + '层' +
                         str(obj.eventdetail.room_num)),
-                    'price': (
+                    'price': format((
                         (
                             obj.eventdetail.area) *
                         (
-                            obj.eventdetail.unit_price)),
+                            obj.eventdetail.unit_price)),','),
                     'house': obj.eventdetail.id,
                 }]
             list.append(value)
@@ -585,11 +585,11 @@ class ReturnFollow(View):
                         obj.eventdetail.unit +
                         str(obj.eventdetail.floor) + '层' +
                         str(obj.eventdetail.room_num)),
-                    'price': (
+                    'price': format((
                         (
                             obj.eventdetail.area) *
                         (
-                            obj.eventdetail.unit_price)),
+                            obj.eventdetail.unit_price)),','),
                     'house': obj.eventdetail.id,
                     'sold': obj.eventdetail.is_testsold if test else obj.eventdetail.is_sold,
                 } for obj in objs]
@@ -638,7 +638,7 @@ class AppOrderListView(View):
                     str(obj.eventdetail.room_num)),
                 'time': obj.time.strftime('%Y/%m/%d %H:%M:%S'),
                 'event': obj.eventdetail.event.name,
-                'unit_price': obj.eventdetail.unit_price if obj.eventdetail.event.covered_space_price else '***',
+                'unit_price': format(obj.eventdetail.unit_price,',') if obj.eventdetail.event.covered_space_price else '***',
                 'orderid': obj.id,
                 'is_test': obj.is_test,
             }]
@@ -662,7 +662,7 @@ class AppOrderInfoView(View):
         value = [
             {
                 'eventname': obj.eventdetail.event.name,
-                'unit_price': obj.eventdetail.unit_price,
+                'unit_price': format(obj.eventdetail.unit_price,','),
                 'limit': (
                     obj.time +
                     timedelta(
@@ -682,10 +682,8 @@ class AppOrderInfoView(View):
                 'identication': obj.user.customer.identication,
                 'order_num': obj.order_num,
                 'is_test': obj.is_test,
-                'total': (
-                            (obj.eventdetail.area) *
-                            (
-                                obj.eventdetail.unit_price))}]
+                'total': format(((obj.eventdetail.area) *
+                            (obj.eventdetail.unit_price)),',')}]
         context = {}
         context['objects'] = value
         context['response_state'] = 200
