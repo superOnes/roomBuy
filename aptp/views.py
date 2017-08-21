@@ -128,7 +128,7 @@ class AppEventDetailListView(View):
         eventid = request.GET.get('id')
         eventobj = Event.get(eventid)
         context = {}
-        eventdetobj = EventDetail.objects.filter(event_id=eventid)
+        eventdetobj = EventDetail.objects.filter(event_id=eventid, status=True)
         buildinglist = set()
         for obj in eventdetobj:
             buildinglist.add(obj.building)
@@ -154,7 +154,7 @@ class AppEventDetailUnitListView(View):
         building = request.GET.get('building')
         context = {}
         eventdetobj = EventDetail.objects.filter(
-            building=building, event_id=eventid)
+            building=building, event_id=eventid, status=True)
         unitlist = set()
         for obj in eventdetobj:
             unitlist.add(obj.unit)
@@ -185,7 +185,7 @@ class AppEventDetailHouseListView(View):
             test = False
         context = {}
         eventdetobj = EventDetail.objects.filter(
-            event_id=eventid, building=building, unit=unit)
+            event_id=eventid, building=building, unit=unit, status=True)
         room_num_list = []
         for obj in eventdetobj:
             if obj.status:
@@ -340,7 +340,7 @@ class Captcha(View):
         vars = random.sample(range(100), 3)
         vars.append(value)
         opt = set(vars)
-        if len(opt)==3:
+        if len(opt) == 3:
             opt.add(101)
         request.session['value'] = value
         return JsonResponse({'formula': formula, 'opt': list(opt)})
