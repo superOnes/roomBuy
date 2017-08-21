@@ -18,7 +18,7 @@
 <div class="row" style="padding:10px;margin-top:-20px;">
 	<a class="btn btn-primary" data-target="#batch" data-toggle="modal">批量操作</a>
 	<a class="btn btn-primary" data-iframe="{% url 'room_create' pk=event.id %}" data-toggle="modal" data-backdrop="static">添加车位/房源</a>
-	<button type="button" class="btn btn-default lead" data-toggle="modal" data-target="#exampleModal" data-moveable="true">导入房源</button>
+	<button type="button" class="btn btn-default lead" data-toggle="modal" data-target="#exampleModal" data-moveable="true" data-backdrop="static">导入房源</button>
 	<a href="{% url 'room_export' pk=event.id %}" class="btn btn-default">导出房源</a>
 	<a href="{% url 'event_house_type_list' pk=event.id %}" class="btn btn-default" target="_blank" data-moveable="true">编辑户型</a>
 	<!-- <a href="javascript:void(0)" class="btn btn-default house-type" data-id="{{event.id}}" data-target="#house-type-modal" data-moveable="true">一键关联户型</a> -->
