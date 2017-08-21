@@ -186,7 +186,7 @@
 		{% endfor %}
 	</tbody>
 </table>
-{% if page_obj.has_other_pages %}
+{% if paginator.num_pages > 1 %}
 <div class="zxf_pagediv"></div>
 {% endif %}
 {% endblock %} {% block js %}
@@ -206,7 +206,7 @@ function batchHandle(isStatic){
 		//分页
 		$(".zxf_pagediv").createPage({
 			pageNum: {{ paginator.num_pages}},//总页码
-			current: {{ page_obj.number }},//当前页
+			current: {{ paginator.number }},//当前页
 			activepage: "current",
 			activepaf: "",
 			backfun: function(e) {  //回调

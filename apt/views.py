@@ -19,7 +19,6 @@ from django.http import JsonResponse, HttpResponse, Http404
 from django.db.models import Q
 from django.http import QueryDict
 from django.utils.decorators import method_decorator
-from django import forms
 
 from aptm import settings
 from accounts.models import Order, Customer
@@ -28,6 +27,7 @@ from .models import Event, EventDetail, HouseType
 from accounts.decorators import admin_required, event_permission
 from .forms import (EventForm, EventDetailForm, CustomerForm, HouseTypeForm,
                     EventDetailSignForm)
+from system.util import Pagination
 
 
 class DialogMixin(object):
@@ -157,21 +157,25 @@ class EventDetailListView(ListView):
     '''
     template_name = 'eventdetail_list.html'
     model = EventDetail
-    paginate_by = 50
+    num_page = 50
 
     def get_queryset(self):
         self.value = self.request.GET.get('value')
         self.event = Event.get(self.kwargs['pk'])
+        page = self.request.GET.get('page', 1)
         queryset = self.model.objects.filter(event=self.event).order_by('-id')
         if self.value:
             queryset = queryset.filter(
                 Q(room_num__contains=self.value)).order_by('-id')
+        self.pagination = Pagination(queryset, page, self.num_page)
+        queryset = self.pagination.get_queryset()
         return queryset
 
     def get_context_data(self):
         context = super(EventDetailListView, self).get_context_data()
         context['event'] = self.event
         context['value'] = self.value
+        context['paginator'] = self.pagination.page_obj
         return context
 
 
@@ -484,9 +488,10 @@ class CustomListView(ListView):
     '''
     template_name = 'customer_list.html'
     model = Customer
-    paginate_by = 50
+    num_page = 50
 
     def get_queryset(self):
+        page = self.request.GET.get('page', 1)
         self.value = self.request.GET.get('value')
         self.event = Event.get(self.kwargs['pk'])
         queryset = self.model.objects.filter(event=self.event).order_by('-id')
@@ -495,12 +500,15 @@ class CustomListView(ListView):
                                        Q(mobile__icontains=self.value) |
                                        Q(identication__icontains=self.value)
                                        ).order_by('-id')
+        self.pagination = Pagination(queryset, page, self.num_page)
+        queryset = self.pagination.get_queryset()
         return queryset
 
     def get_context_data(self):
         context = super(CustomListView, self).get_context_data()
         context['event'] = self.event
         context['value'] = self.value
+        context['paginator'] = self.pagination.page_obj()
         return context
 
 
@@ -1104,5 +1112,3 @@ class UpDownFrameView(View):
         if int(state) == 1:
             ed.update(status=True)
         return JsonResponse({'success': True})
-
-
