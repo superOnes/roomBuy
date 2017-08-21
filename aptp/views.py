@@ -339,9 +339,9 @@ class Captcha(View):
         value = dic.get(sym)
         vars = random.sample(range(100), 3)
         vars.append(value)
-        opt=set(vars)
-        request.session['value']=value
-        return JsonResponse({'formula':formula,'opt':list(opt)})
+        opt = set(vars)
+        request.session['value'] = value
+        return JsonResponse({'formula': formula, 'opt': list(opt)})
 
 
 @method_decorator(customer_login_required, name='dispatch')
@@ -354,8 +354,9 @@ class CheckCaptcha(View):
     def post(self, request):
         value = request.POST.get('value')
         if int(value) == int(request.session['value']):
-            return JsonResponse ({'response_state': 200, 'msg': '正确！'})
+            return JsonResponse({'response_state': 200, 'msg': '正确！'})
         return JsonResponse({'response_state': 412, 'msg': '计算错误！'})
+
 
 @method_decorator(customer_login_required, name='dispatch')
 @method_decorator(customer_login_time, name='dispatch')
@@ -550,6 +551,47 @@ class AppHouseChoiceConfirmTestView(View):
                 return JsonResponse({'response_state': 400,
                                      'msg': '已购买,不要重复购买'})
         return JsonResponse({'response_state': 400, 'msg': '购买失败'})
+
+
+@method_decorator(customer_login_required, name='dispatch')
+@method_decorator(customer_login_time, name='dispatch')
+class ReturnFollow(View):
+    '''
+    订单失败之后返回收藏列表信息
+    '''
+
+    def get(self, request):
+        house = request.GET.get('house')
+        user = request.user
+        eventid = request.GET.get('id')
+        event = Event.get(eventid)
+        objs = Follow.objects.filter(
+            user=user, eventdetail__event_id=eventid).exclude(
+            eventdetail_id=house)
+        now = datetime.now()
+        test = None
+        if event.test_start + timedelta(hours=-0.5) < now < event.test_end:
+            test = True
+        if event.event_start + timedelta(hours=-0.5) < now < event.event_end:
+            test = False
+        value = []
+        if objs:
+            value = [
+                {
+                    'eventdetail': (
+                        obj.eventdetail.building +
+                        obj.eventdetail.unit +
+                        str(obj.eventdetail.floor) + '层' +
+                        str(obj.eventdetail.room_num)),
+                    'price': (
+                        (
+                            obj.eventdetail.area) *
+                        (
+                            obj.eventdetail.unit_price)),
+                    'house': obj.eventdetail.id,
+                    'sold': obj.eventdetail.is_testsold if test else obj.eventdetail.is_sold,
+                } for obj in objs]
+        return JsonResponse({'objects': value})
 
 
 @method_decorator(customer_login_required, name='dispatch')

@@ -550,7 +550,7 @@ class ExportCustomerView(View):
         objs = Customer.objects.filter(event_id=pk)
         sheet = Workbook(encoding='utf-8')
         s = sheet.add_sheet('数据表')
-        list = ['姓名', '手机号', '证件号', '备注']
+        list = ['姓名', '手机号', '证件号', '备注', '状态', '置业顾问', '顾问电话']
         col = 0
         for i in list:
             s.write(0, col, i)
@@ -570,6 +570,9 @@ class ExportCustomerView(View):
             s.write(row, 1, obj.mobile)
             s.write(row, 2, obj.identication)
             s.write(row, 3, obj.remark)
+            s.write(row, 4, '已选购' if obj.has_order() else '未选购')
+            s.write(row, 5, obj.consultant)
+            s.write(row, 6, obj.phone)
             row += 1
         sio = BytesIO()
         sheet.save(sio)
@@ -652,6 +655,8 @@ class ExportBuyHotView(View):
             '姓名',
             '手机号',
             '证件号码',
+            '置业顾问',
+            '顾问电话',
             '同意协议时间',
             '收藏房间数',
             '公测选择房间',
@@ -676,29 +681,17 @@ class ExportBuyHotView(View):
             s.write(row, 0, obj.realname)
             s.write(row, 1, obj.mobile)
             s.write(row, 2, obj.identication)
-            s.write(row, 3, obj.protime.strftime(
+            s.write(row, 3, obj.consultant)
+            s.write(row, 4, obj.phone)
+            s.write(row, 5, obj.protime.strftime(
                 "%Y/%m/%d %H:%M:%S") if obj.protime else '')
-            s.write(row, 4, obj.user.follow_set.count())
+            s.write(row, 6, obj.user.follow_set.count())
             testorder = Order.objects.filter(
                 eventdetail__event_id=eventid,
                 user__customer=obj,
                 is_test=True)
             if testorder:
                 order = testorder[0]
-                s.write(row, 5, order.eventdetail.building +
-                        order.eventdetail.unit +
-                        str(order.eventdetail.floor) +
-                        '层' +
-                        str(order.eventdetail.room_num))
-                s.write(row, 6, (order.time).strftime(
-                    "%Y/%m/%d %H:%M:%S"))
-            else:
-                s.write(row, 5, None)
-                s.write(row, 6, None)
-            nottestorder = Order.objects.filter(
-                eventdetail__event_id=eventid, user__customer=obj, is_test=False)
-            if nottestorder:
-                order = nottestorder[0]
                 s.write(row, 7, order.eventdetail.building +
                         order.eventdetail.unit +
                         str(order.eventdetail.floor) +
@@ -709,6 +702,20 @@ class ExportBuyHotView(View):
             else:
                 s.write(row, 7, None)
                 s.write(row, 8, None)
+            nottestorder = Order.objects.filter(
+                eventdetail__event_id=eventid, user__customer=obj, is_test=False)
+            if nottestorder:
+                order = nottestorder[0]
+                s.write(row, 9, order.eventdetail.building +
+                        order.eventdetail.unit +
+                        str(order.eventdetail.floor) +
+                        '层' +
+                        str(order.eventdetail.room_num))
+                s.write(row, 10, (order.time).strftime(
+                    "%Y/%m/%d %H:%M:%S"))
+            else:
+                s.write(row, 9, None)
+                s.write(row, 10, None)
             row += 1
         sio = BytesIO()
         sheet.save(sio)
@@ -1103,6 +1110,7 @@ class UpDownFrameView(View):
     '''
     上架/下架
     '''
+
     def post(self, request, *args, **kwargs):
         state = request.POST.get('state')
         eventdetail_id = request.POST.getlist('checklist[]')

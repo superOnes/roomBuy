@@ -14,7 +14,7 @@ from .views import (
     AppEventDetailUnitListView,
     AppEventDetailHouseListView,
     OrderProView, AppHouseChoiceConfirmTestView,
-    Captcha, CheckCaptcha)
+    Captcha, CheckCaptcha,ReturnFollow)
 
 urlpatterns = [
     url(r'^eventinfo/', EventInfo.as_view(), name='app_eventinfo'),
@@ -33,6 +33,7 @@ urlpatterns = [
     url(r'^orderslist/', AppOrderListView.as_view(), name='app_order_list'),
     url(r'^captcha/', Captcha.as_view(), name='app_captcha'),
     url(r'^checkcaptcha/', CheckCaptcha.as_view(), name='app_checkcaptcha'),
+    url(r'^retfoll/', ReturnFollow.as_view(), name='app_returnfollow'),
     # 订单确认测试接口
     url(r'^orderconfirmtest/', AppHouseChoiceConfirmTestView.as_view()),
 ]
