@@ -112,7 +112,7 @@
 			<td>{{obj.has_order|yesno:"已选购,未选购"}}</td>
 			<td>{% if obj.sign %}<i class="icon icon-check"></i>{% endif %}</td>
 			<td class="handle">
-					<a href="javascript:void(0)" data-id="{{obj.id}}" class="status" title="{{obj.status|yesno:'上架,下架'}}">{% if obj.status == True %}<i class="icon icon-toggle-on"></i>{% else %}<i class="icon icon-toggle-off"></i>{% endif %}</a>
+					<a href="javascript:void(0)" data-id="{{obj.id}}" class="status" title="{{ obj.status|yesno:'下架,上架' }}">{% if obj.status == True %}<i class="icon icon-toggle-on"></i>{% else %}<i class="icon icon-toggle-off"></i>{% endif %}</a>
 				<!-- <p>
 					<a data-iframe="{% url 'room_remark_update' pk=obj.id %}" data-toggle="modal">情况描述</a>
 				</p> -->
@@ -128,8 +128,8 @@
 						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
 						<h4 class="modal-title">是否上架</h4>
 					</div>
-					<div class="modal-body">
-						<p>确认{{ obj.status|yesno:"取消上架,上架"}}？</p>
+					<div class="modal-body" id="statusHtml">
+						<p></p>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -235,6 +235,12 @@ function batchHandle(isStatic){
 		});
 
 		$('.status').on('click', function(e) {
+			var statusHtml = $(this).parents("tr").children("td")[8].innerHTML;
+			if(statusHtml == "已上架"){
+				$("#statusHtml p").html("确认下架该房源吗？")
+			}else{
+				$("#statusHtml p").html("确认上架该房源吗？")
+			};
 			$("#status_status").val($(e.currentTarget).data("id"));
 			$("#status_issue").modal();
 		});

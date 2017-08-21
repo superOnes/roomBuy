@@ -268,29 +268,38 @@ function getorderList(thisId,is_test,searchValue){
 
 // 批量操作请求
 function batch(ids,isStatic){
-	$.ajax({
-		type:'post',
-		url:'/updownframe/rooms/',
-		data:{checklist:ids,state:isStatic},
-		asunc:true,
-		success:function(){
-			new $.zui.Messager('提示消息：成功', {
-				placement:'center',
-				type: 'success' // 定义颜色主题
-			}).show("",function(){
-				window.location.reload();
-			});
-		},
-		error:function(){
-			new $.zui.Messager('操作失败，请检查网络！', {
-				placement:'center',
-				type: 'danger' // 定义颜色主题
-			}).show('',function(){
-				$(".btn").removeAttr("disabled","disabled");
-			});
-		}
-	})
-}
+	if(ids.length == 0){
+		new $.zui.Messager('请选择房源', {
+			placement:'center',
+			type: 'danger' // 定义颜色主题
+		}).show('',function(){
+			$(".btn").removeAttr("disabled","disabled");
+		});
+	}else {
+		$.ajax({
+			type:'post',
+			url:'/updownframe/rooms/',
+			data:{checklist:ids,state:isStatic},
+			asunc:true,
+			success:function(){
+				new $.zui.Messager('提示消息：成功', {
+					placement:'center',
+					type: 'success' // 定义颜色主题
+				}).show("",function(){
+					window.location.reload();
+				});
+			},
+			error:function(){
+				new $.zui.Messager('操作失败，请检查网络！', {
+					placement:'center',
+					type: 'danger' // 定义颜色主题
+				}).show('',function(){
+					$(".btn").removeAttr("disabled","disabled");
+				});
+			}
+		});
+	};
+};
 
 	function quit(e){
     $(e).attr("disabled","disabled");
