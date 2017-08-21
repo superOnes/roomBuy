@@ -15,6 +15,8 @@ class Customer(models.Model):
     count = models.IntegerField('可选套数', default=1)
     event = models.ForeignKey(Event, verbose_name='关联活动')
     is_delete = models.BooleanField(default=False)
+    consultant = models.CharField('置业顾问', max_length=100, null=True, blank=True)
+    phone = models.CharField('顾问电话', max_length=100, null=True, blank=True)
     session_key = models.CharField(
         max_length=100,
         null=True,

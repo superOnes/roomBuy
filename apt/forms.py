@@ -113,7 +113,8 @@ class EventDetailSignForm(forms.ModelForm):
 class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
-        fields = ['realname', 'mobile', 'identication', 'remark']
+        fields = ['realname', 'mobile', 'identication',
+                  'remark', 'consultant', 'phone']
 
     def clean(self):
         cleaned_data = super(CustomerForm, self).clean()

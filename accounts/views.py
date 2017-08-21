@@ -188,15 +188,17 @@ class ImportView(View):
                     os.remove('media/tmp/customer.xlsx')
                     return JsonResponse(
                         {'response_state': 400, 'msg': '导入的excel为空表！'})
-                if col != 4:
+                if col != 6:
                     return JsonResponse(
                         {'response_state': 400, 'msg': '导入文件不正确！'})
                 value1 = sheet.cell(rowx=0, colx=0).value
                 value2 = sheet.cell(rowx=0, colx=1).value
                 value3 = sheet.cell(rowx=0, colx=2).value
                 value4 = sheet.cell(rowx=0, colx=3).value
-                head = [value1, value2, value3, value4]
-                if head != ['姓名', '手机号', '证件号', '备注']:
+                value5 = sheet.cell(rowx=0, colx=4).value
+                value6 = sheet.cell(rowx=0, colx=5).value
+                head = [value1, value2, value3, value4, value5, value6]
+                if head != ['姓名', '手机号', '证件号', '备注', '置业顾问', '顾问电话']:
                     return JsonResponse(
                         {'response_state': 400, 'msg': '导入文件不正确！'})
                 data = []
@@ -206,6 +208,8 @@ class ImportView(View):
                     value2 = sheet.cell(rowx=rx, colx=1).value
                     value3 = sheet.cell(rowx=rx, colx=2).value
                     value4 = sheet.cell(rowx=rx, colx=3).value
+                    value5 = sheet.cell(rowx=rx, colx=4).value
+                    value6 = sheet.cell(rowx=rx, colx=5).value
                     if not isinstance(value1, str):
                         try:
                             value1 = str(int(value1))
@@ -218,6 +222,12 @@ class ImportView(View):
                         except BaseException:
                             return JsonResponse(
                                 {'response_state': 400, 'msg': '备注格式不正确！'})
+                    if not isinstance(value5, str):
+                        try:
+                            value5 = str(int(value5))
+                        except BaseException:
+                            return JsonResponse(
+                                {'response_state': 400, 'msg': '置业顾问格式不正确！'})
                     if not isinstance(value3, str):
                         try:
                             value3 = str(int(value3))
@@ -231,7 +241,14 @@ class ImportView(View):
                         os.remove('media/tmp/customer.xlsx')
                         return JsonResponse(
                             {'response_state': 400, 'msg': '导入手机号格式有误！'})
-                    li = [value1, value2, value3, value4]
+                    if value6:
+                        try:
+                            value6 = str(int(value6))
+                        except BaseException:
+                            os.remove('media/tmp/customer.xlsx')
+                            return JsonResponse(
+                                {'response_state': 400, 'msg': '导入顾问电话格式有误！'})
+                    li = [value1, value2, value3, value4, value5, value6]
                     data.append(li)
                 realname = list(map(lambda x: (x[0]), data))
                 for rl in realname:
@@ -259,7 +276,13 @@ class ImportView(View):
                     try:
                         for ct in data:
                             customer = Customer.objects.create(
-                                realname=ct[0], mobile=ct[1], identication=ct[2], remark=ct[3], event=event)
+                                realname=ct[0],
+                                mobile=ct[1],
+                                identication=ct[2],
+                                remark=ct[3],
+                                consultant=ct[4],
+                                phone=ct[5],
+                                event=event)
                             customer.save()
                             User.objects.create_user(
                                 username=uuid.uuid1(),
@@ -288,6 +311,8 @@ class GetCustomerInfo(View):
                 'realname': customer.realname,
                 'mobile': customer.mobile,
                 'identication': customer.identication,
+                'consultant': customer.consultant,
+                'phone': customer.phone
             }
             if customer.user.order_set.filter(is_test=False).count() \
                >= customer.count:
