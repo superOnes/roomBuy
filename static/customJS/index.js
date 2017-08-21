@@ -159,7 +159,39 @@ function deleteOrder(thisId){
 	});
 };
 
-
+//分页
+function paginators(num_pages,number) {
+	$(".zxf_pagediv").show();
+	$(".zxf_pagediv").createPage({
+		pageNum: num_pages,//总页码
+		current: number,//当前页
+		activepage: "current",
+		activepaf: "",
+		backfun: function(e) {  //回调
+			if(e.current > num_pages){
+				new $.zui.Messager("输入超出页数，请重新输入！", {
+					placement: "center",
+					type: "danger",
+				}).show('',function(){
+					setTimeout(function(){
+						window.location.reload();
+					},1000)
+				});
+			}else if(e.current <= 0){
+				new $.zui.Messager("请输入正整数！", {
+					placement: "center",
+					type: "danger",
+				}).show('',function(){
+					setTimeout(function(){
+						window.location.reload();
+					},1000)
+				});
+			}else{
+				window.location.href="?page="+e.current;
+			}
+		}
+	});
+}
 
 function statisticsData(thisId){
 	var $listBuyer = $("#buyer");
@@ -181,7 +213,10 @@ function statisticsData(thisId){
 					$listHouse.append("<tr><td>"+(i+1)+"</td><td>"+result[i].building+"</td><td>"+result[i].unit+"</td><td>"+result[i].floor+"</td>"+
 					"<td>"+result[i].room_num+"</td><td>"+result[i].is_sold+"</td><td>"+result[i].unit_price+"</td><td>"+result[i].area+"</td><td>"+result[i].num+"</td>"+
 					"<td>"+result[i].is_testsold+"</td></tr>");
-				}
+				};
+				var num_pages = results.data.num_pages;
+				var number = results.data.number;
+				paginators(num_pages,number);
 			}else{
 				$(".datatable").html("<div style='display:block;padding: 20px 0;'> <p style='font-size: 20px;color: #CCCCCC;text-align: center;'>暂时没有订单数据！</p> </div>")
 			}
@@ -205,7 +240,10 @@ function statisticsData(thisId){
 					$listBuyer.append("<tr><td>"+(i+1)+"</td><td>"+result[i].name+"</td><td>"+result[i].mobile+"</td><td>"+result[i].identication+"</td>"+
 					"<td>"+result[i].consultant+"</td><td>"+result[i].phone+"</td><td>"+result[i].protime+"</td><td>"+result[i].count+"</td><td>"+result[i].testroom+"</td>"+
 					"<td>"+result[i].testtime+"</td><td>"+result[i].openroom+"</td><td>"+result[i].opentime+"</td></tr>")
-				}
+				};
+				var num_pages = results.data.num_pages;
+				var number = results.data.number;
+				paginators(num_pages,number);
 			}else{
 				$(".datatable").html("<div style='display:block;padding: 20px 0;'> <p style='font-size: 20px;color: #CCCCCC;text-align: center;'>暂时没有订单数据！</p> </div>")
 			}
