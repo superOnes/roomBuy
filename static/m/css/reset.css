@@ -665,6 +665,7 @@ div.shoued i{
 }
 .shareCar-list1 { border-bottom: solid 1px #ccc; }
 .shareCar-list1:nth-last-child(1) { border-bottom:none;}
+.shareCar-list1 a {margin-bottom:0.4rem;}
 .shareCar-list a{color:#222;display:block;position:relative;}
 .shareCar-list p{
     line-height: 2rem;
@@ -675,13 +676,13 @@ div.shoued i{
     font-size: .8rem;
 }
 .shareCar-list .sold{
-    color:#f75c2e;
-    line-height:1.4rem;
+    width:100px;
+    height:70px;
     position:absolute;
-    right:10%;
-    top:20px;
-    padding:0 10px;
-    border:solid 1px #999;
+    right:5%;
+    top:0;
+    background:url("../images/sold.png") no-repeat;
+    background-size:100%;
 }
 
 /*遮罩层*/
@@ -1200,24 +1201,25 @@ div.shoued i{
     background:100%;
     margin:0 auto 1.2rem;
 }
-.recommend { padding:6% 10%;border-top:solid 10px #eee;}
+.recommend {width:100%; padding:5%;border-top:solid 10px #eee;}
 .recommend * { float:left;}
 .recommend > i{
-    width:30%;
+    width:35%;
     height:1px;
     background:#b3b3b3;
     margin-top:10px;
 }
 .recommend p{
-    width:37%;
-    padding-left:15%;
-    background:url("../images/share.png") no-repeat 20% center;
-    background-size:20%;
+    width:30%;
+    padding-left:10%;
+    background:url("../images/share.png") no-repeat 18% center;
+    background-size:16%;
     font-size:.7rem;
 }
 .shareFrom{
     width:90%;
     margin:0 5%;
+    padding:1px 0;
     background:#f2f2f2;
     border-radius:6px;
 
@@ -1297,8 +1299,9 @@ div.shoued i{
 .pie2{clip:rect(0px,100px,200px,0px);-o-transform:rotate(0deg);-moz-transform:rotate(0deg);-webkit-transform:rotate(0deg);background-color:#f0977f;}
 .hold{width:200px;height:200px;position:absolute;z-index:1;}
 .bg{width:200px;height:200px;border-radius:200px;position:absolute;background-color:#f7592f;}
-.time{width:160px;height:160px;margin:20px 0 0 20px;color:#fff;
-    border-radius:160px;position:absolute;z-index:1;text-align:center;line-height:160px;font-size:30px;}
+.time{width:160px;height:160px;margin:40px 0 0 20px;color:#fff;
+    border-radius:160px;position:absolute;z-index:1;text-align:center;line-height:40px;font-size:40px;}
+.time span { font-size:1.2rem;}
 
 @media (max-width:340px){
     .tipbox span{font-size:.8rem;}
