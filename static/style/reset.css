@@ -93,15 +93,11 @@ a{text-decoration:none;color:#6c6c6c;outline:none;}
     background:#f9a0a1;
     color:#4c4c4c;
 }
-
-
-
-
 .orderbox{ width:400px;margin:100px auto;}
 .order-top2{
     color:white;
     background-color: rgb(57,191,102);
-    height:150px;
+    height:100px;
     overflow:hidden;
 }
 .order-top2 p{
