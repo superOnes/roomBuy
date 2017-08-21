@@ -1103,7 +1103,7 @@ class EventTVWallOrderView(View):
             'user': order.user.customer.realname,
             'user_mobile': order.user.customer.mobile,
             'user_id': order.user.customer.identication,
-            'house': ('%s楼-%s单元-%s') % (ed.building, ed.unit, ed.room_num),
+            'house': ('%s-%s-%s') % (ed.building, ed.unit, ed.room_num),
             'event': ed.event.name,
             'house_type': ed.type if ed.type else '',
             'area': ed.area,
