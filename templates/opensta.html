@@ -7,7 +7,7 @@
 		<li> <a href="{% url 'event_list' %}"> <h3>开盘统计管理</h3></a> </li>
 	</ol>
 </div>
-<ul class="nav nav-tabs">
+<ul class="nav nav-tabs" id="nav">
 	<li class="active"> <a data-tab href="#tabContent1">购房者热度统计</a> </li>
 	<li> <a data-tab href="#tabContent2">房源热度统计</a> </li>
 	<div class="row" style="float:right;margin:0;width: 400px;">
@@ -38,7 +38,7 @@
 				<tr> </tr>
 			</tbody>
 		</table>
-		<div class="zxf_pagediv" style="display:none;"></div>
+		<p class="btn lookMoreBuyer">查看更多数据</p>
 	</div>
 	<div class="tab-pane fade" id="tabContent2">
 		<table class="table datatable">
@@ -60,7 +60,7 @@
 				<tr> </tr>
 			</tbody>
 		</table>
-		<div class="zxf_pagediv" style="display:none;"></div>
+		<p class="btn lookMoreHouse">查看更多数据</p>
 	</div>
 </div>
 {% endblock %} {% block js %}
@@ -110,6 +110,21 @@
 				$exportEach.attr("href", "/export/househot/?id=" + id);
 			};
 		});
+		//查看房源更多
+		var pageHouse = 1;
+		$(".lookMoreHouse").click(function(){
+			pageHouse++;
+			var id = $(".selectInp").val();
+			lookMoreHouse(pageHouse,id);
+		});
+		//查看购房者更多
+		var pageBuyer = 1;
+		$(".lookMoreBuyer").click(function(){
+			pageBuyer++;
+			var id = $(".selectInp").val();
+			lookMoreBuyer(pageBuyer,id);
+		})
+
 	});
 </script>
 {% endblock %}

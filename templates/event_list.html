@@ -135,7 +135,7 @@
 			$(this).attr("disabled","disabled");
 			var id = $("#is_pub_status").val();
 			$.ajax({
-				type: "PUT",
+				type: "post",
 				url: "../pubstatus/",
 				async: true,
 				data: { id: id },

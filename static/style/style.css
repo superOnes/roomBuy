@@ -66,9 +66,19 @@ input[type="number"]{
 	margin: 0 0 0 100px !important;
 }
 
-
-
-
+/*查看更多*/
+.lookMoreBuyer, .lookMoreHouse{
+	border-radius: 15px;
+	display: block;
+	border: none;
+	background-color: #ffffff;
+}
+.lookMoreBuyer:hover{
+background: #f2f2f2;
+}
+.lookMoreHouse:hover{
+background: #f2f2f2;
+}
 /*表单的必填项*/
 .form-group>label{padding-top: 0 !important;position: relative;margin-top:10px !important;}
 .form-group>label>i{position: absolute;right:0;top:0;font-size: 16px;color:red;}

@@ -54,9 +54,6 @@ function submitFile(event,thisID){
 	$(event).attr("disabled","disabled");
 	$(".modal-header button").attr("disabled","disabled");
 	$(event).siblings("button").attr("disabled","disabled");
-	setTimeout(function(){
-		alert("正在导入，请稍等。。。")
-	},2000)
 	var files = $("#files")[0].files;
 	var data = new FormData(); //转化为表单格式的数据
     data.append('filename', files[0]);
@@ -159,39 +156,6 @@ function deleteOrder(thisId){
 	});
 };
 
-//分页
-function paginators(num_pages,number) {
-	$(".zxf_pagediv").show();
-	$(".zxf_pagediv").createPage({
-		pageNum: num_pages,//总页码
-		current: number,//当前页
-		activepage: "current",
-		activepaf: "",
-		backfun: function(e) {  //回调
-			if(e.current > num_pages){
-				new $.zui.Messager("输入超出页数，请重新输入！", {
-					placement: "center",
-					type: "danger",
-				}).show('',function(){
-					setTimeout(function(){
-						window.location.reload();
-					},1000)
-				});
-			}else if(e.current <= 0){
-				new $.zui.Messager("请输入正整数！", {
-					placement: "center",
-					type: "danger",
-				}).show('',function(){
-					setTimeout(function(){
-						window.location.reload();
-					},1000)
-				});
-			}else{
-				window.location.href="?page="+e.current;
-			}
-		}
-	});
-}
 
 function statisticsData(thisId){
 	var $listBuyer = $("#buyer");
@@ -214,11 +178,9 @@ function statisticsData(thisId){
 					"<td>"+result[i].room_num+"</td><td>"+result[i].is_sold+"</td><td>"+result[i].unit_price+"</td><td>"+result[i].area+"</td><td>"+result[i].num+"</td>"+
 					"<td>"+result[i].is_testsold+"</td></tr>");
 				};
-				var num_pages = results.data.num_pages;
-				var number = results.data.number;
-				paginators(num_pages,number);
 			}else{
 				$(".datatable").html("<div style='display:block;padding: 20px 0;'> <p style='font-size: 20px;color: #CCCCCC;text-align: center;'>暂时没有订单数据！</p> </div>")
+				$(".lookMoreHouse").hide();
 			}
 		},
 		error:function(){
@@ -241,11 +203,9 @@ function statisticsData(thisId){
 					"<td>"+result[i].consultant+"</td><td>"+result[i].phone+"</td><td>"+result[i].protime+"</td><td>"+result[i].count+"</td><td>"+result[i].testroom+"</td>"+
 					"<td>"+result[i].testtime+"</td><td>"+result[i].openroom+"</td><td>"+result[i].opentime+"</td></tr>")
 				};
-				var num_pages = results.data.num_pages;
-				var number = results.data.number;
-				paginators(num_pages,number);
 			}else{
 				$(".datatable").html("<div style='display:block;padding: 20px 0;'> <p style='font-size: 20px;color: #CCCCCC;text-align: center;'>暂时没有订单数据！</p> </div>")
+				$(".lookMoreBuyer").hide();
 			}
 		},
 		error:function(){
@@ -253,6 +213,67 @@ function statisticsData(thisId){
 		}
 	});
 };
+
+
+
+//房源查看更多
+function lookMoreHouse(page,eventId){
+	$.ajax({
+		type:'get',
+		url:'/househeat/',
+		data:{page:page,id:eventId},
+		async:true,
+		success:function(results){
+			if(results.success){
+				var result = results.data;
+				for (var i=0; i<result.length; i++) {
+						result[i].is_sold=  result[i].is_sold==true?"是":"否";
+						result[i].is_testsold= result[i].is_testsold==true?"是":"否";
+						$("#houseHot").append("<tr><td>"+(i+1+50*(page-1))+"</td><td>"+result[i].building+"</td><td>"+result[i].unit+"</td><td>"+result[i].floor+"</td>"+
+						"<td>"+result[i].room_num+"</td><td>"+result[i].is_sold+"</td><td>"+result[i].unit_price+"</td><td>"+result[i].area+"</td><td>"+result[i].num+"</td>"+
+						"<td>"+result[i].is_testsold+"</td></tr>");
+				}
+			}else{
+				$(".lookMoreHouse").hide();
+			}
+		},
+		error:function(){
+			new $.zui.Messager('获取房源更多数据失败，请检查服务器！', {
+				placement:'center',
+				type: 'danger' // 定义颜色主题
+			}).show();
+		}
+	})
+}
+//购房者热度查看更多
+function lookMoreBuyer(page,eventId){
+	$.ajax({
+		type:'get',
+		url:'/purcharseheat/',
+		data:{page:page,id:eventId},
+		async:true,
+		success:function(results){
+			if(results.success){
+				var result = results.data;
+				for (var i=0; i<result.length; i++) {
+					$("#buyer").append("<tr><td>"+(i+1+50*(page-1))+"</td><td>"+result[i].name+"</td><td>"+result[i].mobile+"</td><td>"+result[i].identication+"</td>"+
+					"<td>"+result[i].consultant+"</td><td>"+result[i].phone+"</td><td>"+result[i].protime+"</td><td>"+result[i].count+"</td><td>"+result[i].testroom+"</td>"+
+					"<td>"+result[i].testtime+"</td><td>"+result[i].openroom+"</td><td>"+result[i].opentime+"</td></tr>")
+				};
+			}else{
+				$(".lookMoreBuyer").hide();
+			}
+		},
+		error:function(){
+			new $.zui.Messager('获取购房者更多数据失败，请检查服务器！', {
+				placement:'center',
+				type: 'danger' // 定义颜色主题
+			}).show();
+		}
+	})
+}
+
+
 
 //订单下拉框数据显示
 function getorderSelect(){
