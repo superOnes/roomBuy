@@ -823,14 +823,16 @@ class HouseHeatView(View):
                     'floor': et.floor,
                     'room_num': et.room_num,
                     'is_sold': et.has_order(),
-                      'unit_price': et.unit_price,
+                    'unit_price': et.unit_price,
                     'area': et.area,
                     'num': et.follow_set.count(),
                     'is_testsold': et.is_testsold
                     } for et in queryset]
-        if queryset.has_next() is None:
-            return JsonResponse({'success': False})
-        return JsonResponse({'success': True, 'data': et_list})
+        # print(et_list)
+        # if len(et_list) == 0:
+        #     print('hahah')
+        #     return JsonResponse({'success': False})
+        return JsonResponse({'success': True, 'data': et_list, 'has_next': queryset.has_next()})
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -843,7 +845,6 @@ class PurcharseHeatView(View):
         event_id = request.GET.get('id')
         num_page = 50
         page = request.GET.get('page', 1)
-        print(page)
         li = []
         if event_id:
             queryset = Customer.objects.filter(event_id=event_id).order_by('id')
@@ -893,9 +894,7 @@ class PurcharseHeatView(View):
                         '-' + \
                         str(openorder.eventdetail.room_num)
                 li.append(ct_list)
-            if queryset.has_next() is None:
-                return JsonResponse({'success': False})
-            return JsonResponse({'success': True, 'data': li})
+            return JsonResponse({'success': True, 'data': li, 'has_next': queryset.has_next()})
         return JsonResponse({'success': False})
 
 

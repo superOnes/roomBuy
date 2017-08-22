@@ -169,6 +169,7 @@ function statisticsData(thisId){
 		dataType:'JSON',
 		success:function(results){
 			if(results.success){
+				console.log(results)
 				var result =results.data;
 				$listHouse.find("tr").remove();
 				for (var i=0; i<result.length; i++) {
@@ -178,9 +179,11 @@ function statisticsData(thisId){
 					"<td>"+result[i].room_num+"</td><td>"+result[i].is_sold+"</td><td>"+result[i].unit_price+"</td><td>"+result[i].area+"</td><td>"+result[i].num+"</td>"+
 					"<td>"+result[i].is_testsold+"</td></tr>");
 				};
+				if(!results.has_next) {
+					$(".lookMoreHouse").hide();
+				}
 			}else{
 				$(".datatable").html("<div style='display:block;padding: 20px 0;'> <p style='font-size: 20px;color: #CCCCCC;text-align: center;'>暂时没有订单数据！</p> </div>")
-				$(".lookMoreHouse").hide();
 			}
 		},
 		error:function(){
@@ -203,9 +206,11 @@ function statisticsData(thisId){
 					"<td>"+result[i].consultant+"</td><td>"+result[i].phone+"</td><td>"+result[i].protime+"</td><td>"+result[i].count+"</td><td>"+result[i].testroom+"</td>"+
 					"<td>"+result[i].testtime+"</td><td>"+result[i].openroom+"</td><td>"+result[i].opentime+"</td></tr>")
 				};
+				if(!results.has_next) {
+					$(".lookMoreBuyer").hide();
+				}
 			}else{
 				$(".datatable").html("<div style='display:block;padding: 20px 0;'> <p style='font-size: 20px;color: #CCCCCC;text-align: center;'>暂时没有订单数据！</p> </div>")
-				$(".lookMoreBuyer").hide();
 			}
 		},
 		error:function(){
@@ -232,10 +237,11 @@ function lookMoreHouse(page,eventId){
 						$("#houseHot").append("<tr><td>"+(i+1+50*(page-1))+"</td><td>"+result[i].building+"</td><td>"+result[i].unit+"</td><td>"+result[i].floor+"</td>"+
 						"<td>"+result[i].room_num+"</td><td>"+result[i].is_sold+"</td><td>"+result[i].unit_price+"</td><td>"+result[i].area+"</td><td>"+result[i].num+"</td>"+
 						"<td>"+result[i].is_testsold+"</td></tr>");
+				};
+				if(!results.has_next) {
+					$(".lookMoreHouse").hide();
 				}
-			}else{
-				$(".lookMoreHouse").hide();
-			}
+			};
 		},
 		error:function(){
 			new $.zui.Messager('获取房源更多数据失败，请检查服务器！', {
@@ -260,9 +266,10 @@ function lookMoreBuyer(page,eventId){
 					"<td>"+result[i].consultant+"</td><td>"+result[i].phone+"</td><td>"+result[i].protime+"</td><td>"+result[i].count+"</td><td>"+result[i].testroom+"</td>"+
 					"<td>"+result[i].testtime+"</td><td>"+result[i].openroom+"</td><td>"+result[i].opentime+"</td></tr>")
 				};
-			}else{
-				$(".lookMoreBuyer").hide();
-			}
+				if(!results.has_next) {
+					$(".lookMoreBuyer").hide();
+				}
+			};
 		},
 		error:function(){
 			new $.zui.Messager('获取购房者更多数据失败，请检查服务器！', {
