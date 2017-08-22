@@ -366,6 +366,7 @@ a, img {-webkit-touch-callout: none;}
     position:fixed;
     bottom:0;
     left:0;
+    z-index:999;
 }
 .wapline .lineBox .floor:before{
     content: "";
@@ -1215,18 +1216,19 @@ div.shoued i{
 .recommend {width:100%; padding:5%;border-top:solid 10px #eee;}
 .recommend * { float:left;}
 .recommend > i{
-    width:35%;
+    width:32%;
     height:1px;
     background:#b3b3b3;
     margin-top:10px;
 }
 .recommend p{
-    width:30%;
+    width:35%;
     padding-left:10%;
-    background:url("../images/share.png") no-repeat 18% center;
+    background:url("../images/share.png") no-repeat 14% center;
     background-size:16%;
     font-size:.7rem;
 }
+.shareBox{padding:0 0 2.6rem;}
 .shareFrom{
     width:90%;
     margin:0 5%;

@@ -629,7 +629,9 @@ function buyFailure(data){
 	var failure = $('<div class="recommend clear">' +
 						'<i></i><p>您还收藏了</p><i></i>'+
 					'</div>'+
-					'<ul class="shareFrom"></ul>'
+					'<div class="shareBox">'+
+						'<ul class="shareFrom"></ul>'+
+					'</div>'
 	);
     $(".success-container").append(failure);
 }

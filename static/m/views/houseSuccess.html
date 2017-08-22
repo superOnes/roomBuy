@@ -109,16 +109,13 @@
                                     })
                                 })
                             }
-
-                            $(".backBtnList").click(function(){
-                                window.location.href="houseList.html?id="+id;
-                            })
-
-
                         },
                         error:function(){
                             alert("页面出错!");
                         }
+                    });
+                    $(".backBtnList").click(function(){
+                        window.location.href="houseList.html?id="+idd;
                     })
                 }
 
