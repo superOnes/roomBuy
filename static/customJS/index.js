@@ -218,7 +218,7 @@ function statisticsData(thisId){
 function lookMoreHouse(page,eventId){
 	$.ajax({
 		type:'get',
-		url:'http://10.7.10.198:8000/househeat/',
+		url:'/househeat/',
 		data:{page:page,id:eventId},
 		async:true,
 		success:function(results){
@@ -247,7 +247,7 @@ function lookMoreHouse(page,eventId){
 function lookMoreBuyer(page,eventId){
 	$.ajax({
 		type:'get',
-		url:'http://10.7.10.198:8000/purcharseheat/',
+		url:'/purcharseheat/',
 		data:{page:page,id:eventId},
 		async:true,
 		success:function(results){
