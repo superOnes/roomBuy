@@ -627,7 +627,7 @@ function orderSu(data){
 /*购买失败*/
 function buyFailure(data){
 	var failure = $('<div class="recommend clear">' +
-						'<i></i><p>为您推荐</p><i></i>'+
+						'<i></i><p>您还收藏了</p><i></i>'+
 					'</div>'+
 					'<ul class="shareFrom"></ul>'
 	);

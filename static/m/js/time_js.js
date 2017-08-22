@@ -7,7 +7,7 @@ MS = 0;
 totle = (MM+1)*60;
 d = 180*(MM+1);
 MM = "0" + MM;
-var gameTime = 30;
+var gameTime = 32;
 var showTime = function(){
     totle = totle - 1;
     if (SS == 0) {
@@ -52,7 +52,7 @@ var showTime = function(){
 var start1 = function(){
     i = i + 360/((gameTime));
     count = count + 1;
-    if(count <= (gameTime/2)+1){
+    if(count <= (gameTime/2)){
         $(".pie1").css("-o-transform","rotate(" + i + "deg)");
         $(".pie1").css("-moz-transform","rotate(" + i + "deg)");
         $(".pie1").css("-webkit-transform","rotate(" + i + "deg)");
@@ -65,7 +65,7 @@ var start1 = function(){
 };
 
 var start2 = function(){
-    j = j + 1.2;
+    j = j + 360/((gameTime));
     count = count + 1;
     if (count == 300) {
         count = 0;
@@ -82,7 +82,7 @@ var countDown = function() {
     j = 0;
     count = 0;
     MM = 0;
-    SS = gameTime+1;
+    SS = gameTime;
     MS = 0;
     totle = (MM + 1) * gameTime * 10;
     d = 180 * (MM + 1);
