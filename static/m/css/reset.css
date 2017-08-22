@@ -336,7 +336,7 @@ a, img {-webkit-touch-callout: none;}
     top: 50%;
     left: -0.4rem;
 }
-.wapline .btnline,.backBtnList{
+.wapline .btnline {
     height:2.2rem;
     width:100%;
     background: #f75c2e;
@@ -345,13 +345,27 @@ a, img {-webkit-touch-callout: none;}
     bottom:0;
     left:0;
 }
-.wapline .btnline a,.backBtnList{
+
+.wapline .btnline a {
     font-size: 0.8rem;
     line-height: 2.2rem;
     text-align: center;
     float: left;
     width: 100%;
     color: #fff;
+}
+.backBtnList,.backIndex{
+    height:2.2rem;
+    width:100%;
+    font-size: 0.8rem;
+    line-height: 2.2rem;
+    text-align: center;
+    background: #f75c2e;
+    color:#fff;
+    margin-top: 0.7rem;
+    position:fixed;
+    bottom:0;
+    left:0;
 }
 .wapline .lineBox .floor:before{
     content: "";
@@ -946,7 +960,7 @@ div.shoued i{
     color: #a8a8a8;
     left:80%;
 }
-.checkoderBtn,.backIndex{
+.checkoderBtn{
     font-size:.7rem;
     text-align:center;
     width:120px;
@@ -1006,7 +1020,7 @@ div.shoued i{
 .order-bottom2{
     width:95%;
     position: relative;
-    padding:1rem;
+    padding:1rem 1rem 2.6rem;
     font-size: 1rem;
 }
 .order-bottom2 ul li{
