@@ -817,7 +817,7 @@ class HouseHeatView(View):
         else:
             last_event = Event.get_last_event(request.user.company.id)
             queryset = EventDetail.objects.filter(event_id=last_event).order_by('id')
-        if page > str(int((len(queryset)+1) / num_page)):
+        if int(page) > int((len(queryset)+1) / num_page):
             return JsonResponse({'success': False})
         pagination = Pagination(queryset, page, num_page)
         queryset = pagination.get_queryset()
@@ -851,7 +851,7 @@ class PurcharseHeatView(View):
         else:
             last_event = Event.get_last_event(request.user.company.id)
             queryset = Customer.objects.filter(event_id=last_event).order_by('id')
-        if page > str(int((len(queryset)+1) / num_page)):
+        if int(page) > int((len(queryset)+1) / num_page):
             return JsonResponse({'success': False})
         pagination = Pagination(queryset, page, num_page)
         queryset = pagination.get_queryset()
@@ -1010,6 +1010,8 @@ class OrderListView(View):
         event_id = request.GET.get('id')
         is_test = request.GET.get('is_test')
         value = request.GET.get('value')
+        num_page = 50
+        page = request.GET.get('page')
         if event_id and is_test:
             queryset = Order.objects.filter(
                 eventdetail__event_id=event_id, is_test=is_test)
@@ -1022,7 +1024,7 @@ class OrderListView(View):
                 Q(user__customer__realname__icontains=value) |
                 Q(user__customer__mobile__icontains=value) |
                 Q(user__customer__identication__icontains=value))
-        # if page > str(int((len(queryset)+1) / num_page)):
+        # if int(page) > int((len(queryset)+1) / num_page):
         #     return JsonResponse({'success': False})
         # pagination = Pagination(queryset, page, num_page)
         # queryset = pagination.get_queryset()
