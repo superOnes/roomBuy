@@ -738,7 +738,7 @@ function checkInfo(data){
 								'</table>'+
 							'</div>'+
 						'</div>'+
-						'<p class="backIndex">返回列表页</p>'+
+						'<p class="backIndex">返回房间列表页</p>'+
 				'</div>'
 	);
 	$(".orderInfoBox").append(orderInfo);
