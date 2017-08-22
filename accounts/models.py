@@ -82,4 +82,4 @@ class Order(models.Model):
         obj.save()
 
     class Meta:
-        unique_together = (('user', 'is_test'))
+        unique_together = (('eventdetail', 'is_test'))
