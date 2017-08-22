@@ -248,7 +248,7 @@ function batchHandle(isStatic){
 			$(this).attr("disabled","disabled");
 			var id = $("#status_status").val();
 			$.ajax({
-				type: "PUT",
+				type: "post",
 				url: "../salestatus/",
 				async: true,
 				data: {
