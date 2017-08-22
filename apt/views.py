@@ -815,8 +815,6 @@ class HouseHeatView(View):
         else:
             last_event = Event.get_last_event(request.user.company.id)
             queryset = EventDetail.objects.filter(event_id=last_event).order_by('id')
-        if int(page) > int((len(queryset)+1) / num_page):
-            return JsonResponse({'success': False})
         pagination = Pagination(queryset, page, num_page)
         queryset = pagination.get_queryset()
         et_list = [{'id': et.id,
@@ -830,6 +828,8 @@ class HouseHeatView(View):
                     'num': et.follow_set.count(),
                     'is_testsold': et.is_testsold
                     } for et in queryset]
+        if queryset.has_next() is None:
+            return JsonResponse({'success': False})
         return JsonResponse({'success': True, 'data': et_list})
 
 
@@ -843,14 +843,13 @@ class PurcharseHeatView(View):
         event_id = request.GET.get('id')
         num_page = 50
         page = request.GET.get('page', 1)
+        print(page)
         li = []
         if event_id:
             queryset = Customer.objects.filter(event_id=event_id).order_by('id')
         else:
             last_event = Event.get_last_event(request.user.company.id)
             queryset = Customer.objects.filter(event_id=last_event).order_by('id')
-        if int(page) > int((len(queryset)+1) / num_page):
-            return JsonResponse({'success': False})
         pagination = Pagination(queryset, page, num_page)
         queryset = pagination.get_queryset()
         if queryset is not None:
@@ -894,6 +893,8 @@ class PurcharseHeatView(View):
                         '-' + \
                         str(openorder.eventdetail.room_num)
                 li.append(ct_list)
+            if queryset.has_next() is None:
+                return JsonResponse({'success': False})
             return JsonResponse({'success': True, 'data': li})
         return JsonResponse({'success': False})
 
