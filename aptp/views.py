@@ -1,6 +1,5 @@
 import time
 import random
-import json
 from datetime import datetime, timedelta
 
 from django.views.generic import View
@@ -255,17 +254,16 @@ class AddFollow(View):
         house = request.POST.get('house')
         eventid = request.POST.get('id')
         eventdetail = EventDetail.get(house)
-        if not Follow.objects.filter(
-                user=user,
-                eventdetail=eventdetail):
-            if (Follow.objects.filter(user=user, eventdetail__event_id=eventid).count(
-            )) < Event.get(eventid).follow_num:
-                Follow.objects.create(user=user, eventdetail=eventdetail)
-                return JsonResponse({'response_state': 200, 'msg': '收藏成功'})
-            else:
-                return JsonResponse(
-                    {'response_state': 400, 'msg': '收藏数量超过限制'})
-        return JsonResponse({'response_state': 400, 'msg': '您已收藏过该商品！'})
+        if Follow.objects.filter(user=user, eventdetail=eventdetail).exists():
+            return JsonResponse ({'response_state': 400, 'msg': '您已收藏过该商品！'})
+        if (Follow.objects.filter(user=user, eventdetail__event_id=eventid).count(
+        )) < Event.get(eventid).follow_num:
+            Follow.objects.create(user=user, eventdetail=eventdetail)
+            return JsonResponse({'response_state': 200, 'msg': '收藏成功'})
+        else:
+            return JsonResponse(
+                {'response_state': 400, 'msg': '收藏数量超过限制'})
+
 
 
 @method_decorator(customer_login_required, name='dispatch')
@@ -282,12 +280,13 @@ class CancelFollow(View):
         follow = Follow.objects.filter(
             user=user,
             eventdetail=eventdetail)
-        if not follow:
-            return JsonResponse(
-                {'response_state': 400, 'msg': '没有收藏该商品！'})
-        follow.delete()
+        if follow.exists():
+            follow.delete ()
+            return JsonResponse (
+                {'response_state': 200, 'msg': '成功取消收藏！'})
         return JsonResponse(
-            {'response_state': 200, 'msg': '成功取消收藏！'})
+            {'response_state': 400, 'msg': '没有收藏该商品！'})
+
 
 
 @method_decorator(customer_login_required, name='dispatch')
@@ -577,7 +576,7 @@ class ReturnFollow(View):
         if event.event_start + timedelta(hours=-0.5) < now < event.event_end:
             test = False
         value = []
-        if objs:
+        if objs.exists():
             value = [
                 {
                     'eventdetail': (
