@@ -335,7 +335,7 @@ class Captcha(View):
         var = random.sample(range(1, 10), 2)
         sym = random.sample(['+', '*'], 1)[0]
         dic = {'+': var[0] + var[1], '*': var[0] * var[1]}
-        formula = str(var[0]) + sym + str(var[1])
+        formula = str(var[0]) + ' ' + sym + ' ' + str(var[1]) + ' = ?'
         value = dic.get(sym)
         vars = random.sample(range(1, 100), 3)
         vars.append(value)

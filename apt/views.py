@@ -128,10 +128,9 @@ class EventStatus(View):
     活动发布情况 发布/未发布
     '''
 
-    def put(self, request):
+    def post(self, request):
         user = request.user
-        put = QueryDict(request.body, encoding=request.encoding)
-        id = put.get('id')
+        id = request.POST.get('id')
         if not id:
             return JsonResponse({'success': False, 'response_status': 301})
         else:
@@ -242,9 +241,8 @@ class EventDetailStatus(View):
     车位/房源  上架/下架
     '''
 
-    def put(self, request, **kwargs):
-        put = QueryDict(request.body, encoding=request.encoding)
-        id = put.get('id')
+    def post(self, request, **kwargs):
+        id = request.POST.get('id')
         if id:
             obj = EventDetail.get(id)
             obj.status = not obj.status
