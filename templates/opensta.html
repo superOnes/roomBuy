@@ -90,8 +90,24 @@
 		//	默认获取的数据
 		statisticsData();
 
+		//查看房源更多
+		var pageHouse = 1;
+		$(".lookMoreHouse").click(function(){
+			pageHouse++;
+			var id = $(".selectInp").val();
+			lookMoreHouse(pageHouse,id);
+		});
+		//查看购房者更多
+		var pageBuyer = 1;
+		$(".lookMoreBuyer").click(function(){
+			pageBuyer++;
+			var id = $(".selectInp").val();
+			lookMoreBuyer(pageBuyer,id);
+		})
 		//	活动列表选择时数据的切换显示
 		$(".selectInp").change(function() {
+			pageBuyer = 1;
+			pageHouse = 1;
 			var val = $(this).val();
 			if($("ul.nav-tabs li:first").hasClass("active")){
 				$exportEach.attr("href", "/export/buyhot/?id=" + val);
@@ -110,20 +126,6 @@
 				$exportEach.attr("href", "/export/househot/?id=" + id);
 			};
 		});
-		//查看房源更多
-		var pageHouse = 1;
-		$(".lookMoreHouse").click(function(){
-			pageHouse++;
-			var id = $(".selectInp").val();
-			lookMoreHouse(pageHouse,id);
-		});
-		//查看购房者更多
-		var pageBuyer = 1;
-		$(".lookMoreBuyer").click(function(){
-			pageBuyer++;
-			var id = $(".selectInp").val();
-			lookMoreBuyer(pageBuyer,id);
-		})
 
 	});
 </script>

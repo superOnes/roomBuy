@@ -169,7 +169,7 @@ function statisticsData(thisId){
 		dataType:'JSON',
 		success:function(results){
 			if(results.success){
-				console.log(results)
+				console.log(results);
 				var result =results.data;
 				$listHouse.find("tr").remove();
 				for (var i=0; i<result.length; i++) {
@@ -181,6 +181,8 @@ function statisticsData(thisId){
 				};
 				if(!results.has_next) {
 					$(".lookMoreHouse").hide();
+				}else{
+					$(".lookMoreHouse").show();
 				}
 			}else{
 				$(".datatable").html("<div style='display:block;padding: 20px 0;'> <p style='font-size: 20px;color: #CCCCCC;text-align: center;'>暂时没有订单数据！</p> </div>")
@@ -208,6 +210,8 @@ function statisticsData(thisId){
 				};
 				if(!results.has_next) {
 					$(".lookMoreBuyer").hide();
+				}else{
+					$(".lookMoreBuyer").show();
 				}
 			}else{
 				$(".datatable").html("<div style='display:block;padding: 20px 0;'> <p style='font-size: 20px;color: #CCCCCC;text-align: center;'>暂时没有订单数据！</p> </div>")
@@ -240,6 +244,8 @@ function lookMoreHouse(page,eventId){
 				};
 				if(!results.has_next) {
 					$(".lookMoreHouse").hide();
+				}else{
+					$(".lookMoreHouse").show();
 				}
 			};
 		},
@@ -268,6 +274,8 @@ function lookMoreBuyer(page,eventId){
 				};
 				if(!results.has_next) {
 					$(".lookMoreBuyer").hide();
+				}else{
+					$(".lookMoreBuyer").show();
 				}
 			};
 		},
