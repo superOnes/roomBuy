@@ -867,8 +867,8 @@ class PurcharseHeatView(View):
                            'name': customer.realname,
                            'mobile': customer.mobile,
                            'identication': customer.identication,
-                           'consultant': customer.consultant,
-                           'phone': customer.phone,
+                           'consultant': customer.consultant if customer.consultant else '',
+                           'phone': customer.phone if customer.phone else '',
                            'protime': customer.protime.strftime('%Y-%m-%d %H:%M:%S')
                            if customer.protime else '',
                            'count': customer.count,
