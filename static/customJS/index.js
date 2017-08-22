@@ -180,6 +180,7 @@ function statisticsData(thisId){
 				};
 			}else{
 				$(".datatable").html("<div style='display:block;padding: 20px 0;'> <p style='font-size: 20px;color: #CCCCCC;text-align: center;'>暂时没有订单数据！</p> </div>")
+				$(".lookMoreHouse").hide();
 			}
 		},
 		error:function(){
@@ -204,6 +205,7 @@ function statisticsData(thisId){
 				};
 			}else{
 				$(".datatable").html("<div style='display:block;padding: 20px 0;'> <p style='font-size: 20px;color: #CCCCCC;text-align: center;'>暂时没有订单数据！</p> </div>")
+				$(".lookMoreBuyer").hide();
 			}
 		},
 		error:function(){
