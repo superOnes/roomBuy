@@ -537,7 +537,7 @@ function confrim(){
 				}
                 $(".codeOption li").each(function(){
                     $(this).click(function(){
-                        $(this).css({color:"#f95c30",background:"#fff",border:"none"}).siblings().css({color:"#fff",background:"none",border:"solid 1px #fff"});
+                        $(this).css({color:"#fff",background:"#f95c30",border:"none"}).siblings().css({color:"#222",background:"none",border:"solid 1px #ccc"});
                         var capcha=$(this).html();
                         console.log(capcha);
                         $.ajax({
@@ -633,8 +633,6 @@ function buyFailure(data){
 	);
     $(".success-container").append(failure);
 }
-
-
 
 function orderInfos(){
 	window.location.href="orderinfo.html?orderId="+$(".orderid").html()+"&id="+$(".id1").html();

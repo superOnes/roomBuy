@@ -79,7 +79,7 @@
                 }else if(data.response_state==405){
                     window.location.href="houseInfo.html?house="+id+"&id="+idd;
                 }else{
-                    $(".success-container").append($('<div class="noOne"><img src="../images/none.png" /><p>'+data.msg+'</p></div>'));
+                    $(".success-container").append($('<div class="noOne"><img src="../images/none.png" /><p>'+data.msg+'</p></div><div class="backBtnList">返回房间列表页</div>'));
                     $.ajax({
                         type:"get",
                         url:http+"/app/retfoll/",
@@ -88,8 +88,6 @@
                             id:idd
                         },
                         success:function(data){
-                            console.log(data);
-
                             if(data.objects.length!=0){
                                 buyFailure(data);
                                 for(var i=0;i<data.objects.length;i++){
@@ -111,6 +109,10 @@
                                     })
                                 })
                             }
+
+                            $(".backBtnList").click(function(){
+                                window.location.href="houseList.html?id="+id;
+                            })
 
 
                         },

@@ -336,7 +336,7 @@ a, img {-webkit-touch-callout: none;}
     top: 50%;
     left: -0.4rem;
 }
-.wapline .btnline{
+.wapline .btnline,.backBtnList{
     height:2.2rem;
     width:100%;
     background: #f75c2e;
@@ -345,7 +345,7 @@ a, img {-webkit-touch-callout: none;}
     bottom:0;
     left:0;
 }
-.wapline .btnline a{
+.wapline .btnline a,.backBtnList{
     font-size: 0.8rem;
     line-height: 2.2rem;
     text-align: center;
@@ -1067,15 +1067,12 @@ div.shoued i{
     width:80%;
     height:70%;
     text-align:center;
-    color:#fff;
+    color:#222;
     font-size:.8rem;
     padding-top:30px;
     border-radius:10px;
     margin:20% 10%;
-    background:-moz-linear-gradient(top, #f95c30, #ed2321);
-    background:-webkit-linear-gradient(top, #f95c30, #ed2321);
-    background:-ms-linear-gradient(top, #f95c30, #ed2321);
-    background:linear-gradient(top, #f95c30, #ed2321);
+    background:#fff;
 }
 .codebox h3{
     font-weight:normal;
@@ -1087,14 +1084,14 @@ div.shoued i{
     width:80%;
     margin:0 10% 10%;
     padding:5px 0;
-    border-bottom:solid 1px #fff;
+    border-bottom:solid 1px #eee;
 }
 .codeOption li{
     width:50%;
     height:1.2rem;
     line-height:1.2rem;
     text-align:center;
-    border:solid 1px #fff;
+    border:solid 1px #ccc;
     border-radius:8px;
     margin-left:25%;
     margin-bottom:5%;
