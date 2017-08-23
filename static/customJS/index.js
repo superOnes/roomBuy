@@ -188,7 +188,7 @@ function statisticsData(thisId){
 				}
 			}else{
 				$(".lookMoreHouse").hide();
-				$openList.children("tr").remove();
+				$listHouse.children("tr").remove();
 				$(".tipH").show();
 			}
 		},
