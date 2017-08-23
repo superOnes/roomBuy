@@ -784,6 +784,8 @@ class HouseHeatView(View):
                 event_id=last_event).order_by('id')
         pagination = Pagination(queryset, page, num_page)
         queryset = pagination.get_queryset()
+        if not queryset:
+            return JsonResponse({'success': False})
         et_list = [{'id': et.id,
                     'building': et.building,
                     'unit': et.unit,
@@ -795,10 +797,6 @@ class HouseHeatView(View):
                     'num': et.follow_set.count(),
                     'is_testsold': et.is_testsold
                     } for et in queryset]
-        # print(et_list)
-        # if len(et_list) == 0:
-        #     print('hahah')
-        #     return JsonResponse({'success': False})
         return JsonResponse(
             {'success': True, 'data': et_list, 'has_next': queryset.has_next()})
 
@@ -823,49 +821,50 @@ class PurcharseHeatView(View):
                 event_id=last_event).order_by('id')
         pagination = Pagination(queryset, page, num_page)
         queryset = pagination.get_queryset()
-        if not queryset :
-            for customer in queryset:
-                testorder = customer.user.order_set.filter(
-                    is_test=True).first()
-                openorder = customer.user.order_set.filter(
-                    is_test=False).first()
-                follow = Follow.objects.filter(user_id=customer.user.id)
-                customer.count = len(follow)
-                ct_list = {
-                    'id': customer.id,
-                    'name': customer.realname,
-                    'mobile': customer.mobile,
-                    'identication': customer.identication,
-                    'consultant': customer.consultant if customer.consultant else '',
-                    'phone': customer.phone if customer.phone else '',
-                    'protime': customer.protime.strftime('%Y-%m-%d %H:%M:%S') if customer.protime else '',
-                    'count': customer.count,
-                    'testtime': '',
-                    'testroom': '',
-                    'opentime': '',
-                    'openroom': ''}
-                if testorder:
-                    ct_list['testtime'] = testorder.time.strftime(
-                        "%Y/%m/%d %H:%M:%S")
-                    ct_list['testroom'] = testorder.eventdetail.building + \
-                        testorder.eventdetail.unit + \
-                        '-' + \
-                        str(testorder.eventdetail.floor) + \
-                        '-' + \
-                        str(testorder.eventdetail.room_num)
-                if openorder:
-                    ct_list['opentime'] = openorder.time.strftime(
-                        "%Y/%m/%d %H:%M:%S")
-                    ct_list['openroom'] = openorder.eventdetail.building + \
-                        openorder.eventdetail.unit + \
-                        '-' + \
-                        str(openorder.eventdetail.floor) + \
-                        '-' + \
-                        str(openorder.eventdetail.room_num)
-                li.append(ct_list)
-            return JsonResponse(
+        if not queryset:
+            return JsonResponse({'success': False})
+        for customer in queryset:
+            testorder = customer.user.order_set.filter(
+                is_test=True).first()
+            openorder = customer.user.order_set.filter(
+                is_test=False).first()
+            follow = Follow.objects.filter(user_id=customer.user.id)
+            customer.count = len(follow)
+            ct_list = {
+                'id': customer.id,
+                'name': customer.realname,
+                'mobile': customer.mobile,
+                'identication': customer.identication,
+                'consultant': customer.consultant if customer.consultant else '',
+                'phone': customer.phone if customer.phone else '',
+                'protime': customer.protime.strftime('%Y-%m-%d %H:%M:%S') if customer.protime else '',
+                'count': customer.count,
+                'testtime': '',
+                'testroom': '',
+                'opentime': '',
+                'openroom': ''}
+            if testorder:
+                ct_list['testtime'] = testorder.time.strftime(
+                    "%Y/%m/%d %H:%M:%S")
+                ct_list['testroom'] = testorder.eventdetail.building + \
+                                      testorder.eventdetail.unit + \
+                                      '-' + \
+                                      str(testorder.eventdetail.floor) + \
+                                      '-' + \
+                                      str(testorder.eventdetail.room_num)
+            if openorder:
+                ct_list['opentime'] = openorder.time.strftime(
+                    "%Y/%m/%d %H:%M:%S")
+                ct_list['openroom'] = openorder.eventdetail.building + \
+                                      openorder.eventdetail.unit + \
+                                      '-' + \
+                                      str(openorder.eventdetail.floor) + \
+                                      '-' + \
+                                      str(openorder.eventdetail.room_num)
+            li.append(ct_list)
+            print(li)
+        return JsonResponse(
                 {'success': True, 'data': li, 'has_next': queryset.has_next()})
-        return JsonResponse({'success': False})
 
 
 @method_decorator(admin_required, name='dispatch')
