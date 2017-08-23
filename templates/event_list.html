@@ -11,7 +11,8 @@
 	</ol>
 </div>
 <div class="row" style="padding:10px;margin-top:-20px">
-	<a class="btn btn-primary" data-moveable="true" data-iframe="{% url 'event_create' %}" data-toggle="modal" data-backdrop="static">创建活动</a>
+	<a class="btn btn-primary event-create" data-moveable="true" data-iframe="{% url 'event_create' %}"
+	   data-toggle="modal" data-backdrop="static">创建活动</a>
 	<div class="col-sm-3 col-md-3 col-lg-3" style="float: right;">
 		<form class="form-horizontal searchWrap" method="get" action="">
 			<div class="input-group">
@@ -119,6 +120,8 @@
 {% endblock %} {% block js %}
 <script type="text/javascript">
 	$(document).ready(function() {
+    var windowHeight = $(document).height();
+		$('.event-create').attr('data-height', windowHeight);
 		$("#navActive li").eq(0).addClass("active");
 		$('table.datatable').datatable();
 		//	是否发布
