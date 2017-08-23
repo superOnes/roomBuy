@@ -17,7 +17,6 @@ from django.views.generic import ListView, DetailView, TemplateView
 from django.views.generic.edit import CreateView, UpdateView
 from django.http import JsonResponse, HttpResponse, Http404
 from django.db.models import Q
-from django.http import QueryDict
 from django.utils.decorators import method_decorator
 
 from aptm import settings

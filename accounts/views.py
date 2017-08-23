@@ -19,7 +19,7 @@ from django.db import transaction
 from apt.models import Event, EventDetail
 from aptm import settings
 from .models import User, Customer, Order
-from .decorators import customer_login_required, admin_required
+from .decorators import admin_required
 
 
 class LoginView(View):
@@ -162,137 +162,126 @@ class ImportView(View):
 
     def post(self, request, *args, **kwargs):
         id = request.POST.get('id')
-        if id:
-            event = Event.get(id)
-            file = request.FILES.get('filename')
-            if not file:
-                return JsonResponse({'response_state': 400, 'msg': '没有选择文件！'})
-            filename = file.name.split('.')[-1]
-            if filename == 'xlsx' or filename == 'xls':
-                path = default_storage.save(
-                    'tmp/customer.xlsx',
-                    ContentFile(
-                        file.read()))
-                tmp_file = os.path.join(settings.MEDIA_ROOT, path)
-                workdata = xlrd.open_workbook(tmp_file)
-                sheet_name = workdata.sheet_names()[0]
-                sheet = workdata.sheet_by_name(sheet_name)
-                row = sheet.nrows
-                col = sheet.ncols
-                if row == 0 or row == 1:
-                    os.remove('media/tmp/customer.xlsx')
-                    return JsonResponse(
-                        {'response_state': 400, 'msg': '导入的excel为空表！'})
-                if col != 6:
-                    return JsonResponse(
-                        {'response_state': 400, 'msg': '导入文件不正确！'})
-                value1 = sheet.cell(rowx=0, colx=0).value
-                value2 = sheet.cell(rowx=0, colx=1).value
-                value3 = sheet.cell(rowx=0, colx=2).value
-                value4 = sheet.cell(rowx=0, colx=3).value
-                value5 = sheet.cell(rowx=0, colx=4).value
-                value6 = sheet.cell(rowx=0, colx=5).value
-                head = [value1, value2, value3, value4, value5, value6]
-                if head != ['姓名', '手机号', '证件号', '备注', '置业顾问', '顾问电话']:
-                    return JsonResponse(
-                        {'response_state': 400, 'msg': '导入文件不正确！'})
-                data = []
-                num = 0
-                for rx in range(1, row):
-                    value1 = sheet.cell(rowx=rx, colx=0).value
-                    value2 = sheet.cell(rowx=rx, colx=1).value
-                    value3 = sheet.cell(rowx=rx, colx=2).value
-                    value4 = sheet.cell(rowx=rx, colx=3).value
-                    value5 = sheet.cell(rowx=rx, colx=4).value
-                    value6 = sheet.cell(rowx=rx, colx=5).value
-                    if not isinstance(value1, str):
-                        try:
-                            value1 = str(int(value1))
-                        except BaseException:
-                            return JsonResponse(
-                                {'response_state': 400, 'msg': '姓名格式不正确！'})
-                    if not isinstance(value4, str):
-                        try:
-                            value4 = str(int(value4))
-                        except BaseException:
-                            return JsonResponse(
-                                {'response_state': 400, 'msg': '备注格式不正确！'})
-                    if not isinstance(value5, str):
-                        try:
-                            value5 = str(int(value5))
-                        except BaseException:
-                            return JsonResponse(
-                                {'response_state': 400, 'msg': '置业顾问格式不正确！'})
-                    if not isinstance(value3, str):
-                        try:
-                            value3 = str(int(value3))
-                        except BaseException:
-                            os.remove('media/tmp/customer.xlsx')
-                            return JsonResponse(
-                                {'response_state': 400, 'msg': '身份证号有误！'})
+        event = Event.get(id)
+        file = request.FILES.get('filename')
+        if not file:
+            return JsonResponse({'response_state': 400, 'msg': '没有选择文件！'})
+        filename = file.name.split('.')[-1]
+        if filename == 'xlsx' or filename == 'xls':
+            path = default_storage.save(
+                'tmp/customer.xlsx',
+                ContentFile(
+                    file.read()))
+            tmp_file = os.path.join(settings.MEDIA_ROOT, path)
+            workdata = xlrd.open_workbook(tmp_file)
+            sheet_name = workdata.sheet_names()[0]
+            sheet = workdata.sheet_by_name(sheet_name)
+            row = sheet.nrows
+            col = sheet.ncols
+            if row == 0 or row == 1:
+                os.remove('media/tmp/customer.xlsx')
+                return JsonResponse(
+                    {'response_state': 400, 'msg': '导入的excel为空表！'})
+            if col != 6:
+                return JsonResponse(
+                    {'response_state': 400, 'msg': '导入文件不正确！'})
+            value1 = sheet.cell(rowx=0, colx=0).value
+            value2 = sheet.cell(rowx=0, colx=1).value
+            value3 = sheet.cell(rowx=0, colx=2).value
+            value4 = sheet.cell(rowx=0, colx=3).value
+            value5 = sheet.cell(rowx=0, colx=4).value
+            value6 = sheet.cell(rowx=0, colx=5).value
+            head = [value1, value2, value3, value4, value5, value6]
+            if head != ['姓名', '手机号', '证件号', '备注', '置业顾问', '顾问电话']:
+                return JsonResponse(
+                    {'response_state': 400, 'msg': '导入文件不正确！'})
+            data = []
+            for rx in range(1, row):
+                value1 = sheet.cell(rowx=rx, colx=0).value
+                value2 = sheet.cell(rowx=rx, colx=1).value
+                value3 = sheet.cell(rowx=rx, colx=2).value
+                value4 = sheet.cell(rowx=rx, colx=3).value
+                value5 = sheet.cell(rowx=rx, colx=4).value
+                value6 = sheet.cell(rowx=rx, colx=5).value
+                if not isinstance(value1, str):
                     try:
-                        value2 = str(int(value2))
+                        value1 = str(int(value1))
+                    except BaseException:
+                        return JsonResponse(
+                            {'response_state': 400, 'msg': '姓名格式不正确！'})
+                if not isinstance(value4, str):
+                    try:
+                        value4 = str(int(value4))
+                    except BaseException:
+                        return JsonResponse(
+                            {'response_state': 400, 'msg': '备注格式不正确！'})
+                if not isinstance(value5, str):
+                    try:
+                        value5 = str(int(value5))
+                    except BaseException:
+                        return JsonResponse(
+                            {'response_state': 400, 'msg': '置业顾问格式不正确！'})
+                if not isinstance(value3, str):
+                    try:
+                        value3 = str(int(value3))
                     except BaseException:
                         os.remove('media/tmp/customer.xlsx')
                         return JsonResponse(
-                            {'response_state': 400, 'msg': '导入手机号格式有误！'})
-                    if value6:
-                        try:
-                            value6 = str(int(value6))
-                        except BaseException:
-                            os.remove('media/tmp/customer.xlsx')
-                            return JsonResponse(
-                                {'response_state': 400, 'msg': '导入顾问电话格式有误！'})
-                    li = [value1, value2, value3, value4, value5, value6]
-                    data.append(li)
-                realname = list(map(lambda x: (x[0]), data))
-                for rl in realname:
-                    rl = str(rl).replace(' ', '')
-                    if len(rl) == 0:
-                        return JsonResponse(
-                            {'response_state': 400, 'msg': '姓名,手机号，证件号不能为空！'})
-                mobile = list(map(lambda x: (x[1]), data))
-                if len(set(mobile)) < len(mobile):
+                            {'response_state': 400, 'msg': '身份证号有误！'})
+                try:
+                    value2 = str(int(value2))
+                except BaseException:
                     os.remove('media/tmp/customer.xlsx')
                     return JsonResponse(
-                        {'response_state': 400, 'msg': '手机号有重复，请查询后重试！'})
-                identification = list(map(lambda x: (x[2]), data))
-                for idt in identification:
-                    idt = str(idt).replace(' ', '')
-                    if len(idt) == 0:
+                        {'response_state': 400, 'msg': '导入手机号格式有误！'})
+                if value6:
+                    try:
+                        value6 = str(int(value6))
+                    except BaseException:
+                        os.remove('media/tmp/customer.xlsx')
                         return JsonResponse(
-                            {'response_state': 400, 'msg': '姓名,手机号，证件号不能为空！'})
-                if len(set(identification)) < len(identification):
-                    os.remove('media/tmp/customer.xlsx')
+                            {'response_state': 400, 'msg': '导入顾问电话格式有误！'})
+                li = [value1, value2, value3, value4, value5, value6]
+                data.append(li)
+            realname = list(map(lambda x: (x[0]), data))
+            for rl in realname:
+                rl = str(rl).replace(' ', '')
+                if len(rl) == 0:
                     return JsonResponse(
-                        {'response_state': 400, 'msg': '身份证号有重复，请查询后重试！'})
+                        {'response_state': 400, 'msg': '姓名,手机号，证件号不能为空！'})
+            mobile = list(map(lambda x: (x[1]), data))
+            if len(set(mobile)) < len(mobile):
+                os.remove('media/tmp/customer.xlsx')
+                return JsonResponse(
+                    {'response_state': 400, 'msg': '手机号有重复，请查询后重试！'})
+            identification = list(map(lambda x: (x[2]), data))
+            for idt in identification:
+                idt = str(idt).replace(' ', '')
+                if len(idt) == 0:
+                    return JsonResponse(
+                        {'response_state': 400, 'msg': '姓名,手机号，证件号不能为空！'})
+            if len(set(identification)) < len(identification):
+                os.remove('media/tmp/customer.xlsx')
+                return JsonResponse(
+                    {'response_state': 400, 'msg': '身份证号有重复，请查询后重试！'})
+            try:
                 with transaction.atomic():
                     Customer.objects.filter(event=event).delete()
-                    try:
-                        for ct in data:
-                            customer = Customer.objects.create(
-                                realname=ct[0],
-                                mobile=ct[1],
-                                identication=ct[2],
-                                remark=ct[3],
-                                consultant=ct[4],
-                                phone=ct[5],
-                                event=event)
-                            customer.save()
-                            User.objects.create_user(
-                                username=uuid.uuid1(),
-                                password=customer.identication,
-                                customer=customer,
-                                is_admin=False)
-                            num += 1
-                    except BaseException:
-                        os.remove('media/tmp/customer.xlsx')
-                        return JsonResponse(
-                            {'response_state': 400, 'msg': '导入数据重复！'})
-                    os.remove('media/tmp/customer.xlsx')
-                    return JsonResponse({'response_state': 200, 'data': num})
-            return JsonResponse({'response_state': 400, 'msg': '导入文件格式不正确'})
-        return JsonResponse({'response_state': 400, 'msg': '导入数据失败'})
+                    for ct in data:
+                        customer = Customer.objects.create(
+                            realname=ct[0], mobile=ct[1],
+                            identication=ct[2], remark=ct[3],
+                            consultant=ct[4], phone=ct[5], event=event)
+                        User.objects.create_user(username=uuid.uuid1(),
+                                                 customer=customer,
+                                                 is_admin=False)
+            except:
+                os.remove('media/tmp/customer.xlsx')
+                return JsonResponse({'response_state': 400,
+                                     'msg': '未知错误，请联系管理员'})
+            os.remove('media/tmp/customer.xlsx')
+            return JsonResponse({'response_state': 200, 'data': len(data)})
+        return JsonResponse({'response_state': 400, 'msg': '导入文件格式不正确'})
 
 
 class GetCustomerInfo(View):
