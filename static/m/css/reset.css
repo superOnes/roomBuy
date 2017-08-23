@@ -668,9 +668,9 @@ div.shoued i{
     margin:.8rem;
     border-bottom: solid 1px #eee;
 }
-.shareCar-list1 { border-bottom: solid 1px #ccc; }
-.shareCar-list1:nth-last-child(1) { border-bottom:none;}
-.shareCar-list1 a {margin-bottom:0.4rem;}
+/*.shareCar-list1 { border-bottom: solid 1px #ccc; }*/
+/*.shareCar-list1:nth-last-child(1) { border-bottom:none;}*/
+/*.shareCar-list1 a {margin-bottom:0.4rem;}*/
 .shareCar-list a{color:#222;display:block;position:relative;}
 .shareCar-list p{
     line-height: 2rem;
@@ -680,14 +680,26 @@ div.shoued i{
     margin-bottom: 1rem;
     font-size: .8rem;
 }
-.shareCar-list .sold{
-    width:100px;
-    height:70px;
+.shareFrom .sold{
+    width:36px;
+    height:36px;
+    color:#fff;
     position:absolute;
-    right:5%;
+    right:0;
     top:0;
     background:url("../images/sold.png") no-repeat;
     background-size:100%;
+}
+.sold span {
+    font-size:.8rem;
+    padding-left:6px;
+    padding-bottom:26px;
+    transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    display:block;
 }
 .content-loading {
     width:90%;
@@ -961,7 +973,7 @@ div.shoued i{
     left:2.5%;
     top:.5rem;
     color:white;
-    background-color: rgb(57,191,102);
+    background-color: #39bf66;
     height:6rem;
     overflow:hidden;
 }
@@ -1185,12 +1197,12 @@ div.shoued i{
 .dialog-content-4 .dialog-confirm{
     color:#f26343;
 }
-.noOne{ padding:10% 0;width:100%;text-align:center;}
+.noOne{ padding:5% 0;width:100%;text-align:center;}
 .noOne img{
     width:60px;
     height:60px;
     background:100%;
-    margin:0 auto 1.2rem;
+    margin:0 auto .8rem;
 }
 .recommend {width:100%; padding:5%;border-top:solid 10px #eee;}
 .recommend * { float:left;}
@@ -1212,9 +1224,23 @@ div.shoued i{
     width:90%;
     margin:0 5%;
     padding:1px 0;
-    background:#f2f2f2;
+}
+.shareFrom li {
+    width:47%;
+    line-height:1rem;
+    text-align:center;
+    margin-right:5%;
+    margin-bottom:6%;
+    padding:15px 0;
+    background:#eee;
     border-radius:6px;
-
+    float:left;
+    box-shadow:#a8a8a8 0 3px 8px ;
+    position:relative;
+}
+.shareFrom li:nth-of-type(2n) { margin-right:0;}
+.shareFrom li p {
+    font-size:.7rem;
 }
 .prompt{
     width: 90%;

@@ -40,7 +40,7 @@ $(function(){
 				},
 				error:function(){
                     $btnlog.removeAttr("disabled");
-					alert("页面出错，请重试");
+					alert("无法连接网络，请检查网络后重试！");
 				}
 
 			});
@@ -188,6 +188,8 @@ function myShare(){
 	$(".sharees").addClass("listTile-style");
 	$(".shares").removeClass("listTile-style");
 	$(".houseUnit").remove();
+	console.log($("#houseList").hasClass("houseList"));
+
 	$.ajax({
 		type:"get",
 		url:http+"/app/followlist/",
@@ -232,7 +234,7 @@ function myShare(){
 
 		},
 		error:function(){
-			alert("出错了");
+			alert("无法连接网络，请检查网络后重试！");
 		}
 	})
 }
@@ -336,7 +338,7 @@ function houseList(data){
 									}
 								},
 								error:function(){
-									alert("出错了");
+									alert("无法连接网络，请检查网络后重试！");
 								}
 							})
 						})
@@ -352,7 +354,7 @@ function houseList(data){
 
 				},
 				error:function(data){
-					alert("出错了");
+					alert("无法连接网络，请检查网络后重试！");
 				}
 			})
 		})
@@ -495,7 +497,7 @@ function proldel(){
             }
         },
         error:function(){
-            alert("页面出错，请重试！");
+            alert("无法连接网络，请检查网络后重试！");
         }
     });
 
@@ -548,7 +550,6 @@ function confrim(){
                                 value:capcha
                             },
                             success: function (data) {
-                            	console.log(data);
                                 if(data.response_state==200){
                                     window.location.href = "houseSuccess.html?house="+id+"&id="+idd;
                                 }else if(data.response_state==401||data.response_state==403){
@@ -562,7 +563,7 @@ function confrim(){
 
                             },
                             error: function () {
-                                alert("页面出错，请重试！");
+                                alert("无法连接网络，请检查网络后重试！");
                             }
                         })
 
@@ -571,27 +572,21 @@ function confrim(){
 
             },
             error: function () {
-                alert("页面出错，请重试！");
+                alert("无法连接网络，请检查网络后重试！");
             }
         })
 	}
 }
-function codeSure(){
-	if($(".codeText").val().length!=0){
-
-	}
-
-}
 Date.prototype.Format = function(fmt)
 { //author: meizz
 	var o = {
-		"M+" : this.getMonth()+1,                 //月份
-		"d+" : this.getDate(),                    //日
-		"h+" : this.getHours(),                   //小时
-		"m+" : this.getMinutes(),                 //分
-		"s+" : this.getSeconds(),                 //秒
-		"q+" : Math.floor((this.getMonth()+3)/3), //季度
-		"S"  : this.getMilliseconds()             //毫秒
+		"M+" : this.getMonth()+1,
+		"d+" : this.getDate(),
+		"h+" : this.getHours(),
+		"m+" : this.getMinutes(),
+		"s+" : this.getSeconds(),
+		"q+" : Math.floor((this.getMonth()+3)/3),
+		"S"  : this.getMilliseconds()
 	};
 	if(/(y+)/.test(fmt))
 		fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
@@ -630,7 +625,7 @@ function buyFailure(data){
 						'<i></i><p>您还收藏了</p><i></i>'+
 					'</div>'+
 					'<div class="shareBox">'+
-						'<ul class="shareFrom"></ul>'+
+						'<ul class="shareFrom clear"></ul>'+
 					'</div>'
 	);
     $(".success-container").append(failure);

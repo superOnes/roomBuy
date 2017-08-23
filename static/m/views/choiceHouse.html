@@ -92,7 +92,7 @@ $(function(){
                         },
                         error:function(){
                             $(".quitt").removeAttr("disabled");
-                            alert("退出出现未知错误！");
+                            alert("无法连接网络，请检查网络后重试！");
                         }
                     })
                 });
@@ -108,7 +108,7 @@ $(function(){
             }
         },
         error:function(){
-            alert("出错了,请重试！");
+            alert("无法连接网络，请检查网络后重试！");
         }
     });
 

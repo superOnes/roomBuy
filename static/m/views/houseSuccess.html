@@ -91,27 +91,28 @@
                             if(data.objects.length!=0){
                                 buyFailure(data);
                                 for(var i=0;i<data.objects.length;i++){
-                                    $(".shareFrom").append($('<li class="shareCar-list shareCar-list1">'+
-                                        '<a class="share-a">'+
+                                    $(".shareFrom").append($('<li>'+
                                         '<p>'+data.objects[i].eventdetail+'</p>'+
-                                        '<span>￥'+data.objects[i].price+'</span>'+
                                         '<p style="display:none" class="shareId">'+data.objects[i].house+'</p>'+
                                         '</a>'+
                                         '</li>'
                                     ));
                                     if(data.objects[i].sold){
-                                        $(".shareCar-list").eq(i).find(".share-a").append($('<p class="sold"></p>'));
+                                        $(".shareFrom li").eq(i).append($('<p class="sold"><span>售</span></p>'));
+                                        $(".shareFrom li").eq(i).css({color:"#999",textAlign:"left",paddingLeft:"10px"});
                                     }
                                 }
-                                $(".shareCar-list").each(function(){
+                                $(".shareFrom li").each(function(){
                                     $(this).click(function(){
                                         window.location.href="houseInfo.html?house="+$(this).find(".shareId").html()+"&id="+idd;
                                     })
                                 })
+                            }else{
+                                $(".noOne").css("padding","16% 0");
                             }
                         },
                         error:function(){
-                            alert("页面出错!");
+                            alert("无法连接网络，请检查网络后重试！");
                         }
                     });
                     $(".backBtnList").click(function(){
@@ -121,7 +122,7 @@
 
             },
             error:function(){
-                alert("页面出错,请重试！");
+                alert("无法连接网络，请检查网络后重试！");
             }
         });
     })
