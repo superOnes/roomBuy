@@ -272,148 +272,107 @@ class ImportEventDetailView(View):
 
     def post(self, request, *args, **kwargs):
         id = request.POST.get('id')
-        if id:
-            event = Event.get(id)
-            file = request.FILES.get('file')
-            if not file:
-                return JsonResponse({'response_state': 400, 'msg': '没有选择文件！'})
-            filename = file.name.split('.')[-1]
-            if filename == 'xlsx' or filename == 'xls':
-                path = default_storage.save(
-                    'price/price.xlsx',
-                    ContentFile(
-                        file.read()))
-                tmp_file = os.path.join(settings.MEDIA_ROOT, path)
-                workdata = xlrd.open_workbook(tmp_file)
-                sheet_name = workdata.sheet_names()[0]
-                sheet = workdata.sheet_by_name(sheet_name)
-                row = sheet.nrows
-                col = sheet.ncols
-                if row == 0:
+        event = Event.get(id)
+        file = request.FILES.get('file')
+        if not file:
+            return JsonResponse({'response_state': 400, 'msg': '没有选择文件！'})
+        filename = file.name.split('.')[-1]
+        if filename != 'xlsx' and filename != 'xls':
+            return JsonResponse({'response_state': 400, 'msg': '文件格式不正确'})
+        path = default_storage.save('price/price.xlsx',
+                                    ContentFile(file.read()))
+        tmp_file = os.path.join(settings.MEDIA_ROOT, path)
+        workdata = xlrd.open_workbook(tmp_file)
+        sheet_name = workdata.sheet_names()[0]
+        sheet = workdata.sheet_by_name(sheet_name)
+        row = sheet.nrows
+        col = sheet.ncols
+        if row == 0:
+            os.remove('media/price/price.xlsx')
+            return JsonResponse({'response_state': 400,
+                                 'msg': '导入的excel为空表！'})
+        data = []
+        if col != 10:
+            os.remove('media/price/price.xlsx')
+            return JsonResponse({'response_state': 400,
+                                 'msg': '导入文件不正确！'})
+        value1 = sheet.cell(rowx=0, colx=0).value
+        value2 = sheet.cell(rowx=0, colx=1).value
+        value3 = sheet.cell(rowx=0, colx=2).value
+        value4 = sheet.cell(rowx=0, colx=3).value
+        value5 = sheet.cell(rowx=0, colx=4).value
+        value6 = sheet.cell(rowx=0, colx=5).value
+        value7 = sheet.cell(rowx=0, colx=6).value
+        value8 = sheet.cell(rowx=0, colx=7).value
+        value9 = sheet.cell(rowx=0, colx=8).value
+        value10 = sheet.cell(rowx=0, colx=9).value
+        head = [value1, value2, value3, value4, value5, value6, value7,
+                value8, value9, value10]
+        if head != ['楼栋', '单元', '楼层', '房号', '单价', '建筑面积', '朝向',
+                    '使用年限', '户型', '户型图片名称']:
+            os.remove('media/price/price.xlsx')
+            return JsonResponse(
+                {'response_state': 400, 'msg': '导入文件不正确！'})
+        if row - 1 > request.user.company.house_limit:
+            os.remove('media/price/price.xlsx')
+            return JsonResponse(
+                {'response_state': 400, 'msg': '导入数据超出限制！'})
+        for rx in range(1, row):
+            value1 = sheet.cell(rowx=rx, colx=0).value
+            value2 = sheet.cell(rowx=rx, colx=1).value
+            value3 = sheet.cell(rowx=rx, colx=2).value
+            value4 = sheet.cell(rowx=rx, colx=3).value
+            value5 = sheet.cell(rowx=rx, colx=4).value
+            value6 = sheet.cell(rowx=rx, colx=5).value
+            value7 = sheet.cell(rowx=rx, colx=6).value
+            value8 = sheet.cell(rowx=rx, colx=7).value
+            value9 = sheet.cell(rowx=rx, colx=8).value
+            value10 = sheet.cell(rowx=rx, colx=9).value
+            if isinstance(
+                value1, str) and isinstance(
+                value2, str) and isinstance(
+                value5, float) and isinstance(
+                value6, float) and isinstance(
+                value7, str) and isinstance(
+                value9, str) and isinstance(
+                    value10, str):
+                try:
+                    value3 = int(value3)
+                    value4 = int(value4)
+                    value8 = int(value8)
+                except BaseException:
                     os.remove('media/price/price.xlsx')
                     return JsonResponse(
-                        {'response_state': 400, 'msg': '导入的excel为空表！'})
-                data = []
-                if col != 10:
-                    os.remove('media/price/price.xlsx')
-                    return JsonResponse(
-                        {'response_state': 400, 'msg': '导入文件不正确！'})
-                value1 = sheet.cell(rowx=0, colx=0).value
-                value2 = sheet.cell(rowx=0, colx=1).value
-                value3 = sheet.cell(rowx=0, colx=2).value
-                value4 = sheet.cell(rowx=0, colx=3).value
-                value5 = sheet.cell(rowx=0, colx=4).value
-                value6 = sheet.cell(rowx=0, colx=5).value
-                value7 = sheet.cell(rowx=0, colx=6).value
-                value8 = sheet.cell(rowx=0, colx=7).value
-                value9 = sheet.cell(rowx=0, colx=8).value
-                value10 = sheet.cell(rowx=0, colx=9).value
-                head = [
-                    value1,
-                    value2,
-                    value3,
-                    value4,
-                    value5,
-                    value6,
-                    value7,
-                    value8,
-                    value9,
-                    value10]
-                if head != [
-                    '楼栋',
-                    '单元',
-                    '楼层',
-                    '房号',
-                    '单价',
-                    '建筑面积',
-                    '朝向',
-                    '使用年限',
-                    '户型',
-                        '户型图片名称']:
-                    os.remove('media/price/price.xlsx')
-                    return JsonResponse(
-                        {'response_state': 400, 'msg': '导入文件不正确！'})
-                if row - 1 > request.user.company.house_limit:
-                    os.remove('media/price/price.xlsx')
-                    return JsonResponse(
-                        {'response_state': 400, 'msg': '导入数据超出限制！'})
-                for rx in range(1, row):
-                    value1 = sheet.cell(rowx=rx, colx=0).value
-                    value2 = sheet.cell(rowx=rx, colx=1).value
-                    value3 = sheet.cell(rowx=rx, colx=2).value
-                    value4 = sheet.cell(rowx=rx, colx=3).value
-                    value5 = sheet.cell(rowx=rx, colx=4).value
-                    value6 = sheet.cell(rowx=rx, colx=5).value
-                    value7 = sheet.cell(rowx=rx, colx=6).value
-                    value8 = sheet.cell(rowx=rx, colx=7).value
-                    value9 = sheet.cell(rowx=rx, colx=8).value
-                    value10 = sheet.cell(rowx=rx, colx=9).value
-                    if isinstance(
-                        value1, str) and isinstance(
-                        value2, str) and isinstance(
-                        value5, float) and isinstance(
-                        value6, float) and isinstance(
-                        value7, str) and isinstance(
-                        value9, str) and isinstance(
-                            value10, str):
-                        try:
-                            value3 = int(value3)
-                            value4 = int(value4)
-                            value8 = int(value8)
-                        except BaseException:
-                            os.remove('media/price/price.xlsx')
-                            return JsonResponse(
-                                {'response_state': 400, 'msg': '导入数据格式不正确或有重复数据!'})
-                        li = [
-                            value1,
-                            value2,
-                            value3,
-                            value4,
-                            value5,
-                            value6,
-                            value7,
-                            value8,
-                            value9,
-                            value10]
-                    else:
-                        os.remove('media/price/price.xlsx')
-                        return JsonResponse(
-                            {'response_state': 400, 'msg': '导入数据格式不正确或有重复数据!'})
-                    data.append(li)
-                with transaction.atomic():
-                    try:
-                        EventDetail.objects.filter(event=event).delete()
-                        for ed in data:
-                            if not isinstance(ed[0], str):
-                                ed[0] = str(int(ed[0]))
-                            if not isinstance(ed[1], str):
-                                ed[1] = str(int(ed[1]))
-                            eventdetail = EventDetail.objects.create(
-                                building=ed[0],
-                                unit=ed[1],
-                                floor=ed[2],
-                                room_num=ed[3],
-                                unit_price=ed[4],
-                                area=ed[5],
-                                looking=ed[6],
-                                term=ed[7],
-                                type=ed[8],
-                                house_type=HouseType.objects.filter(
-                                    event=event,
-                                    name=ed[9]).first(),
-                                event=event)
-                            eventdetail.save()
-                        os.remove('media/price/price.xlsx')
-                        return JsonResponse(
-                            {'response_state': 200, 'data': len(data)})
-                    except BaseException:
-                        os.remove('media/price/price.xlsx')
-                        return JsonResponse(
-                            {'response_state': 400, 'msg': '导入数据格式不正确或有重复数据！'})
+                        {'response_state': 400, 'msg': '导入数据格式不正确或有重复数据!'})
+                li = [value1, value2, value3, value4, value5, value6,
+                      value7, value8, value9, value10]
             else:
-                return JsonResponse(
-                    {'response_state': 400, 'msg': '导入文件格式不正确！'})
-        return JsonResponse({'response_state': 400, 'msg': '没有该活动！'})
+                os.remove('media/price/price.xlsx')
+                return JsonResponse({'response_state': 400,
+                                     'msg': '导入数据格式不正确或有重复数据!'})
+            data.append(li)
+        try:
+            with transaction.atomic():
+                EventDetail.objects.filter(event=event).delete()
+                for ed in data:
+                    if not isinstance(ed[0], str):
+                        ed[0] = str(int(ed[0]))
+                    if not isinstance(ed[1], str):
+                        ed[1] = str(int(ed[1]))
+                    EventDetail.objects.create(
+                        building=ed[0], unit=ed[1], floor=ed[2],
+                        room_num=ed[3], unit_price=ed[4], area=ed[5],
+                        looking=ed[6], term=ed[7], type=ed[8],
+                        house_type=HouseType.objects.filter(
+                            event=event,
+                            name=ed[9]).first(),
+                        event=event)
+        except:
+            os.remove('media/price/price.xlsx')
+            return JsonResponse({'response_state': 400,
+                                 'msg': '导入数据格式不正确或有重复数据！'})
+        os.remove('media/price/price.xlsx')
+        return JsonResponse({'response_state': 200, 'data': len(data)})
 
 
 @method_decorator(admin_required, name='dispatch')
