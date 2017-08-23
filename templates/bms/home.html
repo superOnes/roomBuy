@@ -290,6 +290,11 @@
 </div>
 
 <script type="text/javascript">
+var customerOrder = $("#customerOrder");
+customerOrder.find("input[name='username']").val("");
+customerOrder.find("input[name='name']").val("");
+customerOrder.find("input[name='password']").val("");
+customerOrder.find("input[name='house_limit']").val("");
 	$(document).ready(function(){
     // 选择开始日期
     $(".form-datetime").datetimepicker({

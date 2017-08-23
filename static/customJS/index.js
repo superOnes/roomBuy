@@ -81,13 +81,15 @@ function submitFile(event,thisID){
 		       		placement:'center',
 				    type: 'primary' // 定义颜色主题
 				}).show("",function(){
-					$(event).attr("disabled","disabled");
+					$(event).removeAttr("disabled","disabled");
+					$(".modal-header button").removeAttr("disabled","disabled");
+					$(event).siblings("button").removeAttr("disabled","disabled");
 				});
 			}
 		},
 		error:function(){
 			$(event).attr("disabled","disabled");
-			alert("未知错误")
+			alert("未知错误");
 		}
 	});
 };
@@ -185,6 +187,7 @@ function statisticsData(thisId){
 					$(".lookMoreHouse").hide();
 				}
 			}else{
+				$(".lookMoreHouse").hide();
 				$openList.children("tr").remove();
 				$(".tipH").show();
 			}

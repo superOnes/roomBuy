@@ -39,6 +39,11 @@
 </div>
 <script type="text/javascript">
 	$(document).ready(function(){
+		// 户型图文件名
+		var picImgFile = $(".picImgFile").html();
+		var picImgFiles = picImgFile.slice(21); //截取获取文件的文件名
+		$(".picImgFile").html(picImgFiles);
+
 		$("#houseTypeCreate").submit(function(){
 			$(".btn-primary").attr("disabled","disabled");
 			var inputPic = $(".picImgFile").html();
