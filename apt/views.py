@@ -1021,6 +1021,8 @@ class OrderListView(View):
         value = request.GET.get('value')
         num_page = 2
         page = request.GET.get('page')
+        if not page :
+            page=0
         if event_id and is_test:
             queryset = Order.objects.filter(
                 eventdetail__event_id=event_id, is_test=is_test)
