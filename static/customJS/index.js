@@ -169,7 +169,6 @@ function statisticsData(thisId){
 		dataType:'JSON',
 		success:function(results){
 			if(results.success){
-				console.log(results);
 				var result =results.data;
 				$listHouse.find("tr").remove();
 				for (var i=0; i<result.length; i++) {
@@ -322,6 +321,7 @@ function getorderList(thisId,is_test,searchValue){
 		url:"/orderlist/",
 		asunc:true,
 		success:function(results){
+			console.log(results);
 			if(results.success){
 				$(".tip").hide();
 				// 导出链接添加
@@ -332,11 +332,12 @@ function getorderList(thisId,is_test,searchValue){
 					$openList.append("<tr><td>"+(i+1)+"</td><td>"+result[i].time+"</td><td>"+result[i].room_num+"</td><td>"+result[i].unit_price+"元/㎡</td><td>"+result[i].area+"㎡</td><td>"+result[i].realname+"</td>"+
 					"<td>"+result[i].mobile+"</td><td>"+result[i].identication+"</td><td>"+result[i].remark+"</td></tr>")
 				};
+				$("#lookMoreOrder").show();
 			}else{
 				$("#exportEach").removeAttr("href","");
 				$openList.children("tr").remove();
 				$(".tip").show();
-				$(".lookMoreOrder").hide();
+				$("#lookMoreOrder").hide();
 			}
 		},
 		error:function(){
@@ -355,7 +356,6 @@ function lookMoreOrder(pageOrder,eventId,is_test,searchValue){
 		async:true,
 		success:function(results){
 			if(results.success){
-				console.log(results);
 				var result = results.data;
 				for (var i=0; i<result.length; i++) {
 					$openList.append("<tr><td>"+(i+1+50*(pageOrder-1))+"</td><td>"+result[i].time+"</td><td>"+result[i].room_num+"</td><td>"+result[i].unit_price+"元/㎡</td><td>"+result[i].area+"㎡</td><td>"+result[i].realname+"</td>"+
