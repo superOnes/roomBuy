@@ -532,16 +532,22 @@ class CustomerDeleteView(View):
 
     def post(self, request):
         id = request.POST.get('id')
+        print(id)
         if id:
-            eventdetail = Customer.get(id).user.order_set.get(is_test=0)
-            if eventdetail:
-                EventDetail.objects.filter(
-                    id=eventdetail.eventdetail_id).update(is_sold=0)
-            if EventDetail.objects.filter(sign_id=id):
-                EventDetail.objects.filter(sign_id=id).update(sign_id='')
-            Customer.get(id).delete()
-            return JsonResponse({'success': True})
-        return JsonResponse({'success': False})
+            customer=Customer.get(id)
+            try:
+                order=Order.objects.get(user__customer=customer, is_test=False)
+            except:
+                customer.user.delete()
+                customer.delete()
+                return JsonResponse ({'success': True})
+            order.eventdetail.is_sold=False
+            order.eventdetail.save ()
+            order.user.customer.delete()
+            order.user.delete()
+            order.delete()
+            return JsonResponse ({'success': True})
+        return JsonResponse ({'success': False})
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -1008,8 +1014,9 @@ class OrderListView(View):
         event_id = request.GET.get('id')
         is_test = request.GET.get('is_test')
         value = request.GET.get('value')
-        num_page = 50
+        num_page = 2
         page = request.GET.get('page')
+        print(page,event_id)
         if event_id and is_test:
             queryset = Order.objects.filter(
                 eventdetail__event_id=event_id, is_test=is_test)
@@ -1022,10 +1029,10 @@ class OrderListView(View):
                 Q(user__customer__realname__icontains=value) |
                 Q(user__customer__mobile__icontains=value) |
                 Q(user__customer__identication__icontains=value))
-        # if int(page) > int((len(queryset)+1) / num_page):
-        #     return JsonResponse({'success': False})
-        # pagination = Pagination(queryset, page, num_page)
-        # queryset = pagination.get_queryset()
+        if int(page) > int((len(queryset)+1) / num_page):
+            return JsonResponse({'success': False})
+        pagination = Pagination(queryset, page, num_page)
+        queryset = pagination.get_queryset()
         if queryset:
             order_list = [{'id': od.id,
                            'time': od.time.strftime("%Y-%m-%d %H:%M:%S"),
@@ -1043,7 +1050,7 @@ class OrderListView(View):
                            'identication': od.user.customer.identication,
                            'remark': od.user.customer.remark,
                            } for od in queryset]
-            return JsonResponse({'success': True, 'data': order_list})
+            return JsonResponse({'success': True, 'data': order_list,'has_next': queryset.has_next()})
         return JsonResponse({'success': False})
 
 
