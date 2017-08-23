@@ -44,14 +44,14 @@ class ProTimeView(View):
         eventid = request.POST.get('id')
         customer = Customer.objects.filter(
             mobile=mobile, identication=identication, event_id=eventid)
-        if not len(customer):
+        if not customer.exists():
             return JsonResponse(
                 {'response_state': 400, 'msg': '用户名或密码不正确！'})
         else:
-            customer = customer[0]
+            customer = customer.first()
             session_key = customer.session_key
-            user = customer.user
-            if user:
+            if customer.user:
+                user = customer.user
                 if not user.is_admin:
                     if not customer.protime:
                         customer.protime = datetime.now()

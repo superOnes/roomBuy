@@ -978,15 +978,15 @@ class OrderListView(View):
         event_id = request.GET.get('id')
         is_test = request.GET.get('is_test')
         value = request.GET.get('value')
-        num_page = 2
+        num_page = 50
         page = request.GET.get('page',1)
-        if event_id and is_test:
+        if event_id:
             queryset = Order.objects.filter(
                 eventdetail__event_id=event_id, is_test=is_test).order_by('-id')
         else:
             last_event = Event.get_last_event(request.user.company.id)
             queryset = Order.objects.filter(
-                eventdetail__event=last_event, is_test=0).order_by('-id')
+                eventdetail__event=last_event, is_test=is_test).order_by('-id')
         if value:
             queryset = queryset.filter(
                 Q(user__customer__realname__icontains=value) |
