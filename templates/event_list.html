@@ -42,7 +42,7 @@
 		{% for obj in object_list %}
 		<tr>
 			<td>{{ forloop.counter }}</td>
-			<td><a data-iframe="{% url 'event_update' pk=obj.id %}" data-toggle="modal" data-title="编辑活动" title="编辑活动" data-backdrop="static">{{ obj.name }}&nbsp;&nbsp;<i class="icon icon-pencil"></i></a></td>
+			<td><a class="event-create" data-iframe="{% url 'event_update' pk=obj.id %}" data-toggle="modal" data-title="编辑活动" title="编辑活动" data-backdrop="static">{{ obj.name }}&nbsp;&nbsp;<i class="icon icon-pencil"></i></a></td>
 			<td>
 				<p>{{ obj.test_start }}</p>
 				<p>至</p>

@@ -21,6 +21,9 @@
 	<p id="isPub">{{form.is_pub.value|default:''}}</p>
 	<form class="form-horizontal" method="post" enctype="multipart/form-data" id="createEvent">
 		{% csrf_token %}
+		{% if form.non_field_errors %}
+		<div class="alert alert-danger" style="font-size:14px;font-weight:bold">{{form.non_field_errors}}</div>
+		{% endif %}
 		<div class="form-group">
 			<label class="col-sm-3 control-label">活动类型<i>*</i></label>
 			<div class="col-sm-9">
@@ -165,9 +168,6 @@
 				</label>
 			</div>
 		</div>
-		{% if form.non_field_errors %}
-		<div class="alert alert-danger" style="font-size:14px;font-weight:bold">{{form.non_field_errors}}</div>
-		{% endif %}
 		<input type="hidden" name="company" value="{{form.company.value|default:''}}">
 		<div class="modal-footer">
 			<input type="submit" class="btn btn-primary btn_create" value="确定"></input>
