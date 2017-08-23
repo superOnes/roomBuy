@@ -168,8 +168,9 @@ function statisticsData(thisId){
 		async:true,
 		dataType:'JSON',
 		success:function(results){
+			var result =results.data;
 			if(results.success){
-				var result =results.data;
+				$(".tipH").hide();
 				$listHouse.find("tr").remove();
 				for (var i=0; i<result.length; i++) {
 					result[i].is_sold=  result[i].is_sold==true?"是":"否";
@@ -178,13 +179,14 @@ function statisticsData(thisId){
 					"<td>"+result[i].room_num+"</td><td>"+result[i].is_sold+"</td><td>"+result[i].unit_price+"</td><td>"+result[i].area+"</td><td>"+result[i].num+"</td>"+
 					"<td>"+result[i].is_testsold+"</td></tr>");
 				};
-				if(!results.has_next) {
-					$(".lookMoreHouse").hide();
-				}else{
+				if(results.has_next) {
 					$(".lookMoreHouse").show();
+				}else{
+					$(".lookMoreHouse").hide();
 				}
 			}else{
-				$(".datatable").html("<div style='display:block;padding: 20px 0;'> <p style='font-size: 20px;color: #CCCCCC;text-align: center;'>暂时没有订单数据！</p> </div>")
+				$openList.children("tr").remove();
+				$(".tipH").show();
 			}
 		},
 		error:function(){
@@ -199,21 +201,24 @@ function statisticsData(thisId){
 		async:true,
 		dataType:'JSON',
 		success:function(results){
+			var result =results.data;
 			if(results.success){
-				var result =results.data;
+				$(".tipB").hide();
 				$listBuyer.find("tr").remove();
 				for (var i=0; i<result.length; i++) {
 					$listBuyer.append("<tr><td>"+(i+1)+"</td><td>"+result[i].name+"</td><td>"+result[i].mobile+"</td><td>"+result[i].identication+"</td>"+
 					"<td>"+result[i].consultant+"</td><td>"+result[i].phone+"</td><td>"+result[i].protime+"</td><td>"+result[i].count+"</td><td>"+result[i].testroom+"</td>"+
 					"<td>"+result[i].testtime+"</td><td>"+result[i].openroom+"</td><td>"+result[i].opentime+"</td></tr>")
 				};
-				if(!results.has_next) {
-					$(".lookMoreBuyer").hide();
-				}else{
+				if(results.has_next) {
 					$(".lookMoreBuyer").show();
+				}else{
+					$(".lookMoreBuyer").hide();
 				}
 			}else{
-				$(".datatable").html("<div style='display:block;padding: 20px 0;'> <p style='font-size: 20px;color: #CCCCCC;text-align: center;'>暂时没有订单数据！</p> </div>")
+				$(".lookMoreBuyer").hide();
+				$listBuyer.children("tr").remove();
+				$(".tipB").show();
 			}
 		},
 		error:function(){
@@ -241,10 +246,10 @@ function lookMoreHouse(page,eventId){
 						"<td>"+result[i].room_num+"</td><td>"+result[i].is_sold+"</td><td>"+result[i].unit_price+"</td><td>"+result[i].area+"</td><td>"+result[i].num+"</td>"+
 						"<td>"+result[i].is_testsold+"</td></tr>");
 				};
-				if(!results.has_next) {
-					$(".lookMoreHouse").hide();
-				}else{
+				if(results.has_next) {
 					$(".lookMoreHouse").show();
+				}else{
+					$(".lookMoreHouse").hide();
 				}
 			};
 		},
@@ -271,10 +276,10 @@ function lookMoreBuyer(page,eventId){
 					"<td>"+result[i].consultant+"</td><td>"+result[i].phone+"</td><td>"+result[i].protime+"</td><td>"+result[i].count+"</td><td>"+result[i].testroom+"</td>"+
 					"<td>"+result[i].testtime+"</td><td>"+result[i].openroom+"</td><td>"+result[i].opentime+"</td></tr>")
 				};
-				if(!results.has_next) {
-					$(".lookMoreBuyer").hide();
-				}else{
+				if(results.has_next) {
 					$(".lookMoreBuyer").show();
+				}else{
+					$(".lookMoreBuyer").hide();
 				}
 			};
 		},
@@ -321,7 +326,6 @@ function getorderList(thisId,is_test,searchValue){
 		url:"/orderlist/",
 		asunc:true,
 		success:function(results){
-			console.log(results);
 			if(results.success){
 				$(".tip").hide();
 				// 导出链接添加
@@ -332,7 +336,11 @@ function getorderList(thisId,is_test,searchValue){
 					$openList.append("<tr><td>"+(i+1)+"</td><td>"+result[i].time+"</td><td>"+result[i].room_num+"</td><td>"+result[i].unit_price+"元/㎡</td><td>"+result[i].area+"㎡</td><td>"+result[i].realname+"</td>"+
 					"<td>"+result[i].mobile+"</td><td>"+result[i].identication+"</td><td>"+result[i].remark+"</td></tr>")
 				};
-				$("#lookMoreOrder").show();
+				if(results.has_next) {
+					$("#lookMoreOrder").show();
+				}else{
+					$("#lookMoreOrder").hide();
+				}
 			}else{
 				$("#exportEach").removeAttr("href","");
 				$openList.children("tr").remove();
@@ -361,10 +369,10 @@ function lookMoreOrder(pageOrder,eventId,is_test,searchValue){
 					$openList.append("<tr><td>"+(i+1+50*(pageOrder-1))+"</td><td>"+result[i].time+"</td><td>"+result[i].room_num+"</td><td>"+result[i].unit_price+"元/㎡</td><td>"+result[i].area+"㎡</td><td>"+result[i].realname+"</td>"+
 					"<td>"+result[i].mobile+"</td><td>"+result[i].identication+"</td><td>"+result[i].remark+"</td></tr>")
 				};
-				if(!results.has_next) {
-					$("#lookMoreOrder").hide();
-				}else{
+				if(results.has_next) {
 					$("#lookMoreOrder").show();
+				}else{
+					$("#lookMoreOrder").hide();
 				}
 			};
 		},
