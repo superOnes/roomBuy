@@ -115,7 +115,7 @@ function roomPriceFile(event,thisID){
 				    type: 'success' // 定义颜色主题
 				}).show("",function(){
 					setTimeout(function(){
-						window.location.reload();
+						window.location.href="/"+thisID+"/rooms/";
 					},500)
 				});
 			}else if(results.response_state == 400){
