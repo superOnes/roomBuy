@@ -862,7 +862,6 @@ class PurcharseHeatView(View):
                                       '-' + \
                                       str(openorder.eventdetail.room_num)
             li.append(ct_list)
-            print(li)
         return JsonResponse(
                 {'success': True, 'data': li, 'has_next': queryset.has_next()})
 
