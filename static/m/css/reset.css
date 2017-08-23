@@ -159,8 +159,14 @@ a, img {-webkit-touch-callout: none;}
     line-height:2rem;
     font-size:1rem;
     font-weight:normal;
+    padding-top:20px;
 }
-.prols p{font-size:.8rem;}
+.prols p{
+    width:90%;
+    font-size:.7rem;
+    line-height:1.2rem;
+    margin:14px 5%;
+}
 .closePro{
     width:30%;
     height:30px;
@@ -190,10 +196,6 @@ a, img {-webkit-touch-callout: none;}
     border-right:solid 1px #eee;
 }
 .probtn span:nth-last-of-type(1){color:red;}
-.prols p{
-    width:90%;
-    margin:20px 5%;
-}
 .errorPage{
     text-align:center;
     margin:30% auto;
