@@ -864,7 +864,7 @@ class PurcharseHeatView(View):
                 event_id=last_event).order_by('id')
         pagination = Pagination(queryset, page, num_page)
         queryset = pagination.get_queryset()
-        if queryset is not None:
+        if not queryset :
             for customer in queryset:
                 testorder = customer.user.order_set.filter(
                     is_test=True).first()
@@ -1020,25 +1020,21 @@ class OrderListView(View):
         is_test = request.GET.get('is_test')
         value = request.GET.get('value')
         num_page = 2
-        page = request.GET.get('page')
-        if not page :
-            page=0
+        page = request.GET.get('page',1)
         if event_id and is_test:
             queryset = Order.objects.filter(
-                eventdetail__event_id=event_id, is_test=is_test)
+                eventdetail__event_id=event_id, is_test=is_test).order_by('-id')
         else:
             last_event = Event.get_last_event(request.user.company.id)
             queryset = Order.objects.filter(
-                eventdetail__event=last_event, is_test=0)
+                eventdetail__event=last_event, is_test=0).order_by('-id')
         if value:
             queryset = queryset.filter(
                 Q(user__customer__realname__icontains=value) |
                 Q(user__customer__mobile__icontains=value) |
                 Q(user__customer__identication__icontains=value))
-        if int(page) > int((len(queryset) + 1) / num_page):
-            return JsonResponse({'success': False})
         pagination = Pagination(queryset, page, num_page)
-        queryset = pagination.get_queryset()
+        queryset = pagination.get_queryset ()
         if queryset:
             order_list = [{'id': od.id,
                            'time': od.time.strftime("%Y-%m-%d %H:%M:%S"),
