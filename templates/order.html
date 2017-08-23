@@ -41,6 +41,7 @@
 		<tr></tr>
 	</tbody>
 </table>
+<p class="btn" id="lookMoreOrder">查看更多数据</p>
 <div class="tip" style='padding: 20px 0;'> <p style='font-size: 20px;color: #CCCCCC;text-align: center;'>暂时没有订单数据！</p> </div>
 {% endblock %} {% block js %}
 <script type="text/javascript">
@@ -50,9 +51,19 @@
 		$("#navActive li").eq(2).addClass("active");
 		// 获取活动列表
 		getorderSelect();
+		var pageOrder = 1;
+		$("#lookMoreOrder").click(function(){
+			pageOrder = parseInt(pageOrder);
+			pageOrder++;
+			var thisVal = $("#eventList").val();
+			var is_test = $("#orderList").val();
+			var searchValue = $("#searchInput").val();
+			lookMoreOrder(pageOrder, thisVal, is_test, searchValue);
+		})
 
 		// 筛选数据列表
 		function filterData() {
+			pageOrder = 1;
 			var thisVal = $("#eventList").val();
 			var is_test = $("#orderList").val();
 			var searchValue = $("#searchInput").val();

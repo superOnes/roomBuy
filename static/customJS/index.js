@@ -336,6 +336,7 @@ function getorderList(thisId,is_test,searchValue){
 				$("#exportEach").removeAttr("href","");
 				$openList.children("tr").remove();
 				$(".tip").show();
+				$(".lookMoreOrder").hide();
 			}
 		},
 		error:function(){
@@ -343,6 +344,39 @@ function getorderList(thisId,is_test,searchValue){
 		}
 	})
 };
+
+//订单查看更多
+function lookMoreOrder(pageOrder,eventId,is_test,searchValue){
+	var $openList = $("#openList");
+	$.ajax({
+		type:'get',
+		url:'/orderlist/',
+		data:{page:pageOrder,id:eventId,is_test:is_test,value:searchValue},
+		async:true,
+		success:function(results){
+			if(results.success){
+				console.log(results);
+				var result = results.data;
+				for (var i=0; i<result.length; i++) {
+					$openList.append("<tr><td>"+(i+1+50*(pageOrder-1))+"</td><td>"+result[i].time+"</td><td>"+result[i].room_num+"</td><td>"+result[i].unit_price+"元/㎡</td><td>"+result[i].area+"㎡</td><td>"+result[i].realname+"</td>"+
+					"<td>"+result[i].mobile+"</td><td>"+result[i].identication+"</td><td>"+result[i].remark+"</td></tr>")
+				};
+				if(!results.has_next) {
+					$("#lookMoreOrder").hide();
+				}else{
+					$("#lookMoreOrder").show();
+				}
+			};
+		},
+		error:function(){
+			new $.zui.Messager('获取订单数据失败，请检查服务器！', {
+				placement:'center',
+				type: 'danger' // 定义颜色主题
+			}).show();
+		}
+	})
+}
+
 
 // 批量操作请求
 function batch(ids,isStatic){
