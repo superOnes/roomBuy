@@ -36,6 +36,6 @@ urlpatterns = [
     url(r'^checkcaptcha/', CheckCaptcha.as_view(), name='app_checkcaptcha'),
     url(r'^retfoll/', ReturnFollow.as_view(), name='app_returnfollow'),
     # 订单确认测试接口
-    url(r'^orderconfirmtest/', AppHouseChoiceConfirmTestView.as_view()),
+    # url(r'^orderconfirmtest/', AppHouseChoiceConfirmTestView.as_view()),
     # url(r'^orderconfirm/', AppHouseChoiceConfirmSQLiteView.as_view()),
 ]

@@ -132,7 +132,7 @@ class AppEventDetailListView(View):
         value = [{
             'event_name': eventobj.name,
             'customer_count': eventobj.customer_set.count(),
-            'event_start': (eventobj.event_start).strftime("%Y/%m/%d %H:%M:%S"),
+            'event_start': (eventobj.event_start).strftime("%Y-%m-%d %H:%M:%S"),
             'building': sorted(buildinglist),
         }]
         context['objects'] = value
@@ -400,7 +400,7 @@ class AppHouseChoiceConfirmView(View):
                                                             obj[8]),
                             'limit': (
                                 order.time + timedelta(
-                                    hours=event.limit)).strftime('%Y年%m月%d日 \
+                                    hours=event.limit)).strftime('%Y-%m-%d \
                                      %H:%M:%S'),
                             'ordertime': order.time,
                             'orderid': order.id,
@@ -432,7 +432,7 @@ class AppHouseChoiceConfirmView(View):
                                                             obj[7], obj[8]),
                             'limit': (
                                 order.time + timedelta(
-                                    hours=event.limit)).strftime('%Y年%m月%d日 \
+                                    hours=event.limit)).strftime('%Y-%m-%d \
                                      %H:%M:%S'),
                             'ordertime': order.time,
                             'orderid': order.id,
@@ -496,7 +496,7 @@ class AppHouseChoiceConfirmSQLiteView(View):
                                                         obj[8]),
                         'limit': (
                             order.time + timedelta(
-                                hours=event.limit)).strftime('%Y年%m月%d日 \
+                                hours=event.limit)).strftime('%Y-%m-%d \
                                  %H:%M:%S'),
                         'ordertime': order.time,
                         'orderid': order.id,
@@ -531,7 +531,7 @@ class AppHouseChoiceConfirmSQLiteView(View):
                                                         obj[8]),
                         'limit': (
                             order.time + timedelta(
-                                hours=event.limit)).strftime('%Y年%m月%d日 %H:%M:%S'),
+                                hours=event.limit)).strftime('%Y-%m-%d %H:%M:%S'),
                         'ordertime': order.time,
                         'orderid': order.id,
                         'is_test': order.is_test,
@@ -595,7 +595,7 @@ class AppHouseChoiceConfirmTestView(View):
                                                             obj[8]),
                             'limit': (
                                 order.time + timedelta(
-                                    hours=event.limit)).strftime('%Y年%m月%d日 \
+                                    hours=event.limit)).strftime('%Y-%m-%d \
                                      %H:%M:%S'),
                             'ordertime': order.time,
                             'orderid': order.id,
@@ -627,7 +627,7 @@ class AppHouseChoiceConfirmTestView(View):
                                                             obj[7], obj[8]),
                             'limit': (
                                 order.time + timedelta(
-                                    hours=event.limit)).strftime('%Y年%m月%d日 \
+                                    hours=event.limit)).strftime('%Y-%m-%d \
                                      %H:%M:%S'),
                             'ordertime': order.time,
                             'orderid': order.id,
@@ -728,7 +728,7 @@ class AppOrderListView(View):
                     obj.eventdetail.unit +
                     str(obj.eventdetail.floor) + '层' +
                     str(obj.eventdetail.room_num)),
-                'time': obj.time.strftime('%Y/%m/%d %H:%M:%S'),
+                'time': obj.time.strftime('%Y-%m-%d %H:%M:%S'),
                 'event': obj.eventdetail.event.name,
                 'unit_price': format(obj.eventdetail.unit_price, ',') if obj.eventdetail.event.covered_space_price else '***',
                 'orderid': obj.id,
@@ -758,8 +758,8 @@ class AppOrderInfoView(View):
                 'limit': (
                     obj.time +
                     timedelta(
-                        hours=obj.eventdetail.event.limit)).strftime('%Y/%m/%d %H:%M:%S'),
-                'ordertime': obj.time.strftime('%Y/%m/%d %H:%M:%S'),
+                        hours=obj.eventdetail.event.limit)).strftime('%Y-%m-%d %H:%M:%S'),
+                'ordertime': obj.time.strftime('%Y-%m-%d %H:%M:%S'),
                 'room_info': (
                     obj.eventdetail.building +
                     obj.eventdetail.unit +
