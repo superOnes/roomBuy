@@ -50,9 +50,7 @@ class ProTimeView(View):
         else:
             customer = customer[0]
             session_key = customer.session_key
-            user = authenticate(
-                username=customer.user.username,
-                password=customer.identication)
+            user = customer.user
             if user:
                 if not user.is_admin:
                     if not customer.protime:
@@ -73,7 +71,7 @@ class ProTimeView(View):
                             {'response_state': 200, 'msg': '登录成功'})
                 return JsonResponse({'response_state': 400})
             return JsonResponse(
-                {'response_state': 400, 'msg': '该电话号与证件号不正确！'})
+                {'response_state': 400, 'msg': '该电话号或证件号不正确！'})
 
 
 @method_decorator(customer_login_required, name='dispatch')
@@ -255,7 +253,7 @@ class AddFollow(View):
         eventid = request.POST.get('id')
         eventdetail = EventDetail.get(house)
         if Follow.objects.filter(user=user, eventdetail=eventdetail).exists():
-            return JsonResponse ({'response_state': 400, 'msg': '您已收藏过该商品！'})
+            return JsonResponse({'response_state': 400, 'msg': '您已收藏过该商品！'})
         if (Follow.objects.filter(user=user, eventdetail__event_id=eventid).count(
         )) < Event.get(eventid).follow_num:
             Follow.objects.create(user=user, eventdetail=eventdetail)
@@ -263,7 +261,6 @@ class AddFollow(View):
         else:
             return JsonResponse(
                 {'response_state': 400, 'msg': '收藏数量超过限制'})
-
 
 
 @method_decorator(customer_login_required, name='dispatch')
@@ -281,12 +278,11 @@ class CancelFollow(View):
             user=user,
             eventdetail=eventdetail)
         if follow.exists():
-            follow.delete ()
-            return JsonResponse (
+            follow.delete()
+            return JsonResponse(
                 {'response_state': 200, 'msg': '成功取消收藏！'})
         return JsonResponse(
             {'response_state': 400, 'msg': '没有收藏该商品！'})
-
 
 
 @method_decorator(customer_login_required, name='dispatch')

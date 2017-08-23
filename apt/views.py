@@ -534,20 +534,21 @@ class CustomerDeleteView(View):
         id = request.POST.get('id')
         print(id)
         if id:
-            customer=Customer.get(id)
+            customer = Customer.get(id)
             try:
-                order=Order.objects.get(user__customer=customer, is_test=False)
-            except:
+                order = Order.objects.get(
+                    user__customer=customer, is_test=False)
+            except BaseException:
                 customer.user.delete()
                 customer.delete()
-                return JsonResponse ({'success': True})
-            order.eventdetail.is_sold=False
-            order.eventdetail.save ()
+                return JsonResponse({'success': True})
+            order.eventdetail.is_sold = False
+            order.eventdetail.save()
             order.user.customer.delete()
             order.user.delete()
             order.delete()
-            return JsonResponse ({'success': True})
-        return JsonResponse ({'success': False})
+            return JsonResponse({'success': True})
+        return JsonResponse({'success': False})
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -817,10 +818,12 @@ class HouseHeatView(View):
         num_page = 50
         page = request.GET.get('page', 1)
         if event_id:
-            queryset = EventDetail.objects.filter(event_id=event_id).order_by('id')
+            queryset = EventDetail.objects.filter(
+                event_id=event_id).order_by('id')
         else:
             last_event = Event.get_last_event(request.user.company.id)
-            queryset = EventDetail.objects.filter(event_id=last_event).order_by('id')
+            queryset = EventDetail.objects.filter(
+                event_id=last_event).order_by('id')
         pagination = Pagination(queryset, page, num_page)
         queryset = pagination.get_queryset()
         et_list = [{'id': et.id,
@@ -838,7 +841,8 @@ class HouseHeatView(View):
         # if len(et_list) == 0:
         #     print('hahah')
         #     return JsonResponse({'success': False})
-        return JsonResponse({'success': True, 'data': et_list, 'has_next': queryset.has_next()})
+        return JsonResponse(
+            {'success': True, 'data': et_list, 'has_next': queryset.has_next()})
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -853,10 +857,12 @@ class PurcharseHeatView(View):
         page = request.GET.get('page', 1)
         li = []
         if event_id:
-            queryset = Customer.objects.filter(event_id=event_id).order_by('id')
+            queryset = Customer.objects.filter(
+                event_id=event_id).order_by('id')
         else:
             last_event = Event.get_last_event(request.user.company.id)
-            queryset = Customer.objects.filter(event_id=last_event).order_by('id')
+            queryset = Customer.objects.filter(
+                event_id=last_event).order_by('id')
         pagination = Pagination(queryset, page, num_page)
         queryset = pagination.get_queryset()
         if queryset is not None:
@@ -867,20 +873,19 @@ class PurcharseHeatView(View):
                     is_test=False).first()
                 follow = Follow.objects.filter(user_id=customer.user.id)
                 customer.count = len(follow)
-                ct_list = {'id': customer.id,
-                           'name': customer.realname,
-                           'mobile': customer.mobile,
-                           'identication': customer.identication,
-                           'consultant': customer.consultant if customer.consultant else '',
-                           'phone': customer.phone if customer.phone else '',
-                           'protime': customer.protime.strftime('%Y-%m-%d %H:%M:%S')
-                           if customer.protime else '',
-                           'count': customer.count,
-                           'testtime': '',
-                           'testroom': '',
-                           'opentime': '',
-                           'openroom': ''
-                           }
+                ct_list = {
+                    'id': customer.id,
+                    'name': customer.realname,
+                    'mobile': customer.mobile,
+                    'identication': customer.identication,
+                    'consultant': customer.consultant if customer.consultant else '',
+                    'phone': customer.phone if customer.phone else '',
+                    'protime': customer.protime.strftime('%Y-%m-%d %H:%M:%S') if customer.protime else '',
+                    'count': customer.count,
+                    'testtime': '',
+                    'testroom': '',
+                    'opentime': '',
+                    'openroom': ''}
                 if testorder:
                     ct_list['testtime'] = testorder.time.strftime(
                         "%Y/%m/%d %H:%M:%S")
@@ -900,7 +905,8 @@ class PurcharseHeatView(View):
                         '-' + \
                         str(openorder.eventdetail.room_num)
                 li.append(ct_list)
-            return JsonResponse({'success': True, 'data': li, 'has_next': queryset.has_next()})
+            return JsonResponse(
+                {'success': True, 'data': li, 'has_next': queryset.has_next()})
         return JsonResponse({'success': False})
 
 
@@ -1016,7 +1022,6 @@ class OrderListView(View):
         value = request.GET.get('value')
         num_page = 2
         page = request.GET.get('page')
-        print(page,event_id)
         if event_id and is_test:
             queryset = Order.objects.filter(
                 eventdetail__event_id=event_id, is_test=is_test)
@@ -1029,7 +1034,7 @@ class OrderListView(View):
                 Q(user__customer__realname__icontains=value) |
                 Q(user__customer__mobile__icontains=value) |
                 Q(user__customer__identication__icontains=value))
-        if int(page) > int((len(queryset)+1) / num_page):
+        if int(page) > int((len(queryset) + 1) / num_page):
             return JsonResponse({'success': False})
         pagination = Pagination(queryset, page, num_page)
         queryset = pagination.get_queryset()
@@ -1050,7 +1055,8 @@ class OrderListView(View):
                            'identication': od.user.customer.identication,
                            'remark': od.user.customer.remark,
                            } for od in queryset]
-            return JsonResponse({'success': True, 'data': order_list,'has_next': queryset.has_next()})
+            return JsonResponse(
+                {'success': True, 'data': order_list, 'has_next': queryset.has_next()})
         return JsonResponse({'success': False})
 
 

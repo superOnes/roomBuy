@@ -105,11 +105,8 @@ class CustomerLoginView(View):
                 return JsonResponse(
                     {'response_state': 400, 'msg': '用户名或密码不正确！'})
             else:
-                user = authenticate(
-                    username=customer.user.username,
-                    password=customer.identication)
-                if user:
-                    if not user.is_admin:
+                if customer.user:
+                    if not customer.user.is_admin:
                         value = [{
                             'termname': customer.event.termname,
                             'term': customer.event.term,
