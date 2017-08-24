@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from django.db import connection, transaction
 from django.utils.decorators import method_decorator
 from django.contrib.sessions.models import Session
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import login
 
 from apt.models import Event, EventDetail
 from aptp.models import Follow
@@ -56,19 +56,14 @@ class ProTimeView(View):
                     if not customer.protime:
                         customer.protime = datetime.now()
                         customer.save()
+                    Session.objects.filter(pk=request.session.session_key).delete()
                     if session_key:
                         Session.objects.filter(pk=session_key).delete()
-                        login(request, user)
-                        customer.session_key = request.session.session_key
-                        customer.save()
-                        return JsonResponse(
-                            {'response_state': 200, 'msg': '登录成功', })
-                    else:
-                        login(request, user)
-                        customer.session_key = request.session.session_key
-                        customer.save()
-                        return JsonResponse(
-                            {'response_state': 200, 'msg': '登录成功'})
+                    login(request, user)
+                    customer.session_key = request.session.session_key
+                    customer.save()
+                    return JsonResponse({'response_state': 200,
+                                         'msg': '登录成功'})
                 return JsonResponse({'response_state': 400})
             return JsonResponse(
                 {'response_state': 400, 'msg': '该电话号或证件号不正确！'})

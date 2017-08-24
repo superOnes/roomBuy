@@ -62,6 +62,9 @@ def customer_login_required(func):
             return JsonResponse({'response_state': 403, 'msg': '活动还未推出！'})
         if not request.user.is_authenticated() or request.user.is_admin:
             return JsonResponse({'response_state': 401, 'msg': '请登录！'})
+        if request.session.session_key != request.user.customer.session_key:
+            logout(request)
+            return JsonResponse({'response_state': 401, 'msg': '请登录！'})
         try:
             Customer.objects.get(user=request.user, event_id=eventid)
         except:
