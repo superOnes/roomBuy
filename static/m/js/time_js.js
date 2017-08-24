@@ -2,16 +2,17 @@ i = 0;
 j = 0;
 count = 0;
 MM = 0;
-SS = 30;
 MS = 0;
 totle = (MM+1)*60;
 d = 180*(MM+1);
 MM = "0" + MM;
-var gameTime = 32;
+$(".countBlack").append($('<p class="date" style="display:none;">30</p>'));
+var gameTime = $(".date").html();
+console.log(gameTime);
 var showTime = function(){
     totle = totle - 1;
     if (SS == 0) {
-        $(".countBlack").remove();
+        $(".game_time").remove();
         $(".pie2").css("-o-transform", "rotate(" + d + "deg)");
         $(".pie2").css("-moz-transform", "rotate(" + d + "deg)");
         $(".pie2").css("-webkit-transform", "rotate(" + d + "deg)");
@@ -44,8 +45,7 @@ var showTime = function(){
         ;
     }
     ;
-
-    $(".time").html(SS + "<span>秒<br/>之后开始选房</span>");
+    $(".time").html(SS + "s");
 
 };
 

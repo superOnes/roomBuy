@@ -187,56 +187,55 @@ function myOrder() {
 function myShare(){
 	$(".sharees").addClass("listTile-style");
 	$(".shares").removeClass("listTile-style");
-	$(".houseUnit").remove();
-	console.log($("#houseList").hasClass("houseList"));
 
-	$.ajax({
-		type:"get",
-		url:http+"/app/followlist/",
-		data:{
-			id:$(".idNum").html()
-		},
-		success:function(data){
-			if(data.response_state==200){
-				$(".shareCarList").remove();
-				if(data.objects.length==0){
-					$(".houseList").after('<ul class="shareCarList houseTap">'+
-                        							'<div class="noOne"><img src="../images/none.png" /><p>目前您没有任何收藏！</p></div>'+
-                        						'</ul>'
-						);
-				}else{
-                    $(".houseList").after('<ul class="shareCarList houseTap"></ul>');
-					for(var i=0;i<data.objects.length;i++){
-						$(".shareCarList").append($('<li class="shareCar-list">'+
-							'<a class="share-a">'+
-							'<p>'+data.objects[i][0].eventdetail+'</p>'+
-							'<span>￥'+data.objects[i][0].price+'</span>'+
-							'<p style="display:none" class="shareId">'+data.objects[i][0].house+'</p>'+
-							'</a>'+
-							'</li>'
-						))
-					}
-				}
+        $.ajax({
+            type:"get",
+            url:http+"/app/followlist/",
+            data:{
+                id:$(".idNum").html()
+            },
+            success:function(data){
+                if(data.response_state==200){
+                    $(".shareCarList").remove();
+                    $(".houseUnit").remove();
+                    if(data.objects.length==0){
+                        $(".houseList").after('<ul class="shareCarList houseTap">'+
+                            '<div class="noOne"><img src="../images/none.png" /><p>目前您没有任何收藏！</p></div>'+
+                            '</ul>'
+                        );
+                    }else{
+                        $(".houseList").after('<ul class="shareCarList houseTap"></ul>');
+                        for(var i=0;i<data.objects.length;i++){
+                            $(".shareCarList").append($('<li class="shareCar-list">'+
+                                '<a class="share-a">'+
+                                '<p>'+data.objects[i][0].eventdetail+'</p>'+
+                                '<span>￥'+data.objects[i][0].price+'</span>'+
+                                '<p style="display:none" class="shareId">'+data.objects[i][0].house+'</p>'+
+                                '</a>'+
+                                '</li>'
+                            ))
+                        }
+                    }
 
-				$(".shareCar-list").each(function(){
-					$(this).click(function(){
-                        window.location.href="houseInfo.html?house="+$(this).find(".shareId").html()+"&id="+$(".idNum").html();
-					})
-				})
-			}else if(data.response_state==401||data.response_state==403){
-                alert(data.msg);
-                window.location.href="login.html?id="+$(".idNum").html();
-            }else if(data.response_state==405){
-                alert(data.msg);
-			}else{
-				alert("页面错误");
-			}
+                    $(".shareCar-list").each(function(){
+                        $(this).click(function(){
+                            window.location.href="houseInfo.html?house="+$(this).find(".shareId").html()+"&id="+$(".idNum").html();
+                        })
+                    })
+                }else if(data.response_state==401||data.response_state==403){
+                    alert(data.msg);
+                    window.location.href="login.html?id="+$(".idNum").html();
+                }else if(data.response_state==405){
+                    alert(data.msg);
+                }else{
+                    alert("页面错误");
+                }
 
-		},
-		error:function(){
-			alert("无法连接网络，请检查网络后重试！");
-		}
-	})
+            },
+            error:function(){
+                alert("无法连接网络，请检查网络后重试！");
+            }
+        })
 }
 function houseList(data){
 
@@ -257,106 +256,110 @@ function houseList(data){
 			$(".sharees").removeClass("listTile-style");
 			aPp.removeClass('listTile-style');
 			$(this).addClass('listTile-style');
-			$.ajax({
-				type:"get",
-				url:http+"/app/unit/",
-				data:{
-					building:$(this).text(),
-					id:$(".idNum").html()
-				},
-				dataType:'JSON',
-				success: function (data) {
-					if(data.response_state==200){
-					$(".houseUnit").remove();
-					if(data.objects[0].unit.length>0){
-						var unit = $('<div class="houseTap houseUnit">'+
-											'<div class="unite clear"></div>'+
-									'</div>'
-						);
-						$(".houseList").after(unit);
-					}
+                $.ajax({
+                    type:"get",
+                    url:http+"/app/unit/",
+                    data:{
+                        building:$(this).text(),
+                        id:$(".idNum").html()
+                    },
+                    dataType:'JSON',
+                    success: function (data) {
+                        if(data.response_state==200){
+                            $(".houseUnit").remove();
+                            $(".shareCarList").remove();
+                            if(data.objects[0].unit.length>0){
+                                var unit = $('<div class="houseTap houseUnit">'+
+                                    '<div class="unite clear"></div>'+
+                                    '</div>'
+                                );
+                                $(".houseUnit").remove();
+                                $(".shareCarList").remove();
+                                $(".houseList").after(unit);
+                            }
 
-					for(var i=0;i<data.objects[0].unit.length;i++){
+                            for(var i=0;i<data.objects[0].unit.length;i++){
 
-						var units = $('<p>'+data.objects[0].unit[i]+'</p>');
-						$(".unite").append(units);
+                                var units = $('<p>'+data.objects[0].unit[i]+'</p>');
+                                $(".unite").append(units);
 
-					}
-					var aPps = $(".unite").find("p");
-					var build;
-					for(var i=0;i<$(".shares").length;i++){
-						if($(".shares").eq(i).hasClass("listTile-style")){
-							build=$(".shares").eq(i).html();
-						}
-					}
-					aPps.each(function(){
-						$(this).click(function(){
-							aPps.removeClass("listTile-style");
-							$(this).addClass("listTile-style");
-							$.ajax({
-								type:"get",
-								url:http+"/app/houselist/",
-								data:{
-									building:build,
-									unit:$(this).html(),
-									id:$(".idNum").html()
-								},
-								success:function(data){
-                                    if(data.response_state==200){
-										$(".houseChose").remove();
-										var romms=$('<div class="houseChose">'+
-															'<div class="floorListbox">'+
-																'<ul class="floorChose">'+
-																'</ul>'+
-																'<div class="tab">'+
-																	'<div class="shouing"><i></i>在售</div>'+
-																	'<div class="shoued"><i></i>已售</div>'+
-																'</div>'+
-															'</div>'+
-													'</div>');
+                            }
+                            var aPps = $(".unite").find("p");
+                            var build;
+                            for(var i=0;i<$(".shares").length;i++){
+                                if($(".shares").eq(i).hasClass("listTile-style")){
+                                    build=$(".shares").eq(i).html();
+                                }
+                            }
+                            aPps.each(function(){
+                                $(this).click(function(){
+                                    aPps.removeClass("listTile-style");
+                                    $(this).addClass("listTile-style");
+                                    $.ajax({
+                                        type:"get",
+                                        url:http+"/app/houselist/",
+                                        data:{
+                                            building:build,
+                                            unit:$(this).html(),
+                                            id:$(".idNum").html()
+                                        },
+                                        success:function(data){
+                                            if(data.response_state==200){
+                                                $(".houseChose").remove();
+                                                var romms=$('<div class="houseChose">'+
+                                                    '<div class="floorListbox">'+
+                                                    '<ul class="floorChose">'+
+                                                    '</ul>'+
+                                                    '<div class="tab">'+
+                                                    '<div class="shouing"><i></i>在售</div>'+
+                                                    '<div class="shoued"><i></i>已售</div>'+
+                                                    '</div>'+
+                                                    '</div>'+
+                                                    '</div>');
 
-										$(".unite").after(romms);
-										for(var i=0;i<data.objects.length;i++){
-											$(".floorChose").append("<li>"+data.objects[i].floor_room_num+"</li>");
-											if(data.objects[i].sold){
-												$(".floorChose li").eq(i).addClass("floorLi-red");
-											}
-										}
-										var aLis=$(".floorChose").find("li");
+                                                $(".unite").after(romms);
+                                                for(var i=0;i<data.objects.length;i++){
+                                                    $(".floorChose").append("<li>"+data.objects[i].floor_room_num+"</li>");
+                                                    if(data.objects[i].sold){
+                                                        $(".floorChose li").eq(i).addClass("floorLi-red");
+                                                    }
+                                                }
+                                                var aLis=$(".floorChose").find("li");
 
-										aLis.each(function(){
-											$(this).click(function(){
-												var houseID=data.objects[$(this).index()].house;
-												window.location.href="houseInfo.html?house="+houseID+"&id="+$(".idNum").html();
-											})
-										})
-                                    }else if(data.response_state==401||data.response_state==403){
-                                        alert(data.msg);
-                                        window.location.href="login.html?id="+$(".idNum").html();
-                                    }else{
-                                        alert(data.msg);
-									}
-								},
-								error:function(){
-									alert("无法连接网络，请检查网络后重试！");
-								}
-							})
-						})
-					});
-                 }else if(data.response_state==401||data.response_state==403){
-                        alert(data.msg);
-                        window.location.href="login.html?id="+$(".idNum").html();
-                    }else if(data.response_state==405){
-                        alert(data.msg);
-                    }else{
-                        alert(data.msg);
+                                                aLis.each(function(){
+                                                    $(this).click(function(){
+                                                        var houseID=data.objects[$(this).index()].house;
+                                                        window.location.href="houseInfo.html?house="+houseID+"&id="+$(".idNum").html();
+                                                    })
+                                                })
+                                            }else if(data.response_state==401||data.response_state==403){
+                                                alert(data.msg);
+                                                window.location.href="login.html?id="+$(".idNum").html();
+                                            }else{
+                                                alert(data.msg);
+                                            }
+                                        },
+                                        error:function(){
+                                            alert("无法连接网络，请检查网络后重试！");
+                                        }
+                                    })
+                                })
+                            });
+                        }else if(data.response_state==401||data.response_state==403){
+                            alert(data.msg);
+                            window.location.href="login.html?id="+$(".idNum").html();
+                        }else if(data.response_state==405){
+                            alert(data.msg);
+                        }else{
+                            alert(data.msg);
+                        }
+
+                    },
+                    error:function(data){
+                        alert("无法连接网络，请检查网络后重试！");
                     }
+                })
 
-				},
-				error:function(data){
-					alert("无法连接网络，请检查网络后重试！");
-				}
-			})
 		})
 	});
 

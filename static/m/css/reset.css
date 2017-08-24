@@ -1315,8 +1315,8 @@ div.shoued i{
 .hold{width:200px;height:200px;position:absolute;top:50%;left:50%;margin-left:-100px;margin-top:-100px;z-index:1;}
 .bg{width:200px;height:200px;border-radius:200px;position:absolute;top:50%;left:50%;margin-left:-100px;margin-top:-100px;background-color:#f7592f;}
 .time{width:160px;height:160px;margin:40px 0 0 20px;color:#fff;
-    border-radius:160px;position:absolute;z-index:1;text-align:center;line-height:40px;font-size:40px;top:50%;left:50%;margin-top:-80px;margin-left:-80px;}
-.time span { font-size:1.2rem;}
+    border-radius:160px;position:absolute;z-index:1;text-align:center;line-height:30px;font-size:40px;top:50%;left:50%;margin-top:-80px;margin-left:-80px;padding-top:20px;}
+.time span { font-size:1.0rem;}
 
 @media (max-width:340px){
     .tipbox span{font-size:.8rem;}

@@ -8,10 +8,11 @@
 <link type="text/css" rel="stylesheet" href="../css/reset.css"/>
 </head>
 <body>
-	<div class="container" id="houseList"></div>
+	<div class="container" id="houseList">
+		<!---->
+	</div>
 
 	<script type="text/javascript" src="../js/jquery-1.12.4.min.js"></script>
-	<script type="text/javascript" src="../js/time_js.js"></script>
 	<script type="text/javascript" src="../js/login.js"></script>
 <script>
 	// 获取地址栏的参数数组
@@ -99,20 +100,20 @@
 		});
 	});
     function updataTime() {
-        var count = $('<div class="countBlack">'+
-            '<div class="game_time">'+
-            '<div class="hold">'+
-            '<div class="pie pie1"></div>'+
-            '</div>'+
-            '<div class="hold">'+
-            '<div class="pie pie2"></div>'+
-            '</div>'+
-            '<div class="bg"> </div>'+
-            '<div class="time"></div>'+
-            '</div>'+
-            '</div>'
-        );
-        $("body").append(count);
+//        var count = $('<div class="countBlack">'+
+//							'<div class="game_time">'+
+//								'<div class="hold">'+
+//								'<div class="pie pie1"></div>'+
+//								'</div>'+
+//								'<div class="hold">'+
+//								'<div class="pie pie2"></div>'+
+//								'</div>'+
+//								'<div class="bg"> </div>'+
+//								'<div class="time"></div>'+
+//								'</div>'+
+//						'</div>'
+//        );
+//        $("body").append(count);
         setInterval(function() {
             var date = new Date().getTime();  //当前时间
             //活动结束时间
@@ -124,17 +125,16 @@
             var date6 = date4 - date;
             var count1=Math.floor((date3-date)/1000);
             var count2=Math.floor((date1-date)/1000);
+
             //计算出相差天数
             if(date<date3){
                 $('#endTimeing').html("公测活动未开始");
-                 if(count1<=30&&count1>0){
-                     $(".countBlack").show();
-                     showTime();start1();
-
-                     // $(".countBlack p span").html(count1);
-                 }else{
-                     $(".countBlack").hide();
-                 }
+//                 if(count1<=240&&count1>0){
+//                     $(".countBlack").show();
+//                     showTime();start1();
+//                 }else{
+//                     $(".countBlack").hide();
+//                 }
             }else if(date>date3&&date<date4){
                 if (date6 > 0) {
                     var dayss = Math.floor(date6 / (24 * 3600 * 1000));
@@ -152,12 +152,13 @@
                 }
             }else if(date>date4&&date<date1){
                 $('#endTimeing').html("开盘活动未开始");
-                if(count2<=30&&count2>0){
-                    $(".countBlack").show();
-                    showTime();start1();
-                }else{
-                    $(".countBlack").hide();
-                }
+//                $(".date").html(count2);
+//                if(count2<=30&&count2>0){
+//                    $(".countBlack").show();
+//                    showTime();start1();
+//                }else{
+//                    $(".countBlack").hide();
+//                }
             }else if(date>date1&&date<date2){
                 if (date5 > 0) {
                     var days = Math.floor(date5 / (24 * 3600 * 1000));
@@ -181,5 +182,6 @@
         },1000)
     }
 </script>
+<!--<script type="text/javascript" src="../js/time_js.js"></script>-->
 </body>
 </html>
