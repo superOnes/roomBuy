@@ -29,7 +29,7 @@ class Event(models.Model):
     event_start = models.DateTimeField('活动开始时间')
     event_end = models.DateTimeField('活动结束时间')
     limit = models.IntegerField('选房完成期限')
-    equ_login_num = models.IntegerField('支持设备登录数',default=1)
+    equ_login_num = models.IntegerField('支持设备登录数', default=1)
     follow_num = models.IntegerField('同一账号允许收藏数')
     covered_space = models.BooleanField('是否显示建筑面积', default=True)
     covered_space_price = models.BooleanField('是否显示建筑面积单价', default=True)
@@ -89,7 +89,7 @@ class HouseType(models.Model):
 
 class EventDetail(models.Model):
     building = models.CharField('楼号', max_length=50)
-    unit = models.CharField('单元', max_length=100)
+    unit = models.CharField('单元', max_length=100, null=True, blank=True)
     floor = models.IntegerField('楼层')
     room_num = models.IntegerField('房号')
     status = models.BooleanField('上架状态', default=True)
@@ -102,8 +102,8 @@ class EventDetail(models.Model):
     num = models.IntegerField('收藏人数', default=0)
     is_delete = models.BooleanField(default=False)
     house_type = models.ForeignKey(HouseType, null=True, blank=True)
-    type = models.CharField('户型名称', max_length=50, default="暂无数据")
-    looking = models.CharField('朝向', max_length=100)
+    type = models.CharField('户型名称', max_length=50, null=True, blank=True)
+    looking = models.CharField('朝向', max_length=100, null=True, blank=True)
     term = models.IntegerField('使用年限')
     area = models.FloatField('建筑面积', max_length=50)
     unit_price = models.FloatField('面积单价', max_length=100)
