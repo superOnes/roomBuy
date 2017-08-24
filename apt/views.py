@@ -9,6 +9,7 @@ from xlwt import Workbook
 from io import BytesIO
 from copy import copy
 
+from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.shortcuts import resolve_url
@@ -19,7 +20,6 @@ from django.http import JsonResponse, HttpResponse, Http404
 from django.db.models import Q
 from django.utils.decorators import method_decorator
 
-from aptm import settings
 from accounts.models import Order, Customer
 from aptp.models import Follow
 from .models import Event, EventDetail, HouseType
@@ -65,10 +65,13 @@ class EventListView(ListView):
         queryset = self.model.get_all_by_company(self.request.user.company.id)
         if self.value:
             queryset = queryset.filter(Q(name__contains=self.value))
+        host = self.request.get_host()
+        if settings.DEBUG is False:
+            host = 'xfcdn.zhongkerunxin.com'
         for obj in queryset:
             obj.qr = url2qrcode(
                 'http://%s/static/m/views/choiceHouse.html?id=%s' %
-                (self.request.get_host(), obj.id))
+                (host, obj.id))
             obj.save()
         return queryset
 
