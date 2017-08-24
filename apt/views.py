@@ -190,9 +190,15 @@ class EventDetailCreateView(DialogMixin, CreateView):
 
     def get_initial(self):
         initial = super(EventDetailCreateView, self).get_initial()
-        initial['event'] = Event.get(self.kwargs['pk'])
+        self.event = Event.get(self.kwargs['pk'])
+        initial['event'] = self.event
         initial['current_user'] = self.request.user
         return initial
+
+    def get_context_data(self):
+        context = super(EventDetailCreateView, self).get_context_data()
+        context['event'] = self.event
+        return context
 
 
 @method_decorator(admin_required, name='dispatch')
