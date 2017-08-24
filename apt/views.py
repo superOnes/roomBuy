@@ -195,8 +195,8 @@ class EventDetailCreateView(DialogMixin, CreateView):
         initial['current_user'] = self.request.user
         return initial
 
-    def get_context_data(self):
-        context = super(EventDetailCreateView, self).get_context_data()
+    def get_context_data(self, **kwargs):
+        context = super(EventDetailCreateView, self).get_context_data(**kwargs)
         context['event'] = self.event
         return context
 
