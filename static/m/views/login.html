@@ -35,7 +35,7 @@
 
 		</div>
 		<div class="probtn">
-			<span class="proCancle">取消</span><span class="proSure">确定</span>
+			<input type="button" class="proCancle" value="取消" /><input type="button" value="确定" class="proSure" />
 		</div>
 	</div>
 </div>
@@ -126,8 +126,8 @@
 
         });
 
-        $(".proSure").click(function(){
-            $(this).unbind("click");
+        $(".proSure").on("click",function(){
+            $(".proSure").attr("disabled", "disabled");
             $.ajax({
                 type:"POST",
                 url:http+"/app/protime/",
@@ -139,7 +139,7 @@
                 },
                 dataType:'JSON',
                 success: function (data) {
-                    $(".proSure").bind("click");
+                    $(".proSure").removeAttr("disabled");
                     if(data.response_state==200){
                         window.location.href = "choiceHouse.html?id="+$(".loginId").html();
 
@@ -148,7 +148,7 @@
                     }
                 },
                 error:function(){
-                    $(".proSure").bind("click");
+                    $(".proSure").removeAttr("disabled");
                     alert('无法连接网络，请检查网络后重试！');
                 }
             });

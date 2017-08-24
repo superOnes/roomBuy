@@ -185,7 +185,7 @@ a, img {-webkit-touch-callout: none;}
     left:0;
     border-top:solid 1px #eee;
 }
-.probtn span{
+.probtn >input{
     width:50%;
     height:2rem;
     line-height:2rem;
@@ -195,7 +195,7 @@ a, img {-webkit-touch-callout: none;}
     box-sizing: border-box;
     border-right:solid 1px #eee;
 }
-.probtn span:nth-last-of-type(1){color:red;}
+.probtn >input:nth-last-of-type(1){color:red;}
 .errorPage{
     text-align:center;
     margin:30% auto;
@@ -1337,7 +1337,7 @@ div.shoued i{
 .alert-sec-text {
     position: absolute;
     top: 20%;
-    left: 34%;
+    left: 33%;
     width: 76px;
     color: #000;
     font-size: 68px
