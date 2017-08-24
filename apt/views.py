@@ -572,7 +572,7 @@ class ExportHouseHotView(View):
             '楼层',
             '房号',
             '是否已售',
-            '面积单价',
+            '单价',
             '建筑面积',
             '收藏人数',
             '公测是否已售']
@@ -619,7 +619,7 @@ class ExportBuyHotView(View):
 
     def get(self, request):
         eventid = request.GET.get('id')
-        objs = Customer.objects.filter(event_id=eventid)
+        objs = Customer.objects.filter(event_id=eventid).order_by('id')
         sheet = Workbook(encoding='utf-8')
         s = sheet.add_sheet('数据表')
         list = [
@@ -744,7 +744,7 @@ class ExportOrderView(View):
             response.write(sio.getvalue())
             return response
         row = 1
-        for obj in objs:
+        for obj in objs.order_by('-id'):
             s.write(row, 0, obj.time.strftime("%Y/%m/%d %H:%M:%S"))
             s.write(row, 1, obj.eventdetail.building +
                     obj.eventdetail.unit +
