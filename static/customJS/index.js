@@ -191,9 +191,6 @@ function statisticsData(thisId){
 				$listHouse.children("tr").remove();
 				$(".tipH").show();
 			}
-		},
-		error:function(){
-			alert("获取房源热度统计错误！！！")
 		}
 	});
 //	购买者数据获取
@@ -223,9 +220,6 @@ function statisticsData(thisId){
 				$listBuyer.children("tr").remove();
 				$(".tipB").show();
 			}
-		},
-		error:function(){
-			alert("获取购买者热度统计错误！！！")
 		}
 	});
 };
@@ -257,7 +251,7 @@ function lookMoreHouse(page,eventId){
 			};
 		},
 		error:function(){
-			new $.zui.Messager('获取房源更多数据失败，请检查服务器！', {
+			new $.zui.Messager('网络异常，请检查网络！', {
 				placement:'center',
 				type: 'danger' // 定义颜色主题
 			}).show();
@@ -287,7 +281,7 @@ function lookMoreBuyer(page,eventId){
 			};
 		},
 		error:function(){
-			new $.zui.Messager('获取购房者更多数据失败，请检查服务器！', {
+			new $.zui.Messager('网络异常，请检查网络！', {
 				placement:'center',
 				type: 'danger' // 定义颜色主题
 			}).show();
@@ -315,7 +309,10 @@ function getorderSelect(){
 			return true;
 		},
 		error:function(){
-			alert("获取活动列表失败");
+			new $.zui.Messager('获取活动列表失败', {
+				placement:'center',
+				type: 'danger' // 定义颜色主题
+			}).show();
 		}
 	});
 }
@@ -350,9 +347,6 @@ function getorderList(thisId,is_test,searchValue){
 				$(".tip").show();
 				$("#lookMoreOrder").hide();
 			}
-		},
-		error:function(){
-			alert("获取开盘数据失败！！！")
 		}
 	})
 };
@@ -380,7 +374,7 @@ function lookMoreOrder(pageOrder,eventId,is_test,searchValue){
 			};
 		},
 		error:function(){
-			new $.zui.Messager('获取订单数据失败，请检查服务器！', {
+			new $.zui.Messager('网络异常，请检查网络！', {
 				placement:'center',
 				type: 'danger' // 定义颜色主题
 			}).show();

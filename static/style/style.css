@@ -70,6 +70,7 @@ input[type="number"]{
 .lookMoreBuyer, .lookMoreHouse{
 	border-radius: 15px;
 	display: block;
+	display: none;
 	border: none;
 	background-color: #ffffff;
 }
@@ -83,6 +84,7 @@ background: #f2f2f2;
 #lookMoreOrder{
 	border-radius: 15px;
 	display: block;
+	display: none;
 	border: none;
 	background-color: #ffffff;
 }
