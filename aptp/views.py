@@ -184,7 +184,7 @@ class AppEventDetailHouseListView(View):
             if obj.status:
                 value = {
                     'house': obj.id,
-                    'floor_room_num': str(obj.floor) + '-' + str(obj.room_num),
+                    'floor_room_num': str(obj.floor) + '层' + str(obj.room_num),
                     'floor': obj.floor,
                     'room_num': obj.room_num,
                     'sold': obj.is_testsold if test else obj.is_sold,
