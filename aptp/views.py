@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from django.db import connection, transaction
 from django.utils.decorators import method_decorator
 from django.contrib.sessions.models import Session
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 
 from apt.models import Event, EventDetail
 from aptp.models import Follow
@@ -53,10 +53,11 @@ class ProTimeView(View):
             if customer.user:
                 user = customer.user
                 if not user.is_admin:
+                    if request.session.session_key:
+                        logout(request)
                     if not customer.protime:
                         customer.protime = datetime.now()
                         customer.save()
-                    Session.objects.filter(pk=request.session.session_key).delete()
                     if session_key:
                         Session.objects.filter(pk=session_key).delete()
                     login(request, user)
