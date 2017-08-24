@@ -73,7 +73,7 @@ function creatEle(data){
 					'</div>' +
 				'</div>'+
 				'<div class="houseQui clear"><h1 class="fl">'+data.name+'</h1><p class="quit fr"><input type="button" value="退出" class="quitt"/></p></div>'+
-				'<div class="phone">咨询电话：'+data.phone+'</div>'+
+				'<div class="phone">咨询电话：<input type="text" value="'+data.phone+'" readonly style="color:#1f9af0"></div>'+
 				'<div class="lineBox">'+
 					'<div class="floor">' +
 						'<div class="remark"><div class="mark"></div><span class="floor1">公测时间</span></div><div class="flr choicSt">公测开始 '+data.test_start+'<br/>公测结束 '+data.test_ent+'</div>' +
@@ -170,7 +170,6 @@ function createList(data){
 	);
 	$("#houseList").append(str);
 	$("title").html(data.event_name);
-
 }
 function data3(result){
 	var datap=$('<p class="event_start" style="display:none">'+result.event_start+'</p>'+
@@ -182,6 +181,23 @@ function data3(result){
 }
 function myOrder() {
     window.location.href="order.html?id="+$(".idNum").html()
+}
+function addCount(){
+    var count = $('<div id="js-alert-box" class="alert-box"> ' +
+        '<div class="countTime">'+
+        '<svg class="alert-circle" width="234" height="234">'+
+        '<circle cx="117" cy="117" r="108" fill="#FFF" stroke="#43AEFA" stroke-width="17"></circle>'+
+        '<circle id="js-sec-circle" class="alert-sec-circle" cx="117" cy="117" r="108" fill="transparent" stroke="#F4F1F1" stroke-width="18" transform="rotate(-90 117 117)"></circle>'+
+        '<text class="alert-sec-unit" x="82" y="172" fill="#BDBDBD">secs</text>'+
+        '</svg>'+
+        ' <div id="js-sec-text" class="alert-sec-text"></div>'+
+        '<div class="alert-body">'+
+        '<div id="js-alert-head" class="alert-head"></div>'+
+        '</div>'+
+        '</div>'+
+        '</div>'
+    );
+    $("#houseList").after(count);
 }
 /*我的收藏*/
 function myShare(){

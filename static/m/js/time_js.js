@@ -6,10 +6,16 @@ MS = 0;
 totle = (MM+1)*60;
 d = 180*(MM+1);
 MM = "0" + MM;
-$(".countBlack").append($('<p class="date" style="display:none;">30</p>'));
-var gameTime = $(".date").html();
+var date3=new Date($(".test_start").html()).getTime();
+var date = new Date().getTime();
+var gameTime = Math.floor((date3-date)/1000);
 console.log(gameTime);
-var showTime = function(){
+if(gameTime%2!=0){
+    gameTime=gameTime+1
+}else{
+    gameTime=gameTime
+}
+var showTime = function(SS){
     totle = totle - 1;
     if (SS == 0) {
         $(".game_time").remove();
@@ -35,7 +41,7 @@ var showTime = function(){
         }
         ;
         if (SS == 0 && MM > 0) {
-            SS = 30;
+            SS = SS;
             MM = MM - 1;
             if (MM < 10) {
                 MM = "0" + MM
@@ -45,12 +51,11 @@ var showTime = function(){
         ;
     }
     ;
-    $(".time").html(SS + "s");
+    $(".time").html(SS + "<span>秒<br/>之后开始选房</span>");
 
 };
 
-var start1 = function(){
-    i = i + 360/((gameTime));
+var start1 = function(SS){
     count = count + 1;
     if(count <= (gameTime/2)){
         $(".pie1").css("-o-transform","rotate(" + i + "deg)");

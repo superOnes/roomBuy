@@ -9,7 +9,6 @@
 </head>
 <body>
 	<div class="container" id="houseList">
-		<!---->
 	</div>
 
 	<script type="text/javascript" src="../js/jquery-1.12.4.min.js"></script>
@@ -60,13 +59,13 @@
 	$(function(){
         var eventname=localStorage.getItem("eventname");
         $("title").html(decodeURI(eventname));
+        addCount();
         $.ajax({
             type:"get",
             url:http+"/app/detail/",
             data:{
                 id:id
             },
-
             success:function(data){
                 if(data.response_state==200){
                     data3(data.objects[0]);
@@ -83,6 +82,7 @@
 			},
 			success:function(data){
 				if(data.response_state==200){
+
 					createList(data.objects[0]);
 					updataTime();
 					houseList(data.objects[0]);
@@ -99,21 +99,8 @@
 			}
 		});
 	});
+
     function updataTime() {
-//        var count = $('<div class="countBlack">'+
-//							'<div class="game_time">'+
-//								'<div class="hold">'+
-//								'<div class="pie pie1"></div>'+
-//								'</div>'+
-//								'<div class="hold">'+
-//								'<div class="pie pie2"></div>'+
-//								'</div>'+
-//								'<div class="bg"> </div>'+
-//								'<div class="time"></div>'+
-//								'</div>'+
-//						'</div>'
-//        );
-//        $("body").append(count);
         setInterval(function() {
             var date = new Date().getTime();  //当前时间
             //活动结束时间
@@ -129,12 +116,11 @@
             //计算出相差天数
             if(date<date3){
                 $('#endTimeing').html("公测活动未开始");
-//                 if(count1<=240&&count1>0){
-//                     $(".countBlack").show();
-//                     showTime();start1();
-//                 }else{
-//                     $(".countBlack").hide();
-//                 }
+                 if(count1<=30&&count1>=0){
+                     $(".alert-box").show();
+                     alertSet(count1);
+
+                 }
             }else if(date>date3&&date<date4){
                 if (date6 > 0) {
                     var dayss = Math.floor(date6 / (24 * 3600 * 1000));
@@ -152,13 +138,10 @@
                 }
             }else if(date>date4&&date<date1){
                 $('#endTimeing').html("开盘活动未开始");
-//                $(".date").html(count2);
-//                if(count2<=30&&count2>0){
-//                    $(".countBlack").show();
-//                    showTime();start1();
-//                }else{
-//                    $(".countBlack").hide();
-//                }
+                if(count2<=30&&count2>=0){
+                    alertSet(count2);
+                    $(".alert-box ").show();
+                }
             }else if(date>date1&&date<date2){
                 if (date5 > 0) {
                     var days = Math.floor(date5 / (24 * 3600 * 1000));
@@ -179,9 +162,25 @@
                 $('#endTimeing').html("开盘活动已结束");
             }
 
-        },1000)
+
+        },1000);
+
+
+        function alertSet(t) {
+            document.getElementById("js-alert-box").style.display = "block";
+            n = document.getElementById("js-sec-circle");
+            document.getElementById("js-sec-text").innerHTML = t;
+            var e = Math.round(t  * 735);
+            n.style.strokeDashoffset = e - 735;
+            if(0 == t){
+                document.getElementById("js-alert-box").style.display = "none";
+			}
+        }
     }
+
+
 </script>
-<!--<script type="text/javascript" src="../js/time_js.js"></script>-->
+
+
 </body>
 </html>
