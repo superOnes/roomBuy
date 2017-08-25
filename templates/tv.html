@@ -67,10 +67,16 @@
       $(".section").css("height", sectionH + "px");
       $("html, .section").animate({ scrollTop: 0 }, 0);
       $("html, .section").animate({ scrollTop: height }, 60000);
+			var h = $(".section").get(0).offsetHeight;
+			var sh = $(".section").get(0).scrollHeight;
+			if(sh <= h) {
+				setInterval(function(){
+					window.location.reload();
+				}, 2000);
+			}
+
       $(".section").on("scroll", function(){
           var point = $(this).scrollTop();
-          var h = $(this).height(); // 可视区域高度
-          var sh = $(this).get(0).scrollHeight; // 总高度
           if(sh - h - point <= 0) {
             setInterval(function(){
               window.location.reload();
