@@ -14,7 +14,8 @@ from .views import (EventListView, EventCreateView, ImportEventDetailView,
                     PurcharseHeatView, GetEventView, OrderListView,
                     EventDetailSignUpdateView, DeleteHouseTypeView,
                     ExportOrderView, EventTVWall, EventTVWallInfoView,
-                    EventTVWallOrder, EventTVWallOrderView, UpDownFrameView)
+                    EventTVWallOrder, EventTVWallOrderView, UpDownFrameView,
+                    TVWallView)
 
 
 urlpatterns = [
@@ -91,4 +92,5 @@ urlpatterns = [
     url(r'^tvwall/order/(?P<pk>\d+)/', EventTVWallOrder.as_view(),
         name='tv_order'),
     url(r'^tv/(?P<pk>\d+)/order/', EventTVWallOrderView.as_view()),
+    url(r'^tv/(?P<pk>\d+)/', TVWallView.as_view(), name='tv'),
 ]

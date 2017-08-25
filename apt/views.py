@@ -1114,3 +1114,31 @@ class UpDownFrameView(View):
         if int(state) == 1:
             ed.update(status=True)
         return JsonResponse({'success': True})
+
+
+class TVWallView(TemplateView):
+    template_name = 'tv.html'
+
+    def get_context_data(self, pk):
+        result = []
+        eventdetails = Event.get(pk).eventdetail_set.all()
+        buildings = sorted(
+            list(set(eventdetails.values_list('building', flat=True))))
+        for b in buildings:
+            units = eventdetails.filter(building=b).order_by('unit') \
+                                .values_list('unit', flat=True)
+            units = list(set(units))
+            unit = []
+            for u in units:
+                rooms = eventdetails.filter(building=b, unit=u) \
+                                    .order_by('room_num')
+                room_dict = [{'id': r.id,
+                              'room_num': r.room_num,
+                              'is_sold': r.is_sold} for r in rooms]
+                unit_dict = {'unit': u, 'rooms': room_dict}
+                unit.append(unit_dict)
+            building_dict = {'building': b, 'units': unit}
+            result.append(building_dict)
+        context = {}
+        context['objects'] = result
+        return context
