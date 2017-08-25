@@ -73,7 +73,7 @@
 				<p>
 					<a data-toggle="modal" data-target="#deleteModal" data-id="{{obj.id}}" class="deleteOrder">清除公测订单</a>
 				</p>
-				<p><a href="{% url 'tv_wall' pk=obj.id %}" target="_blank">电视墙</a></p>
+				<p><a href="{% url 'tv' pk=obj.id %}" target="_blank">电视墙</a></p>
 			</td>
 		</tr>
 		{% endfor %}
