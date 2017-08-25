@@ -169,6 +169,12 @@ class AppEventDetailHouseListView(View):
         eventid = request.GET.get('id')
         building = request.GET.get('building')
         unit = request.GET.get('unit')
+        if unit:
+            eventdetobj = EventDetail.objects.filter(
+                event_id=eventid, building=building, unit=unit, status=True)
+        else:
+            eventdetobj = EventDetail.objects.filter(
+                event_id=eventid, building=building, status=True)
         event = Event.get(eventid)
         now = datetime.now()
         test = None
@@ -177,8 +183,6 @@ class AppEventDetailHouseListView(View):
         if event.event_start + timedelta(hours=-0.5) < now < event.event_end:
             test = False
         context = {}
-        eventdetobj = EventDetail.objects.filter(
-            event_id=eventid, building=building, unit=unit, status=True)
         room_num_list = []
         for obj in eventdetobj:
             if obj.status:
@@ -390,10 +394,11 @@ class AppHouseChoiceConfirmView(View):
                     return JsonResponse(
                         {
                             'response_state': 200,
-                            'room_info': ('%s-%s-%s-%s') % (obj[5],
-                                                            obj[6],
-                                                            obj[7],
-                                                            obj[8]),
+                            'room_info': ('%s%s%s%s%s') % (obj[5],
+                                                           obj[6],
+                                                           obj[7],
+                                                           '层',
+                                                           obj[8]),
                             'limit': (
                                 order.time + timedelta(
                                     hours=event.limit)).strftime('%Y/%m/%d \
@@ -424,8 +429,8 @@ class AppHouseChoiceConfirmView(View):
                     return JsonResponse(
                         {
                             'response_state': 200,
-                            'room_info': ('%s-%s-%s-%s') % (obj[5], obj[6],
-                                                            obj[7], obj[8]),
+                            'room_info': ('%s%s%s%s%s') % (obj[5], obj[6],
+                                                           obj[7], '层', obj[8]),
                             'limit': (
                                 order.time + timedelta(
                                     hours=event.limit)).strftime('%Y/%m/%d \
