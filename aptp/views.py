@@ -621,10 +621,11 @@ class AppHouseChoiceConfirmTestView(View):
                             'response_state': 200,
                             'room_info': ('%s-%s-%s-%s') % (obj[5], obj[6],
                                                             obj[7], obj[8]),
-                            'limit': (
-                                order.time + timedelta(
-                                    hours=event.limit)).strftime('%Y-%m-%d \
-                                     %H:%M:%S'),
+                            #'limit': (
+                                #order.time + timedelta(
+                                    #hours=event.limit)).strftime('%Y-%m-%d \
+                                     #%H:%M:%S'),
+                            'limit':3,
                             'ordertime': order.time,
                             'orderid': order.id,
                             'is_test': order.is_test,
