@@ -455,7 +455,7 @@ function houseInfo(data){
 							'</div>'+
 					'</div>'+
 					'<ul class="houseInfoCont">'+
-						'<li>单价<br/><span class="shpri">￥'+data.unit_price+'/m²</span></li>'+
+						'<li>单价<br/><span class="shpri">￥'+data.unit_price+'/㎡</span></li>'+
 						'<li>户型<br/><span class="type">'+data.house_type+'</span></li>'+
 						'<li>楼层<br/><span>'+data.floor+'F</span></li>'+
 					'</ul>'+
@@ -463,7 +463,7 @@ function houseInfo(data){
 						'<p>其他信息</p>'+
 						'<ul>'+
 							'<li class="clear">'+
-								'<span class="fl"><label>建筑面积</label><i>'+data.area+' m²</i></span>'+
+								'<span class="fl"><label>建筑面积</label><i>'+data.area+' ㎡</i></span>'+
 							'</li>'+
 							'<li class="clear">'+
 								'<span class="fl"><label>售价</label><i>￥'+data.total+'</i></span>'+
@@ -732,7 +732,7 @@ function order(data){
 				'</tr>'+
 				'<tr>'+
 				'<td>单价：</td>'+
-				'<td>￥'+data.objects[i][0].unit_price+'/m²</td>'+
+				'<td>￥'+data.objects[i][0].unit_price+'/㎡</td>'+
 				'</tr>'+
 				'</table>'+
 				'<p class="checkoderBtn">查看订单详情</p>'+
@@ -781,11 +781,11 @@ function checkInfo(data){
 									'</tr>'+
 									'<tr>'+
 										'<td>建筑面积：</td>'+
-										'<td>'+data.area+' m²</td>'+
+										'<td>'+data.area+' ㎡</td>'+
 									'</tr>'+
 									'<tr>' +
 										'<td>价格:</td>'+
-										'<td>￥'+data.unit_price+'/m²</td>'+
+										'<td>￥'+data.unit_price+'/㎡</td>'+
 									'</tr>'+
 								'</table>'+
 							'</div>'+
