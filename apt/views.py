@@ -499,7 +499,6 @@ class CustomerDeleteView(View):
 
     def post(self, request):
         id = request.POST.get('id')
-        print(id)
         if id:
             customer = Customer.get(id)
             try:
