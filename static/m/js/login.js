@@ -467,7 +467,7 @@ function houseInfo(data){
 								'<span class="fl"><label>售价</label><i>￥'+data.total+'</i></span>'+
 							'</li>'+
 							'<li class="clear">'+
-								'<span class="fl"><label>朝向</label><a>朝'+data.looking+'</a></span>'+
+								'<span class="fl"><label>朝向</label><a>'+data.looking+'</a></span>'+
 							'</li>'+
 							'<li class="clear">'+
 								'<span class="fl"><label>产权年限</label><a>'+data.term+'</a></span>'+
