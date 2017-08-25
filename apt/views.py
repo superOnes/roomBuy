@@ -419,7 +419,7 @@ class ExportEventDetailView(View):
             response.write(sio.getvalue())
             return response
         row = 1
-        for obj in objs:
+        for obj in objs.order_by('-id'):
             s.write(row, 0, obj.building)
             s.write(row, 1, obj.unit)
             s.write(row, 2, str(obj.floor))
@@ -543,7 +543,7 @@ class ExportCustomerView(View):
             response.write(sio.getvalue())
             return response
         row = 1
-        for obj in objs:
+        for obj in objs.order_by('-id'):
             s.write(row, 0, obj.realname)
             s.write(row, 1, obj.mobile)
             s.write(row, 2, obj.identication)
