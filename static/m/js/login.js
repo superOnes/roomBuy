@@ -456,7 +456,7 @@ function houseInfo(data){
 					'</div>'+
 					'<ul class="houseInfoCont">'+
 						'<li>单价<br/><span class="shpri">￥'+data.unit_price+'/m²</span></li>'+
-						'<li>户型<br/><span>'+data.house_type+'</span></li>'+
+						'<li>户型<br/><span class="type">'+data.house_type+'</span></li>'+
 						'<li>楼层<br/><span>'+data.floor+'F</span></li>'+
 					'</ul>'+
 					'<div class="houseInfoOther">'+
@@ -468,7 +468,7 @@ function houseInfo(data){
 							'<li class="clear">'+
 								'<span class="fl"><label>售价</label><i>￥'+data.total+'</i></span>'+
 							'</li>'+
-							'<li class="clear">'+
+							'<li class="looking clear">'+
 								'<span class="fl"><label>朝向</label><a>'+data.looking+'</a></span>'+
 							'</li>'+
 							'<li class="clear">'+
@@ -511,20 +511,20 @@ function houseInfo(data){
 	);
 	$("#houseInfo").after(infoBlack);
 	$("#houseInfo").append(houseInfo);
+    console.log(data.house_type);
+    if(data.house_type==""){
+        $(".houseInfoCont li").eq(1).hide();
+        $(".houseInfoCont li").css("width","50%");
+        $(".looking").hide();
+        $(".floor-unit+span+br").hide();
+        $(".floor-unit+span").hide();
+        $(".floor-unit").hide();
+    }
 	if(data.sold){
 		$(".houseInfoOther").after($('<div class="houseBtnN">房间已售</div>'));
 	}else{
 		$(".houseInfoOther").after($('<div class="houseBtnY" onclick="buyNow()">立即选择</div>'));
 	}
-
-	if(data.house_type=""){
-		$(".houseInfoCont li").eq(1).hide();
-        $(".houseInfoCont li").css("width","50%");
-        $(".floor-unit+span+br").hide();
-        $(".floor-unit+span").hide();
-        $(".floor-unit").hide();
-	}
-
 
 	$(".shareBt").bind("click",shareBtn);
 	/*这里去掉[0]*/
