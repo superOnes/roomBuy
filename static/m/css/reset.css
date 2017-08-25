@@ -250,10 +250,11 @@ a, img {-webkit-touch-callout: none;}
     line-height: 1.8rem;
     height: 1.8rem;
     color: #1f9af0;
-    padding-left: 2.8rem;
+    padding-left: 2.6rem;
     background:#fff url("../images/tel.png") 1.45rem center no-repeat;
     background-size:6%;
 }
+.wapline .phone a{color: #1f9af0;}
 .wapline .lineBox{
     width: 95%;
     margin: 0.4rem auto 1.8rem;

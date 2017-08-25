@@ -73,7 +73,7 @@ function creatEle(data){
 					'</div>' +
 				'</div>'+
 				'<div class="houseQui clear"><h1 class="fl">'+data.name+'</h1><p class="quit fr"><input type="button" value="退出" class="quitt"/></p></div>'+
-				'<div class="phone">咨询电话：'+data.phone+'</div>'+
+				'<div class="phone">咨询电话：<a href="tel:'+data.phone+'">'+data.phone+'</a></div>'+
 				'<div class="lineBox">'+
 					'<div class="floor">' +
 						'<div class="remark"><div class="mark"></div><span class="floor1">公测时间</span></div><div class="flr choicSt">公测开始 '+data.test_start+'<br/>公测结束 '+data.test_ent+'</div>' +
@@ -511,11 +511,20 @@ function houseInfo(data){
 	);
 	$("#houseInfo").after(infoBlack);
 	$("#houseInfo").append(houseInfo);
-		if(data.sold){
-			$(".houseInfoOther").after($('<div class="houseBtnN">房间已售</div>'));
-		}else{
-			$(".houseInfoOther").after($('<div class="houseBtnY" onclick="buyNow()">立即选择</div>'));
-		}
+	if(data.sold){
+		$(".houseInfoOther").after($('<div class="houseBtnN">房间已售</div>'));
+	}else{
+		$(".houseInfoOther").after($('<div class="houseBtnY" onclick="buyNow()">立即选择</div>'));
+	}
+
+	if(data.house_type=""){
+		$(".houseInfoCont li").eq(1).hide();
+        $(".houseInfoCont li").css("width","50%");
+        $(".floor-unit+span+br").hide();
+        $(".floor-unit+span").hide();
+        $(".floor-unit").hide();
+	}
+
 
 	$(".shareBt").bind("click",shareBtn);
 	/*这里去掉[0]*/
@@ -766,7 +775,7 @@ function checkInfo(data){
 							'</div>'+
 							'<div class="order-bottom-2">'+
 								'<table>'+
-									'<tr>'+
+									'<tr class="housetype">'+
 										'<td>户型：</td>'+
 										'<td>'+data.house_type+'</td>'+//改正拼写
 									'</tr>'+
@@ -801,6 +810,9 @@ function checkInfo(data){
 				'</div>'
 	);
 	$(".orderInfoBox").append(orderInfo);
+	if(data.house_type ==""){
+		$(".housetype").hide();
+	}
     if(data.is_test){
         $(".order-middle2").empty();
         $(".order-bottom-1 table").append($('<tr class="ordertype">'+
