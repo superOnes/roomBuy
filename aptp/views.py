@@ -396,7 +396,7 @@ class AppHouseChoiceConfirmView(View):
                                                             obj[8]),
                             'limit': (
                                 order.time + timedelta(
-                                    hours=event.limit)).strftime('%Y-%m-%d \
+                                    hours=event.limit)).strftime('%Y/%m/%d \
                                      %H:%M:%S'),
                             'ordertime': order.time,
                             'orderid': order.id,
@@ -428,7 +428,7 @@ class AppHouseChoiceConfirmView(View):
                                                             obj[7], obj[8]),
                             'limit': (
                                 order.time + timedelta(
-                                    hours=event.limit)).strftime('%Y-%m-%d \
+                                    hours=event.limit)).strftime('%Y/%m/%d \
                                      %H:%M:%S'),
                             'ordertime': order.time,
                             'orderid': order.id,
@@ -492,7 +492,7 @@ class AppHouseChoiceConfirmSQLiteView(View):
                                                         obj[8]),
                         'limit': (
                             order.time + timedelta(
-                                hours=event.limit)).strftime('%Y-%m-%d \
+                                hours=event.limit)).strftime('%Y/%m/%d \
                                  %H:%M:%S'),
                         'ordertime': order.time,
                         'orderid': order.id,
@@ -527,7 +527,7 @@ class AppHouseChoiceConfirmSQLiteView(View):
                                                         obj[8]),
                         'limit': (
                             order.time + timedelta(
-                                hours=event.limit)).strftime('%Y-%m-%d %H:%M:%S'),
+                                hours=event.limit)).strftime('%Y/%m/%d %H:%M:%S'),
                         'ordertime': order.time,
                         'orderid': order.id,
                         'is_test': order.is_test,
@@ -591,7 +591,7 @@ class AppHouseChoiceConfirmTestView(View):
                                                             obj[8]),
                             'limit': (
                                 order.time + timedelta(
-                                    hours=event.limit)).strftime('%Y-%m-%d \
+                                    hours=event.limit)).strftime('%Y/%m/%d \
                                      %H:%M:%S'),
                             'ordertime': order.time,
                             'orderid': order.id,
@@ -621,11 +621,10 @@ class AppHouseChoiceConfirmTestView(View):
                             'response_state': 200,
                             'room_info': ('%s-%s-%s-%s') % (obj[5], obj[6],
                                                             obj[7], obj[8]),
-                            #'limit': (
-                                #order.time + timedelta(
-                                    #hours=event.limit)).strftime('%Y-%m-%d \
-                                     #%H:%M:%S'),
-                            'limit':3,
+                            'limit': (
+                                order.time + timedelta(
+                                    hours=event.limit)).strftime('%Y/%m/%d \
+                                     %H:%M:%S'),
                             'ordertime': order.time,
                             'orderid': order.id,
                             'is_test': order.is_test,
@@ -755,7 +754,7 @@ class AppOrderInfoView(View):
                 'limit': (
                     obj.time +
                     timedelta(
-                        hours=obj.eventdetail.event.limit)).strftime('%Y-%m-%d %H:%M:%S'),
+                        hours=obj.eventdetail.event.limit)).strftime('%Y/%m/%d %H:%M:%S'),
                 'ordertime': obj.time.strftime('%Y-%m-%d %H:%M:%S'),
                 'room_info': (
                     obj.eventdetail.building +
