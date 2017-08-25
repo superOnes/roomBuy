@@ -92,6 +92,10 @@ function creatEle(data){
 	for(var i=0;i<data.plane_graph.length;i++){
 		$(".swiper-wrapper").append($('<div class="swiper-slide"><img src="'+http+data.plane_graph[i]+'"/></div>'));
 	}
+	if(data.plane_graph.length==0){
+		$(".bannerline").hide();
+	}
+
 	
 	var width = $("body").width();
 	$(".swiper-container").css({"width":width});
@@ -256,6 +260,7 @@ function houseList(data){
 			$(".sharees").removeClass("listTile-style");
 			aPp.removeClass('listTile-style');
 			$(this).addClass('listTile-style');
+			var building = $(this).html();
                 $.ajax({
                     type:"get",
                     url:http+"/app/unit/",
@@ -269,7 +274,7 @@ function houseList(data){
                             $(".houseUnit").remove();
                             $(".shareCarList").remove();
                             console.log(data);
-                            if(data.objects[0].unit.length>0){
+                            if(data.objects[0].unit!=""){
                                 var unit = $('<div class="houseTap houseUnit">'+
                                     '<div class="unite clear"></div>'+
                                     '</div>'
@@ -278,14 +283,11 @@ function houseList(data){
                                 $(".shareCarList").remove();
                                 $(".houseList").after(unit);
                             }else{
-                                $(".houseUnit").remove();
-                                $(".shareCarList").remove();
                                 $.ajax({
                                     type:"get",
                                     url:http+"/app/houselist/",
                                     data:{
-                                        building:$(this).html(),
-                                        unit:None,
+                                        building:building,
                                         id:$(".idNum").html()
                                     },
                                     success:function(data){
@@ -302,7 +304,7 @@ function houseList(data){
                                                 '</div>'+
                                                 '</div>');
 
-                                            $(".unite").after(romms);
+                                            $(".houseList").after(romms);
                                             for(var i=0;i<data.objects.length;i++){
                                                 $(".floorChose").append("<li>"+data.objects[i].floor_room_num+"</li>");
                                                 if(data.objects[i].sold){
@@ -328,7 +330,6 @@ function houseList(data){
                                         alert("无法连接网络，请检查网络后重试！");
                                     }
                                 })
-
 							}
 
                             for(var i=0;i<data.objects[0].unit.length;i++){
