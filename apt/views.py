@@ -510,6 +510,7 @@ class CustomerDeleteView(View):
                 customer.delete()
                 return JsonResponse({'success': True})
             order.eventdetail.is_sold = False
+            order.eventdetail.sign_id = None
             order.eventdetail.save()
             order.user.customer.delete()
             order.user.delete()
