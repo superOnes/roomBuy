@@ -857,18 +857,16 @@ class PurcharseHeatView(View):
                     "%Y/%m/%d %H:%M:%S")
                 ct_list['testroom'] = testorder.eventdetail.building + \
                                       testorder.eventdetail.unit + \
-                                      '-' + \
                                       str(testorder.eventdetail.floor) + \
-                                      '-' + \
+                                      '层' + \
                                       str(testorder.eventdetail.room_num)
             if openorder:
                 ct_list['opentime'] = openorder.time.strftime(
                     "%Y/%m/%d %H:%M:%S")
                 ct_list['openroom'] = openorder.eventdetail.building + \
                                       openorder.eventdetail.unit + \
-                                      '-' + \
                                       str(openorder.eventdetail.floor) + \
-                                      '-' + \
+                                      '层' + \
                                       str(openorder.eventdetail.room_num)
             li.append(ct_list)
         return JsonResponse(
@@ -1005,11 +1003,9 @@ class OrderListView(View):
             order_list = [{'id': od.id,
                            'time': od.time.strftime("%Y-%m-%d %H:%M:%S"),
                            'room_num': od.eventdetail.building +
-                           '-' +
                            od.eventdetail.unit +
-                           '-' +
                            str(od.eventdetail.floor) +
-                           '-' +
+                           '层' +
                            str(od.eventdetail.room_num),
                            'unit_price': od.eventdetail.unit_price,
                            'area': od.eventdetail.area,
@@ -1094,7 +1090,7 @@ class EventTVWallOrderView(View):
             'user': order.user.customer.realname,
             'user_mobile': order.user.customer.mobile,
             'user_id': order.user.customer.identication,
-            'house': ('%s-%s-%s') % (ed.building, ed.unit, ed.room_num),
+            'house': ed.building+ed.unit+str(ed.floor)+'层'+str(ed.room_num),
             'event': ed.event.name,
             'house_type': ed.type if ed.type else '',
             'area': ed.area,
