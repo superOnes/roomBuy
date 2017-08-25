@@ -191,7 +191,7 @@ function myOrder() {
 function myShare(){
 	$(".sharees").addClass("listTile-style");
 	$(".shares").removeClass("listTile-style");
-
+    $(".houseChose").remove();
         $.ajax({
             type:"get",
             url:http+"/app/followlist/",
@@ -204,11 +204,13 @@ function myShare(){
                     $(".houseUnit").remove();
                     $(".houseChose").remove();
                     if(data.objects.length==0){
+                        $(".houseChose").remove();
                         $(".houseList").after('<ul class="shareCarList houseTap">'+
                             '<div class="noOne"><img src="../images/none.png" /><p>目前您没有任何收藏！</p></div>'+
                             '</ul>'
                         );
                     }else{
+                        $(".houseChose").remove();
                         $(".houseList").after('<ul class="shareCarList houseTap"></ul>');
                         for(var i=0;i<data.objects.length;i++){
                             $(".shareCarList").append($('<li class="shareCar-list">'+
@@ -306,7 +308,7 @@ function houseList(data){
                                                 '</div>'+
                                                 '</div>'+
                                                 '</div>');
-
+                                            $(".houseChose").remove();
                                             $(".houseList").after(romms);
                                             for(var i=0;i<data.objects.length;i++){
                                                 $(".floorChose").append("<li>"+data.objects[i].floor_room_num+"</li>");
