@@ -28,7 +28,7 @@ urlpatterns = [
     url(r'^addfollow/', AddFollow.as_view(), name='app_house_follow'),
     url(r'^cancelfollow/', CancelFollow.as_view(), name='app_house_cancelfollow'),
     url(r'^followlist/', FollowView.as_view(), name='app_follow_view'),
-    #url(r'^orderconfirm/', AppHouseChoiceConfirmView.as_view()),
+    url(r'^orderconfirm/', AppHouseChoiceConfirmView.as_view()),
     url(r'^orderinfo/', AppOrderInfoView.as_view(), name='app_order_info'),
     url(r'^orderpro/', OrderProView.as_view(), name='app_order_pro'),
     url(r'^orderslist/', AppOrderListView.as_view(), name='app_order_list'),
@@ -37,5 +37,5 @@ urlpatterns = [
     url(r'^retfoll/', ReturnFollow.as_view(), name='app_returnfollow'),
     # 订单确认测试接口
     # url(r'^orderconfirmtest/', AppHouseChoiceConfirmTestView.as_view()),
-     url(r'^orderconfirm/', AppHouseChoiceConfirmSQLiteView.as_view()),
+    # url(r'^orderconfirm/', AppHouseChoiceConfirmSQLiteView.as_view()),
 ]
