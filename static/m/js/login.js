@@ -202,6 +202,7 @@ function myShare(){
                 if(data.response_state==200){
                     $(".shareCarList").remove();
                     $(".houseUnit").remove();
+                    $(".houseChose").remove();
                     if(data.objects.length==0){
                         $(".houseList").after('<ul class="shareCarList houseTap">'+
                             '<div class="noOne"><img src="../images/none.png" /><p>目前您没有任何收藏！</p></div>'+
@@ -273,7 +274,7 @@ function houseList(data){
                         if(data.response_state==200){
                             $(".houseUnit").remove();
                             $(".shareCarList").remove();
-                            console.log(data);
+                            $(".houseChose").remove();
                             if(data.objects[0].unit!=""){
                                 var unit = $('<div class="houseTap houseUnit">'+
                                     '<div class="unite clear"></div>'+
@@ -292,6 +293,8 @@ function houseList(data){
                                     },
                                     success:function(data){
                                         if(data.response_state==200){
+                                            $(".houseUnit").remove();
+                                            $(".shareCarList").remove();
                                             $(".houseChose").remove();
                                             var romms=$('<div class="houseChose">'+
                                                 '<div class="floorListbox">'+
@@ -803,42 +806,23 @@ function checkInfo(data){
             '<td>公测订单</td>'+
             '</tr>'));
     } else{
-        // setInterval(function(){
-        //     var dateNew= new Date(data.limit).getTime() - new Date().getTime();
-        //     if(dateNew>0){
-        //         var hours = Math.floor(dateNew / (3600 * 1000));
-        //         //计算相差分钟数
-        //         var leave2 = dateNew % (3600 * 1000);       //计算小时数后剩余的毫秒数
-        //         var minutes = Math.floor(leave2 / (60 * 1000));
-        //         //计算相差秒数
-        //         var leave3 = leave2 % (60 * 1000);     //计算分钟数后剩余的毫秒数
-        //         var seconds = Math.round(leave3 / 1000);
-        //
-        //
-        //         $('.order-2').html((hours < 10 ? "0" + hours : hours) + "小时 " + (minutes < 10 ? "0" + minutes : minutes) + " 分钟" + (seconds < 10 ? "0" + seconds : seconds) + " 秒");
-        //     }else{
-        //         $('.order-2').html("订单无效");
-        //     }
-        //
-        // },1000);
+        setInterval(function(){
+            var dateNew= new Date(data.limit).getTime() - new Date().getTime();
+            if(dateNew>0){
+                var hours = Math.floor(dateNew / (3600 * 1000));
+                //计算相差分钟数
+                var leave2 = dateNew % (3600 * 1000);       //计算小时数后剩余的毫秒数
+                var minutes = Math.floor(leave2 / (60 * 1000));
+                //计算相差秒数
+                var leave3 = leave2 % (60 * 1000);     //计算分钟数后剩余的毫秒数
+                var seconds = Math.round(leave3 / 1000);
+
+
+                $('.order-2').html((hours < 10 ? "0" + hours : hours) + "小时 " + (minutes < 10 ? "0" + minutes : minutes) + " 分钟" + (seconds < 10 ? "0" + seconds : seconds) + " 秒");
+            }else{
+                $('.order-2').html("订单无效");
+            }
+
+        },1000);
     }
-    setInterval(function(){
-        var dateNew= new Date("2017/08/25 09:00:00").getTime() - new Date().getTime();
-        console.log(dateNew);
-        if(dateNew>0){
-            var hours = Math.floor(dateNew / (3600 * 1000));
-            //计算相差分钟数
-            var leave2 = dateNew % (3600 * 1000);       //计算小时数后剩余的毫秒数
-            var minutes = Math.floor(leave2 / (60 * 1000));
-            //计算相差秒数
-            var leave3 = leave2 % (60 * 1000);     //计算分钟数后剩余的毫秒数
-            var seconds = Math.round(leave3 / 1000);
-
-
-            $('.order-2').html((hours < 10 ? "0" + hours : hours) + "h " + (minutes < 10 ? "0" + minutes : minutes) + " m" + (seconds < 10 ? "0" + seconds : seconds) + " s");
-        }else{
-            $('.order-2').html("订单无效");
-        }
-
-    },1000);
 }
