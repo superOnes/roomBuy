@@ -846,7 +846,7 @@ class PurcharseHeatView(View):
                 'identication': customer.identication,
                 'consultant': customer.consultant if customer.consultant else '',
                 'phone': customer.phone if customer.phone else '',
-                'protime': customer.protime.strftime('%Y-%m-%d %H:%M:%S') if customer.protime else '',
+                'protime': customer.protime.strftime('%Y/%m/%d %H:%M:%S') if customer.protime else '',
                 'count': customer.count,
                 'testtime': '',
                 'testroom': '',
@@ -1001,7 +1001,7 @@ class OrderListView(View):
         queryset = pagination.get_queryset ()
         if queryset:
             order_list = [{'id': od.id,
-                           'time': od.time.strftime("%Y-%m-%d %H:%M:%S"),
+                           'time': od.time.strftime("%Y/%m/%d %H:%M:%S"),
                            'room_num': od.eventdetail.building +
                            od.eventdetail.unit +
                            str(od.eventdetail.floor) +
