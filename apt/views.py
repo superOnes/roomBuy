@@ -1121,7 +1121,8 @@ class TVWallView(TemplateView):
 
     def get_context_data(self, pk):
         result = []
-        eventdetails = Event.get(pk).eventdetail_set.all()
+        event = Event.get(pk)
+        eventdetails = event.eventdetail_set.all()
         buildings = sorted(
             list(set(eventdetails.values_list('building', flat=True))))
         for b in buildings:
@@ -1141,4 +1142,5 @@ class TVWallView(TemplateView):
             result.append(building_dict)
         context = {}
         context['objects'] = result
+        context['event'] = event.name
         return context
