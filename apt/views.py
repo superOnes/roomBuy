@@ -65,9 +65,9 @@ class EventListView(ListView):
         queryset = self.model.get_all_by_company(self.request.user.company.id)
         if self.value:
             queryset = queryset.filter(Q(name__contains=self.value))
-        host = self.request.get_host()
-        if settings.DEBUG is False:
-            host = 'xfcdn.zhongkerunxin.com'
+        host = 'xfcdn.zhongkerunxin.com'
+        if settings.ENVIRONMENT == 'development':
+            host = self.request.get_host()
         for obj in queryset:
             obj.qr = url2qrcode(
                 'http://%s/static/m/views/choiceHouse.html?id=%s' %

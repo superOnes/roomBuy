@@ -175,6 +175,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'public')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+ENVIRONMENT = 'production'
+
 try:
     from .local_settings import *
 except:
