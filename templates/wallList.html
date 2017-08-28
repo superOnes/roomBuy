@@ -18,6 +18,7 @@
 
             success:function(data){
                 if(data.response_state==200){
+                    console.log(data);
                     createWap(data.result);
                     var oH=$(window).height();
                     $(".wap").css({height:oH+"px",overflow:"hidden"});
@@ -73,6 +74,13 @@
 
                                         )
                     );
+                if( $(".wapbox").eq(i).find(".unitName").html()==""){
+                    $(".wapbox").eq(i).find(".unitName").hide();
+                    $(".wapbox").eq(i).find(".unit").css("width","100%");
+                }
+                if(data[i].units.length%3==1){
+                    $(".wapbox").eq(i).find(".unit").eq(3*j).css("width","100%");
+                }
 
                 for(var n=0;n<data[i].units[j].rooms.length;n++){
                     $(".wapbox").eq(i).find(".unit").eq(j).find(".unitList").append($('<span>'+data[i].units[j].rooms[n].room_num+

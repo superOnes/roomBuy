@@ -73,7 +73,7 @@ function creatEle(data){
 					'</div>' +
 				'</div>'+
 				'<div class="houseQui clear"><h1 class="fl">'+data.name+'</h1><p class="quit fr"><input type="button" value="退出" class="quitt"/></p></div>'+
-				'<div class="phone">咨询电话：<input type="text" value="'+data.phone+'" readonly style="color:#1f9af0"></div>'+
+				'<div class="phone">咨询电话：<a href="tel:'+data.phone+'">'+data.phone+'</a></div>'+
 				'<div class="lineBox">'+
 					'<div class="floor">' +
 						'<div class="remark"><div class="mark"></div><span class="floor1">公测时间</span></div><div class="flr choicSt">公测开始 '+data.test_start+'<br/>公测结束 '+data.test_ent+'</div>' +
@@ -92,7 +92,11 @@ function creatEle(data){
 	for(var i=0;i<data.plane_graph.length;i++){
 		$(".swiper-wrapper").append($('<div class="swiper-slide"><img src="'+http+data.plane_graph[i]+'"/></div>'));
 	}
-	
+	if(data.plane_graph.length==0){
+		$(".bannerline").hide();
+	}
+
+
 	var width = $("body").width();
 	$(".swiper-container").css({"width":width});
 	var swiper = new Swiper('.swiper-container', {
@@ -203,7 +207,7 @@ function addCount(){
 function myShare(){
 	$(".sharees").addClass("listTile-style");
 	$(".shares").removeClass("listTile-style");
-
+    $(".houseChose").remove();
         $.ajax({
             type:"get",
             url:http+"/app/followlist/",
@@ -214,12 +218,15 @@ function myShare(){
                 if(data.response_state==200){
                     $(".shareCarList").remove();
                     $(".houseUnit").remove();
+                    $(".houseChose").remove();
                     if(data.objects.length==0){
+                        $(".houseChose").remove();
                         $(".houseList").after('<ul class="shareCarList houseTap">'+
                             '<div class="noOne"><img src="../images/none.png" /><p>目前您没有任何收藏！</p></div>'+
                             '</ul>'
                         );
                     }else{
+                        $(".houseChose").remove();
                         $(".houseList").after('<ul class="shareCarList houseTap"></ul>');
                         for(var i=0;i<data.objects.length;i++){
                             $(".shareCarList").append($('<li class="shareCar-list">'+
@@ -272,6 +279,7 @@ function houseList(data){
 			$(".sharees").removeClass("listTile-style");
 			aPp.removeClass('listTile-style');
 			$(this).addClass('listTile-style');
+			var building = $(this).html();
                 $.ajax({
                     type:"get",
                     url:http+"/app/unit/",
@@ -284,7 +292,8 @@ function houseList(data){
                         if(data.response_state==200){
                             $(".houseUnit").remove();
                             $(".shareCarList").remove();
-                            if(data.objects[0].unit.length>0){
+                            $(".houseChose").remove();
+                            if(data.objects[0].unit!=""){
                                 var unit = $('<div class="houseTap houseUnit">'+
                                     '<div class="unite clear"></div>'+
                                     '</div>'
@@ -292,7 +301,57 @@ function houseList(data){
                                 $(".houseUnit").remove();
                                 $(".shareCarList").remove();
                                 $(".houseList").after(unit);
-                            }
+                            }else{
+                                $.ajax({
+                                    type:"get",
+                                    url:http+"/app/houselist/",
+                                    data:{
+                                        building:building,
+                                        id:$(".idNum").html()
+                                    },
+                                    success:function(data){
+                                        if(data.response_state==200){
+                                            $(".houseUnit").remove();
+                                            $(".shareCarList").remove();
+                                            $(".houseChose").remove();
+                                            var romms=$('<div class="houseChose">'+
+                                                '<div class="floorListbox">'+
+                                                '<ul class="floorChose">'+
+                                                '</ul>'+
+                                                '<div class="tab">'+
+                                                '<div class="shouing"><i></i>在售</div>'+
+                                                '<div class="shoued"><i></i>已售</div>'+
+                                                '</div>'+
+                                                '</div>'+
+                                                '</div>');
+                                            $(".houseChose").remove();
+                                            $(".houseList").after(romms);
+                                            for(var i=0;i<data.objects.length;i++){
+                                                $(".floorChose").append("<li>"+data.objects[i].floor_room_num+"</li>");
+                                                if(data.objects[i].sold){
+                                                    $(".floorChose li").eq(i).addClass("floorLi-red");
+                                                }
+                                            }
+                                            var aLis=$(".floorChose").find("li");
+
+                                            aLis.each(function(){
+                                                $(this).click(function(){
+                                                    var houseID=data.objects[$(this).index()].house;
+                                                    window.location.href="houseInfo.html?house="+houseID+"&id="+$(".idNum").html();
+                                                })
+                                            })
+                                        }else if(data.response_state==401||data.response_state==403){
+                                            alert(data.msg);
+                                            window.location.href="login.html?id="+$(".idNum").html();
+                                        }else{
+                                            alert(data.msg);
+                                        }
+                                    },
+                                    error:function(){
+                                        alert("无法连接网络，请检查网络后重试！");
+                                    }
+                                })
+							}
 
                             for(var i=0;i<data.objects[0].unit.length;i++){
 
@@ -412,21 +471,21 @@ function houseInfo(data){
 							'</div>'+
 					'</div>'+
 					'<ul class="houseInfoCont">'+
-						'<li>单价<br/><span class="shpri">￥'+data.unit_price+'/m²</span></li>'+
-						'<li>户型<br/><span>'+data.house_type+'</span></li>'+
+						'<li>单价<br/><span class="shpri">￥'+data.unit_price+'/㎡</span></li>'+
+						'<li>户型<br/><span class="type">'+data.house_type+'</span></li>'+
 						'<li>楼层<br/><span>'+data.floor+'F</span></li>'+
 					'</ul>'+
 					'<div class="houseInfoOther">'+
 						'<p>其他信息</p>'+
 						'<ul>'+
 							'<li class="clear">'+
-								'<span class="fl"><label>建筑面积</label><i>'+data.area+' m²</i></span>'+
+								'<span class="fl"><label>建筑面积</label><i>'+data.area+' ㎡</i></span>'+
 							'</li>'+
 							'<li class="clear">'+
 								'<span class="fl"><label>售价</label><i>￥'+data.total+'</i></span>'+
 							'</li>'+
-							'<li class="clear">'+
-								'<span class="fl"><label>朝向</label><a>朝'+data.looking+'</a></span>'+
+							'<li class="looking clear">'+
+								'<span class="fl"><label>朝向</label><a>'+data.looking+'</a></span>'+
 							'</li>'+
 							'<li class="clear">'+
 								'<span class="fl"><label>产权年限</label><a>'+data.term+'</a></span>'+
@@ -468,11 +527,20 @@ function houseInfo(data){
 	);
 	$("#houseInfo").after(infoBlack);
 	$("#houseInfo").append(houseInfo);
-		if(data.sold){
-			$(".houseInfoOther").after($('<div class="houseBtnN">房间已售</div>'));
-		}else{
-			$(".houseInfoOther").after($('<div class="houseBtnY" onclick="buyNow()">立即选择</div>'));
-		}
+    console.log(data.house_type);
+    if(data.house_type==""){
+        $(".houseInfoCont li").eq(1).hide();
+        $(".houseInfoCont li").css("width","50%");
+        $(".looking").hide();
+        $(".floor-unit+span+br").hide();
+        $(".floor-unit+span").hide();
+        $(".floor-unit").hide();
+    }
+	if(data.sold){
+		$(".houseInfoOther").after($('<div class="houseBtnN">房间已售</div>'));
+	}else{
+		$(".houseInfoOther").after($('<div class="houseBtnY" onclick="buyNow()">立即选择</div>'));
+	}
 
 	$(".shareBt").bind("click",shareBtn);
 	/*这里去掉[0]*/
@@ -680,7 +748,7 @@ function order(data){
 				'</tr>'+
 				'<tr>'+
 				'<td>单价：</td>'+
-				'<td>￥'+data.objects[i][0].unit_price+'/m²</td>'+
+				'<td>￥'+data.objects[i][0].unit_price+'/㎡</td>'+
 				'</tr>'+
 				'</table>'+
 				'<p class="checkoderBtn">查看订单详情</p>'+
@@ -723,17 +791,17 @@ function checkInfo(data){
 							'</div>'+
 							'<div class="order-bottom-2">'+
 								'<table>'+
-									'<tr>'+
+									'<tr class="housetype">'+
 										'<td>户型：</td>'+
 										'<td>'+data.house_type+'</td>'+//改正拼写
 									'</tr>'+
 									'<tr>'+
 										'<td>建筑面积：</td>'+
-										'<td>'+data.area+' m²</td>'+
+										'<td>'+data.area+' ㎡</td>'+
 									'</tr>'+
 									'<tr>' +
 										'<td>价格:</td>'+
-										'<td>￥'+data.unit_price+'/m²</td>'+
+										'<td>￥'+data.unit_price+'/㎡</td>'+
 									'</tr>'+
 								'</table>'+
 							'</div>'+
@@ -758,13 +826,16 @@ function checkInfo(data){
 				'</div>'
 	);
 	$(".orderInfoBox").append(orderInfo);
+	if(data.house_type ==""){
+		$(".housetype").hide();
+	}
     if(data.is_test){
         $(".order-middle2").empty();
         $(".order-bottom-1 table").append($('<tr class="ordertype">'+
             '<td>订单类型：</td>'+
             '<td>公测订单</td>'+
             '</tr>'));
-    }else{
+    } else{
         setInterval(function(){
             var dateNew= new Date(data.limit).getTime() - new Date().getTime();
             if(dateNew>0){

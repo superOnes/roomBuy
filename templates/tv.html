@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}src/zui/css/zui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}src/zui/css/zui-theme.css"/>
+		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}src/jquery.fullpage.css"/>
+    <script src="{{ STATIC_URL }}src/jquery-3.2.1.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="{{ STATIC_URL }}src/jquery.fullpage.js" type="text/javascript" charset="utf-8"></script>
+    <script src="{{ STATIC_URL }}src/autoscroll.js" type="text/javascript" charset="utf-8"></script>
+    <style>
+    body {
+      background-image: url(/static/images/bg1.png);
+      margin: 0 auto;
+      width: 90%;
+    }
+    .section {
+      overflow-x: hidden;
+      overflow-y: scroll;
+      margin-top: 20px;
+    }
+    .title {
+      margin: 0 auto;
+      width: 300px;
+      color: white;
+    }
+    .room-num {
+      width: 100px;
+      height: 50px;
+      font-size: 20px;
+      margin: 5px;
+      background-color: white;
+      padding: 10px 0;
+    }
+    ::-webkit-scrollbar{
+      display:none;
+    }
+    </style>
+	</head>
+	<body>
+    <div class="section">
+      {% for b in objects %}
+        {% for u in b.units %}
+          <div style="margin-top:10px">
+            <h1 class="title">{{b.building}} {{u.unit}}<h1>
+            <div class="content">
+            {% for r in u.rooms %}
+            {% if r.is_sold %}
+            <a href="{% url 'tv_order' pk=r.id %}" class="btn room-num"
+               style="background-color:pink" target="_blank">{{r.room_num}}</a>
+            {% else %}
+            <a class="btn room-num">{{r.room_num}}</a>
+            {% endif %}
+            {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+      {% endfor %}
+    </div>
+	</body>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      var height = $(document).height();
+      var sectionH = $(window).height() - 50;
+      $(".section").css("height", sectionH + "px");
+      $("html, .section").animate({ scrollTop: 0 }, 0);
+      $("html, .section").animate({ scrollTop: height }, 60000);
+			var h = $(".section").get(0).offsetHeight;
+			var sh = $(".section").get(0).scrollHeight;
+			if(sh <= h) {
+				setInterval(function(){
+					window.location.reload();
+				}, 2000);
+			}
+
+      $(".section").on("scroll", function(){
+          var point = $(this).scrollTop();
+          if(sh - h - point <= 0) {
+            setInterval(function(){
+              window.location.reload();
+            }, 2000);
+          }
+      });
+    });
+  </script>
+</html>

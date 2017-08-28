@@ -190,9 +190,15 @@ class EventDetailCreateView(DialogMixin, CreateView):
 
     def get_initial(self):
         initial = super(EventDetailCreateView, self).get_initial()
-        initial['event'] = Event.get(self.kwargs['pk'])
+        self.event = Event.get(self.kwargs['pk'])
+        initial['event'] = self.event
         initial['current_user'] = self.request.user
         return initial
+
+    def get_context_data(self, **kwargs):
+        context = super(EventDetailCreateView, self).get_context_data(**kwargs)
+        context['event'] = self.event
+        return context
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -413,7 +419,7 @@ class ExportEventDetailView(View):
             response.write(sio.getvalue())
             return response
         row = 1
-        for obj in objs:
+        for obj in objs.order_by('-id'):
             s.write(row, 0, obj.building)
             s.write(row, 1, obj.unit)
             s.write(row, 2, str(obj.floor))
@@ -493,7 +499,6 @@ class CustomerDeleteView(View):
 
     def post(self, request):
         id = request.POST.get('id')
-        print(id)
         if id:
             customer = Customer.get(id)
             try:
@@ -504,6 +509,7 @@ class CustomerDeleteView(View):
                 customer.delete()
                 return JsonResponse({'success': True})
             order.eventdetail.is_sold = False
+            order.eventdetail.sign_id = None
             order.eventdetail.save()
             order.user.customer.delete()
             order.user.delete()
@@ -537,7 +543,7 @@ class ExportCustomerView(View):
             response.write(sio.getvalue())
             return response
         row = 1
-        for obj in objs:
+        for obj in objs.order_by('-id'):
             s.write(row, 0, obj.realname)
             s.write(row, 1, obj.mobile)
             s.write(row, 2, obj.identication)
@@ -590,7 +596,7 @@ class ExportHouseHotView(View):
             response.write(sio.getvalue())
             return response
         row = 1
-        for obj in objs:
+        for obj in objs.order_by('id'):
             s.write(row, 0, obj.building)
             s.write(row, 1, obj.unit)
             s.write(row, 2, str(obj.floor))
@@ -851,18 +857,16 @@ class PurcharseHeatView(View):
                     "%Y/%m/%d %H:%M:%S")
                 ct_list['testroom'] = testorder.eventdetail.building + \
                                       testorder.eventdetail.unit + \
-                                      '-' + \
                                       str(testorder.eventdetail.floor) + \
-                                      '-' + \
+                                      '层' + \
                                       str(testorder.eventdetail.room_num)
             if openorder:
                 ct_list['opentime'] = openorder.time.strftime(
                     "%Y/%m/%d %H:%M:%S")
                 ct_list['openroom'] = openorder.eventdetail.building + \
                                       openorder.eventdetail.unit + \
-                                      '-' + \
                                       str(openorder.eventdetail.floor) + \
-                                      '-' + \
+                                      '层' + \
                                       str(openorder.eventdetail.room_num)
             li.append(ct_list)
         return JsonResponse(
@@ -999,11 +1003,9 @@ class OrderListView(View):
             order_list = [{'id': od.id,
                            'time': od.time.strftime("%Y-%m-%d %H:%M:%S"),
                            'room_num': od.eventdetail.building +
-                           '-' +
                            od.eventdetail.unit +
-                           '-' +
                            str(od.eventdetail.floor) +
-                           '-' +
+                           '层' +
                            str(od.eventdetail.room_num),
                            'unit_price': od.eventdetail.unit_price,
                            'area': od.eventdetail.area,
@@ -1088,7 +1090,7 @@ class EventTVWallOrderView(View):
             'user': order.user.customer.realname,
             'user_mobile': order.user.customer.mobile,
             'user_id': order.user.customer.identication,
-            'house': ('%s-%s-%s') % (ed.building, ed.unit, ed.room_num),
+            'house': ed.building+ed.unit+str(ed.floor)+'层'+str(ed.room_num),
             'event': ed.event.name,
             'house_type': ed.type if ed.type else '',
             'area': ed.area,
@@ -1112,3 +1114,31 @@ class UpDownFrameView(View):
         if int(state) == 1:
             ed.update(status=True)
         return JsonResponse({'success': True})
+
+
+class TVWallView(TemplateView):
+    template_name = 'tv.html'
+
+    def get_context_data(self, pk):
+        result = []
+        eventdetails = Event.get(pk).eventdetail_set.all()
+        buildings = sorted(
+            list(set(eventdetails.values_list('building', flat=True))))
+        for b in buildings:
+            units = eventdetails.filter(building=b).order_by('unit') \
+                                .values_list('unit', flat=True)
+            units = list(set(units))
+            unit = []
+            for u in units:
+                rooms = eventdetails.filter(building=b, unit=u) \
+                                    .order_by('room_num')
+                room_dict = [{'id': r.id,
+                              'room_num': r.room_num,
+                              'is_sold': r.is_sold} for r in rooms]
+                unit_dict = {'unit': u, 'rooms': room_dict}
+                unit.append(unit_dict)
+            building_dict = {'building': b, 'units': unit}
+            result.append(building_dict)
+        context = {}
+        context['objects'] = result
+        return context

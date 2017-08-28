@@ -169,6 +169,12 @@ class AppEventDetailHouseListView(View):
         eventid = request.GET.get('id')
         building = request.GET.get('building')
         unit = request.GET.get('unit')
+        if unit:
+            eventdetobj = EventDetail.objects.filter(
+                event_id=eventid, building=building, unit=unit, status=True)
+        else:
+            eventdetobj = EventDetail.objects.filter(
+                event_id=eventid, building=building, status=True)
         event = Event.get(eventid)
         now = datetime.now()
         test = None
@@ -177,14 +183,12 @@ class AppEventDetailHouseListView(View):
         if event.event_start + timedelta(hours=-0.5) < now < event.event_end:
             test = False
         context = {}
-        eventdetobj = EventDetail.objects.filter(
-            event_id=eventid, building=building, unit=unit, status=True)
         room_num_list = []
         for obj in eventdetobj:
             if obj.status:
                 value = {
                     'house': obj.id,
-                    'floor_room_num': str(obj.floor) + '-' + str(obj.room_num),
+                    'floor_room_num': str(obj.floor) + '层' + str(obj.room_num),
                     'floor': obj.floor,
                     'room_num': obj.room_num,
                     'sold': obj.is_testsold if test else obj.is_sold,
@@ -390,13 +394,14 @@ class AppHouseChoiceConfirmView(View):
                     return JsonResponse(
                         {
                             'response_state': 200,
-                            'room_info': ('%s-%s-%s-%s') % (obj[5],
-                                                            obj[6],
-                                                            obj[7],
-                                                            obj[8]),
+                            'room_info': ('%s%s%s%s%s') % (obj[5],
+                                                           obj[6],
+                                                           obj[7],
+                                                           '层',
+                                                           obj[8]),
                             'limit': (
                                 order.time + timedelta(
-                                    hours=event.limit)).strftime('%Y-%m-%d \
+                                    hours=event.limit)).strftime('%Y/%m/%d \
                                      %H:%M:%S'),
                             'ordertime': order.time,
                             'orderid': order.id,
@@ -424,11 +429,11 @@ class AppHouseChoiceConfirmView(View):
                     return JsonResponse(
                         {
                             'response_state': 200,
-                            'room_info': ('%s-%s-%s-%s') % (obj[5], obj[6],
-                                                            obj[7], obj[8]),
+                            'room_info': ('%s%s%s%s%s') % (obj[5], obj[6],
+                                                           obj[7], '层', obj[8]),
                             'limit': (
                                 order.time + timedelta(
-                                    hours=event.limit)).strftime('%Y-%m-%d \
+                                    hours=event.limit)).strftime('%Y/%m/%d \
                                      %H:%M:%S'),
                             'ordertime': order.time,
                             'orderid': order.id,
@@ -492,7 +497,7 @@ class AppHouseChoiceConfirmSQLiteView(View):
                                                         obj[8]),
                         'limit': (
                             order.time + timedelta(
-                                hours=event.limit)).strftime('%Y-%m-%d \
+                                hours=event.limit)).strftime('%Y/%m/%d \
                                  %H:%M:%S'),
                         'ordertime': order.time,
                         'orderid': order.id,
@@ -527,7 +532,7 @@ class AppHouseChoiceConfirmSQLiteView(View):
                                                         obj[8]),
                         'limit': (
                             order.time + timedelta(
-                                hours=event.limit)).strftime('%Y-%m-%d %H:%M:%S'),
+                                hours=event.limit)).strftime('%Y/%m/%d %H:%M:%S'),
                         'ordertime': order.time,
                         'orderid': order.id,
                         'is_test': order.is_test,
@@ -591,7 +596,7 @@ class AppHouseChoiceConfirmTestView(View):
                                                             obj[8]),
                             'limit': (
                                 order.time + timedelta(
-                                    hours=event.limit)).strftime('%Y-%m-%d \
+                                    hours=event.limit)).strftime('%Y/%m/%d \
                                      %H:%M:%S'),
                             'ordertime': order.time,
                             'orderid': order.id,
@@ -623,7 +628,7 @@ class AppHouseChoiceConfirmTestView(View):
                                                             obj[7], obj[8]),
                             'limit': (
                                 order.time + timedelta(
-                                    hours=event.limit)).strftime('%Y-%m-%d \
+                                    hours=event.limit)).strftime('%Y/%m/%d \
                                      %H:%M:%S'),
                             'ordertime': order.time,
                             'orderid': order.id,
@@ -754,7 +759,7 @@ class AppOrderInfoView(View):
                 'limit': (
                     obj.time +
                     timedelta(
-                        hours=obj.eventdetail.event.limit)).strftime('%Y-%m-%d %H:%M:%S'),
+                        hours=obj.eventdetail.event.limit)).strftime('%Y/%m/%d %H:%M:%S'),
                 'ordertime': obj.time.strftime('%Y-%m-%d %H:%M:%S'),
                 'room_info': (
                     obj.eventdetail.building +
