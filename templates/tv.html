@@ -17,10 +17,8 @@
       width: 95%;
     }
     .section {
-      overflow: hidden;
+      overflow-y: hidden;
       margin-top: 20px;
-			width: 101%;
-			padding: 0 5px;
     }
     .title {
       margin: 0 auto;
@@ -56,28 +54,25 @@
 			<div class="mark-sold">已售</div>
 		</div>
 		<h1 style="color:#fff;text-align:center">{{event}}</h1>
-		<div style="width:100%;overflow-x:hidden">
-	    <div class="section">
-	      {% for b in objects %}
-	        {% for u in b.units %}
-	          <div style="margin-top:10px">
-	            <h1 class="title">{{b.building}} {{u.unit}}<h1>
-	            <div class="content">
-	            {% for r in u.rooms %}
-	            {% if r.is_sold %}
-	            <a href="{% url 'tv_order' pk=r.id %}" class="btn room-num"
-	               style="background-color:#f75c2e;border:1px #f75c2e solid;color:#fff" target="_blank">{{r.room_num}}</a>
-	            {% else %}
-	            <a class="btn room-num">{{r.room_num}}</a>
-	            {% endif %}
-	            {% endfor %}
-	            </div>
-	          </div>
-	        {% endfor %}
-	      {% endfor %}
-	    </div>
-	  </div>
-
+    <div class="section">
+      {% for b in objects %}
+        {% for u in b.units %}
+          <div style="margin-top:10px">
+            <h1 class="title">{{b.building}} {{u.unit}}<h1>
+            <div class="content">
+            {% for r in u.rooms %}
+            {% if r.is_sold %}
+            <a href="{% url 'tv_order' pk=r.id %}" class="btn room-num"
+               style="background-color:#f75c2e;border:1px #f75c2e solid;color:#fff" target="_blank">{{r.room_num}}</a>
+            {% else %}
+            <a class="btn room-num">{{r.room_num}}</a>
+            {% endif %}
+            {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+      {% endfor %}
+    </div>
 	</body>
   <script type="text/javascript">
     $(document).ready(function(){
