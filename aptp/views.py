@@ -729,7 +729,7 @@ class AppOrderListView(View):
                     obj.eventdetail.unit +
                     str(obj.eventdetail.floor) + '层' +
                     str(obj.eventdetail.room_num)),
-                'time': obj.time.strftime('%Y-%m-%d %H:%M:%S'),
+                'time': obj.time.strftime('%Y/%m/%d %H:%M:%S'),
                 'event': obj.eventdetail.event.name,
                 'unit_price': format(obj.eventdetail.unit_price, ',') if obj.eventdetail.event.covered_space_price else '***',
                 'orderid': obj.id,
@@ -760,7 +760,7 @@ class AppOrderInfoView(View):
                     obj.time +
                     timedelta(
                         hours=obj.eventdetail.event.limit)).strftime('%Y/%m/%d %H:%M:%S'),
-                'ordertime': obj.time.strftime('%Y-%m-%d %H:%M:%S'),
+                'ordertime': obj.time.strftime('%Y/%m/%d %H:%M:%S'),
                 'room_info': (
                     obj.eventdetail.building +
                     obj.eventdetail.unit +
