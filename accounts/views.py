@@ -105,18 +105,22 @@ class CustomerLoginView(View):
                 return JsonResponse(
                     {'response_state': 400, 'msg': '用户名或密码不正确！'})
             else:
-                if customer.user:
-                    if not customer.user.is_admin:
+                try:
+                    customer.user
+                except BaseException:
+                    return JsonResponse (
+                        {'response_state': 400, 'msg': '帐号出现异常，请联系售楼人员！'})
+                else:
+                    if customer.user.is_admin:
+                        return JsonResponse ({'response_state': 400})
+                    else:
                         value = [{
                             'termname': customer.event.termname,
                             'term': customer.event.term,
                         }]
-                        return JsonResponse(
+                        return JsonResponse (
                             {'response_state': 200, 'objects': value})
-                    return JsonResponse({'response_state': 400})
-                return JsonResponse(
-                    {'response_state': 400, 'msg': '该电话号与证件号不正确！'})
-        return JsonResponse({'response_state': 403, 'msg': '活动还未正式推出！'})
+        return JsonResponse ({'response_state': 403, 'msg': '活动还未正式推出！'})
 
 
 class CustomerLogoutView(View):
