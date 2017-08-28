@@ -192,7 +192,7 @@ function addCount(){
         '<svg class="alert-circle" width="234" height="234">'+
         '<circle cx="117" cy="117" r="108" fill="#FFF" stroke="#43AEFA" stroke-width="17"></circle>'+
         '<circle id="js-sec-circle" class="alert-sec-circle" cx="117" cy="117" r="108" fill="transparent" stroke="#F4F1F1" stroke-width="18" transform="rotate(-90 117 117)"></circle>'+
-        '<text class="alert-sec-unit" x="82" y="172" fill="#BDBDBD">secs</text>'+
+        '<text class="alert-sec-unit" x="52" y="172" fill="#666">秒之后开始选房</text>'+
         '</svg>'+
         ' <div id="js-sec-text" class="alert-sec-text"></div>'+
         '<div class="alert-body">'+
