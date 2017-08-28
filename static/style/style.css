@@ -68,10 +68,11 @@ input[type="number"]{
 
 /*查看更多*/
 .lookMoreBuyer, .lookMoreHouse{
-	border-radius: 15px;
+	margin-bottom: 20px;
 	display: block;
 	display: none;
 	border: none;
+	border-radius: 15px;
 	background-color: #ffffff;
 }
 .lookMoreBuyer:hover{
@@ -82,10 +83,11 @@ background: #f2f2f2;
 }
 
 #lookMoreOrder{
-	border-radius: 15px;
+	margin-bottom: 20px;
 	display: block;
 	display: none;
 	border: none;
+	border-radius: 15px;
 	background-color: #ffffff;
 }
 #lookMoreOrder:hover{
