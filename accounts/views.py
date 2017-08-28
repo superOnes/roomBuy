@@ -106,21 +106,21 @@ class CustomerLoginView(View):
                     {'response_state': 400, 'msg': '用户名或密码不正确！'})
             else:
                 try:
-                    customer.user
+                    user = customer.user
                 except BaseException:
-                    return JsonResponse (
+                    return JsonResponse(
                         {'response_state': 400, 'msg': '帐号出现异常，请联系售楼人员！'})
                 else:
-                    if customer.user.is_admin:
-                        return JsonResponse ({'response_state': 400})
+                    if user.is_admin:
+                        return JsonResponse({'response_state': 400})
                     else:
                         value = [{
                             'termname': customer.event.termname,
                             'term': customer.event.term,
                         }]
-                        return JsonResponse (
+                        return JsonResponse(
                             {'response_state': 200, 'objects': value})
-        return JsonResponse ({'response_state': 403, 'msg': '活动还未正式推出！'})
+        return JsonResponse({'response_state': 403, 'msg': '活动还未正式推出！'})
 
 
 class CustomerLogoutView(View):
@@ -279,7 +279,7 @@ class ImportView(View):
                         User.objects.create_user(username=uuid.uuid1(),
                                                  customer=customer,
                                                  is_admin=False)
-            except:
+            except BaseException:
                 os.remove('media/tmp/customer.xlsx')
                 return JsonResponse({'response_state': 400,
                                      'msg': '未知错误，请联系管理员'})
