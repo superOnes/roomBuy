@@ -595,9 +595,9 @@ div.shoued i{
 .floorChose li{
     height:1.4rem;
     font-size:.7rem;
-    width:27%;
+    width:30%;
     float: left;
-    margin:0 0 0.32rem 3%;
+    margin:0 0 0.32rem 3.3%;
     border:solid 1px #ccc;
     text-align: center;
     line-height:1.4rem;
@@ -640,7 +640,7 @@ div.shoued i{
     font-size: .8rem;
     color: #f75c2e;
 }
-.houseUnit .floorChose li {width:30%;margin:0 0 0.32rem 3%;}
+.houseUnit .floorChose li {width:30%;margin:0 0 0.32rem 3.3%;}
 .floorChose li.floorLi-red{background:#f75c2e;border:none;color:#fff;}
 .legend{
     padding:0 5% 0 60%;

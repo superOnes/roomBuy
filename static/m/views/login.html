@@ -99,17 +99,12 @@
                 if(data.objects.cover){
 					localStorage.setItem("cover",data.objects.cover);
 				}
-				if(data.objects.eventname){
-					localStorage.setItem("eventname",data.objects.eventname);
-				}
                 $(".wapLogin").show();
 				 var cover=localStorage.getItem("cover");
-                var eventname=localStorage.getItem("eventname");
-        $(".loginLogo img").prop("src",http+cover);
-        $(".login h1").html(eventname);
-        $("title").html(eventname);
+				$(".loginLogo img").prop("src",http+cover);
+				$(".login h1").html(data.objects.eventname);
+				$("title").html(data.objects.eventname);
 			}
-
 		});
 
         $(".loginId").html(id);

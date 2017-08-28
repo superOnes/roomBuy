@@ -58,7 +58,6 @@ function getParamValue(name)
 }
 $(function(){
     var id = getParamValue("id");
-    $("title").html(decodeURI(localStorage.getItem("eventname")));
     $.ajax({
         type:"get",
         url:http+"/app/detail/",
@@ -66,8 +65,11 @@ $(function(){
             id:id
         },
         success:function(data){
-            console.log(data);
             if(data.response_state==200){
+                if(data.objects[0].name){
+                    localStorage.setItem("eventname",data.objects[0].name);
+                }
+                $("title").html(decodeURI(localStorage.getItem("eventname")));
                 creatEle(data.objects[0]);
                 $(".ind1").html(id);
                 $(".btnL").bind("click",function(){
