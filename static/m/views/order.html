@@ -71,9 +71,9 @@
                             window.location.href="orderinfo.html?orderId="+$(this).find(".oferId").html()+"&id="+id;
                         })
                     });
-                    for(var i=0;i<data.objects.length;i++){
-
-                    }
+                    $(".backIndex").click(function(){
+                        window.location.href="houseList.html?id="+id;
+                    })
 
                 }else if(data.response_state==401||data.response_state==403){
                     alert(data.msg);

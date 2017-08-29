@@ -723,7 +723,8 @@ function orderInfos(){
 }
 function order(data){
 	if(data.objects.length==0){
-		$("body").append('<div class="noOne"><img src="../images/none.png" /><p>目前您没有任何订单！</p></div>');
+		$("body").append('<div class="noOne"><img src="../images/none.png" /><p>目前您没有任何订单！</p></div><p class="backIndex">返回房间列表页</p>');
+		$(".noOne").css("padding","50% 0");
 	}else{
 		for(var i=0;i<data.objects.length;i++){
 			$("body").append($('<div class="order-all">' +
@@ -761,6 +762,7 @@ function order(data){
                 $(".order-all").eq(i).find(".order-right").append($('<img src="../images/test.png" />'));
             }
 		}
+		$("body").append($('<p class="backIndex">返回房间列表页</p>'));
 	}
 }
 
