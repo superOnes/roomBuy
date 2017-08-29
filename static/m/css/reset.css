@@ -546,7 +546,7 @@ a, img {-webkit-touch-callout: none;}
     margin-left:5%;
     margin-top: 0.45rem;
     border:solid 1px #fdd6d6;
-    padding: 0.8rem 0.95rem .5rem 0.3rem;
+    padding: 0.8rem 0.3rem;
     -moz-border-radius:.3rem;
     -webkit-border-radius:.3rem;
     border-radius:.3rem;
@@ -597,7 +597,7 @@ div.shoued i{
     font-size:.7rem;
     width:30%;
     float: left;
-    margin:0 0 0.32rem 3.3%;
+    margin:0 1.6% 0.32rem 1.6%;
     border:solid 1px #ccc;
     text-align: center;
     line-height:1.4rem;
@@ -640,7 +640,7 @@ div.shoued i{
     font-size: .8rem;
     color: #f75c2e;
 }
-.houseUnit .floorChose li {width:30%;margin:0 0 0.32rem 3.3%;}
+.houseUnit .floorChose li {width:30%;margin:0 1.6% 0.32rem 1.6%;}
 .floorChose li.floorLi-red{background:#f75c2e;border:none;color:#fff;}
 .legend{
     padding:0 5% 0 60%;
