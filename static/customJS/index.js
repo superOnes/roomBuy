@@ -324,7 +324,7 @@ function getorderList(thisId,is_test,searchValue){
 		type:"get",
 		data:{id:thisId,is_test:is_test,value:searchValue},
 		url:"/orderlist/",
-		asunc:true,
+		async:true,
 		success:function(results){
 			if(results.success){
 				$(".tip").hide();
