@@ -1128,7 +1128,7 @@ class TVWallView(TemplateView):
         for b in buildings:
             units = eventdetails.filter(building=b).order_by('unit') \
                                 .values_list('unit', flat=True)
-            units = list(set(units))
+            units = sorted(list(set(units)))
             unit = []
             for u in units:
                 rooms = eventdetails.filter(building=b, unit=u) \
