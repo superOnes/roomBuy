@@ -93,7 +93,7 @@ function creatEle(data){
 		$(".swiper-wrapper").append($('<div class="swiper-slide"><img src="'+http+data.plane_graph[i]+'"/></div>'));
 	}
 	if(data.plane_graph.length==0){
-		$(".bannerline").hide();
+        $(".swiper-wrapper").append($('<div class="swiper-slide"><img src="../images/default.png"/></div>'));
 	}
 
 
