@@ -670,17 +670,14 @@ div.shoued i{
     margin:.8rem;
     border-bottom: solid 1px #eee;
 }
-/*.shareCar-list1 { border-bottom: solid 1px #ccc; }*/
-/*.shareCar-list1:nth-last-child(1) { border-bottom:none;}*/
-/*.shareCar-list1 a {margin-bottom:0.4rem;}*/
 .shareCar-list a{color:#222;display:block;position:relative;}
-.shareCar-list p{
-    line-height: 2rem;
-}
+.shareCar-list p{ font-size:.9rem; }
 .shareCar-list span{
     line-height: 1.6rem;
-    margin-bottom: 1rem;
+    margin-bottom: .3rem;
     font-size: .8rem;
+    color:#666;
+    display:block;
 }
 .shareFrom .sold{
     width:36px;
